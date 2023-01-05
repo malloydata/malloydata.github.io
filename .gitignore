@@ -1,0 +1,24 @@
+# auto-generated docs
+/_includes/generated/
+/_site/
+/documentation/
+/fiddle/
+/aux/
+/.jekyll-cache/
+/js/generated/
+
+# misc
+node_modules
+.DS_Store
+*.tsbuildinfo
+
+npm-debug.log*
+
+.idea/
+.idea*
+*.iml
+gems/
+.vscode/settings.json
+.vscode/spellright.dict
+.tmp/
+logfile
