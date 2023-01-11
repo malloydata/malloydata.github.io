@@ -9,18 +9,18 @@
 
 
 // import existing source 'flights' from flights.malloy
-//  see: https://malloydata.github.io/malloy/documentation/language/imports.html
+//  see: https://malloydata.github.io/documentation/language/imports.html
 //
 import "2_flights.malloy"
 
 // source 'flights_carrier' refines source 'flights'
-//  https://malloydata.github.io/malloy/documentation/language/source.html#source-refinement
+//  https://malloydata.github.io/documentation/language/source.html#source-refinement
 source: flights_carrier is flights + {
 
     //
   // flight_count - aggregate calculation count(*), imported from
   //  see:
-  //    https://malloydata.github.io/malloy/documentation/language/aggregates.html
+  //    https://malloydata.github.io/documentation/language/aggregates.html
   //
   // all(flight_count) - computes flight_count without any group_by
   //

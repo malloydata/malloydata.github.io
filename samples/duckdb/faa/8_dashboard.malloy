@@ -6,9 +6,9 @@
 
 // see:
 // dashboards:
-//  https://malloydata.github.io/malloy/documentation/visualizations/dashboards.html
+//  https://malloydata.github.io/documentation/visualizations/dashboards.html
 // nesting:
-//  https://malloydata.github.io/malloy/documentation/language/nesting.html
+//  https://malloydata.github.io/documentation/language/nesting.html
 //
 
 import "2_flights.malloy"

@@ -2,11 +2,11 @@
 // Flights example model.  Joins multipe tables into a 'source'
 //
 //  Malloy Language Documentation,
-//    see: https://malloydata.github.io/malloy/documentation/index.html
+//    see: https://malloydata.github.io/documentation/index.html
 
 
 // source:
-//  see: https://malloydata.github.io/malloy/documentation/language/source.html
+//  see: https://malloydata.github.io/documentation/language/source.html
 source: carriers is table('duckdb:data/carriers.parquet') + {
   primary_key: code
   measure: carrier_count is count()
@@ -27,7 +27,7 @@ source: aircraft_models is table('duckdb:data/aircraft_models.parquet') + {
 source: aircraft is table('duckdb:data/aircraft.parquet') + {
   primary_key: tail_num
   measure: aircraft_count is count()
-  // join, see: https://malloydata.github.io/malloy/documentation/language/join.html
+  // join, see: https://malloydata.github.io/documentation/language/join.html
   join_one: aircraft_models with aircraft_model_code
 }
 
@@ -40,7 +40,7 @@ source: flights is table('duckdb:data/flights.parquet') + {
   rename: destination_code is destination
 
   // join all the data sources
-  //  see: https://malloydata.github.io/malloy/documentation/language/join.html
+  //  see: https://malloydata.github.io/documentation/language/join.html
 
   join_one: carriers with carrier
   join_one: origin is airports with origin_code
@@ -49,13 +49,13 @@ source: flights is table('duckdb:data/flights.parquet') + {
 
 
   // declare some resusable aggregate calculations
-  //  see: https://malloydata.github.io/malloy/documentation/language/aggregates.html
+  //  see: https://malloydata.github.io/documentation/language/aggregates.html
   measure:
     flight_count is count()
     total_distance is sum(distance)
 
   // declare some queries:
-  // see: https://malloydata.github.io/malloy/documentation/language/query.html
+  // see: https://malloydata.github.io/documentation/language/query.html
   query: by_carrier is {
     group_by: carriers.nickname
     aggregate:

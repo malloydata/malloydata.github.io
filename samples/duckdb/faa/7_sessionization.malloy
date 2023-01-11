@@ -8,7 +8,7 @@
 //  In the result you can see that Delta had 13 flights on 03-03 and the individual
 //    aircraft events (ordered through the day)
 //
-//  see: https://malloydata.github.io/malloy/documentation/patterns/foreign_sums.html
+//  see: https://malloydata.github.io/documentation/patterns/foreign_sums.html
 //
 
 import "2_flights.malloy"
