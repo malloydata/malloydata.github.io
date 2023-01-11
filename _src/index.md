@@ -12,7 +12,7 @@ Malloy is a work in progress. Malloy is designed to be a language for anyone who
 - Learn the language with zero install using our entirely browser-based [Malloy Fiddle](https://malloydata.github.io/fiddle/index.html?q=12+-+Line+Chart+with+two+dimension%3A+Flights+by+Month+and+Length&m=Flights&t=).
 - Write Malloy in the [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode): build semantic data models, query and transform data, and create simple visualizations and dashboards.
 - Build data applications with [npm modules](https://www.npmjs.com/package/@malloydata/malloy) in javascript or typescript.
-- Explore data with the [Malloy Composer](https://github.com/malloydata/malloy/tree/main/demo/malloy-demo-composer), a demo of a data exploration application built on top of Malloy
+- Explore data with the [Malloy Composer]( https://github.com/malloydata/malloy-composer), a demo of a data exploration application built on top of Malloy
 
 ## Get involved:
 - Join our [Slack community](https://join.slack.com/t/malloy-community/shared_invite/zt-upi18gic-W2saeFu~VfaVM1~HIerJ7w).
