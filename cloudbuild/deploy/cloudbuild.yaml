@@ -11,6 +11,7 @@ steps:
     args:
       - -c
       - "./cloudbuild/deploy/$TRIGGER_NAME.sh"
+    secretEnv: ["GITHUB_SSH_KEY"]
     waitFor: ["nix-quiet-install"]
     timeout: "1800s"
 timeout: "1800s"
