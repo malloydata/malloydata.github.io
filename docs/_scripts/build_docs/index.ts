@@ -37,7 +37,7 @@ const OUT_PATH2 = path.join(__dirname, "../../docs/documentation/");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
 const SAMPLES_BIGQUERY_PATH = path.join(__dirname, "../../samples/bigquery");
 const SAMPLES_ROOT_PATH = path.join(__dirname, "../../samples");
-const AUX_OUT_PATH = path.join(__dirname, "../../aux/generated");
+const AUX_OUT_PATH = path.join(__dirname, "../../docs/aux/generated");
 
 const WATCH_ENABLED = process.argv.includes("--watch");
 
