@@ -30,10 +30,10 @@ import { exit } from "process";
 
 const __dirname = path.resolve("./_scripts/build_docs");
 
-const DOCS_ROOT_PATH = path.join(__dirname, "../../_src");
-const OUT_PATH = path.join(__dirname, "../../_includes/generated");
-const JS_OUT_PATH = path.join(__dirname, "../../js/generated");
-const OUT_PATH2 = path.join(__dirname, "../../documentation/");
+const DOCS_ROOT_PATH = path.join(__dirname, "../../docs/_src");
+const OUT_PATH = path.join(__dirname, "../../docs/_includes/generated");
+const JS_OUT_PATH = path.join(__dirname, "../../docs/js/generated");
+const OUT_PATH2 = path.join(__dirname, "../../docs/documentation/");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
 const SAMPLES_BIGQUERY_PATH = path.join(__dirname, "../../samples/bigquery");
 const SAMPLES_ROOT_PATH = path.join(__dirname, "../../samples");
