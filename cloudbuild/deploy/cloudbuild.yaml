@@ -1,0 +1,20 @@
+steps:
+  - id: nix-quiet-install
+    name: gcr.io/cloud-builders/docker
+    args:
+      - pull
+      - "-q"
+      - nixos/nix
+  - id: run-script
+    name: "nixos/nix"
+    entrypoint: sh
+    args:
+      - -c
+      - "./cloudbuild/build-test/$TRIGGER_NAME.sh"
+    waitFor: ["nix-quiet-install"]
+    timeout: "1800s"
+timeout: "1800s"
+availableSecrets:
+  secretManager:
+    - versionName: projects/malloy-303216/secrets/github-ssh-key/versions/latest
+      env: "GITHUB_SSH_KEY"
