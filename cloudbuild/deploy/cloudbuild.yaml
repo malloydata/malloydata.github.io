@@ -14,6 +14,8 @@ steps:
     waitFor: ["nix-quiet-install"]
     timeout: "1800s"
 timeout: "1800s"
+options:
+  logging: CLOUD_LOGGING_ONLY
 availableSecrets:
   secretManager:
     - versionName: projects/malloy-303216/secrets/github-ssh-key/versions/latest
