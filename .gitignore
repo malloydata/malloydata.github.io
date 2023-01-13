@@ -1,11 +1,10 @@
 # auto-generated docs
-/_includes/generated/
-/_site/
-/documentation/
-/fiddle/
-/aux/
-/.jekyll-cache/
-/js/generated/
+/docs/_includes/generated/
+/docs/_site/
+/docs/documentation/
+/docs/aux/
+/docs/.jekyll-cache/
+/docs/js/generated/
 
 # misc
 node_modules
