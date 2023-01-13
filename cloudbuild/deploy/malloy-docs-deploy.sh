@@ -10,9 +10,9 @@ nix-shell --quiet --pure --command "$(cat <<NIXCMD
   npm ci --silent
   bundle install
   npm run docs-deploy
-  git checkout -b docs-release-test
+  git checkout -b docs-release
   git add -f docs/documentation docs/aux
   git commit -m "Docs Release"
-  git push -f origin docs-release-test
+  git push -f origin docs-release
 NIXCMD
 )"
