@@ -18,7 +18,7 @@
     "url": "git+https://github.com/malloydata/malloydata.github.io.git"
   },
   "author": "",
-  "license": "GPL-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/malloydata/malloydata.github.io/issues"
   },
