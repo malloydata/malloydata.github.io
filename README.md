@@ -27,19 +27,33 @@ Once all that is installed, you can install Jekyll and its Ruby dependencies:
 bundle install
 ```
 
+Then update npm:
+
+```
+npm install
+```
+
 ### Compile
 
-To compile the documentation, run `npm run docs-build`. Your system must be
-authenticated to a BigQuery instance with access to all the public tables referenced in the
-`/samples` models.
+To compile the documentation, run:
+
+```
+ npm run docs-build
+ ```  
+
+Your system must be authenticated to a BigQuery instance with access to all the public tables referenced in the `/samples` models.
 
 ### Develop
 
-For developing the documentation, run `npm run docs-serve` build the docs, watch for
-file changes in any of the docs, static files, or sample models, and serve the result
-at [http://127.0.0.1:4000](http://127.0.0.1:4000). Jekyll hot-reloading is
-enabled, so pages should automatically refresh when changes are made. When initial
-compilation is complete, a browser should open to the home page.
+For developing the documentation: 
+
+```
+npm run docs-serve
+```
+
+This will build the docs, watch for file changes in any of the docs, static files, or sample models, and serve the result at [http://127.0.0.1:4000](http://127.0.0.1:4000). 
+
+Jekyll hot-reloading is enabled, so pages should automatically refresh when changes are made. When initial compilation is complete, a browser should open to the home page.
 
 Code blocks in the documentation may begin with a command string to indicate
 whether the code should be run, and how the query should be compiled or the results
