@@ -51,7 +51,7 @@ query: limited_users -> {
 
 ## Embedding Malloy queries in an SQL block ( Turducken )
 
-Malloy queries can be embedded in SQL blocks as well. When `%{` and `}%` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with a `SELECT` statement generated from that code.
+Malloy queries can be embedded in SQL blocks as well. When `%{` and `}%` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with the `SELECT` statement generated from the query.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"sql", "runMode": "auto", "size": "large", "sqlBlockName": "malloy_in_sql_query" }
@@ -60,14 +60,15 @@ source: users is table('malloy-data.ecomm.users')
 sql: malloy_in_sql_query is {
   select: """
 -- BEGIN MALLOY QUERY
-    %{
-      users -> {
-        top: 10; group_by: first_name, last_name, gender
-        aggregate: number_with_this_name is count()
-      }
-    }%
+%{
+  users -> {
+    top: 10 group_by: first_name, last_name, gender
+    aggregate: n_with_this_name is count()
+  }
+}%
 -- END MALLOY QUERY
-  """
+"""
+
 }
 ```
 
