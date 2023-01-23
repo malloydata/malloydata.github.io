@@ -45,7 +45,7 @@ import { highlight } from "./highlighter.js";
 
 const __dirname = path.resolve("./docs/_scripts/build_docs");
 
-const SAMPLES_BIGQUERY_PATH = path.join(__dirname, "../../../samples/bigquery");
+const MODELS_BIGQUERY_PATH = path.join(__dirname, "../../../models/bigquery");
 
 export const DEPENDENCIES = new Map<string, string[]>();
 
@@ -53,7 +53,7 @@ export const DEPENDENCIES = new Map<string, string[]>();
  * Add a known dependency to the `DEPENDENCIES` map.
  */
 function addDependency(modelPath: string, documentPath: string) {
-  const key = modelPath.substring(SAMPLES_BIGQUERY_PATH.length);
+  const key = modelPath.substring(MODELS_BIGQUERY_PATH.length);
   const existing = DEPENDENCIES.get(key);
   if (existing) {
     if (!existing.includes(documentPath)) {
@@ -141,7 +141,7 @@ const BIGQUERY_CONNECTION = new BigQueryConnection("bigquery", {
 });
 
 function resolveSourcePath(sourcePath: string) {
-  return `file://${path.resolve(path.join(SAMPLES_BIGQUERY_PATH, sourcePath))}`;
+  return `file://${path.resolve(path.join(MODELS_BIGQUERY_PATH, sourcePath))}`;
 }
 
 function mapKeys<KA, V, KB>(

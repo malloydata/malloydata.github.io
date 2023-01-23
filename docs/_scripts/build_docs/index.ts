@@ -23,7 +23,6 @@
 
 import path from "path";
 import fs from "fs";
-import archiver from "archiver";
 import { performance } from "perf_hooks";
 import { renderDoc } from "./render_document.js";
 import { renderFooter, renderSidebar, Section } from "./page.js";
@@ -45,9 +44,7 @@ const OUT_PATH = path.join(__dirname, "../../docs/_includes/generated");
 const JS_OUT_PATH = path.join(__dirname, "../../docs/js/generated");
 const OUT_PATH2 = path.join(__dirname, "../../docs/documentation/");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
-const SAMPLES_BIGQUERY_PATH = path.join(__dirname, "../../samples/bigquery");
-const SAMPLES_ROOT_PATH = path.join(__dirname, "../../samples");
-const AUX_OUT_PATH = path.join(__dirname, "../../docs/aux/generated");
+const MODELS_BIGQUERY_PATH = path.join(__dirname, "../../models/bigquery");
 
 const WATCH_ENABLED = process.argv.includes("--watch");
 
@@ -68,7 +65,16 @@ async function compileDoc(file: string): Promise<{
   const outPath = path.join(OUT_PATH, shortOutPath);
   const outDirPath = path.join(outPath, "..");
   fs.mkdirSync(outDirPath, { recursive: true });
+  fs.mkdirSync(path.join(OUT_PATH2, shortOutPath, ".."), { recursive: true });
   const markdown = fs.readFileSync(file, "utf8");
+  // If not a standard layout, just copy
+  if (markdown.startsWith("---\n")) {
+    fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), markdown);
+    return {
+      errors: [],
+      searchSegments: [],
+    }
+  }
   const { renderedDocument, errors, searchSegments } = await renderDoc(
     markdown,
     shortPath
@@ -80,7 +86,6 @@ async function compileDoc(file: string): Promise<{
     `footer: ${path.join("/generated/footers", shortOutPath)}\n` +
     `---\n\n` +
     renderedDocument;
-  fs.mkdirSync(path.join(OUT_PATH2, shortOutPath, ".."), { recursive: true });
   fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), headerDoc);
   log(
     `File ${outPath.substring(OUT_PATH.length)} compiled in ${timeString(
@@ -141,56 +146,7 @@ function outputSearchSegmentsFile(
   log(`File js/generated/search_segments.js written.`);
 }
 
-function outputSamplesZip(
-  rootPath: string,
-  relativePath: string,
-  name: string
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    try {
-      const archive = archiver("zip");
-      fs.mkdirSync(AUX_OUT_PATH, { recursive: true });
-      const output = fs.createWriteStream(path.join(AUX_OUT_PATH, name));
-      output.on("close", () => {
-        log(`File aux/${name} written.`);
-        resolve();
-      });
-      archive.on("error", (error) => {
-        log(error.message);
-        reject(error);
-      });
-      archive.pipe(output);
-      archive.directory(path.join(rootPath, relativePath), false);
-      archive.finalize();
-    } catch (error) {
-      log(error);
-      reject(error);
-    }
-  });
-}
-
-async function outputSamplesZips(): Promise<void> {
-  log("Zipping samples");
-  await Promise.all([
-    outputSamplesZip(SAMPLES_ROOT_PATH, "/", "samples.zip"),
-    ...fs.readdirSync(SAMPLES_BIGQUERY_PATH).map((relativePath) => {
-      if (
-        fs
-          .statSync(path.join(SAMPLES_BIGQUERY_PATH, relativePath))
-          .isDirectory()
-      ) {
-        return outputSamplesZip(
-          SAMPLES_BIGQUERY_PATH,
-          relativePath,
-          relativePath + ".zip"
-        );
-      }
-    }),
-  ]);
-}
-
 (async () => {
-  await outputSamplesZips();
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
   const allDocs = allFiles.filter(isMarkdown);
   const staticFiles = allFiles.filter((file) => !isMarkdown(file));
@@ -215,7 +171,7 @@ async function outputSamplesZips(): Promise<void> {
   rebuildSidebarAndFooters();
 
   if (WATCH_ENABLED) {
-    log(`\nWatching /documentation and /samples for changes...`);
+    log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
       if (isMarkdown(file)) {
@@ -231,13 +187,12 @@ async function outputSamplesZips(): Promise<void> {
         }
       }
     });
-    watchDebouncedRecursive(SAMPLES_BIGQUERY_PATH, (type, file) => {
+    watchDebouncedRecursive(MODELS_BIGQUERY_PATH, (type, file) => {
       log(`Model file ${file} ${type}d. Recompiling dependent documents...`);
       for (const doc of DEPENDENCIES.get(file) || []) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
         compileDoc(fullPath);
       }
-      outputSamplesZips();
     });
     watchDebounced(CONTENTS_PATH, (type) => {
       log(`Table of contents ${type}d. Recompiling...`);
