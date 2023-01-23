@@ -39,19 +39,19 @@ To compile the documentation, run:
 
 ```
  npm run docs-build
- ```  
+ ```
 
-Your system must be authenticated to a BigQuery instance with access to all the public tables referenced in the `/samples` models.
+Your system must be authenticated to a BigQuery instance with access to all the public tables referenced in the `/models` models.
 
 ### Develop
 
-For developing the documentation: 
+For developing the documentation:
 
 ```
 npm run docs-serve
 ```
 
-This will build the docs, watch for file changes in any of the docs, static files, or sample models, and serve the result at [http://127.0.0.1:4000](http://127.0.0.1:4000). 
+This will build the docs, watch for file changes in any of the docs, static files, or sample models, and serve the result at [http://127.0.0.1:4000](http://127.0.0.1:4000).
 
 Jekyll hot-reloading is enabled, so pages should automatically refresh when changes are made. When initial compilation is complete, a browser should open to the home page.
 
@@ -68,7 +68,7 @@ flights -> sessionize
 ````
 
 Currently, options include `isRunnable` (which must be `true` for the snippet
-to run), `project` (which refers to a directory in `/samples`), `model` (
+to run), `project` (which refers to a directory in `/models`), `model` (
 which refers to a file (not including the `.malloy` extension inside that
 directory), and `size` (which adjusts the maximum scroll size of the results).
 

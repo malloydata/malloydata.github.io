@@ -9,7 +9,7 @@ To set up a styles file for a Malloy model:
 2. Specify styles
 3. Reference your styles document in your `.malloy` file, by adding `--! styles ecommerce.styles.json` to the first line.
 
-We recommend looking at the individual visualization documents in this section as well as the [sample models](/documentation/samples.html) for examples of how this looks in action.
+We recommend looking at the individual visualization documents in this section as well as the [sample models](http://github.com/malloydata/malloy-samples/) for examples of how this looks in action.
 
 While the above approach is preferred, the extension additionally allows the renderer to utilize naming conventions as a shortcut for visualization specification. For example:
 
