@@ -47,3 +47,28 @@ query: limited_users -> {
   aggregate: user_count
 }
 ```
+
+
+## Embedding Malloy queries in an SQL block ( Turducken )
+
+Malloy queries can be embedded in SQL blocks as well. When `%{` and `}%` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with a `SELECT` statement generated from that code.
+
+```malloy
+--! {"isRunnable": true, "showAs":"sql", "runMode": "auto", "size": "large", "sqlBlockName": "malloy_in_sql_query" }
+source: users is table('malloy-data.ecomm.users')
+
+sql: malloy_in_sql_query is {
+  select: """
+-- BEGIN MALLOY QUERY
+    %{
+      users -> {
+        top: 10; group_by: first_name, last_name, gender
+        aggregate: number_with_this_name is count()
+      }
+    }%
+-- END MALLOY QUERY
+  """
+}
+```
+
+> _We have referred to this feature the ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinte nesting, but it is amusing_
