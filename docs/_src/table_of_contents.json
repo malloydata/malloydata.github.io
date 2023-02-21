@@ -24,6 +24,15 @@
           "link": "/samples.md"
         },
         {
+          "title": "Setting up Malloy",
+          "items": [
+            {
+              "title": "Google Cloud Shell Setup",
+              "link": "/setup/gcloud.md"
+            }
+          ]
+        },
+        {
           "title": "Connecting a Database",
           "link": "/connection_instructions.md"
         },

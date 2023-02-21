@@ -18,7 +18,7 @@ query: wordle -> find_words
 
 Skipping 'SAREE' and 'SOOTY' to avoid duplicates this early in the game, let's go with 'SAUCE' again.
 
-<img src="/malloy/img/wordle218a.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle218a.png" style="width: 200px">
 
 ## The Second Guess
 'C' as yellow in the 4th position.
@@ -35,7 +35,7 @@ query: wordle -> find_words {
 
 Wow, lots of double letter words, let's skip them this early in the game and pick 'CHOIR'
 
-<img src="/malloy/img/wordle218b.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle218b.png" style="width: 200px">
 
 ## Bang!  There is is 'CRIMP' in 3 guesses
 In three.
@@ -50,7 +50,7 @@ query: wordle -> find_words {
 }
 ```
 
-<img src="/malloy/img/wordle218c.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle218c.png" style="width: 200px">
 
 
 [⬅️ Previous Puzzle](wordle217.md)   |   [↩️ All Solved Puzzles](wordle5.md)  |  [➡️ Next Puzzle](wordle219.md)
