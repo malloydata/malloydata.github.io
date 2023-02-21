@@ -65,7 +65,7 @@ query: wordle -> find_words
 
 Start with a word without duplicates to get coverage.  Today we choose 'SLATE'
 
-<img src="/malloy/img/wordle214a.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle214a.png" style="width: 200px">
 
 Query for words that Contain 'T', don't have 'T' in the 4th spot and don't have the Letters 'SLAE'. Rank them by the number
 of possible space matches.
@@ -82,7 +82,7 @@ query: wordle -> find_words {
 
 'TIGHT" has two Ts so skip it. Next best word..  'TOUCH'
 
-<img src="/malloy/img/wordle214b.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle214b.png" style="width: 200px">
 
 Query for words that Contain 'T', don't have 'T' in the 1st and 4th spot.  Has O in the second spot.  and don't have the Letters 'SLAEUCH'.
 
@@ -96,7 +96,7 @@ query: wordle -> find_words {
 }
 ```
 
-<img src="/malloy/img/wordle214c.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle214c.png" style="width: 200px">
 
 ```malloy
 --! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "/inline/w2.malloy", "showAs":"html"}
@@ -108,7 +108,7 @@ query: wordle -> find_words {
 }
 ```
 
-<img src="/malloy/img/wordle214d.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle214d.png" style="width: 200px">
 
 
 

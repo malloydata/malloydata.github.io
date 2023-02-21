@@ -65,7 +65,7 @@ query: wordle -> find_words
 
 Start with a word without duplicates to get coverage. We'll run with 'SLATE' as our starter again today.
 
-<img src="/malloy/img/wordle216a.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle216a.png" style="width: 200px">
 
 ## The Second Guess
 Oof--no matches. Now what? We'll query for words that don't contain any of these characters, and rank them by the number of possible space matches.
@@ -79,7 +79,7 @@ query: wordle -> find_words {
 
 'CRONY' looks good, let's run with that.
 
-<img src="/malloy/img/wordle216b.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle216b.png" style="width: 200px">
 
 ## Round 3: Tie Breaking
 'CRONY' gave us one match and a yellow tile, so we'll query for words with 'R' in the second position, and that contain 'C', but not in the first position.
@@ -108,7 +108,7 @@ query: wordle -> {
 
 'P' appears a little bit more often than 'B'; we'll go with that.
 
-<img src="/malloy/img/wordle216c.png" style="width: 200px">
+<img src="{{site.baseurl}}/img/wordle216c.png" style="width: 200px">
 
 
 ## Solved in 3.5?
