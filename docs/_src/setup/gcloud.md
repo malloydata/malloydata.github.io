@@ -49,6 +49,6 @@ cd ~
 ./composer -p 8080 malloy-samples/composer.json
 ```
 
-4) Open Malloy Composer in the browser.   Click the Preview Button in the IDE and select port 8080. 
+4) Open Malloy Composer in the browser.   Click the Preview Button in the IDE and select port 8080.
 
-<img src="{{site.baseurl}}/img/setup_ide_preview.png" style="height: 50px; width:280px;">
+<img src="{{site.baseurl}}/img/setup_ide_preview2.png" style="height: 192px; width:396px;">
