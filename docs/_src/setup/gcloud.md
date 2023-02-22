@@ -9,7 +9,7 @@ Goto https://shell.cloud.google.com
 The command below will install Malloy into your cloud shell account.  Run the following command and replace [PROJECT_ID] with a project where you have permissions to run BigQuery queries (if you open a BigQuery console, you should see the project name on the top line).
 
 ```
-curl -s https://github.com/malloydata/malloy/raw/main/scripts/cloud/update_malloy.sh | bash -s [PROJECT_ID]
+curl -s https://raw.githubusercontent.com/malloydata/malloy/main/scripts/cloud/update_malloy.sh | bash -s [PROJECT_ID]
 ```
 
 ## 3) Open the Cloud Shell Editor
