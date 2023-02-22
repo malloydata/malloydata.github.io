@@ -16,7 +16,7 @@ curl -s https://raw.githubusercontent.com/malloydata/malloy/main/scripts/cloud/u
 
 Goto https://ide.cloud.google.com and open your "Home Workspace".
 
-<img src="{{site.baseurl}}/img/setup_ide_home.png"style="height: 406px; width:566px;">
+<img src="{{site.baseurl}}/img/setup_ide_home.png">
 
 You should see the directory 'Malloy Samples'.  
 
@@ -24,12 +24,10 @@ You should see the directory 'Malloy Samples'.
 
 In the IDE Editor open malloy-samples/bigquery/faa/airports.malloy and scroll down click the 'Run' code lens above one of the queries.  You should see query results.
 
-
 <img src="{{site.baseurl}}/img/setup_ide_run.png">
 
-
 ## To Change the Project for Malloy IDE
-Open preferences and change the Cloudshell:Project
+Open the settings by clicking the lower-left corner gear icon, search for "project," and enter the project ID for Cloudshell:Project
 
 <img src="{{site.baseurl}}/img/setup_ide_project.png">
 
