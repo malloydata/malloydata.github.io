@@ -29,7 +29,7 @@ source: numbers is table('malloy-data.malloytest.numbers') {
 The result is a table with nested data.  Each word contains a sub-table with a letter in each position.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100, "size":"large","source": "/inline/w1.malloy", "showAs":"json","dataStyles":{"letters":{"renderer":"list_detail"}}}
+--! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100, "size":"large","source": "/inline/w1.malloy", "showAs":"html","dataStyles":{"letters":{"renderer":"list_detail"}}}
 // define the query
 query: words_and_position is from(words -> five_letter_words) {
   // cross join is missing at the moment
