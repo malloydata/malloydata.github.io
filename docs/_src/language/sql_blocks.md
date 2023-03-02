@@ -27,7 +27,7 @@ sql: my_sql_query is {
 Sources can be created from a SQL block, e.g.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large" }
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large" }
 sql: my_sql_query is {
   select: """
     SELECT

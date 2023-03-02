@@ -132,7 +132,7 @@ For more information about named queries appearing in models, see the [Models](s
 Sources can be created from a SQL block, e.g.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large" }
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large" }
 sql: my_sql_query is {
   select: """
     SELECT
