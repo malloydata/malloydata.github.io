@@ -76,10 +76,6 @@
       "title": "Language Reference",
       "items": [
         {
-          "title": "Introduction",
-          "link": "/language/overview.md"
-        },
-        {
           "title": "SQL to Malloy",
           "link": "/language/sql_to_malloy.md"
         },
