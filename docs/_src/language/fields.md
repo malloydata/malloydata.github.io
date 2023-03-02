@@ -60,7 +60,7 @@ Dimensions are defined using expressions that contain no
 aggregate functions.
 
 ```malloy
-expore: users is table('malloy-data.ecomm.users') {
+source: users is table('malloy-data.ecomm.users') {
   dimension: full_name is concat(first_name, ' ', last_name)
 }
 ```
