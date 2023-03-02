@@ -59,71 +59,83 @@ async function compileDoc(file: string): Promise<{
     )[];
   }[];
 }> {
-  const startTime = performance.now();
-  const shortPath = file.substring(DOCS_ROOT_PATH.length);
-  const shortOutPath = shortPath.replace(/\.md$/, ".html");
-  const outPath = path.join(OUT_PATH, shortOutPath);
-  const outDirPath = path.join(outPath, "..");
-  fs.mkdirSync(outDirPath, { recursive: true });
-  fs.mkdirSync(path.join(OUT_PATH2, shortOutPath, ".."), { recursive: true });
-  const markdown = fs.readFileSync(file, "utf8");
-  // If not a standard layout, just copy
-  if (markdown.startsWith("---\n")) {
-    fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), markdown);
-    return {
-      errors: [],
-      searchSegments: [],
+  try {
+    const startTime = performance.now();
+    const shortPath = file.substring(DOCS_ROOT_PATH.length);
+    const shortOutPath = shortPath.replace(/\.md$/, ".html");
+    const outPath = path.join(OUT_PATH, shortOutPath);
+    const outDirPath = path.join(outPath, "..");
+    fs.mkdirSync(outDirPath, { recursive: true });
+    fs.mkdirSync(path.join(OUT_PATH2, shortOutPath, ".."), { recursive: true });
+    const markdown = fs.readFileSync(file, "utf8");
+    // If not a standard layout, just copy
+    if (markdown.startsWith("---\n")) {
+      fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), markdown);
+      return {
+        errors: [],
+        searchSegments: [],
+      }
     }
+    const { renderedDocument, errors, searchSegments } = await renderDoc(
+      markdown,
+      shortPath
+    );
+    const headerDoc =
+      `---\n` +
+      `layout: documentation\n` +
+      `title: Malloy Documentation\n` +
+      `footer: ${path.join("/generated/footers", shortOutPath)}\n` +
+      `---\n\n` +
+      renderedDocument;
+    fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), headerDoc);
+    log(
+      `File ${outPath.substring(OUT_PATH.length)} compiled in ${timeString(
+        startTime,
+        performance.now()
+      )}.`
+    );
+    return {
+      errors: errors.map((error) => ({ ...error, path: shortPath })),
+      searchSegments: searchSegments.map((segment) => ({
+        ...segment,
+        path: shortPath,
+      })),
+    };
+  } catch(e) {
+    log("Error compiling:")
+    log(e)
   }
-  const { renderedDocument, errors, searchSegments } = await renderDoc(
-    markdown,
-    shortPath
-  );
-  const headerDoc =
-    `---\n` +
-    `layout: documentation\n` +
-    `title: Malloy Documentation\n` +
-    `footer: ${path.join("/generated/footers", shortOutPath)}\n` +
-    `---\n\n` +
-    renderedDocument;
-  fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), headerDoc);
-  log(
-    `File ${outPath.substring(OUT_PATH.length)} compiled in ${timeString(
-      startTime,
-      performance.now()
-    )}.`
-  );
-  return {
-    errors: errors.map((error) => ({ ...error, path: shortPath })),
-    searchSegments: searchSegments.map((segment) => ({
-      ...segment,
-      path: shortPath,
-    })),
-  };
+
 }
 
 function rebuildSidebarAndFooters() {
+  try {
   const tableOfContents = JSON.parse(fs.readFileSync(CONTENTS_PATH, "utf8"))
-    .contents as Section[];
+      .contents as Section[];
 
-  const renderedSidebar = renderSidebar(tableOfContents);
-  fs.writeFileSync(path.join(OUT_PATH, "toc.html"), renderedSidebar);
-  log(`File _includes/toc.html written.`);
+    const renderedSidebar = renderSidebar(tableOfContents);
+    fs.writeFileSync(path.join(OUT_PATH, "toc.html"), renderedSidebar);
+    log(`File _includes/toc.html written.`);
 
-  const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMarkdown);
+    const allFiles = readDirRecursive(DOCS_ROOT_PATH);
+    const allDocs = allFiles.filter(isMarkdown);
 
-  for (const file of allDocs) {
-    const shortPath = file.substring(DOCS_ROOT_PATH.length);
-    const htmlLink = shortPath.replace(/\.md$/, ".html");
-    const footer = renderFooter(tableOfContents, DOCS_ROOT_PATH, htmlLink);
-    const footerPath = path.join(OUT_PATH, "footers", htmlLink);
-    fs.mkdirSync(path.join(footerPath, ".."), {
-      recursive: true,
-    });
-    fs.writeFileSync(footerPath, footer);
+    for (const file of allDocs) {
+      const shortPath = file.substring(DOCS_ROOT_PATH.length);
+      const htmlLink = shortPath.replace(/\.md$/, ".html");
+      const footer = renderFooter(tableOfContents, DOCS_ROOT_PATH, htmlLink);
+      const footerPath = path.join(OUT_PATH, "footers", htmlLink);
+      fs.mkdirSync(path.join(footerPath, ".."), {
+        recursive: true,
+      });
+      fs.writeFileSync(footerPath, footer);
+    }
+    log(`Files _includes/footers/** written.`);
+  } catch(e) {
+    log(`Error parsing JSON`);
+    log(e)
   }
-  log(`Files _includes/footers/** written.`);
+
 }
 
 function outputSearchSegmentsFile(
