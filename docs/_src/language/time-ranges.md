@@ -85,8 +85,8 @@ These will return a negative number if t1 is later than t2.
 ## Literals
 
 Time literals are specified in Malloy with the `@` character. A literal
-specified this way has an implied duration which means a literal
-can act like a range.
+specified this way may have an implied duration which means a literal
+can act like a range in some cases.
 
 For example the year `@2003` can be used with `eventTime : @2003` to test if the
 event happened in the year 2003.
@@ -96,11 +96,13 @@ Literal pattern | Duration | Begins
 `@DDDD` | One year | The first day of that year
 `@DDDD-QN` | Three months | The first day of that quarter
 `@DDDD-MM` | One month | The first day of that month
-`@WKDDDD-MM-SS` | Seven days | Sunday of the week containing that day
+`@DDDD-MM-SS-WK` | Seven days | Sunday of the week containing that day
 `@DDDD-MM-DD` | One day | Midnight on the specified date
+`@DDDD-MM-DD HH` | One Hour | The specified time. minute 0
 `@DDDD-MM-DD HH:MM` | One Minute | The specified time
-`@DDDD-MM-DD HH:MM:SS` | One Second | the specified time
-`now` | _N/A_ | The current time, without implied duration
+`@DDDD-MM-DD HH:MM:SS` | _none_ | the specified time
+`@DDDD-MM-DD HH:MM:SS.sss` | _none_ | the specified time
+`now` | _none_ | The current time, without implied duration
 
 ### Time Units
 
