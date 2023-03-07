@@ -15,17 +15,27 @@
     <div class="top">
       <div class="header">
         <div class="header-banner">
-          <img src="{{ site.baseurl }}/img/logo.png" alt="malloy logo" />
+          <a href="https://malloydata.dev" target="_blank">
+            <img src="{{ site.baseurl }}/img/logo.png" alt="malloy logo" />
+          </a>
+
           Malloy
           <span class="subtitle">Documentation</span>
         </div>
-        <form onSubmit="() => alert('submit')" action="/search">
-          <div class="search-input-outer">
-            <img src="{{ site.baseurl }}/img/search.svg" alt="search" />
-            <input placeholder="Search" id="search-input" name="query" />
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"><img src="{{ site.baseurl }}/img/github.svg" style="transform: scale(0.5)"/></a>
+            <a href="https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw" target="_blank"><img
+                src="{{ site.baseurl }}/img/slack.svg" /></a>
           </div>
-          <input type="submit" style="display: none" />
-        </form>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="{{ site.baseurl }}/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
       </div>
       <div class="main">
         {% include /generated/toc.html %}

@@ -15,4 +15,33 @@ Malloy is a work in progress. Malloy is designed to be a language for anyone who
 
 ## Get involved:
 - Join our [Slack community](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw).
-- File feature requests/bugs, join discussions, or contribute to Malloy on our [Repo](https://github.com/malloydata/malloy).
+- File feature requests/bugs, join discussions, or contribute to Malloy on our [Github repository](https://github.com/malloydata/malloy).
+
+<br/>
+
+***
+
+<br/>
+
+# The Story of Malloy
+
+Malloy was designed by a team of people with a lot of experience in
+understanding the task of extracting meaning from data. Years of constant
+exposure to SQL resulted in a tremendous sense of wonder at the
+power of SQL ... and a tremendous source of frustration at how
+bad SQL is at representing the types of operations needed to
+get meaningful data out of relational databases, and how
+difficult it is to maintain and extend a complex set
+of transformations written in SQL.
+
+Malloy started as a "clean slate" thought experiment, if we knew
+all the things we know about data, and about programming with data,
+and about programming languages in general, and we were designing
+a query language today, what would it look like.
+
+In it's earliest form, Malloy looked a lot like SQL, and
+much of Malloy continues to be influenced by the overall
+design of the SQL language. It was always the intention that there
+could be a document that would contain both Malloy and SQL
+and those would make sense together, perhaps parallel to
+the way Javascript and Typescript work together.

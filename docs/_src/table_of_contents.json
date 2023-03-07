@@ -21,6 +21,16 @@
       "title": "Setting up Malloy",
       "items": [
         {
+          "title": "Common Patterns",
+          "items": [
+            {
+              "title": "Year Over Year Analysis",
+              "link": "/patter"
+            }
+          ]
+
+        },
+        {
           "title": "Google Cloud Shell Setup",
           "link": "/setup/gcloud.md"
         },
@@ -75,10 +85,6 @@
     {
       "title": "Language Reference",
       "items": [
-        {
-          "title": "Introduction",
-          "link": "/language/overview.md"
-        },
         {
           "title": "SQL to Malloy",
           "link": "/language/sql_to_malloy.md"

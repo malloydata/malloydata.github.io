@@ -61,6 +61,18 @@ div.header-banner {
   align-items: center;
 }
 
+
+div.header-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.header-links {
+  height: 50px;
+}
+
+
 a.button {
   border-radius: 5px;
   background-color: #4285f4;
