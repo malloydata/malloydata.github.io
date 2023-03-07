@@ -21,18 +21,8 @@
       "title": "Setting up Malloy",
       "items": [
         {
-          "title": "Common Patterns",
-          "items": [
-            {
-              "title": "Year Over Year Analysis",
-              "link": "/patter"
-            }
-          ]
-
-        },
-        {
-          "title": "Google Cloud Shell Setup",
-          "link": "/setup/gcloud.md"
+          "title": "Installing the Malloy Extension",
+          "link": "/setup/extension.md"
         },
         {
           "title": "Connecting a Database",
