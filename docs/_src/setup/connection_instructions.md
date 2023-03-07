@@ -2,7 +2,7 @@
 Currently, BigQuery, PostgreSQL, and DuckDB are supported.  These instructions assume you have already installed the [Malloy Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) in VSCode.
 
 ## Adding the Connection in VS Code
-_Note:  DuckDB is natively supported, allowing you to skip these initial steps._
+_**NOTE:**  DuckDB is natively supported, allowing you to skip these initial steps._
 
 1. Open or create a file that ends in `.malloy`. In the explorer view (the top left icon that looks like files), you'll see a section called "MALLOY CONNECTIONS".
 
@@ -31,7 +31,7 @@ _Replace `{my_project_id}` with the **ID** of the BigQuery project you want to u
 
 When creating the connection in the VS Code Plugin, you can leave the optional fields blank as it will connect using your gcloud project configuration.
 
-***NOTE:***  The Malloy Extension used the BigQuery Node SDK, which does its best guess at finding credentials stored on your device - it looks in environment variables, and also in places that gcloud is known to store application credentials. There is not necessarily a 1:1 mapping of how `gcloud` is authenticated and how the BigQuery SDK will authenticate.
+_**NOTE:**  The Malloy Extension used the BigQuery Node SDK, which does its best guess at finding credentials stored on your device - it looks in environment variables, and also in places that gcloud is known to store application credentials. There is not necessarily a 1:1 mapping of how `gcloud` is authenticated and how the BigQuery SDK will authenticate._
 
 ### Option 2: Service Account
 

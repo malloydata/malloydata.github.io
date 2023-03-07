@@ -100,7 +100,7 @@ function renderSection(section: EnrichedSection | EnrichedSectionItem): string {
           section.items
         ).map(
           (item) => (item as EnrichedSectionItem).compareLink
-        )} contains page.url)} %}collapsed{% endunless %}"
+        )} contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
       >
         ${section.title}
         <img class="chevron-open" src="{{ site.baseurl }}/img/section_open.svg" alt="section open"/>
