@@ -537,6 +537,10 @@ div.document img {
   width: 100%;
 }
 
+div.document .small-img {
+  width: 60%;
+}
+
 div.document div.error {
   color: #ca4c4c;
 }

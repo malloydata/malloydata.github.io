@@ -3,6 +3,12 @@
 This document will assumes a working knowledge of SQL and will rapidly take you through some of
 Malloy's key language features.
 
+## Using this Guide
+
+For every Malloy Query you can see the formatted result, or raw result as JSON, or the SQL used to produce the result.
+
+Click tab to to see the  HTML, JSON or SQL result:  <img src="https://user-images.githubusercontent.com/1093458/154121968-6436d94e-94b2-4f16-b982-bf136a3fcf40.png" style="width:142px"> 👈👈
+
 ## SQL SELECT vs Malloy's `query`
 
 The statement to run a query in Malloy is `query:`. There are two types of queries in Malloy, reductions which have `group_by:` or `aggregate:` statements, and projections which have `project:` statements and do not group or aggregate results.
@@ -49,13 +55,6 @@ query: table('malloy-data.faa.airports') -> {
   order_by: airport_count desc
 }
 ```
-
-## Using this Guide
-
-For every Malloy Query you can see the formatted result, or raw result as JSON, or the SQL used to produce the result.
-
-Click tab to to see the  HTML, JSON or SQL result:  <img src="https://user-images.githubusercontent.com/1093458/154121968-6436d94e-94b2-4f16-b982-bf136a3fcf40.png" style="width:142px"> 👈👈
-
 
 ## Source: A data source for queries
 
