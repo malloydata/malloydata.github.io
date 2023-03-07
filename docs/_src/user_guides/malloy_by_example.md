@@ -3,10 +3,6 @@
 This document will assumes a working knowledge of SQL and will rapidly take you through some of
 Malloy's key language features.
 
-Malloy is currently available as a VS Code extension and can query BigQuery and Postgres SQL databases.
-
-[Install Instructions](https://github.com/malloydata/malloy/)
-
 ## SQL SELECT vs Malloy's `query`
 
 The statement to run a query in Malloy is `query:`. There are two types of queries in Malloy, reductions which have `group_by:` or `aggregate:` statements, and projections which have `project:` statements and do not group or aggregate results.

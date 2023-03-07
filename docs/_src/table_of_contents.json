@@ -21,6 +21,16 @@
       "title": "Setting up Malloy",
       "items": [
         {
+          "title": "Common Patterns",
+          "items": [
+            {
+              "title": "Year Over Year Analysis",
+              "link": "/patter"
+            }
+          ]
+
+        },
+        {
           "title": "Google Cloud Shell Setup",
           "link": "/setup/gcloud.md"
         },

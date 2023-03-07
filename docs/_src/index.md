@@ -15,7 +15,7 @@ Malloy is a work in progress. Malloy is designed to be a language for anyone who
 
 ## Get involved:
 - Join our [Slack community](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw).
-- File feature requests/bugs, join discussions, or contribute to Malloy on our [Repo](https://github.com/malloydata/malloy).
+- File feature requests/bugs, join discussions, or contribute to Malloy on our [Github repository](https://github.com/malloydata/malloy).
 
 <br/>
 
