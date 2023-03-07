@@ -1,0 +1,77 @@
+---
+layout: documentation
+title: Malloy Documentation
+footer: /generated/footers/setup/extension.html
+---
+
+<div class="document">
+      <h1>
+        <a id="the-malloy-extension" class="header-link anchor" href="#the-malloy-extension">
+          The Malloy Extension
+        </a>
+      </h1>
+    <p>The <a href="https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode">Malloy Extension</a> is an authoring enironments for Malloy models. It contains helpful features like schema browsing, query running, language auto-complete, help & documentation, and rudimentary visualizations.</p>
+<p>The Extension can be installed anywhere that VS Code runs - either locally on your machine, or in a variety of sites that provide the VS Code interface.</p>
+<img class="small-img" src="{{site.baseurl}}/img/running_extension.gif"><p><em><strong>NOTE:</strong>  Because there are two versions of VS Code - VS Code Desktop and <a href="https://code.visualstudio.com/docs/editor/vscode-web">VS Code Web</a> - there are times when only specific databases are available. When running on a desktop, the Malloy Extension can execute database queries against any supported database, such as BigQuery, PostGres, or DuckDB. When running VS Code Web, the Malloy Extension can only communicate with a browser-based version of DuckDB that comes pre-packaged with the Extension.</em></p>
+
+      <h2>
+        <a id="using-the-malloy-extension-on-your-desktop" class="header-link anchor" href="#using-the-malloy-extension-on-your-desktop">
+          Using the Malloy Extension on your Desktop
+        </a>
+      </h2>
+    <ol>
+<li><p><strong>Download Visual Studio Code</strong>: If you don't already have it, download <a href="https://code.visualstudio.com/">Visual Studio Code</a></p>
+</li>
+<li><p><strong>Add the Malloy Extension</strong>: Open VS Code and click the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install"</p>
+</li>
+<li><p><strong>Download and unzip the <a href="https://malloydata.github.io/malloy/aux/generated/samples.zip">Sample Models</a></strong></p>
+</li>
+<li><p><strong>Open the samples folder in VS Code:</strong> In VS Code, go to File > <strong>Open Folder</strong>... select samples/duckdb > Open. DuckDB is built into the extension so you're ready to run these.</p>
+</li></ol>
+
+      <h2>
+        <a id="using-the-malloy-extension-on-google-cloud-shell-editor" class="header-link anchor" href="#using-the-malloy-extension-on-google-cloud-shell-editor">
+          Using the Malloy Extension on Google Cloud Shell Editor
+        </a>
+      </h2>
+    <p>Google Cloud customers have access to a built-in integrated development environment (IDE) running the Desktop version of VS Code, and Malloy can run in this environment access data in BigQuery, Postgres or DuckDB. Running Malloy here only takes a few clicks:</p>
+<ol>
+<li><p><strong>Launch the Google Cloud Shell</strong></p>
+</li></ol>
+<p>Goto <a href="https://shell.cloud.google.com">https://shell.cloud.google.com</a></p>
+<ol>
+<li><p><strong>Install Malloy Extension & Examples:</strong>
+The command below will install Malloy into your cloud shell account. Run the following command and replace [PROJECT_ID] with a project where you have permissions to run BigQuery queries (if you open a BigQuery console, you should see the project name on the top line).</p>
+</li></ol>
+<pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">curl -sL \</span></span>
+<span class="line"><span style="color: #000000">  https://github.com/malloydata/malloy/raw/main/scripts/cloud/update_malloy.sh \</span></span>
+<span class="line"><span style="color: #000000">  | bash -s [PROJECT_ID]</span></span>
+<span class="line"><span style="color: #000000"></span></span></pre><ol start="3">
+<li><p><strong>Open the Cloud Shell Editor:</strong></p>
+</li></ol>
+<p>Go to <a href="https://ide.cloud.google.com">https://ide.cloud.google.com</a> and open your "Home Workspace".</p>
+<img class="small-img" src="{{site.baseurl}}/img/setup_ide_home.png"><p>You should see the directory called 'Malloy Samples'.</p>
+<ol start="4">
+<li><p><strong>Verify that BigQuery connects correctly:</strong></p>
+</li></ol>
+<p>In the IDE Editor open <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">samples</span><span style="color: #000000">/</span><span style="color: #001080">bigquery</span><span style="color: #000000">/</span><span style="color: #001080">faa</span><span style="color: #000000">/</span><span style="color: #001080">airports</span><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> and scroll down click the 'Run' code lens above one of the queries.  You should see query results.</p>
+<p><img class="small-img"src="{{site.baseurl}}/img/setup_ide_run.png"></p>
+
+      <h3>
+        <a id="changing-the-project-id" class="header-link anchor" href="#changing-the-project-id">
+          Changing the Project ID
+        </a>
+      </h3>
+    <p>If you need to modify the Google CLoud Project ID, open the settings by clicking the lower-left corner gear icon, search for "project," and enter the project ID for Cloudshell:Project</p>
+<p><img class="small-img"src="{{site.baseurl}}/img/setup_ide_project.png"></p>
+
+      <h2>
+        <a id="using-the-malloy-extension-on-github-dev" class="header-link anchor" href="#using-the-malloy-extension-on-github-dev">
+          Using the Malloy Extension on github.dev
+        </a>
+      </h2>
+    <p><em><strong>NOTE:</strong> github.dev uses the Web version of VS Code, so it is only possible to interact with local data. If you have data stored in CSVs, JSON files, or Parquet files in your repository, you can query that data in the Malloy Extension directly from your browser</em></p>
+<p>If you are logged into Github, any repository on Github can be opened into a web-only VS Code instance with all the files in the repository loaded into your browser memory. Simply press <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span></span></code> on the main repo page, or change the url from <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">https</span><span style="color: #000000">:</span><span style="color: #008000">//github.com/{repo-name}</span></span></code> to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">https</span><span style="color: #000000">:</span><span style="color: #008000">//github.dev/{repo-name}</span></span></code>.</p>
+<p>Once you have opened the repository on github.dev, install the Malloy extension by clicking the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install".</p>
+<p>DuckDB is available without needing to explicitly configure a connection - you can simply reference your local files in the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span></span></code> of the Malloy model, i.e. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">my_data_table</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:my_file.csv&#39;</span><span style="color: #000000">)</span></span></code></p>
+</div>
