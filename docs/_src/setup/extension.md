@@ -6,7 +6,7 @@ The Extension can be installed anywhere that VS Code runs - either locally on yo
 
 <img class="small-img" src="{{site.baseurl}}/img/running_extension.gif">
 
-***NOTE:***  Because there are two versions of VS Code - VS Code Desktop and [VS Code Web](https://code.visualstudio.com/docs/editor/vscode-web) - there are times when only specific databases are available. When running on a desktop, the Malloy Extension can execute database queries against any supported database, such as BigQuery, PostGres, or DuckDB. When running VS Code Web, the Malloy Extension can only communicate with a browser-based version of DuckDB that comes pre-packaged with the Extension.
+_**NOTE:**  Because there are two versions of VS Code - VS Code Desktop and [VS Code Web](https://code.visualstudio.com/docs/editor/vscode-web) - there are times when only specific databases are available. When running on a desktop, the Malloy Extension can execute database queries against any supported database, such as BigQuery, PostGres, or DuckDB. When running VS Code Web, the Malloy Extension can only communicate with a browser-based version of DuckDB that comes pre-packaged with the Extension._
 
 ## Using the Malloy Extension on your Desktop
 
@@ -55,7 +55,7 @@ If you need to modify the Google CLoud Project ID, open the settings by clicking
 
 ## Using the Malloy Extension on github.dev
 
-***NOTE:*** github.dev uses the Web version of VS Code, so it is only possible to interact with local data. If you have data stored in CSVs, JSON files, or Parquet files in your repository, you can query that data in the Malloy Extension directly from your browser
+_**NOTE:** github.dev uses the Web version of VS Code, so it is only possible to interact with local data. If you have data stored in CSVs, JSON files, or Parquet files in your repository, you can query that data in the Malloy Extension directly from your browser_
 
 If you are logged into Github, any repository on Github can be opened into a web-only VS Code instance with all the files in the repository loaded into your browser memory. Simply press `.` on the main repo page, or change the url from `https://github.com/{repo-name}` to `https://github.dev/{repo-name}`.
 

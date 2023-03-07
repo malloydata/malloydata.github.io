@@ -4,7 +4,7 @@ This guide introduces the basics of querying and modeling with Malloy. Malloy ha
 
 If you'd like to follow along with this guide, you can create a new <code>.malloy</code> file and run these queries there. You can do this right now in your browser - <a href="https://github.dev/malloydata/try-malloy/airports.malloy" target="_blank">just click here!</a>
 
-***NOTE:*** This guide assumes you are connected to BigQuery and are using our public BigQuery dataset at `malloy-data.faa`. If not, you'll need to update the lines with `table("malloy-data.faa.airports")` to point to the airpots table you are using. For example, if you're using DuckDB with a local file called `airports.csv`, modify the `table()` reference in all examples below to be `table("duckdb:airports.csv")`.
+_**NOTE:** This guide assumes you are connected to BigQuery and are using our public BigQuery dataset at `malloy-data.faa`. If not, you'll need to update the lines with `table("malloy-data.faa.airports")` to point to the airpots table you are using. For example, if you're using DuckDB with a local file called `airports.csv`, modify the `table()` reference in all examples below to be `table("duckdb:airports.csv")`._
 
 ## Leading with the Source
 
@@ -425,7 +425,7 @@ query: airports -> {
 }
 ```
 
-Note: to pipeline a named query, the syntax to reference that named query is `-> query_name`. An example of this can be found in the [Query Doc](query.md#multi-stage-pipelines).
+_**NOTE:**: to pipeline a named query, the syntax to reference that named query is `-> query_name`. An example of this can be found in the [Query Doc](query.md#multi-stage-pipelines)._
 
 
 ## Joins
