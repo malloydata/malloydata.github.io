@@ -41,8 +41,8 @@ Add the relevant account information to the new connection, and include the path
 
 Add the relevant database connection information. Once you click save, the password (if you have entered one) will be stored in your system keychain.
 
-## DuckDB
+## Parquet and CSV Files (via DuckDB)
 
-DuckDB is available without needing to explicitly configure a connection. It works with local parquet or csv files, which can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is table('duckdb:babynames.csv')`
+Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is table('duckdb:babynames.csv')`
 
 There are a number of examples on public data using DuckDB available [here](https://github.com/lloydtabb/malloy_examples).
