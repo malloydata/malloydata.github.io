@@ -10,7 +10,7 @@ _**NOTE:** This guide assumes you are connected to BigQuery and are using our pu
 
 Queries are of the form: _source_ `->` _operation_
 
-In Malloy, the source of a query is either a raw table, a [modeled source](source.md), or another query.
+In Malloy, the source of a query is either a raw table, a [modeled source](../language/source.md), or another query.
 
 In this example, the `table()` function provides the query _source_ from a table (or view) in the database.
 The query _operation_ is explicit about which fields are grouped, aggregated or projected.
@@ -139,7 +139,7 @@ query: airports -> {
 
 ## Ordering and Limiting
 
-In Malloy, ordering and limiting work pretty much the same way they do in SQL, though Malloy introduces some [reasonable defaults](order_by.md).
+In Malloy, ordering and limiting work pretty much the same way they do in SQL, though Malloy introduces some [reasonable defaults](../language/order_by.md).
 
 The `top:` and `limit:` statements are synonyms and limits the number of rows returned. Results below are sorted by the first measure descending--in this case, `airport_count`.
 
@@ -235,7 +235,7 @@ query: table('malloy-data.faa.airports') -> {
 
 ## Dates and Timestamps
 
-Working with time in data is often needlessly complex; Malloy has built in constructs to simplify many time-related operations. This section gives a brief introduction to some of these tools, but for more details see the [Time Ranges](time-ranges.md) section.
+Working with time in data is often needlessly complex; Malloy has built in constructs to simplify many time-related operations. This section gives a brief introduction to some of these tools, but for more details see the [Time Ranges](../language/time-ranges.md) section.
 
 ### Time Literals
 
@@ -275,7 +275,7 @@ query: table('malloy-data.faa.flights') -> {
 
 ### Extraction
 
-Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](time-ranges.md#extraction).
+Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](../language/time-ranges.md#extraction).
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "pageSize": 7, "size": "large"}
@@ -328,7 +328,7 @@ source: airports is table('malloy-data.faa.airports') {
 
 ### Aggregating Subqueries
 
-In Malloy, queries can be [nested](nesting.md) to produce subtables on each output row. Such nested queries are called _aggregating subqueries_, or simply "nested queries." When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
+In Malloy, queries can be [nested](../language/nesting.md) to produce subtables on each output row. Such nested queries are called _aggregating subqueries_, or simply "nested queries." When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy"}
@@ -425,12 +425,12 @@ query: airports -> {
 }
 ```
 
-_**NOTE:**: to pipeline a named query, the syntax to reference that named query is `-> query_name`. An example of this can be found in the [Query Doc](query.md#multi-stage-pipelines)._
+_**NOTE:**: to pipeline a named query, the syntax to reference that named query is `-> query_name`. An example of this can be found in the [Query Doc](../language/query.md#multi-stage-pipelines)._
 
 
 ## Joins
 
-[Joins](join.md) are declared as part of a source. When joining a source to another, it brings with it all child joins.
+[Joins](../language/join.md) are declared as part of a source. When joining a source to another, it brings with it all child joins.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
@@ -459,9 +459,9 @@ In this example, the `aircraft` source is joined to `flights`, and aircraft_mode
 ## Aggregate Calculations
 
 As in SQL, aggregate functions `sum`, `count`, and `avg` are available, and their use in
-an expression identifies the corresponding field as a [measure](fields.md#measures).
+an expression identifies the corresponding field as a [measure](../language/fields.md#measures).
 
-Aggregates may be computed with respect to any joined source, allowing for a wider variety of measurements to be calculated than is possible in SQL. See the [Aggregate Locality](aggregates.md#aggregate-locality) section for more information.
+Aggregates may be computed with respect to any joined source, allowing for a wider variety of measurements to be calculated than is possible in SQL. See the [Aggregate Locality](../language/aggregates.md#aggregate-locality) section for more information.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy"}
