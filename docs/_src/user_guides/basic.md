@@ -322,7 +322,7 @@ The next several examples will use this simple source definition:
 
 ```malloy
 source: airports is table('malloy-data.faa.airports') {
-  airport_count is count()
+  measure: airport_count is count()
 };
 ```
 
