@@ -23,18 +23,17 @@ query: table('malloy-data.faa.airports') -> {
 
 Let's break down each part of this query.
 - `query:` is the opening statement that indicates we're starting to write a query
-- `table('malloy-data.faa.airports')` defines the source for the query. The `table()` function creates a source from a table or view in the database. A source is similar to a table or view in SQL, but Malloy sources can include additional information that we'll cover later on.
+- `table('malloy-data.faa.airports')` defines the source for the query. The `table()` function creates a source from a table or view in the database.
+  - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
 - The `->` operator begins the query. All queries take the form `source -> { ... }`, with the query logic specified inside of the curly braces.
 - `project: ` is equivalent to `SELECT` in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
 - `limit: 10` limits the resultset of the query to the first 10 items
 
-You can explicitly list out the columns you want to project by specifying them as a list in the `project` clause:
-
 ## Query Operators
 
-In SQL, the <code>SELECT</code> command does two very different things.  A <code>SELECT</code> with a <code>GROUP BY</code> aggregates data according to the <code>GROUP BY</code> clause and produces aggregate calculation against every calculation not in the <code>GROUP BY</code>.  In Malloy, the query operator for this is `group_by:`.  Calculation about data in the group are made using `aggregate:`.
+In SQL, the <code>SELECT</code> command does two very different things.  A <code>SELECT</code> with a <code>GROUP BY</code> aggregates data according to the <code>GROUP BY</code> clause and produces aggregate calculation against every calculation not in the <code>GROUP BY</code>.  In Malloy, the query operator for this is `group_by`.  Calculation about data in the group are made using `aggregate`.
 
-The second type of <code>SELECT</code> in SQL does not perform any aggregation;  All rows in the input table, unless filtered in some way, show up in the output table. In Malloy, this command is called `project:`.
+The second type of <code>SELECT</code> in SQL does not perform any aggregation;  All rows in the input table, unless filtered in some way, show up in the output table. In Malloy, this command is called `project`.
 
 ### Aggregate
 In the query below, the data will be grouped by `state` and `county`, and will produce an aggregate calculation for `airport_count` and `average_elevation`.
@@ -52,21 +51,23 @@ query: table('malloy-data.faa.airports') -> {
 ```
 
 ### Project
-`project` produces a list of fields.  For every row in the input table, there is a row in the output table.
+In Malloy, "project" is a verb, not a noun. As in "to project something", rather than "this is a project". `project` produces a list of fields.  For every row in the input table, there is a row in the output table. This is similar to a simple `SELECT` statement in SQL with no aggregations.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
 query: table('malloy-data.faa.airports') -> {
   project: code, full_name, city, county
   where: county = 'SANTA CRUZ'
+  limit: 10
 }
 ```
 
-Operator statements can be placed in any order within a query. The above query could also be written:
+Operator statements can be placed in any order within a query. `where` can come before or after `project`, and `limit` can be placed anywhere as well. The above query could also be written:
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
 query: table('malloy-data.faa.airports') -> {
+  limit: 10
   where: county = 'SANTA CRUZ'
   project: code, full_name, city, county
 }
@@ -118,9 +119,11 @@ query: table('malloy-data.faa.airports') -> {
 
 The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`, and `timestamp`.
 
-## Modeling and Reuse
+## Sources: the Basic Structure for Modeling and Reuse
 
-One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with . In the example below, we create a *source* object named `airports` and add a `dimension:` calculation for `county_and_state` and `measure:` calculation for `airport_count`.  Dimensions can be used in `group_by:`, `project:` and `where:`.  Measures can be used in `aggregate:` and `having:`.
+One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
+
+In the example below, we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
@@ -148,6 +151,27 @@ query: airports -> {
   group_by: county_and_state
   aggregate: average_elevation
 }
+```
+
+Sources can also contain named queries. These named queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
+source: airports_with_named_query is table('malloy-data.faa.airports') {
+    dimension: county_and_state is concat(county, ', ', state)
+    measure: airport_count is count()
+    measure: average_elevation is avg(elevation)
+
+    // This is a "named query":
+    query: top_county_and_state is {
+        group_by: county_and_state
+        aggregate: airport_count
+        limit:10
+    }
+}
+
+// The named query can now be referenced by name, and run without having to rewrite the logic:
+query: airports_with_named_query -> top_county_and_state
 ```
 
 ## Joins
@@ -271,7 +295,7 @@ source: airports is table('malloy-data.faa.airports') {
 
 ### Nested Queries
 
-In Malloy, queries can be [nested](../language/nesting.md) to produce subtables on each output row. When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
+In Malloy, queries can be [nested](../language/nesting.md) to produce subtables on each output row.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "isPaginationEnabled": true}
@@ -288,6 +312,8 @@ query: airports -> {
 ```
 
 Here we can see that the `by_facility` column of the output table contains a nested subtable on each row. `by_facility` contains the counts for the top 3 facility types for each state, i.e., the number of airports, heliports, and stolports in Texas, the number of airports, heliports, and seaplane bases in California, etc.
+
+When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
 
 Queries can be nested infinitely, allowing for rich, complex output structures. A query may always include another nested query, regardless of depth.
 
