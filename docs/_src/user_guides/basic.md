@@ -1,8 +1,8 @@
 # Malloy Quickstart
 
-This guide introduces the basics of querying data and building a semantic model with Malloy. By the end of this tutorial, you will understand how to use Malloy to run simple queries, build re-usable data models, and construct detailed analyses complete with visualizations and nested queries.
+This guide introduces the basics of querying data and building a semantic model with the Malloy language. By the end of this tutorial, you will understand how to use Malloy to run queries, build re-usable data models, and do analysis on your data that is nearly impossible in SQL.
 
-The easiest way to follow along is by going to the [interactive notebook version of this tutorial](https://github.dev/malloydata/patterns/blob/main/quickstart.malloynb). The link will launch a browser-based VSCode environment and ask you to install the Malloy extension. Once installed, navigate back to the [quickstart](https://github.dev/malloydata/patterns/blob/main/quickstart.malloynb), and dive in.
+The easiest way to follow along is by going to the [interactive notebook version of this tutorial](https://github.dev/malloydata/patterns/blob/main/quickstart.malloynb). The link will launch a browser-based VSCode environment and ask you to install the Malloy extension. Once installed, navigate back to the [quickstart file](https://github.dev/malloydata/patterns/blob/main/quickstart.malloynb), and dive in.
 
 If you'd like to run Malloy locally on your laptop instead, follow the setup instructions to [install the VSCode extension](../setup/extension.md) and [connect to a database](../setup/connection_instructions.md).
 
@@ -23,8 +23,8 @@ query: table('malloy-data.faa.airports') -> {
 
 Let's break down each part of this query.
 - `query:` is the opening statement that indicates we're starting to write a query
-- ` table('malloy-data.faa.airports')` defines the Source for the query. The `table()` function creates a Source from a table or view in the database. A Source is similar to a table or view in SQL, but Malloy Sources can include additional information that we'll cover later on.
-- The `->` operator begins the query. All queries take the form `Source -> { ... }`, with the query logic specified inside of the curly braces.
+- `table('malloy-data.faa.airports')` defines the source for the query. The `table()` function creates a source from a table or view in the database. A source is similar to a table or view in SQL, but Malloy sources can include additional information that we'll cover later on.
+- The `->` operator begins the query. All queries take the form `source -> { ... }`, with the query logic specified inside of the curly braces.
 - `project: ` is equivalent to `SELECT` in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
 - `limit: 10` limits the resultset of the query to the first 10 items
 
@@ -62,6 +62,16 @@ query: table('malloy-data.faa.airports') -> {
 }
 ```
 
+Operator statements can be placed in any order within a query. The above query could also be written:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
+query: table('malloy-data.faa.airports') -> {
+  where: county = 'SANTA CRUZ'
+  project: code, full_name, city, county
+}
+```
+
 ## Everything has a Name
 
 In Malloy, all output fields have names. This means that any time a query
@@ -79,7 +89,7 @@ Notice that Malloy uses the form "_name_ `is` _value_" instead of SQL's "_value_
 Having the output column name written first makes it easier for someone reading
 the code to visualize the resulting query structure.
 
-Named objects, like columns from a table, and fields defined in a Source, can be included in field lists without an `is`
+Named objects, like columns from a table, and fields defined in a source, can be included in field lists without an `is`
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
@@ -126,6 +136,17 @@ source: airports is table('malloy-data.faa.airports') {
 query: airports -> {
   group_by: county_and_state
   aggregate: airport_count
+}
+```
+
+Sources that are defined in one file can be imported into another using `import "path/to/some/file.malloy"`. For example, if the `airports` source above were defined in a file called `flights.malloy`, you could create a new file that imports it and immediately start using the `airports` source:
+
+```malloy
+import "flights.malloy"
+
+query: airports -> {
+  group_by: county_and_state
+  aggregate: average_elevation
 }
 ```
 
@@ -180,58 +201,36 @@ query: flights -> {
 
 ## Filtering
 
-When working with data, filtering is something you do in almost every query. Malloy's filtering is more powerful and expressive than that of SQL. When querying data, we first isolate the data we are interested in (filter it) and then perform aggregations and calculations on the data we've isolated (shape it). Malloy provides consistent syntax for filtering everywhere within a query.
+When working with data, filtering is something you do in almost every query. Malloy provides consistent syntax for filtering everywhere within a query. The most basic type of filter is applied using a `where:` clause, very similar to a <code>WHERE</code> clause in SQL.
 
-### Filtering the Source
-
-A filter on a data source table narrows down which data is included to be passed to the query _operation_. This translates
-to a <code>WHERE</code> clause in SQL.
-In this case, the data from the table is filtered to just airports in California.
+The following query grabs the top 5 counties in California with the highest airport count:
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
-query: table('malloy-data.faa.airports') { where: state = 'CA' } -> {
-  top: 2
-  group_by: county
-  aggregate: airport_count is count()
-}
-```
-
-### Filtering Query Stages
-
-Filters can also be applied to any query _operation_. When using a filter in this way, it only applies to
-the data for that operation alone. (More on this later, in the section on `nest:` operations in queries.)
-
-```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
-query: table('malloy-data.faa.airports') -> {
-  where: state ? 'AL' | 'KY'
-  top: 5
-  group_by: state
-  aggregate:
-    airports  is count() { where: fac_type = 'AIRPORT' }
-    heliports is count() { where: fac_type = 'HELIPORT' }
-    total     is count()
-}
-```
-
-A note on filtering the source vs filtering in query stages: The below queries are both valid and produce identical SQL.
-
-```malloy
-query: table('malloy-data.faa.airports') { where: state = 'CA' } -> {
-  top: 2
-  group_by: county
-  aggregate: airport_count is count()
-}
-
 query: table('malloy-data.faa.airports') -> {
   where: state = 'CA'
-  top: 2
+  top: 5
   group_by: county
   aggregate: airport_count is count()
 }
 ```
 
+Filters can also be applied to sources:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true}
+source: airports_in_california is table('malloy-data.faa.airports') {
+  where: state = 'CA'
+}
+
+query: airports_in_california -> {
+  top: 5
+  group_by: county
+  aggregate: airport_count is count()
+}
+```
+
+Any query run on the `airports_in_california` source will run against the `airports` table, and always include the filter in `state = 'CA'`.
 
 ### Filtering Measures
 
@@ -245,6 +244,88 @@ query: table('malloy-data.faa.airports') -> {
     airports is count() { where: fac_type = 'AIRPORT' }
     heliports is count() { where: fac_type = 'HELIPORT' }
     total is count()
+}
+```
+
+In SQL, this same calculation is often done using <code>CASE</code> statements inside of the aggregates, which is verbose and difficult to read. A query like the above would look like:
+
+```sql
+SELECT
+   state
+   , SUM(CASE WHEN fac_type = 'AIRPORT' THEN 1 ELSE 0 END) AS airports
+   , SUM(CASE WHEN fac_type = 'HELIPORT' THEN 1 ELSE 0 END) AS heliports
+   , COUNT(*) AS total
+FROM `malloy-data.faa.airports`
+GROUP BY state
+```
+
+## Nested Queries
+
+The next several examples will use this simple source definition:
+
+```malloy
+source: airports is table('malloy-data.faa.airports') {
+  measure: airport_count is count()
+};
+```
+
+### Nested Queries
+
+In Malloy, queries can be [nested](../language/nesting.md) to produce subtables on each output row. When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "isPaginationEnabled": true}
+
+query: airports -> {
+  group_by: state
+  aggregate: airport_count
+  nest: by_facility is {
+    group_by: fac_type
+    aggregate: airport_count
+    top: 3
+  }
+}
+```
+
+Here we can see that the `by_facility` column of the output table contains a nested subtable on each row. `by_facility` contains the counts for the top 3 facility types for each state, i.e., the number of airports, heliports, and stolports in Texas, the number of airports, heliports, and seaplane bases in California, etc.
+
+Queries can be nested infinitely, allowing for rich, complex output structures. A query may always include another nested query, regardless of depth.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "size": "large"}
+query: airports -> {
+  group_by: state
+  aggregate: airport_count
+  nest: top_5_counties is {
+    top: 5
+    group_by: county
+    aggregate: airport_count
+    nest: by_facility is {
+      group_by: fac_type
+      aggregate: airport_count
+    }
+  }
+}
+```
+
+### Filtering Nested Queries
+
+Filters can be isolated to any level of nesting. In the following example, we limit the `major_facilities` query to only airports where `major` is `'Y'`. This particular filter applies _only_ to `major_facilities`, and not to other parts of the outer query.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "size": "large"}
+query: airports -> {
+  where: state = 'CA'
+  group_by: county
+  aggregate: airport_count
+  nest: major_facilities is {
+    where: major = 'Y'
+    group_by: name is concat(code, ' (', full_name, ')')
+  }
+  nest: by_facility is {
+    group_by: fac_type
+    aggregate: airport_count
+  }
 }
 ```
 
@@ -331,75 +412,6 @@ query: table('malloy-data.faa.flights') { where: dep_time > @2003 } -> {
 }
 ```
 
-## Nested Queries
-
-The next several examples will use this simple source definition:
-
-```malloy
-source: airports is table('malloy-data.faa.airports') {
-  measure: airport_count is count()
-};
-```
-
-### Aggregating Subqueries
-
-In Malloy, queries can be [nested](../language/nesting.md) to produce subtables on each output row. Such nested queries are called _aggregating subqueries_, or simply "nested queries." When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
-
-```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy"}
-
-query: airports -> {
-  group_by: state
-  aggregate: airport_count
-  nest: by_facility is {
-    group_by: fac_type
-    aggregate: airport_count
-  }
-}
-```
-
-Here we can see that the `by_facility` column of the output table contains nested subtables on each row. When interpreting these inner tables, all of the dimensional values from outer rows still apply to each of the inner rows.
-
-Queries can be nested infinitely, allowing for rich, complex output structures. A query may always include another nested query, regardless of depth.
-
-```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "size": "large"}
-query: airports -> {
-  group_by: state
-  aggregate: airport_count
-  nest: top_5_counties is {
-    top: 5
-    group_by: county
-    aggregate: airport_count
-    nest: by_facility is {
-      group_by: fac_type
-      aggregate: airport_count
-    }
-  }
-}
-```
-
-### Filtering Nested Queries
-
-Filters can be isolated to any level of nesting. In the following example, we limit the `major_facilities` query to only airports where `major` is `'Y'`. This particular filter applies _only_ to `major_facilities`, and not to other parts of the outer query.
-
-```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "size": "large"}
-query: airports -> {
-  where: state = 'CA'
-  group_by: county
-  aggregate: airport_count
-  nest: major_facilities is {
-    where: major = 'Y'
-    group_by: name is concat(code, ' (', full_name, ')')
-  }
-  nest: by_facility is {
-    group_by: fac_type
-    aggregate: airport_count
-  }
-}
-```
-
 ## Pipelines and Multi-stage Queries
 
 The output from one stage of a query can be passed into another stage using `->`. For example, we'll start with this query which outputs, for California and New York, the total number of airports, as well as the number of airports in each county.
@@ -442,12 +454,9 @@ query: airports -> {
 
 _**NOTE:**: to pipeline a named query, the syntax to reference that named query is `-> query_name`. An example of this can be found in the [Query Doc](../language/query.md#multi-stage-pipelines)._
 
-## Aggregate Calculations
+## Aggregate Locality
 
-As in SQL, aggregate functions `sum`, `count`, and `avg` are available, and their use in
-an expression identifies the corresponding field as a [measure](../language/fields.md#measures).
-
-Aggregates may be computed with respect to any joined source, allowing for a wider variety of measurements to be calculated than is possible in SQL. See the [Aggregate Locality](../language/aggregates.md#aggregate-locality) section for more information.
+ When computing `sum`, `avg`, and `count` on fields in joined sources with one-to-many relationships, Malloy will automatically handle the duplication of rows that occurs in the join, and compute accurate aggregations on the fanned-out table. See the [Aggregate Locality](../language/aggregates.md#aggregate-locality) section for more information.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy"}
@@ -508,6 +517,15 @@ query: table('malloy-data.faa.airports') -> {
   aggregate: airport_count is count()
 }
 ```
+
+## Next Steps
+
+This was a whirlwind tour of the syntax and features of Malloy. To continue on your Malloy journey:
+
+- Explore sample analyses and data models built in Malloy in our [Patterns Github repo](https://github.com/malloydata/patterns).
+- Learn how to [connect Malloy to your own database](../setup/connection_instructions.html).
+- Take a look at our [guide for translating SQL to Malloy](../language/sql_to_malloy.html).
+- Join the [Malloy community Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1t32mufpy-THwP1o1ADJVkd3o2L2zaZw)!
 
 <!-- ## Joins are between primary and foreign keys.
 
