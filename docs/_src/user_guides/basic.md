@@ -2,7 +2,7 @@
 
 This guide introduces the basics of querying data and building a semantic model with the Malloy language. By the end of this tutorial, you will understand how to use Malloy to run queries, build re-usable data models, and do analysis on your data that is nearly impossible in SQL.
 
-The easiest way to follow along is by going to the [interactive notebook version of this tutorial](https://github.dev/malloydata/quickstart/blob/main/README.md). The link will launch a browser-based VSCode environment and ask you to install the Malloy extension. Once installed, navigate back to the [quickstart file](https://github.dev/malloydata/quickstart/blob/main/quickstart.malloynb), and dive in.
+The easiest way to follow along is by going to the [interactive notebook version of this tutorial](https://github.dev/malloydata/quickstart/blob/main/README.md). The link will launch a browser-based VSCode environment and ask you to install the Malloy extension. Once installed, navigate back to the [quickstart notebook file](https://github.dev/malloydata/quickstart/blob/main/quickstart.malloynb), and dive in.
 
 If you'd like to run Malloy locally on your laptop instead, follow the setup instructions to [install the VSCode extension](../setup/extension.md) and [connect to a database](../setup/connection_instructions.md).
 
