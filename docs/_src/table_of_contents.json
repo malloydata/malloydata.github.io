@@ -31,19 +31,15 @@
         {
           "title": "Connecting a Database",
           "link": "/setup/connection_instructions.md"
-        },
-        {
-          "title": "SQL to Malloy",
-          "link": "/language/sql_to_malloy.md"
         }
-      ]
+       ]
     },
     {
       "title": "User Guides",
       "items": [
         {
-          "title": "Malloy By Example",
-          "link": "/user_guides/malloy_by_example.md"
+          "title": "SQL to Malloy",
+          "link": "/language/sql_to_malloy.md"
         },
         {
           "title": "Common Patterns",
@@ -79,10 +75,6 @@
     {
       "title": "Language Reference",
       "items": [
-        {
-          "title": "SQL to Malloy",
-          "link": "/language/sql_to_malloy.md"
-        },
         {
           "title": "Models",
           "link": "/language/statement.md"
