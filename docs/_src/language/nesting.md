@@ -62,3 +62,36 @@ query: airports -> {
   }
 }
 ```
+
+## Un-nesting in a pipeline flattens the table
+
+Queries can be chained together (pipelined), the output of one becoming the input of the next one, by simply adding another `->` operator and a new query definition. When fields within a nested subtable are accessed using dot-notation, the resulting value is a standard, non-nested, field.
+
+```malloy
+--! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+
+source: airports is table('malloy-data.faa.airports') {
+  measure: airport_count is count()
+}
+
+query: airports -> {
+  where: fac_type = 'HELIPORT'
+  group_by: state
+  aggregate: airport_count
+  nest: top_3_county is {
+    limit: 3
+    group_by: county
+    aggregate: airport_count
+  }
+}
+-> {
+  project:
+    state
+    top_3_county.county
+    airports_in_state is airport_count
+    airports_in_county is top_3_county.airport_count
+    percent_of_state is top_3_county.airport_count/airport_count
+}
+```
+
+In this example, `top_3_county` is a nested subtable in the output of the first part of the pipeline. In the second part of the pipeline, `airports_in_county` is a scalar number, created by accessing the `airport_count` field from the `top_3_county` subtable.

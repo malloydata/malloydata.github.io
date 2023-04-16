@@ -18,8 +18,12 @@
       ]
     },
     {
-      "title": "Setting up Malloy",
+      "title": "Getting Started",
       "items": [
+        {
+          "title": "Quickstart",
+          "link": "/user_guides/basic.md"
+        },
         {
           "title": "Installing the Malloy Extension",
           "link": "/setup/extension.md"
@@ -27,16 +31,16 @@
         {
           "title": "Connecting a Database",
           "link": "/setup/connection_instructions.md"
+        },
+        {
+          "title": "SQL to Malloy",
+          "link": "/language/sql_to_malloy.md"
         }
       ]
     },
     {
       "title": "User Guides",
       "items": [
-        {
-          "title": "Quickstart",
-          "link": "/user_guides/basic.md"
-        },
         {
           "title": "Malloy By Example",
           "link": "/user_guides/malloy_by_example.md"

@@ -1,10 +1,12 @@
 # Sources
 
-Malloy separates a query from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table. These computations can consist of measures (aggregate functions), dimensions (scalar calculations) and query definitions;  joins are relationships between sources.
+Malloy separates a query from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table. These computations can consist of measures (aggregate functions), dimensions (scalar calculations) and query definitions. Joins are relationships between sources.
 
-## Sources
+* A `measure:` is an aggregate calculation which can be used in the `aggregate:` clause of a query
+* A `dimension:` is a scalar calculation which that can be used in `group_by:` or `project:` clauses of a query
+* A `query:` is a named query that can be used in the `nest:` clause of a query, or run with the `->` operator, e.g., `source_name -> named_query`
 
-A source can be any of the following:
+A source can be defined with any of the following:
 
 * A SQL table or view
 * Another Malloy source
@@ -155,7 +157,7 @@ query: limited_users -> {
 
 ## Source Refinement
 
-When you add fields to or modify a source we call this refinements. This can  include adding filters, specifying a `primary key`, adding fields and
+When you add fields to or modify a source we call this refinement. This can include adding filters, specifying a `primary key`, adding fields and
 joins, renaming fields, or limiting which fields are
 available.
 

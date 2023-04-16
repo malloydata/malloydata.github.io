@@ -123,7 +123,7 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 
 One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
 
-In the example below, we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
+In the example below, we create a *source* object named `airports`, add a `dimension` calculation for `county_and_state`, and add a `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
@@ -142,6 +142,8 @@ query: airports -> {
 }
 ```
 
+### Imports
+
 Sources that are defined in one file can be imported into another using `import "path/to/some/file.malloy"`. For example, if the `airports` source above were defined in a file called `flights.malloy`, you could create a new file that imports it and immediately start using the `airports` source:
 
 ```malloy
@@ -152,6 +154,8 @@ query: airports -> {
   aggregate: average_elevation
 }
 ```
+
+### Named Queries
 
 Sources can also contain named queries. These named queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.
 
@@ -173,6 +177,8 @@ source: airports_with_named_query is table('malloy-data.faa.airports') {
 // The named query can now be referenced by name, and run without having to rewrite the logic:
 query: airports_with_named_query -> top_county_and_state
 ```
+
+Note that the source for the named query is implied, so the query operator (`->`) and source (`airports_with_named_query`) are not needed to define the named query.
 
 ## Joins
 
