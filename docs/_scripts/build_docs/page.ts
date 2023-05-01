@@ -136,7 +136,8 @@ export function renderFooter(
   const thisIndex = items.findIndex(
     (item) => item.link.replace(/\.md$/, ".html") === docPath
   );
-  const next = items[thisIndex + 1];
+
+  const next = thisIndex > -1 ? items[thisIndex + 1] : null;
   const nextLink = next && next.link.replace(/\.md$/, ".html");
   const nextRelative =
     next &&

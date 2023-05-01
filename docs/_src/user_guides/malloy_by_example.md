@@ -636,18 +636,18 @@ query: airport_facts -> flights_by_origin
 
 ## Other Interesting Language Features:
 
-### SQL BLocks ([SQL Block Documentation](language/sql_block.html))
+### SQL BLocks ([SQL Block Documentation](../language/sql_blocks.md))
 
-### Named Queries from SQL Blocks ([SQL Block Documentation](language/sql_block.html))
+### Embedding Malloy queries in SQL ([SQL Block Documentation](../language/sql_blocks.md#embedding-malloy-queries-in-an-sql-block-turducken-))
 
-### Case statement improved with  `pick` ([Expression Documentation](language/expressions.html#pick-expressions))
+### Case statement improved with  `pick` ([Expression Documentation](../language/expressions.md#pick-expressions))
 
 ### Group by on Joined Subtrees
 
-### Date/Timestamp filters and Timezones ([Time Documentation](expressions.html#time-ranges))
+### Date/Timestamp filters and Timezones ([Time Documentation](../language/expressions.html#time-ranges))
 
-### Nested data and Symmetric aggregates  ([Aggregates Documentation](language/aggregates.html))
+### Nested data and Symmetric aggregates  ([Aggregates Documentation](../language/aggregates.html))
 
-### Import ([Import Documentation](language/imports.html))
+### Import ([Import Documentation](../language/imports.md))
 
-### Data styles and rendering ([Rendering Documentation](visualizations/dashboards.html))
+### Data styles and rendering ([Rendering Documentation](../visualizations/dashboards.md))
