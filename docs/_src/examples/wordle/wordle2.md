@@ -97,3 +97,7 @@ source: wordle is from(-> words_and_position) {
 --! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "/inline/w3.malloy", "showAs":"html"}
 query: wordle -> { aggregate: word_count }
 ```
+
+## Next Steps
+
+Next, [we create a function to help us pick the next word.](./wordle3.md)

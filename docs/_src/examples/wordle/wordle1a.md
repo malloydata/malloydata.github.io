@@ -1,4 +1,4 @@
-#  Letters and Positioning.
+#  Letters and Positioning
 
 The query below produces a table with the numbers 1 to 5
 
@@ -47,3 +47,7 @@ query: words_and_position is from(words -> five_letter_words) {
 // run it
 query: -> words_and_position
 ```
+
+## Next Steps
+
+Next, [we look at letter frequency and the most common 5-letter words](./wordle2.md).

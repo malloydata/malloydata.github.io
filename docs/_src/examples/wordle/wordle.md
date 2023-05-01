@@ -1,8 +1,10 @@
 # A Perfect Solver for Wordle using Data
 
-[Wordle](https://www.powerlanguage.co.uk/wordle/) is an interesting, challenging and fun word game.  If you aren't familiar with it, I suggest that you play it before reading this article
+[Wordle](https://www.nytimes.com/games/wordle/index.html) is an interesting, challenging and fun word game.  If you aren't familiar with it, I suggest that you play it before reading this article.
 
-## Step 1 - Raw Materials
+In this tutorial, we'll show you how to build a function in Malloy that generates the best guesses for a Wordle puzzle. Check out [this page](./wordle214.md) for an example of the solver in action.
+
+## Creating a List of Words
 The first thing we need is a word list.  It turns out that on most unix systems there is a word list that can be
 found at `/usr/share/dict/words`.  The file has a single word per line, so we've just uploaded the entire files (as a CSV)
 into BigQuery. If you'd like to use DuckDB (which is natively supported) instead, follow [these steps](wordle_duckdb.md).
@@ -90,3 +92,7 @@ query: words -> five_letter_words -> {
   project: word
 }
 ```
+
+## Next Steps
+
+Next up, [we create a table to represent each word, its letters, and their positions.](./wordle1a.md)

@@ -9,11 +9,11 @@
         },
         {
           "title": "Key Features",
-          "link": "about/features.md"
+          "link": "/about/features.md"
         },
         {
           "title": "The Tao of Malloy",
-          "link": "about/tao.md"
+          "link": "/about/tao.md"
         }
       ]
     },
@@ -170,87 +170,28 @@
       "title": "Examples",
       "items": [
         {
-          "title": "NTSB Flight Database",
-          "items": [
-            {
-              "title": "FAA Dashboards",
-              "link": "/examples/faa/bigquery.md"
-            },
-            {
-              "title": "Connect with Postgres",
-              "link": "/examples/faa/postgres.md"
-            }
-          ]
-        },
-        {
-          "title": "eCommerce Analysis",
-          "link": "/examples/ecommerce.md"
+          "title": "Iowa Liquor Sales",
+          "link": "/examples/iowa/iowa.md"
         },
         {
           "title": "The Name Game",
           "link": "/examples/names.md"
         },
         {
+          "title": "eCommerce Analysis",
+          "link": "/examples/ecommerce.md"
+        },
+        {
+          "title": "NTSB Flight Database",
+          "link": "/examples/faa/bigquery.md"
+        },
+        {
           "title": "Google Analytics GA360",
           "link": "/examples/ga_sessions.md"
         },
         {
-          "title": "Walkthrough: Iowa Liquor",
-          "items": [
-            {
-              "title": "About the Data Set",
-              "link": "/examples/iowa/iowa.md"
-            },
-            {
-              "title": "The Malloy Data Model",
-              "link": "/examples/iowa/source.md"
-            },
-            {
-              "title": "Basic Calculations",
-              "link": "/examples/iowa/step2.md"
-            },
-            {
-              "title": "Analysis: Products and Brands",
-              "link": "/examples/iowa/step2a.md"
-            },
-            {
-              "title": "Bucketing and Mapping",
-              "link": "/examples/iowa/step3.md"
-            },
-            {
-              "title": "Dashboards",
-              "link": "/examples/iowa/step6.md"
-            }
-          ]
-        },
-        {
-          "title": "Walkthrough: Wordle Solver",
-          "items": [
-            {
-              "title": "Just Words",
-              "link": "/examples/wordle/wordle.md"
-            },
-            {
-              "title": "Letters and Positioning",
-              "link": "/examples/wordle/wordle1a.md"
-            },
-            {
-              "title": "Letter Frequency",
-              "link": "/examples/wordle/wordle2.md"
-            },
-            {
-              "title": "Scoring Words",
-              "link": "/examples/wordle/wordle3.md"
-            },
-            {
-              "title": "Final Model",
-              "link": "/examples/wordle/wordle4.md"
-            },
-            {
-              "title": "Solving Puzzles",
-              "link": "/examples/wordle/wordle5.md"
-            }
-          ]
+          "title": "Wordle Solver",
+          "link": "/examples/wordle/wordle.md"
         }
       ]
     }

@@ -51,3 +51,6 @@ source: wordle is from(-> words_and_position) {
   }
 }
 ```
+
+# Next Steps
+Next, [let's solve some Wordles!](./wordle5.md)

@@ -154,3 +154,6 @@ query: wordle -> find_words {
     word !~ r'[SLA]'
 }
 ```
+
+## Next Steps
+Next, [take a look at our final data model.](./wordle4.md)

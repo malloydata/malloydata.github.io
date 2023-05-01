@@ -2,6 +2,8 @@
 
 _The follow examples all run against the model at the bottom of this page OR you can find the source code [here](https://github.com/malloydata/malloy-samples/blob/main/bigquery/faa/flights.malloy)._
 
+_The examples here assume you are connected to BigQuery. If you would like to use Postgres instead, instructions for connecting can be found [here](./postgres.md)._
+
 ## Airport Dashboard
 Where can you fly from SJC? For each destination; Which carriers?  How long have they been flying there?
 Are they on time?
