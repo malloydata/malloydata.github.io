@@ -196,32 +196,7 @@
         },
         {
           "title": "Walkthrough: Iowa Liquor",
-          "items": [
-            {
-              "title": "About the Data Set",
-              "link": "/examples/iowa/iowa.md"
-            },
-            {
-              "title": "The Malloy Data Model",
-              "link": "/examples/iowa/source.md"
-            },
-            {
-              "title": "Basic Calculations",
-              "link": "/examples/iowa/step2.md"
-            },
-            {
-              "title": "Analysis: Products and Brands",
-              "link": "/examples/iowa/step2a.md"
-            },
-            {
-              "title": "Bucketing and Mapping",
-              "link": "/examples/iowa/step3.md"
-            },
-            {
-              "title": "Dashboards",
-              "link": "/examples/iowa/step6.md"
-            }
-          ]
+          "link": "/examples/iowa/iowa.md"
         },
         {
           "title": "Walkthrough: Wordle Solver",
