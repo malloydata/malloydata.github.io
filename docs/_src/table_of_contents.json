@@ -96,6 +96,10 @@
           "link": "/language/query.md"
         },
         {
+          "title": "Datatypes",
+          "link": "/language/datatypes.md"
+        },
+        {
           "title": "Fields",
           "link": "/language/fields.md"
         },
