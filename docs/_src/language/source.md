@@ -261,7 +261,7 @@ The list of fields available in a source  can be limited. This can be done eithe
 
 ```malloy
 source: airports is table('malloy-data.faa.airports') {
-  accept: [ id, name, code, city, state, elevation ]
+  accept: id, name, code, city, state, elevation
 }
 ```
 
@@ -269,6 +269,6 @@ source: airports is table('malloy-data.faa.airports') {
 
 ```malloy
 source: airports is table('malloy-data.faa.airports') {
-  except: [ c_ldg_rts, aero_cht, cntl_twr ]
+  except: c_ldg_rts, aero_cht, cntl_twr
 }
 ```
