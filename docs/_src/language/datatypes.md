@@ -72,10 +72,12 @@ A date represents combination of year, month, day into a single data item.
 Date literals are specified in Malloy with the `@` character. A literal can specify a date, a week, a month, a quarter or a year.
 
 * Date: `@2001-02-03`
-* Week: `@2001-WK2`
+* Week: `@2001-02-04-WK` ( the sunday week containing 2001-02-04 )
+   * `@2001-02-03-WK` will generate an error because that day does not start a week. The week containing 2001-02-03 that would be `@2001-02-03.week`
 * Month: `@2001-02`
 * Quarter: `@2001-Q2`
 * Year: `@2001`
+
 
 ## Unsupported
 
