@@ -90,3 +90,63 @@ Columns in sources which Malloy does not have a datatype for are considered "uns
 ## Unknown
 
 When parsing expressions, an error in an expression may result in an expression where the compiler does not know the resulting type. Error messages containing the phrase `type 'unknown'` indicate that there is an eariler error which has produced this condition.
+
+
+## Intermediate Types
+
+The following types are not assignable to fields, and are
+therefore considered _intermediate types_, in that they are
+primarily used to represent part of a computation that
+yields a regular scalar type, often `boolean`.
+
+### Regular Expressions
+
+Literal regular expressions are enclosed in single quotation
+marks `'` and preceded by either `/` or `r`, e.g. `/'.*'` or `r'.*'`. Both syntaxes are semantically equivalent.
+
+In the future, the literal regular expressions will likely
+be simply slash-enclosed, e.g <code>/.*/</code>.
+
+Values of type `string` may be compared against regular
+expressions using either the [apply operator](apply.md),`name: r'c.*'` or the like operator, `name ~ r'c.*'`.
+
+### Ranges
+
+There are three types of ranges today: `string` ranges, `date` ranges, and `timestamp` ranges. The most basic ranges
+are of the form `start to end` and represent the inclusive range between `start` and `end`, e.g. `10 to 20` or `@2004-01 to @2005-05`.
+
+Ranges may be used in conjunction with the [apply operator](apply.md) to test whether a value falls within a given range.
+
+In the future, other ranges may be allowed, such as `string` ranges.
+
+### Alternations and Partials
+
+_Partials_ represent a "part of" a comparison.
+Specifically, a partial is a comparison missing its
+left-hand side, and represents the condition of the
+comparison yielding `true` if a given value were to be
+filled in for that missing left-hand side. For example, `> 10` is a partial that represents the condition "is greater
+than ten." Likewise, `!= 'CA'` is a partial that represents the condition of not being equal to `'CA'`.
+
+_Alternations_ are combinations of partials representing
+either the logical union ("or") or conjunction ("and") of
+their conditions. Alternations are represented using the
+union alternation operator `|` and the conjunction
+alternation operator `&`.
+
+For example, `= 'CA' | = 'NY'` represents the condition of being equal to 'CA' or _alternatively_ being equal to 'NY'. On the other hand, `!= 'CA' & != 'NY'` represents the condition of being not equal to 'CA' _as well as_ being not equal to 'NY'.
+
+Scalar values, regular expressions, and
+ranges may also be used in alternations, in which case the
+condition is assumed to be that of equality, matching, and
+inclusion respectively.
+
+For example, `'CA' | r'N.*'` represents the condition of being equal to 'CA' or starting with 'N', and `10 to 20 | 20 to 30` represents the condition of being _either_ between 10 and 20 _or_ 20 and 30.
+
+Alternations and partials may be used in conjunction with the [apply operator](apply.md) to test whether a value meets the given condition.
+
+## Nullability
+
+Today, all Malloy types include the value `null`, however
+in the future Malloy may have a concept of nullable vs.
+non-nullable types.
