@@ -20,18 +20,22 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Time truncation](#time-truncation) | `event_time.quarter` <br/> `now.year` |
 | [Time extraction](#time-extraction)<br/>Extract one part of a time value | `day_of_year(event_time)` <br/> `minute(now)` |
 | [Interval extraction](#interval-extraction)<br/>Extract the interval between two times  | `days(created_at to shipped_at)` |
-| [Time literals](time-ranges.md#literals) | `@2003-04-19`<br/>`@2020-Q4`<br/>`@2021-10-24 10:00:00`
+| [Time literals](#time-literals) | `@2003-04-19`<br/>`@2020-Q4`<br/>`@2021-10-24 10:00:00`
 | [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`!= null`<br/>`~ r'C.*'` |
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
-| [Application](#application)<br/>Apply conditions to values | `state: 'CA'`<br/> `weight: > 100 & < 1000` |
+| [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
 
 ## Identifiers
 
-<!-- * `distance` -->
-<!-- * `origin.city` -->
 <!-- * `` `year` `` -->
 
-Fields may be referenced by name, and fields in joins or nested structures can be described using `.`s.
+Fields may be referenced by name, and fields in joins or nested structures can be accessed using period as in `item.item_property`
+
+* If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword.
+
+```
+  dimension: year_plus_one is `year` + 1
+```
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
@@ -185,31 +189,15 @@ Malloy has built in constructs to simplify many time-related operations, which a
 
 <a id="numeric-ranges"></a>
 
-Ranges between a start and end time can be constructed with the `to` operator, e.g. `@2003 to @2006`. This kind of range is also possible for numbers, e.g. `10 to 20`.
+A time value can be compared to a range. If you [apply](#apply-operator) a time to a range, (for example, `event_time ? @2003 to @2004`) that will check if the value is within the range. You can also use `=` to see if a time is with a range, or `<` to test for before the range it will be `<`, or `>` for after the range.
 
-Time ranges can also be constructed with a start time and duration using the `for` operator, e.g. `@2003 for 6 years` or `now for 20 minutes`.
-
-A time value can be compared to a range. If the time is within the range it will be `=`, before the range it will be `<`, and after the range it will be `>`. If you [apply](#apply-operator) a time to a range, (for example, `event_time ? @2003 to @2004`) that will also check if the value is within the range.
+See [Time Ranges](time-ranges.md) for more details.
 
 ### Time Truncation
 
-To truncate a time value to a given timeframe, use the `.` operator followed by the timeframe, e.g. `event_time.quarter` or `now.year`.
+To truncate a time value to a given timeframe, use the `.` operator followed by the timeframe, e.g. `event_time.quarter` or `now.year`. See [Timestamp Truncation](timestamp-opertations.md#truncation) for details.
 
-By way of example, if the value of `time` is `@2021-08-06 00:36`, then the below truncations will produce the results on the right:
-
-
-truncation | result
- ---- | ----
-`time.minute` | 2021-08-06 00:36
-`time.hour`   | 2021-08-06 00:00
-`time.day`    | 2021-08-06
-`time.week`   | WK2021-08-01 _(the week containing the 10th)_
-`time.month`  | 2021-08
-`time.quarter` | Q2-2021
-`time.year`   | 2021
-
-A truncation made this way (unlike a truncation make in SQL with
-`TIMESTAMP_TRUNC()`) can also function as a range. The range begins
+A truncation made this way can also function as a range. The range begins
 at the moment of truncation and the duration is the timeframe unit
 used to specify the truncation, so for example `time.year`
 would be a range covering the entire year which contains `time`.
@@ -218,67 +206,24 @@ This is extremely useful with the [apply operator](#apply-operator), `?`. To see
 
 ### Time Extraction
 
-Another very common grouping for time related data is by particular components, and this extraction of a single component as an integer. In Malloy this gesture looks like a function call.
-
-The "Result" column uses a value of `@2021-08-06 00:55:05` for `expr`.
-
-expression | meaning | result
----- | ---- | ----
-`day_of_year(expr)` | day of year, 1-365 | 218
-`day(expr)` | day of month 1-31 | 5
-`day_of_week(expr)` | day of week 1-7 | 6 _(Note: 1 represents Sunday)_
-`week(expr)` | week in year, 1-53 | 31
-`quarter(expr)` | quarter in year 1-4 | 3
-`hour(expr)` | hour of day 0-23 | 0
-`minute(expr)` | minute of hour 0-59 | 55
-`second(expr)` | second of minute 0-59 | 5
+Another very common grouping for time related data is by particular components, and this extraction of a single component as an integer. In Malloy this gesture looks like `hour(event_time)` or `minute(event_time)`. See [Timestamp extraction](timestamp-operations.md#extraction) for more details.
 
 ### Interval extraction
 
 To measure the difference between two times, pass a range expression to
-one of the below extraction functions. This is Malloy's take on SQL's <code>DATE_DIFF()</code> and <code>TIMESTAMP_DIFF()</code> :
+one of the extraction functions.
 
-expression | meaning
----- | ----
-`seconds(t1 to t2)` | Number of seconds from `t1` until `t2`
-`minutes(t1 to t2)` | ... minutes ...
-`hours(t1 to t2)` | ... hours ...
-`days(t1 to t2)` | ... days ...
-`weeks(t1 to t2)` | ... weeks ...
-`months(t1 to t2)` | ... months ...
-`quarters(t1 to t2)` | ... quarters ...
-`years(t1 to t2)` | ... years ...
-
-These will return a negative number if `t1` is later than `t2`.
-
-For `seconds`, `minutes`, and `hours`, the returned values is the number of complete seconds/minutes/hours beween the two values. For example, `hours(@2022-10-03 10:30:00 to @2022-10-03 11:29:00)` would return 0, because the range spans only 59 minutes, despite crossing over the hour boundry from 10 to 11. Likewise, `minutes(now to now + 59 seconds)` will always return 0, regardless of what time it is.
-
-For `days`, `weeks`, `months`, `quarters`, and `years`, the returned value is the number of day/week/month/quarter/year boundaries crossed between the two dates. For example, `days(@2022-10-03 11:59 to @2022-10-04 00:00)` is 1, because the end time is on the day after the start time, even though only one minute passed between them. So `weeks(now to now + 6 days)` will return either 0 or 1 depending on the day of the week.
+For more details see [Interval Measurement](time-ranges.md#interval-measurement)
 
 ### Time Literals
 
-<!-- * `@2003-04-19` -->
-<!-- * `@2020-Q4` -->
-<!-- * `@2021-10-24 10:00:00` -->
-<!-- * `now` -->
-
 Time literals are specified in Malloy with the `@` character. A literal
 specified this way has an implied duration which means a literal
-can act like a range.
+can act like a range. See [Timestamp literals](datatypes.md#timestamp-literals) and [Date literals](datatypes.md#date-literals) for more details.
 
-For example the year `@2003` can be used with `event_time: @2003` to test if the
-event happened in the year 2003.
+In addition the `@` based literal syntax, Malloy also has one built in time constant.
 
-Literal pattern | Duration | Begins
----- | ---- | ----
-`@DDDD` | One year | The first day of that year
-`@DDDD-QN` | Three months | The first day of that quarter
-`@DDDD-MM` | One month | The first day of that month
-`@WKDDDD-MM-SS` | Seven days | Sunday of the week containing that day
-`@DDDD-MM-DD` | One day | Midnight on the specified date
-`@DDDD-MM-DD HH:MM` | One Minute | The specified time
-`@DDDD-MM-DD HH:MM:SS` | One Second | the specified time
-`now` | _n/a_ | The current time, without implied duration
+* `now` -- The current time
 
 ## Special Filter Expression Syntax
 

@@ -1,10 +1,10 @@
  # Timezones in Malloy
 
- Without any timezone specification, all timestamps in Malloy are condered to be in the UTC ( zero offset ) locale.
+A timestamp represents a moment in time which does not change, however we often describe the moments in time relative to a timezone.
 
- A source or a query can specify a timezone wiht a locale name. When that is specified, a number of things change.
+ Without any timezone specification, all timestamps in Malloy are described as being in the "UTC" or zero-offset timezone.
 
- The timezomes statement can appear in a source, or in any query definition, it looks like
+ A source or a query can specify a timezone with a locale name. When that is specified, the Malloy description of a timestamp which you would access through [truncation](expressions.md#time-truncation) or [extraction](expressions.md#time-extraction), chnages.
 
 ```
    timezone: 'America/Mexico_City'

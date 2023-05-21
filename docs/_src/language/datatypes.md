@@ -46,6 +46,8 @@ The expression `mightBeNull > 0` ...
 
 A timestamp represents an instant in time.
 
+Malloy's approach to timezone related computations relating to timestamp data is explained in [Timezones](timezones.md)
+
 ### Timestamp literals
 
 Timestamp literals are specified in Malloy with the `@` character. Seconds, and subsecond resolution maybe be specified and an optional locale may also be added.
@@ -147,6 +149,4 @@ Alternations and partials may be used in conjunction with the [apply operator](a
 
 ## Nullability
 
-Today, all Malloy types include the value `null`, however
-in the future Malloy may have a concept of nullable vs.
-non-nullable types.
+Today, all Malloy types include the value `null`.
