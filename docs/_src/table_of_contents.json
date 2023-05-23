@@ -92,6 +92,10 @@
           "link": "/language/query.md"
         },
         {
+          "title": "Datatypes",
+          "link": "/language/datatypes.md"
+        },
+        {
           "title": "Fields",
           "link": "/language/fields.md"
         },
@@ -126,10 +130,6 @@
         {
           "title": "Imports",
           "link": "/language/imports.md"
-        },
-        {
-          "title": "Types",
-          "link": "/language/types.md"
         },
         {
           "title": "Change Log",
