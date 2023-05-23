@@ -1,5 +1,9 @@
  # Timezones in Malloy
 
+> NOTE: While full timezone support exists in the calculation component of
+> Malloy, the support in the rendering components is not yet present.  It is
+> best to avoid the use of the `timezone:` keyword at this time.
+
 A timestamp represents a moment in time which does not change, however we often describe the moments in time relative to a timezone.
 
  Without any timezone specification, all timestamps in Malloy are described as being in the "UTC" or zero-offset timezone.
