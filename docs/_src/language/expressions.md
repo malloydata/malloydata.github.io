@@ -195,7 +195,7 @@ See [Time Ranges](time-ranges.md) for more details.
 
 ### Time Truncation
 
-To truncate a time value to a given timeframe, use the `.` operator followed by the timeframe, e.g. `event_time.quarter` or `now.year`. See [Timestamp Truncation](timestamp-opertations.md#truncation) for details.
+To truncate a time value to a given timeframe, use the `.` operator followed by the timeframe, e.g. `event_time.quarter` or `now.year`. See [Timestamp Truncation](timestamp-operations.md#truncation) for details.
 
 A truncation made this way can also function as a range. The range begins
 at the moment of truncation and the duration is the timeframe unit
