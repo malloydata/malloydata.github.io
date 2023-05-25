@@ -24,6 +24,8 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`!= null`<br/>`~ r'C.*'` |
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
 | [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
+| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != NULL`<br/> `eventStatus ?? 'unknown'` |
+| [Operator Precedence](#operator-precedence) | `a + b * c and d ?? e > f`
 
 ## Identifiers
 
@@ -278,3 +280,41 @@ size ?
   pick 'medium' when < 20
   else 'large'
 ```
+
+### Null Operations
+
+Malloy has the keyword `null` (or `NULL` if you prefer) to represent
+the null value.
+
+To check to see if a value is null, simply compare it to NULL, there is no `IS NULL` or `IS NOT NULL` operator in Malloy.
+
+```
+   dimension: name_not_present is name = NULL
+   dimension: name_present is name != NULL
+```
+
+Malloy also has the operator `??`, which in other languages is sometimes called the "Nullish Coalescing" operator, for providing a value to use in case an expression is null.
+
+```
+  dimension: name_cleaned is name ?? '(No Name Provided)'
+```
+
+### Operator Precedence
+
+From highest to lowest precedence, here are the Malloy operators
+
+| Operator    | Function
+| --------    | --------
+| `::`        | Type cast
+| `-`         | Unary negation
+| `* / %`     | Multiply, Divide, Modulo
+| `+ -`       | Addition, Subtraction
+| `to`        | Range with endpoints
+| `for N XXX` | Range with duration
+| `&`         | Alternation with and
+| <code>&#124;</code> | Alternation with or
+| `?`         | Apply
+| `not`       | Unary boolean not
+| `and`       | Bolean and
+| `or`        | Bolean or
+| `??`        | Nullish coalesce
