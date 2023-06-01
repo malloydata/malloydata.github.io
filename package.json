@@ -4,6 +4,13 @@
   "description": "Malloy documentation",
   "type": "module",
   "private": true,
+  "config": {
+    "malloy_packages": [
+      "@malloydata/malloy",
+      "@malloydata/db-bigquery",
+      "@malloydata/render"
+    ]
+  },
   "scripts": {
     "docs-clean": "rm -rf docs/.jekyll-cache/ && rm -rf docs/_includes/generated/ && rm -rf docs/documentation && rm -rf js/generated/",
     "docs-prebuild": "npm run docs-clean",
