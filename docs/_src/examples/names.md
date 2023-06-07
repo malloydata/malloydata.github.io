@@ -81,8 +81,9 @@ query: names -> {
   nest: names is {
     where: name  ? 'Michael' | 'Lloyd' | 'Olivia'
     group_by: name
-    aggregate: population is by_name.population.sum()
-    group_by: births_per_100k
+    aggregate: 
+      population is by_name.population.sum()
+      births_per_100k
   }
 }
 ```
@@ -116,7 +117,7 @@ query: names { where: decade < 1970 } -> {
       top: 15
       order_by: popularity desc
       group_by: name
-      aggregate: popularity is (by_state.births_per_100k - births_per_100k) / births_per_100k
+      group_by: popularity is (by_state.births_per_100k - births_per_100k) / births_per_100k
     }
   }
 }

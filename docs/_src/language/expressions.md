@@ -99,6 +99,8 @@ you could call from Standard SQL. This is not well implemented at
 the moment. If you experience type check errors, use the `::type`
 typecast to work around the errors in typing.
 
+<!--  TODO -->
+
 ## Aggregation
 
 Aggregations may included in an expression to create [measures](fields.md#measures), e.g. `count()`, `sum(distance)`, or `aircraft_models.seats.avg()`. For detailed information, see the [Aggregates](aggregates.md) section.

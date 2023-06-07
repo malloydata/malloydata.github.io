@@ -3,6 +3,43 @@ _Breaking changes indicated with *_
 
 We will use this space to highlight major and/or breaking changes to Malloy.
 
+## v0.0.40
+
+### *More strict expression types
+
+Previously, `group_by:`, `nest:`, `aggregate:`, `dimension:`, `measure:`, etc. would all allow fields of the wrong expression type (dimension, measure, query). Now that is an error.
+
+### *Function argument typechecking
+
+Function arguments are now typechecked for a set of "built-in" functions. All unknown functions will error. See [the functions docs](./functions.md).
+
+### Forced function call syntax
+
+For functions which are not "built-in", or to call the native SQL version of a function, there is special syntax:
+
+```malloy
+// Exclamation point indicates to not typecheck arguments and directly call the named SQL function
+// Return type is by default the same as the first argument
+dimension: cuberoot_value is cbrt!(value)
+// A return type may be specified after the exclamation point
+dimension: timestamp_value is timestamp_seconds!timestamp(value)
+```
+
+### Calculations (analytic functions / window functions)
+
+There is a new keyword `calculate:` which can appear in a query, for use with [analytic functions](./functions.md#analytic-functions).
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+query: flights -> {
+  group_by: carrier
+  calculate: prev_carrier is lag(carrier)
+}
+```
+
+### *New functions are in the global namespace
+
+New functions are in the global namespace, which means that top level objects (SQL blocks, queries, sources) in a Malloy file cannot have the same name as a built-in function.
 
 ## v0.0.10
 

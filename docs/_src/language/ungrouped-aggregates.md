@@ -2,10 +2,17 @@
 
 In a query which is grouped by multiple dimensions, it is often useful to be able to perform an aggregate calculation on sub-groups.
 
-### **all(aggregateExpression)**
+## Ungrouped Aggregate Functions
 
-The `all()` function will perform the specified aggregate computation, ignoring the grouping in the
-current_query to provide an overall value.
+### all
+
+```malloy
+all(expr)
+all(aggregate_expr, grouping_dimension, ...)
+```
+
+The `all()` function will perform the specified aggregate computation `aggregate_expr`, ignoring the grouping in the
+current query to provide an overall value.
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}
@@ -15,9 +22,7 @@ query: airports -> {
 }
 ```
 
-### **all(aggregateExpression, groupingDimension, ...)**
-
-When the optional grouping dimension argument is provided, `all()` will preserve grouping by the named dimensions (`faa_region`), but will not group by un-named dimensions (`state`).
+When `grouping_dimension`s are provided, `all()` will preserve grouping by the named dimensions. For example, in the query below, grouping by `faa_region` is preserved, while `state` is ungrouped.
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}
@@ -30,12 +35,16 @@ query: airports -> {
 }
 ```
 
-Dimensions named in `all()` must be included in a `group_by` in the current query.
+Dimensions named in `all()` must be included in a `group_by` in the current query (in other words, they must be [output fields](./eval_space.md#outputs)).
 
-### **exclude(aggregateExpression, groupingDimension)**
+### exclude
 
-Similar to `al()`,  `exclude()` allows you to control which grouping dimensions are
-used to compute `aggregateExpression`. In this case, dimensions which should NOT be used are listed. For example, these two aggregates will do the exact same thing:
+```malloy
+exclude(aggregate_expr, ungroup_dimension, ...)
+```
+
+Similar to `all()`,  `exclude()` allows you to control which grouping dimensions are
+used to compute `aggregate_expr`. In this case, dimensions which should _not_ be used are listed. For example, these two aggregates will do the exact same thing:
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}
@@ -49,3 +58,5 @@ query: airports -> {
 ```
 
 The main difference is that in a nested query, it is legal to name a grouping dimension from an outer query which contains the inner query.
+
+As with `all()`, `ungroup_dimension`s must be [output fields](./eval_space.md#outputs).
