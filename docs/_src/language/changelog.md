@@ -11,7 +11,7 @@ Previously, `group_by:`, `nest:`, `aggregate:`, `dimension:`, `measure:`, etc. w
 
 ### *Function argument typechecking
 
-Function arguments are now typechecked for a set of "built-in" functions. All unknown functions will error. See [the functions docs](./functions.md).
+Function arguments are now typechecked for a set of "built-in" functions. All unknown functions will error. See [the functions documentation](./functions.md) and [a detailed description of what changed](./new_functions.md).
 
 ### Forced function call syntax
 

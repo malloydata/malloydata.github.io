@@ -6,6 +6,8 @@ These functions are defined in Malloy in order to provide basic typechecking of 
 
 For quick function lookup, see the [alphebetized table of all available functions](#all-functions).
 
+Note: the behavior of functions changed in v0.0.40. For more information, see [a description of that change](./new_functions.md).
+
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/empty.malloy", "isHidden": true}
 sql: my_sql_query is {
@@ -1414,7 +1416,9 @@ query: flights -> {
 }
 ```
 
-Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field.
+For more detailed information, see the [Calculations](./calculations.md) section.
+
+<!-- Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
@@ -1435,7 +1439,7 @@ query: flights -> {
   // ERROR: Parameter 1 ('value') of lag must be literal, constant, or output, but received input
   calculate: prev_carrier is lag(carrier)
 }
-```
+``` -->
 
 <table class="transpose">
   <tr>
