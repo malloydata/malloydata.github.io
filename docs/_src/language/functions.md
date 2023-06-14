@@ -6,7 +6,7 @@ These functions are defined in Malloy in order to provide basic typechecking of 
 
 For quick function lookup, see the [alphebetized table of all available functions](#all-functions).
 
-Note: the behavior of functions changed in v0.0.40. For more information, see [a description of that change](./new_functions.md).
+Note: the behavior of functions changed in v0.0.39. For more information, see [a description of that change](./new_functions.md).
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/empty.malloy", "isHidden": true}
@@ -760,8 +760,6 @@ query: empty -> {
     c is sqrt(null)
 }
 ```
-
-<!-- TODO add exp function -->
 
 ### pow
 

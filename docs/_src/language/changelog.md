@@ -3,7 +3,7 @@ _Breaking changes indicated with *_
 
 We will use this space to highlight major and/or breaking changes to Malloy.
 
-## v0.0.40
+## v0.0.39
 
 ### *More strict expression types
 

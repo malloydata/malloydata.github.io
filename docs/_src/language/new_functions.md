@@ -1,11 +1,10 @@
-# Functions Changes in v0.0.40
-<!-- TODO make sure this version number is correct -->
+# Functions Changes in v0.0.39
 
-In Malloy version 0.0.40, treatment of functions changed dramatically. 
+In Malloy version 0.0.39, treatment of functions changed dramatically. 
 
 ## The Old Way ("SQL Functions")
 
-Prior to v0.0.40:
+Prior to v0.0.39:
 
 * Any function call of the form `SOME_NAME(arg1, arg2, ..., argN)` was translated directly into SQL as-is. 
 * If the dialect had no function called `SOME_NAME` a dialect SQL error would be generated. 
@@ -16,7 +15,7 @@ Prior to v0.0.40:
 
 ## The New Way ("Malloy Functions")
 
-Starting in v0.0.40:
+Starting in v0.0.39:
 
 * There is a [list of "built-in" functions available in Malloy](./functions.md#all-functions).
 * Some functions, such as `sin(x)` are translated to SQL as-is.

@@ -94,8 +94,6 @@ Malloy includes the basic binary boolean operators `and` and `or`, as well as th
 
 Many functions available in SQL are available unchanged in Malloy. Malloy provides some compatibility transformations for known functions. Unknown functions may be called like `cbrt!(x)` or `timestamp_seconds!timestap(value)` to specify a return type. For detailed information, as well as a full list of all available functions, see the [Functions](./functions.md) section.
 
-<!--  TODO -->
-
 ## Aggregation
 
 Aggregations may included in an expression to create [measures](fields.md#measures), e.g. `count()`, `sum(distance)`, or `aircraft_models.seats.avg()`. For detailed information, see the [Aggregates](aggregates.md) section.
