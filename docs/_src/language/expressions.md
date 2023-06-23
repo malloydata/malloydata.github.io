@@ -13,7 +13,8 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
 | [Aggregation Control / Subtotals](ungrouped-aggregates.md) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
 | [Filtered expressions](#filtered-expressions) | `avg(age) : [state: 'CA']`<br/>`flight_count : [origin.county != null]` |
-| [Safe type cast](#safe-type-cast) | `total_distance::string`<br/>`some_date::timestamp` |
+| [Type cast](#type-cast) | `total_distance::string`<br/>`some_date::timestamp` |
+| [Safe type cast](#safe-type-cast) | `birth_year::number`<br/>`start_time_string::timestamp` |
 | [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/>`kind: pick 'other' when null` |
 | [Time ranges](#time-ranges)<br/>Ranges with start and end or duration |  `start_time for 3 hours`<br/>`@2003 for 10 months` <br/> `@2003 to @2005` |
 | [Numeric ranges](#numeric-ranges)<br/>Numeric ranges with start and end | `10 to 20` |
@@ -120,12 +121,13 @@ query: flights -> {
 }
 ```
 
-## Safe Type Cast
+## Type Cast
+Type cast may be accomplished with the :: operator.
 
 <!-- * `total_distance::string` -->
 <!-- * `some_date::timestamp` -->
 
-Safe type casting may be accomplished with the `::type` syntax.
+Type casting may be accomplished with the `::type` syntax.
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
@@ -133,6 +135,24 @@ query: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
 }
 ```
+
+## Safe Type Cast
+
+Safe Type cast may be accomplished with the ::: operator.  A safe type cast will return NULL
+if an error occurs during the cast operation. Safe Type Cast is particularly useful in loading data.  Not all databases support safe type cast.
+
+<!-- * `total_distance:::string` -->
+<!-- * `some_date:::timestamp` -->
+
+Type casting may be accomplished with the `:::type` syntax.
+
+```malloy
+--! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
+query: flights -> {
+  aggregate: distance_summary is concat(total_distance:::string, ' miles')
+}
+```
+
 
 ## Pick Expressions
 
