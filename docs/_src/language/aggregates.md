@@ -4,7 +4,12 @@ Malloy supports the standard aggregate functions `count`, `sum`, `avg`, `min`, a
 
 ## Basic Syntax
 
-### Counts
+### count
+
+```malloy
+count()
+join_name.count()
+```
 
 The `count` aggregate function may be used to count the number of records appearing in a source.
 
@@ -15,7 +20,11 @@ query: flights -> {
 }
 ```
 
-### Distinct Counts
+### count (distinct)
+
+```malloy
+count(distinct expr)
+```
 
 Distinct counts may be used to count the number of distinct values of a particular field within a source.
 
@@ -26,7 +35,13 @@ query: order_items -> {
 }
 ```
 
-### Sums
+### sum
+
+```malloy
+sum(expr)
+join_name.sum(expr)
+join_name.expr.sum()
+```
 
 The `sum` function may be used to compute the sum of all records of a particular field.
 
@@ -37,7 +52,13 @@ query: flights -> {
 }
 ```
 
-### Averages
+### avg
+
+```malloy
+avg(expr)
+join_name.avg(expr)
+join_name.expr.avg()
+```
 
 The `avg` function may be used to compute the average of all records of a particular field.
 
@@ -48,7 +69,13 @@ query: aircraft -> {
 }
 ```
 
-### Minima
+### min
+
+```malloy
+min(expr)
+join_name.min(expr)
+join_name.expr.min()
+```
 
 The `min` function may be used to compute the minimum of all records of a particular field.
 
@@ -59,7 +86,13 @@ query: order_items -> {
 }
 ```
 
-### Maxima
+### max
+
+```malloy
+max(expr)
+join_name.max(expr)
+join_name.expr.max()
+```
 
 The `max` function may be used to compute the maximum of all records of a particular field.
 
@@ -72,7 +105,7 @@ query: flights -> {
 
 ## Ungrouped Aggregates
 
-In a query which is grouped by multiple dimensions, it is often useful to be able to perform an aggregate calculation on sub-groups to determine subtotals. The `all()` and `exclude` functions in Malloy allow control over grouping and ungrouping, making this simple:
+In a query which is grouped by multiple dimensions, it is often useful to be able to perform an aggregate calculation on sub-groups to determine subtotals. The `all()` and `exclude()` functions in Malloy allow control over grouping and ungrouping, making this simple:
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}

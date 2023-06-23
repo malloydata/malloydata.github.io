@@ -12,7 +12,7 @@ Although Malloy can use columns of any numberic type, there is no way to write a
 
 ### Numeric Literals
 
-Malloy has a fairly basic syntac for numeric literals
+Malloy has a fairly basic syntax for numeric literals
 
 * `123`
 * `123.4`
@@ -31,16 +31,20 @@ Malloy uses single quotes to wrap strings and uses the "backslash" (reverse virg
 
 ## Boolean
 
-Malloy has one interesting difference from most SQL engines in how it handles null values.
-
-The expression `mightBeNull > 0` ...
-* SQL result is a boolean column where the value could be `true`, `false`, or `NULL`
-* Malloy result will only be `true` or `false`
-
 ### Boolean literals
 
 * `true`
 * `false`
+
+### Boolean Comparison Nullability 
+
+Malloy has one interesting difference from most SQL engines in how it handles null values.
+
+For expressions which return a `boolean`, e.g. `might_be_null > 0`:
+* in SQL, the result is a boolean column where the value could be `true`, `false`, or `NULL`
+* in Malloy, the result will only be `true` or `false`
+
+This is true for all the comparison operators (`>`, `=`, etc.) as well as functions which return a boolean (e.g. `starts_with`, `is_inf`, etc.).
 
 ## Timestamp
 

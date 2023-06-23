@@ -1,0 +1,110 @@
+# Evaluation Spaces
+
+All expressions in Malloy have an "evaluation space" which can be one of four values: _literal_, _constant_, _input_, and _output_.
+
+Functions may have constraints on what evaluation space particular arguments can be. For example:
+* In `avg_moving(expr, preceding)`, `preceding` must be a literal `number`.
+* In `lag(expr)`, `expr` must be an output value.
+* In `avg(expr)`, `expr` must be an input value.
+* In `lag(expr, offset, default)`, `default` must be a constant value.
+
+## Literals
+
+Literal expressions are any literal value that you can write in Malloy. These include literals of type `number`, `boolean`, `string`, `date`, `timestamp`, and even regular expressions. The following are all literals: `12`, `true`, `'hello world'`, `@2003`, `@2011-11-11 11:11:11`, `r'.*'`.
+
+Some functions require that particular arguments be _literals_. For example, `avg_moving(expr, preceding)` required that `preceding` be a literal `number`.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+query: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  // Second argument must be a literal
+  calculate: rolling_avg is avg_moving(flight_count, 3)
+}
+```
+
+## Constants
+
+Constant expressions are produced by operating on literals, e.g. `1 + 1` etc.
+
+Some functions require that particular arguments be _constants_. For example, the `default` argument to `lag` must be constant:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+query: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  // Third argument must be a constant (or literal)
+  calculate: prev_carrier1 is lag(carrier, 1, concat('NO', ' ', 'VALUE'))
+  calculate: prev_carrier2 is lag(carrier, 1, 'NO VALUE')
+}
+```
+
+Currently, when constants are saved as dimensions, they become _input fields_, even though they are known to be constants. This may change in the future.
+
+## Inputs
+
+Input expressions are those that reference columns in a table or dimensions defined in a source. They represent data that exists inside the source table or that can be computed directly from a particular row of data.
+
+```malloy
+query: flights -> {
+  group_by: carrier
+}
+```
+
+In the above query, `carrier` is an input expression (in particular, an input field).
+
+## Outputs
+
+Output expressions are those which reference columns in the output of a query or aggregate values. They represent values which can be produced from the source table. Dimensions are only _output_ values when they are included in the query. Aggregate values are always output values, because they don't need to be included in the result table to be known.
+
+### Dimensional Outputs
+
+Any time a field is included in a query, it creates an _output field_ with the same name:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+query: flights -> {
+  group_by: 
+    carrier
+    new_field is 1
+  aggregate: flight_count
+}
+```
+
+The above query defines `carrier`, `new_field`, and `flight_count` as _output fields_ of the query. 
+
+When inside a `calculate:` statement, field references will by default use the _output field_ with that name. There is often an _input field_ with the same name, and in that case the output field will take precedence. In the following query, `group_by: carrier` creates an output field called `carrier`. In `lag(carrier)`, `carrier` refers to that output field (rather than the input field `carrier` defined in `flights`) because it appears inside a `calculate:` statement.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+query: flights -> {
+  group_by: carrier
+  calculate: prev_carrier is lag(carrier)
+}
+```
+
+In this next query, `group_by: output_carrier is carrier` creates an output field called `output_carrier`, which is referenced in the subsequent line. 
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+query: flights -> {
+  group_by: output_carrier is carrier
+  calculate: prev_carrier is lag(output_carrier)
+}
+```
+
+Here, `calculate: prev_carrier is lag(carrier)` would result in an error, because `carrier` is an _input expression_, and `lag` requires that its first argument be an output expression.
+
+### Aggregate Outputs
+
+An aggregate value is always considered to be an output expression, even when it is a direct reference to a `measure`.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+query: flights -> {
+  group_by: carrier
+  calculate: prev_carrier_flight_count is lag(flight_count)
+}
+```

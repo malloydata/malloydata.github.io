@@ -92,7 +92,7 @@
           "link": "/language/query.md"
         },
         {
-          "title": "Datatypes",
+          "title": "Data Types",
           "link": "/language/datatypes.md"
         },
         {
@@ -124,12 +124,20 @@
           "link": "/language/expressions.md"
         },
         {
+          "title": "Functions",
+          "link": "/language/functions.md"
+        },
+        {
           "title": "SQL Blocks",
           "link": "/language/sql_blocks.md"
         },
         {
           "title": "Imports",
           "link": "/language/imports.md"
+        },
+        {
+          "title": "Calculations",
+          "link": "/language/calculations.md"
         },
         {
           "title": "Change Log",
