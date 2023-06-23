@@ -1,7 +1,7 @@
 --! styles ecommerce.styles.json
 source: users is table('malloy-data.ecomm.users'){
   primary_key: id
-  dimension: full_name is INITCAP(CONCAT(first_name,' ',last_name))
+  dimension: full_name is initcap!(concat(first_name, ' ', last_name))
   measure: user_count is count()
 }
 

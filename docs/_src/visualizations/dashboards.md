@@ -13,7 +13,7 @@ We recommend looking at the individual visualization documents in this section a
 
 While the above approach is preferred, the extension additionally allows the renderer to utilize naming conventions as a shortcut for visualization specification. For example:
 
-```
+```malloy
 query: flights_bar_chart is table('malloy-data.faa.flights') -> {
   group_by: origin
   aggregate: flight_count is count()

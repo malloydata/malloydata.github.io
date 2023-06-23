@@ -9,12 +9,12 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Mathematical operations](#mathematical-operators) | `x * 100`<br/>`-cost`<br/>`(a + b) / c` |
 | [Comparison operators](#comparison-operators) | `x > 200`<br/>`state != null` |
 | [Boolean operators](#boolean-operators)<br/>Logically combine booleans | `height > 10 and height < 100`<br/>`is_cancelled or is_delayed`</br>`not is_commercial_flight` |
-| [SQL functions](#sql-functions) | `floor(10.35)`<br/>`concat(first_name, ' ', last_name)`<br/>`sqrt(x)` |
+| [Functions](#functions) | `floor(10.35)`<br/>`concat(first_name, ' ', last_name)`<br/>`cbrt!(x)`<br/>`timestamp_seconds!timestamp(val)` |
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
 | [Aggregation Control / Subtotals](ungrouped-aggregates.md) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
-| [Filtered expressions](#filtered-expressions) | `avg(age) : [state: 'CA']`<br/>`flight_count : [origin.county != null]` |
+| [Filtered expressions](#filtered-expressions) | `avg(age) { where: state = 'CA' }`<br/>`flight_count { where: origin.county != null }` |
 | [Safe type cast](#safe-type-cast) | `total_distance::string`<br/>`some_date::timestamp` |
-| [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/>`kind: pick 'other' when null` |
+| [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/>`kind ? pick 'other' when null` |
 | [Time ranges](#time-ranges)<br/>Ranges with start and end or duration |  `start_time for 3 hours`<br/>`@2003 for 10 months` <br/> `@2003 to @2005` |
 | [Numeric ranges](#numeric-ranges)<br/>Numeric ranges with start and end | `10 to 20` |
 | [Time truncation](#time-truncation) | `event_time.quarter` <br/> `now.year` |
@@ -86,18 +86,13 @@ Standard comparison operators `>`, `<`, `>=`, `<=`, and `=` are available in Mal
 
 Malloy includes the basic binary boolean operators `and` and `or`, as well as the unary `not` operator.
 
-## SQL Functions
+## Functions
 
 <!-- * `floor(10.35)` -->
 <!-- * `concat(first_name, ' ', last_name)` -->
 <!-- * `sqrt(x)` -->
 
-Many functions available in SQL are available unchanged in Malloy. See [here](https://cloud.google.com/bigquery/docs/reference/standard-sql/syntax) for documentation on functions available in BigQuery.
-
-The intention is to be able to call from Malloy any function which
-you could call from Standard SQL. This is not well implemented at
-the moment. If you experience type check errors, use the `::type`
-typecast to work around the errors in typing.
+Many functions available in SQL are available unchanged in Malloy. Malloy provides some compatibility transformations for known functions. Unknown functions may be called like `cbrt!(x)` or `timestamp_seconds!timestap(value)` to specify a return type. For detailed information, as well as a full list of all available functions, see the [Functions](./functions.md) section.
 
 ## Aggregation
 
