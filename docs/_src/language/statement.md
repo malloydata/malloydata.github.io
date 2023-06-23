@@ -1,7 +1,30 @@
-# Models
+# Modeling With Malloy
 
 Malloy recognizes modeling as a key aspect of data analytics and provides tools that allow for modularity and reusability of definitions. Whereas in SQL, queries generally define all metrics inline, requiring useful snippets to be saved and managed separately, in Malloy,
 _dimensions_, _measures_, and _queries_ can be saved and attached to a modeled source.
+
+A Malloy document is a collection of [statements](#statements), [comments](#comments), and [tags](#tags)
+
+## Statements
+
+* [Import Statements](imports.md)
+* [Source Statements](#sources)
+* [Query Statements](#queries)
+
+A semicolon can optionally separate two statements
+
+```
+// These are all legal
+source: s1 is s2
+query: q2 is s1 -> { project: * }
+
+// Semicolon allowed
+source: s1 is s2; query: q2 is s1 -> { project: * }
+
+// Semicolon is not required
+source: s1 is s2 query: q2 is s1 -> { project: * }
+
+```
 
 ## Sources
 
@@ -20,7 +43,7 @@ source: flights is table('malloy-data.faa.flights') {
   }
 }
 ```
-See [here](source.md) for more information on sources.
+See [Source Documentation](source.md) for more information on sources.
 
 ## Queries
 
@@ -67,4 +90,34 @@ query: flights -> {
   nest: top_carriers is by_carrier { limit: 2 }
 }
 ```
-See [here](query.md) for more information on queries.
+See [Query Documentation](query.md) for more information on queries.
+
+## Comments
+
+Comments in Malloy can be written with `--` (as in SQL) or `//`.
+A comment continues untli the end of the line containing a comment.
+
+## Tags
+
+Tags look like comments, they begin with the `#` (hash, octothorpe, numbersign),
+the tag texts are collected and distributed to objects defined after the tag,
+with the following rules
+
+* Tags with `##` are collected and attached to the document
+* All other tags are attached the the object defined after the tag
+* Statements which define multiple objects, distribute their tags to
+  each object defined in the statement.
+
+  ```
+  ## This tag is attached to the document ( or model as it is sometfimes called )
+
+  # This will be attached top the next query
+  query: myQuery is someSource -> { project: * }
+
+  # This tag will be applied to both "a" and "b"
+  dimension:
+    # This tag will only be applied to "a"
+    a is 'a'
+    # This tag will only be applied to "b"`
+    b is 'b'
+
