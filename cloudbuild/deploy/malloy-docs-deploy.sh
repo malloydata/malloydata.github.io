@@ -8,10 +8,9 @@ nix-shell --quiet --pure --command "$(cat <<NIXCMD
   git config --global user.email "malloy-ci-bot@google.com"
   git config --global user.name "Malloy CI Bot"
   npm ci --silent
-  bundle install
-  npm run docs-deploy
+  npm run build
   git checkout -b docs-release
-  git add -f docs/documentation docs/js/generated/search_segments.js docs/_includes/generated
+  git add -f docs/
   git commit -m "Docs Release"
   git push -f origin docs-release
 NIXCMD
