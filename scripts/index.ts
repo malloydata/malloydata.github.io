@@ -252,7 +252,7 @@ function compileOtherFile(contents: string): string {
   // TODO make this update in watch mode
   outputSearchSegmentsFile(allSegments);
   log(`All docs compiled in ${timeString(startTime, performance.now())}`);
-
+  fs.writeFileSync(path.join(OUT_PATH, "done.txt"), "done");
   if (WATCH_ENABLED) {
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
