@@ -23,11 +23,13 @@
 
 import { unified } from "unified";
 import remarkParse from "remark-parse";
+import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import { Markdown } from "./markdown_types.js";
 import { runCode } from "./run_code.js";
 import { log } from "./log.js";
 import { highlight } from "./highlighter.js";
+import yaml from "yaml";
 
 /*
  * A Renderer is capable of converting a parsed `Markdown` document into HTML,
@@ -389,13 +391,25 @@ export async function renderDoc(
       | { type: "code"; text: string }
     )[];
   }[];
+  frontmatter: any,
 }> {
-  const ast = unified().use(remarkParse).use(remarkGfm).parse(text);
+  const ast = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkFrontmatter, ['yaml'])
+    .parse(text);
   const renderer = new Renderer(path);
+  let frontmatter: unknown = {};
+  if (ast.children[0].type === 'yaml') {
+    const frontmatterRaw = ast.children[0].value;
+    frontmatter = yaml.parse(frontmatterRaw);
+    ast.children = ast.children.slice(1);
+  }
   const renderedDocument = await renderer.render(ast as unknown as Markdown);
   return {
     renderedDocument,
     errors: renderer.errors,
     searchSegments: renderer.searchSegments,
+    frontmatter,
   };
 }

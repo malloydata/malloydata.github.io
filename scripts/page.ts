@@ -42,7 +42,7 @@ interface EnrichedSection {
 interface EnrichedSectionItem {
   title: string;
   link: string;
-  fullLink: string;
+  htmlLink: string;
   compareLink: string;
 }
 
@@ -58,11 +58,10 @@ function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
       items: section.items.map((item) => {
         if (isSectionItem(item)) {
           const htmlLink = item.link.replace(/\.md$/, ".html");
-          const fullLink = path.join("/documentation", htmlLink);
           const compareLink =
-            htmlLink === "/index.html" ? "/documentation/" : fullLink;
+            htmlLink === "/index.html" ? "/" : htmlLink;
 
-          return { title: item.title, link: item.link, fullLink, compareLink };
+          return { title: item.title, link: item.link, htmlLink, compareLink };
         } else {
           return enrichTableOfContents([item])[0];
         }
@@ -88,7 +87,7 @@ function extractItems(sections: (Section | SectionItem)[]): SectionItem[] {
 function renderSection(section: EnrichedSection | EnrichedSectionItem): string {
   if (isSectionItem(section)) {
     return `<div class='sidebar-item {% if page.url == "${section.compareLink}" %}active{% endif %}'>
-      <a href="{{ site.baseurl }}${section.fullLink}">
+      <a href="{{ site.baseurl }}${section.htmlLink}">
         <img src="{{ site.baseurl }}/img/article_icon.svg" alt="document"/>
         ${section.title}
       </a>

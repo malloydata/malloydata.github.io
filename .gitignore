@@ -1,10 +1,6 @@
 # auto-generated docs
-/docs/_includes/generated/
-/docs/_site/
-/docs/documentation/
-/docs/aux/
-/docs/.jekyll-cache/
-/docs/js/generated/
+/docs
+/docs_old
 
 # misc
 node_modules

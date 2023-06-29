@@ -9,7 +9,7 @@
       type="image/x-icon"
       href="{{ site.baseurl }}/img/favicon.ico"
     />
-    {% include ga.html %}
+    {{> ga.html }}
   </head>
   <body>
     <div class="top">
@@ -38,19 +38,19 @@
         </div>
       </div>
       <div class="main">
-        {% include /generated/toc.html %}
+        {{> toc.html }}
         <script src="{{ site.baseurl }}/js/sidebar_state.js"></script>
         <div class="content">
           <div class="footer">
-            {% if page.footer %} {% include {{ page.footer }} %} {% endif %}
+            {{#if page.footer }}{{{ page.footer }}} {{/if}}
           </div>
-          <div class="document-outer">{{ content }}</div>
+          <div class="document-outer">{{{ page.content }}}</div>
         </div>
         <script src="{{ site.baseurl }}/js/view_toggles.js"></script>
         <script src="{{ site.baseurl }}/js/jump_to_hash.js"></script>
       </div>
     </div>
-    {% include banner.html %}
+    {{> banner.html }}
     <script src="{{ site.baseurl }}/js/banner.js"></script>
   </body>
 </html>
