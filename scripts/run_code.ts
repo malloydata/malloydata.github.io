@@ -108,13 +108,11 @@ async function fetchFile(uri: string) {
 
 class DocsURLReader implements URLReader {
   private dataStyles: DataStyles = {};
-  private readonly modelPath: string;
-  private readonly inMemoryURLs: Map<string, string>;
 
-  constructor(modelPath: string, inMemoryURLs: Map<string, string>) {
-    this.modelPath = modelPath;
-    this.inMemoryURLs = inMemoryURLs;
-  }
+  constructor(
+    private readonly documentPath: string, 
+    private readonly inMemoryURLs: Map<string, string>
+  ) { }
 
   async readURL(url: URL): Promise<string> {
     const inMemoryURL = this.inMemoryURLs.get(url.toString());
@@ -122,7 +120,7 @@ class DocsURLReader implements URLReader {
       return inMemoryURL;
     }
     const contents = await fetchFile(url.toString());
-    addDependency(this.modelPath, url.toString().replace(/^file:\/\//, ""));
+    addDependency(url.toString().replace(/^file:\/\//, ""), this.documentPath);
     this.dataStyles = {
       ...this.dataStyles,
       ...(await dataStylesForFile(url.toString(), contents)),

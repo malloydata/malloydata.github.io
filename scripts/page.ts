@@ -22,6 +22,8 @@
  */
 
 import path from "path";
+import { DEFAULT_CONTEXT } from "./context.js";
+import Handlebars from "handlebars";
 
 export interface Section {
   title: string;
@@ -126,6 +128,21 @@ export function renderSidebar(sections: Section[]): string {
   </div>`;
 }
 
+const FOOTER_TEMPLATE_STRING = `
+<div class="linear-navigation">
+  <div class="item">
+    {{#if previous }}
+      <a href="{{ previous.relative }}"><img src="{{ site.baseurl }}/img/previous.svg" alt="previous"/>{{ previous.title }}</a>
+    {{/if }}
+  </div>
+  <div class="item">
+    {{#if next }}
+      <a href="{{ next.relative }}">{{ next.title }}<img src="{{ site.baseurl }}/img/next.svg" alt="next"/></a>
+    {{/if }}
+  </div>
+</div>`
+const FOOTER_TEMPLATE = Handlebars.compile(FOOTER_TEMPLATE_STRING);
+
 export function renderFooter(
   sections: Section[],
   rootPath: string,
@@ -154,20 +171,15 @@ export function renderFooter(
       path.join(rootPath, previousLink)
     );
 
-  return `<div class="linear-navigation">
-    <div class="item">
-      ${
-        previous
-          ? `<a href="${previousRelative}"><img src="{{ site.baseurl }}/img/previous.svg" alt="previous"/>${previous.title}</a>`
-          : ""
-      }
-    </div>
-    <div class="item">
-      ${
-        next
-          ? `<a href="${nextRelative}">${next.title}<img src="{{ site.baseurl }}/img/next.svg" alt="next"/></a>`
-          : ""
-      }
-    </div>
-  </div>`;
+  return FOOTER_TEMPLATE({
+    ...DEFAULT_CONTEXT,
+    next: next ? {
+      relative: nextRelative,
+      title: next.title
+    } : undefined,
+    previous: previous ? {
+      relative: previousRelative,
+      title: previous.title
+    } : undefined,
+  });
 }

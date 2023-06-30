@@ -38,10 +38,11 @@ import { log } from "./log.js";
 import { exit } from "process";
 import Handlebars from "handlebars";
 import yaml from "yaml";
+import { DEFAULT_CONTEXT } from "./context.js";
 
 const __dirname = path.resolve("./scripts/");
 
-const DOCS_ROOT_PATH = path.join(__dirname, "../src/");
+const DOCS_ROOT_PATH = path.join(__dirname, "../src");
 const OUT_PATH = path.join(__dirname, "../docs/");
 const JS_OUT_PATH = path.join(__dirname, "../docs/js/generated");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
@@ -62,12 +63,6 @@ for (const file of fs.readdirSync(LAYOUTS_PATH)) {
   if (fs.statSync(absolutePath).isFile()) {
     LAYOUTS[file] = Handlebars.compile(fs.readFileSync(absolutePath, "utf-8"));
   }
-}
-
-const DEFAULT_CONTEXT = {
-  site: {
-    baseurl: "http://localhost:8080"
-  },
 }
 
 const WATCH_ENABLED = process.argv.includes("--watch");
@@ -222,26 +217,30 @@ function compileOtherFile(contents: string): string {
   }
 }
 
+function handleStaticFile(file: string) {
+  const destination = path.join(
+    OUT_PATH,
+    file.substring(DOCS_ROOT_PATH.length)
+  );
+  fs.mkdirSync(path.join(destination, ".."), { recursive: true });
+  if (
+    ["html", "js", "css"].some(ext => file.endsWith("." + ext))
+  ) {
+    const contents = fs.readFileSync(file, 'utf-8');
+    const compiledContents = compileOtherFile(contents);
+    fs.writeFileSync(destination, compiledContents);
+  } else {
+    fs.copyFileSync(file, destination);
+  }
+}
+
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
   const allDocs = allFiles.filter(isMarkdown);
   const staticFiles = allFiles.filter((file) => !isMarkdown(file));
   let { toc, footers } = rebuildSidebarAndFooters();
   for (const file of staticFiles) {
-    const destination = path.join(
-      OUT_PATH,
-      file.substring(DOCS_ROOT_PATH.length)
-    );
-    fs.mkdirSync(path.join(destination, ".."), { recursive: true });
-    if (
-      ["html", "js", "css"].some(ext => file.endsWith("." + ext))
-    ) {
-      const contents = fs.readFileSync(file, 'utf-8');
-      const compiledContents = compileOtherFile(contents);
-      fs.writeFileSync(destination, compiledContents);
-    } else {
-      fs.copyFileSync(file, destination);
-    }
+    handleStaticFile(file);
   }
   const startTime = performance.now();
   const results = await Promise.all(allDocs.map(f => compileDoc(f, footers)));
@@ -262,8 +261,7 @@ function compileOtherFile(contents: string): string {
         compileDoc(fullPath, footers);
       } else {
         if (fs.existsSync(fullPath)) {
-          log(`Static file ${file} ${type}d. Copied.`);
-          fs.copyFileSync(fullPath, path.join(OUT_PATH, file));
+          handleStaticFile(file);
         } else {
           fs.unlinkSync(path.join(OUT_PATH, file));
           log(`Static file ${file} deleted. Removed.`);
@@ -272,6 +270,7 @@ function compileOtherFile(contents: string): string {
     });
     watchDebouncedRecursive(MODELS_BIGQUERY_PATH, (type, file) => {
       log(`Model file ${file} ${type}d. Recompiling dependent documents...`);
+      console.log(DEPENDENCIES);
       for (const doc of DEPENDENCIES.get(file) || []) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
         compileDoc(fullPath, footers);
