@@ -13,7 +13,7 @@ A Malloy document is a collection of [statements](#statements), [comments](#comm
 
 A semicolon can optionally separate two statements
 
-```
+```malloy
 // These are all legal
 source: s1 is s2
 query: q2 is s1 -> { project: * }
@@ -108,16 +108,30 @@ with the following rules
 * Statements which define multiple objects, distribute their tags to
   each object defined in the statement.
 
-  ```
-  ## This tag is attached to the document ( or model as it is sometfimes called )
+```malloy
+// This tag is attached to the document/model
+## tag_1
 
-  # This will be attached top the next query
-  query: myQuery is someSource -> { project: * }
+// This will be attached top the next query
+# tag_2
+query: myQuery is someSource -> { project: * }
 
-  # This tag will be applied to both "a" and "b"
-  dimension:
-    # This tag will only be applied to "a"
-    a is 'a'
-    # This tag will only be applied to "b"`
-    b is 'b'
+// This tag will be applied to both "a" and "b"
+# tag_3
+dimension:
+  // This tag will only be applied to "a"
+  # tag_4
+  a is 'a'
+  // This tag will only be applied to "b"
+  # tag_5
+  b is 'b'
+```
+
+Tags are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode). This makes annotations extensible for many use cases. In VSCode, annotations are interpreted in two ways:
+* As rendering instructions: `# bar_chart`
+* As documentation comments: `#" This query calculates ...`
+
+Other formats of tags are ignored:
+* `#bar_chart` without a space after the `#`
+* `#! custom="application" values="here"`
 
