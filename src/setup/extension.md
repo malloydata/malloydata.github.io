@@ -4,7 +4,7 @@ The [Malloy Extension](https://marketplace.visualstudio.com/items?itemName=mallo
 
 The Extension can be installed anywhere that VS Code runs - either locally on your machine, or in a variety of sites that provide the VS Code interface.
 
-<img class="small-img" src="{{site.baseurl}}/img/running_extension.gif">
+<img class="small-img" src="../img/running_extension.gif">
 
 _**NOTE:**  Because there are two versions of VS Code - VS Code Desktop and [VS Code Web](https://code.visualstudio.com/docs/editor/vscode-web) - there are times when only specific databases are available. When running on a desktop, the Malloy Extension can execute database queries against any supported database, such as BigQuery, PostGres, or DuckDB. When running VS Code Web, the Malloy Extension can only communicate with a browser-based version of DuckDB that comes pre-packaged with the Extension._
 
@@ -38,7 +38,7 @@ curl -sL \
 
 Go to https://ide.cloud.google.com and open your "Home Workspace".
 
-<img class="small-img" src="{{site.baseurl}}/img/setup_ide_home.png">
+<img class="small-img" src="../img/setup_ide_home.png">
 
 You should see the directory called 'Malloy Samples'.
 
@@ -46,12 +46,12 @@ You should see the directory called 'Malloy Samples'.
 
 In the IDE Editor open `malloy-samples/bigquery/faa/airports.malloy` and scroll down click the 'Run' code lens above one of the queries.  You should see query results.
 
-<img class="small-img"src="{{site.baseurl}}/img/setup_ide_run.png">
+<img class="small-img"src="../img/setup_ide_run.png">
 
 ### Changing the Project ID
 If you need to modify the Google CLoud Project ID, open the settings by clicking the lower-left corner gear icon, search for "project," and enter the project ID for Cloudshell:Project
 
-<img class="small-img"src="{{site.baseurl}}/img/setup_ide_project.png">
+<img class="small-img"src="../img/setup_ide_project.png">
 
 ## Using the Malloy Extension on github.dev
 

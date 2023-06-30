@@ -16,7 +16,7 @@
     "prebuild": "rm -rf docs/done.txt",
     "build": "npm run prebuild && ts-node --project tsconfig.docs.json --esm ./scripts/index.ts",
     "build-watch": "npm run prebuild && ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --watch",
-    "start-server": "wait-on ./docs/done.txt && http-server docs",
+    "start-server": "http-server docs",
     "serve": "concurrently --kill-others 'npm run build-watch' 'npm run start-server'",
     "malloy-update-next": "npm install --no-fund --no-audit --save-exact $(echo $npm_package_config_malloy_packages | sed -E 's/(@malloydata\\/[-a-z]+)/\\1@next/g')",
     "malloy-update": "npm install --no-fund --no-audit --save-exact $(echo $npm_package_config_malloy_packages | sed -E 's/(@malloydata\\/[-a-z]+)/\\1@latest/g')",
@@ -46,8 +46,7 @@
     "remark-parse": "^10.0.1",
     "shiki": "^0.10.1",
     "ts-node": "^10.9.1",
-    "unified": "^10.1.2",
-    "wait-on": "^6.0.0"
+    "unified": "^10.1.2"
   },
   "dependencies": {
     "@types/fs-extra": "^9.0.13",

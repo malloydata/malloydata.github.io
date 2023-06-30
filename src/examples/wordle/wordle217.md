@@ -65,7 +65,7 @@ query: wordle -> find_words
 
 Skipping 'SAREE' to avoid duplicates this early in the game, let's go with 'SLATE' again.
 
-<img src="{{site.baseurl}}/img/wordle217a.png" style="width: 200px">
+<img src="../../img/wordle217a.png" style="width: 200px">
 
 ## The Second Guess
 One green match--not a bad start. Let's find more words ending in E.
@@ -81,7 +81,7 @@ query: wordle -> find_words {
 
 The 'PRICE' is right, or something...
 
-<img src="{{site.baseurl}}/img/wordle217b.png" style="width: 200px">
+<img src="../../img/wordle217b.png" style="width: 200px">
 
 ## Round 3: Tie Breaking
 That worked nicely for us, we have two green matches and now we need to figure out where 'I' belong(s).
@@ -111,7 +111,7 @@ Another tie, today with a chance to guess just how into cooking the Wordle creat
 
 'M' appears to be a little more common as a first letter than 'W' so we went with that.
 
-<img src="{{site.baseurl}}/img/wordle217c.png" style="width: 200px">
+<img src="../../img/wordle217c.png" style="width: 200px">
 
 
 ## Solved in 3.5 again
@@ -127,7 +127,7 @@ query: wordle -> find_words {
 }
 ```
 
-<img src="{{site.baseurl}}/img/wordle217d.png" style="width: 200px">
+<img src="../../img/wordle217d.png" style="width: 200px">
 
 There it is, and our solution also happens to describe our reaction after missing that coin-toss! We'll go ahead and call this one 3.5 again based on the last round.
 

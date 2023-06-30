@@ -65,7 +65,7 @@ query: wordle -> find_words
 
 ### Start with 'SAUCE' today (why not?)
 
-<img src="{{site.baseurl}}/img/wordle215a.png" style="width: 200px">
+<img src="../../img/wordle215a.png" style="width: 200px">
 
 ### Query for words that
   * Don't have the letters 'SAUCE'
@@ -82,7 +82,7 @@ query: wordle -> find_words {
 
 ### Best next word is 'BOOTY', trust double letters today.
 
-<img src="{{site.baseurl}}/img/wordle215b.png" style="width: 200px">
+<img src="../../img/wordle215b.png" style="width: 200px">
 
 ### Query for words that
    * Contain 'B' and 'O' and 'T'
@@ -101,7 +101,7 @@ query: wordle -> find_words {
 ```
 
 
-<img src="{{site.baseurl}}/img/wordle215c.png" style="width: 200px">
+<img src="../../img/wordle215c.png" style="width: 200px">
 
 ## Solved in 3!
 

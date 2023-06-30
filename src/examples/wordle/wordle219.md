@@ -15,7 +15,7 @@ query: wordle -> find_words
 
 We'll open up with 'SAUCE' again today (skipping those double-letter words this early on).
 
-<img src="{{site.baseurl}}/img/wordle219a.png" style="width: 200px">
+<img src="../../img/wordle219a.png" style="width: 200px">
 
 ## The Second Guess
 Nothing on 'SAUCE'--let's look for our top scoring words excluding these characters.
@@ -29,7 +29,7 @@ query: wordle -> find_words {
 
 Still feels a bit early for double letters, so we're running with 'DOILY'
 
-<img src="{{site.baseurl}}/img/wordle219b.png" style="width: 200px">
+<img src="../../img/wordle219b.png" style="width: 200px">
 
 ## Round 3/4: More Creative Tie-breaking
  With one green and one yellow match we're down to two possible words.
@@ -56,7 +56,7 @@ query: wordle -> find_words {
 }
 ```
 
-<img src="{{site.baseurl}}/img/wordle219c.png" style="width: 200px">
+<img src="../../img/wordle219c.png" style="width: 200px">
 
 Our luck on these tie-breakers really hasn't been so great, but all in all another 3.5 day isn't half bad!
 
