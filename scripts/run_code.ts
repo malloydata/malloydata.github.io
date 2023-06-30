@@ -230,7 +230,7 @@ export async function runCode(
   );
 
   const document = new JSDOM().window.document;
-  const element = await new HTMLView(document).render(queryResult.data, {
+  const element = await new HTMLView(document).render(queryResult, {
     dataStyles,
   });
   const htmlResult = element.outerHTML;
