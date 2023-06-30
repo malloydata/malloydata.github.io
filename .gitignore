@@ -1,6 +1,5 @@
 # auto-generated docs
-/docs/*
-/docs_old
+/docs/**
 
 # misc
 node_modules
