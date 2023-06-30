@@ -15,7 +15,7 @@ Literal expressions are any literal value that you can write in Malloy. These in
 Some functions require that particular arguments be _literals_. For example, `avg_moving(expr, preceding)` required that `preceding` be a literal `number`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -31,7 +31,7 @@ Constant expressions are produced by operating on literals, e.g. `1 + 1` etc.
 Some functions require that particular arguments be _constants_. For example, the `default` argument to `lag` must be constant:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -64,7 +64,7 @@ Output expressions are those which reference columns in the output of a query or
 Any time a field is included in a query, it creates an _output field_ with the same name:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: 
     carrier
@@ -78,7 +78,7 @@ The above query defines `carrier`, `new_field`, and `flight_count` as _output fi
 When inside a `calculate:` statement, field references will by default use the _output field_ with that name. There is often an _input field_ with the same name, and in that case the output field will take precedence. In the following query, `group_by: carrier` creates an output field called `carrier`. In `lag(carrier)`, `carrier` refers to that output field (rather than the input field `carrier` defined in `flights`) because it appears inside a `calculate:` statement.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
@@ -88,7 +88,7 @@ query: flights -> {
 In this next query, `group_by: output_carrier is carrier` creates an output field called `output_carrier`, which is referenced in the subsequent line. 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: output_carrier is carrier
   calculate: prev_carrier is lag(output_carrier)
@@ -102,7 +102,7 @@ Here, `calculate: prev_carrier is lag(carrier)` would result in an error, becaus
 An aggregate value is always considered to be an output expression, even when it is a direct reference to a `measure`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   calculate: prev_carrier_flight_count is lag(flight_count)

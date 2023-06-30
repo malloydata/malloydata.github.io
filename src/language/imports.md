@@ -13,13 +13,13 @@ be included in the file's _public namespace_.
 
 Consider a file <code>samples/faa/flights.malloy</code>:
 ```malloy
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   primary_key: code
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   join_one: origin is airports with origin_code
   join_one: destination is airports with destination_code
 }

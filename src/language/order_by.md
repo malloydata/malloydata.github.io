@@ -12,7 +12,7 @@ If a query stage has a [dimensional](fields.md#dimensions) column that represent
 important concept in the query.  Because the most recent data is usually the most relevant, Malloy sorts the newest data first.
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size":"small" }
+--! {"isRunnable": true, "source": "flights.malloy", "size":"small" }
 query: flights -> {
   group_by: dep_month is dep_time.month
   aggregate: flight_count is count()
@@ -25,7 +25,7 @@ If there is a [measure](fields.md#measures) involved, Malloy sorts larger values
 In the following example, Rule 1 doesn't apply, so the default behavior is to sort by first aggregate, `flight_count` with the largest values first.
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size":"small" }
+--! {"isRunnable": true, "source": "flights.malloy", "size":"small" }
 query: flights -> {
   group_by: carrier
   aggregate: flight_count is count()
@@ -39,7 +39,7 @@ You can be explicit about result ordering by using the `order by` clause.
 In the following example, the results are ordered by `carrier` in reverse alphabetical order.
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size":"small" }
+--! {"isRunnable": true, "source": "flights.malloy", "size":"small" }
 query: flights -> {
   order_by: carrier desc
   group_by: carrier
@@ -51,7 +51,7 @@ Like in SQL, Malloy's `order by` always defaults to ascending order when `desc` 
 the results are ordered by `carrier` in alphabetical order.
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size":"small" }
+--! {"isRunnable": true, "source": "flights.malloy", "size":"small" }
 query: flights -> {
   order_by: carrier
   group_by: carrier
@@ -66,7 +66,7 @@ In Malloy, you can limit the number of results returned using a `top: n` or `lim
 In the example below, the results are limited to 2 rows, which are sorted by `dep_month` with newest results first (due to Rule 1).
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size":"small" }
+--! {"isRunnable": true, "source": "flights.malloy", "size":"small" }
 query: flights -> {
   top: 2
   group_by: dep_month is dep_time.month

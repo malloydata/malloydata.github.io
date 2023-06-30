@@ -16,7 +16,7 @@ A source can be created from a SQL table or view from a connected database.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 ```
@@ -26,7 +26,7 @@ the source table are available for use in field definitions
 or queries.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e1.malloy"}
+--! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e1.malloy"}
 query: flights -> {
   // Columns from the source table are available
   group_by:
@@ -46,7 +46,7 @@ the base source with modifications only relevant in that specific context.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
@@ -61,7 +61,7 @@ source: my_flights is flights {
 }
 ```
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e1.malloy"}
+--! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e1.malloy"}
 query: my_flights -> carrier_stats { limit: 3 }
 ```
 
@@ -79,7 +79,7 @@ be defined inline or referenced by name.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e2.malloy"}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
@@ -94,7 +94,7 @@ source: carrier_facts is from(
 
 ```
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e2.malloy"}
+--! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e2.malloy"}
 query: carrier_facts -> {
   project: carrier, lifetime_flights_bucketed, lifetime_flights
   limit: 3
@@ -106,7 +106,7 @@ query: carrier_facts -> {
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e3.malloy"}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
   query: by_carrier is {
     group_by: carrier
@@ -119,7 +119,7 @@ source: carrier_facts is from(flights -> by_carrier) {
 }
 ```
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e3.malloy"}
+--! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e3.malloy"}
 query: carrier_facts -> {
   project: carrier, lifetime_flights_bucketed, lifetime_flights
   limit: 3
@@ -132,16 +132,17 @@ For more information about named queries appearing in models, see the [Models](s
 Sources can be created from a SQL block, e.g.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large" }
+--! {"isRunnable": true, "showAs":"html", "size": "large" }
 sql: my_sql_query is {
   select: """
     SELECT
       first_name,
       last_name,
       gender
-    FROM malloy-data.ecomm.users
+    FROM 'data/users.parquet'
     LIMIT 10
   """
+  connection: "duckdb"
 }
 
 source: limited_users is from_sql(my_sql_query) {
@@ -165,7 +166,7 @@ When a source is defined, filters which apply to any query against the new sourc
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e4.malloy"}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
@@ -175,7 +176,7 @@ source: long_sfo_flights is flights {
 ```
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e4.malloy"}
+--! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e4.malloy"}
 query: long_sfo_flights -> { group_by: destination; aggregate: flight_count; limit: 3 }
 ```
 
@@ -185,7 +186,7 @@ To be used in joins to other sources, a source must
 have a primary key specified.
 
 ```malloy
-source: carriers is table('malloy-data.faa.carriers') {
+source: carriers is duckdb.table('data/carriers.parquet') {
   primary_key: code
 }
 ```
@@ -196,17 +197,17 @@ When sources are joined as part of their definition, queries can reference field
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e5.malloy"}
-source: carriers is table('malloy-data.faa.carriers') {
+source: carriers is duckdb.table('data/carriers.parquet') {
   primary_key: code
 }
 
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   join_one: carriers with carrier
   measure: flight_count is count()
 }
 ```
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e5.malloy"}
+--! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e5.malloy"}
 query: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count
@@ -225,7 +226,7 @@ part of the source, allowing for them to be used in any
 query against the source.
 
 ```malloy
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   // A dimension
   dimension: has_control_tower is cntl_twr = 'Y'
 
@@ -245,7 +246,7 @@ source: airports is table('malloy-data.faa.airports') {
 Fields from a source may be renamed in the context of the
 new source. This is useful when the original name is not descriptive, or has a different meaning in the new context.
 ```malloy
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   rename: facility_type is fac_type
   rename: origin_code is origin
 
@@ -260,7 +261,7 @@ The list of fields available in a source  can be limited. This can be done eithe
 **Accepting fields**
 
 ```malloy
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   accept: id, name, code, city, state, elevation
 }
 ```
@@ -268,7 +269,7 @@ source: airports is table('malloy-data.faa.airports') {
 **Excepting fields**
 
 ```malloy
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   except: c_ldg_rts, aero_cht, cntl_twr
 }
 ```

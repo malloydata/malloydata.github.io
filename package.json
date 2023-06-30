@@ -35,6 +35,7 @@
   "homepage": "https://github.com/malloydata/malloydata.github.io#readme",
   "devDependencies": {
     "@malloydata/db-bigquery": "0.0.50",
+    "@malloydata/db-duckdb": "0.0.50",
     "@malloydata/malloy": "0.0.50",
     "@malloydata/render": "0.0.50",
     "@types/jsdom": "^20.0.0",

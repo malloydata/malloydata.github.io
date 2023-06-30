@@ -7,8 +7,8 @@ Compare performance of different years on the same scale.  Line charts take the 
 In this Case, the X-Axis is `month_of_year`, the Y-Axis is `flight_count` and the Dimensional Axis is the year.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "size": "medium", "dataStyles": {"year_over_year":{"renderer":"line_chart"}}}
-source: flights is table('malloy-data.faa.flights') {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "dataStyles": {"year_over_year":{"renderer":"line_chart"}}}
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
@@ -25,9 +25,9 @@ query: flights -> {
 Filters make it easy to reuse aggregate calculations for trends analysis.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto",   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 // common calculation for flights
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
@@ -50,12 +50,12 @@ Often you want to show up-to-date information.  You can write timeframes relativ
 current data.  Read more about it in the [filters](../language/filters.md) section.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto",   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
-source: inventory_items is table('malloy-data.ecomm.inventory_items') {
+--! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+source: inventory_items is duckdb.table('data/inventory_items.parquet') {
   primary_key: id
 }
 
-source: order_items is table('malloy-data.ecomm.order_items') {
+source: order_items is duckdb.table('data/order_items.parquet') {
   join_one: inventory_items with inventory_item_id
   measure: order_item_count is count()
 }
@@ -79,13 +79,13 @@ query: order_items -> {
 We can rewrite the query so it is more reusable.  The declarations after the source are temporary additions to this order_items table for the sake of just this query.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto",   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 -- common calculation for order_items
-source: inventory_items is table('malloy-data.ecomm.inventory_items') {
+source: inventory_items is duckdb.table('data/inventory_items.parquet') {
   primary_key: id
 }
 
-source: order_items is table('malloy-data.ecomm.order_items') {
+source: order_items is duckdb.table('data/order_items.parquet') {
   join_one: inventory_items  with inventory_item_id
   measure: order_item_count is count()
 }

@@ -13,7 +13,7 @@ Scatter charts compare two numeric values. The data styles for the subsequent ex
 ## Run as a nested subtable
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "size": "medium", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "size": "medium", "source": "flights.malloy"}
 query: flights -> {
   where: origin_code = 'ORD'
   nest: seats_by_distance_scatter_chart is {
@@ -27,7 +27,7 @@ query: flights -> {
 ## Run as a trellis
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: origin_code
   nest: seats_by_distance_scatter_chart is {

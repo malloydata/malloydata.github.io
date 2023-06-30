@@ -15,7 +15,7 @@ The `all()` function will perform the specified aggregate computation `aggregate
 current query to provide an overall value.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}
+--! {"isRunnable": true, "source": "airports.malloy"}
 query: airports -> {
   group_by: faa_region
   aggregate: percent_of_total is count() / all(count())*100.0
@@ -25,7 +25,7 @@ query: airports -> {
 When `grouping_dimension`s are provided, `all()` will preserve grouping by the named dimensions. For example, in the query below, grouping by `faa_region` is preserved, while `state` is ungrouped.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}
+--! {"isRunnable": true, "source": "airports.malloy"}
 query: airports -> {
   group_by: faa_region, state
   aggregate:
@@ -47,7 +47,7 @@ Similar to `all()`,  `exclude()` allows you to control which grouping dimensions
 used to compute `aggregate_expr`. In this case, dimensions which should _not_ be used are listed. For example, these two aggregates will do the exact same thing:
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/airports.malloy"}
+--! {"isRunnable": true, "source": "airports.malloy"}
 query: airports -> {
   group_by: faa_region, fac_type
   aggregate:

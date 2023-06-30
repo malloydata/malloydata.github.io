@@ -30,7 +30,7 @@ dimension: timestamp_value is timestamp_seconds!timestamp(value)
 There is a new keyword `calculate:` which can appear in a query, for use with [analytic functions](./functions.md#analytic-functions).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
 query: flights -> {
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
@@ -73,7 +73,7 @@ Prior to version 0.0.9, lists of things were contained inside `[ ]`. Going forwa
 
 For example, this syntax:
 ```malloy
-query: table('malloy-data.faa.airports') -> {
+query: duckdb.table('data/airports.parquet') -> {
   top: 10
   group_by: [
     faa_region
@@ -94,7 +94,7 @@ query: table('malloy-data.faa.airports') -> {
 
 Is now written:
 ```malloy
-query: table('malloy-data.faa.airports') -> {
+query: duckdb.table('data/airports.parquet') -> {
   top: 10
   group_by:
     faa_region

@@ -46,7 +46,7 @@ line in a comment with an `!`, like: `--! { "isRunnable": true }`. For example,
 
 ````
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
 flights -> sessionize
 ```
 ````

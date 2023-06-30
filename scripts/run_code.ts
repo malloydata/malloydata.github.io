@@ -33,8 +33,11 @@ import {
   URLReader,
   QueryMaterializer,
   SQLBlockMaterializer,
+  FixedConnectionMap,
+  Connection,
 } from "@malloydata/malloy";
 import { BigQueryConnection } from "@malloydata/db-bigquery";
+import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
 import { promises as fs } from "fs";
 import { performance } from "perf_hooks";
@@ -45,7 +48,7 @@ import { highlight } from "./highlighter.js";
 
 const __dirname = path.resolve("./docs/_scripts/build_docs");
 
-const MODELS_BIGQUERY_PATH = path.join(__dirname, "../../../models/bigquery");
+const MODELS_PATH = path.join(__dirname, "../../../models");
 
 export const DEPENDENCIES = new Map<string, string[]>();
 
@@ -53,7 +56,7 @@ export const DEPENDENCIES = new Map<string, string[]>();
  * Add a known dependency to the `DEPENDENCIES` map.
  */
 function addDependency(modelPath: string, documentPath: string) {
-  const key = modelPath.substring(MODELS_BIGQUERY_PATH.length);
+  const key = modelPath.substring(MODELS_PATH.length);
   const existing = DEPENDENCIES.get(key);
   if (existing) {
     if (!existing.includes(documentPath)) {
@@ -138,8 +141,19 @@ const BIGQUERY_CONNECTION = new BigQueryConnection("bigquery", {
   rowLimit: 5,
 });
 
+const DUCKDB_CONNECTION = new DuckDBConnection("duckdb", undefined, MODELS_PATH, {
+  rowLimit: 5,
+});
+
+const CONNECTIONS = new FixedConnectionMap(
+  new Map<string, Connection>([
+    ["bigquery", BIGQUERY_CONNECTION],
+    ["duckdb", DUCKDB_CONNECTION]
+  ])
+);
+
 function resolveSourcePath(sourcePath: string) {
-  return `file://${path.resolve(path.join(MODELS_BIGQUERY_PATH, sourcePath))}`;
+  return `file://${path.resolve(path.join(MODELS_PATH, sourcePath))}`;
 }
 
 function mapKeys<KA, V, KB>(
@@ -165,7 +179,7 @@ export async function runCode(
     documentPath,
     mapKeys(inlineModels, resolveSourcePath)
   );
-  const runtime = new Runtime(urlReader, BIGQUERY_CONNECTION);
+  const runtime = new Runtime(urlReader, CONNECTIONS);
 
   // Here, we assume that docs queries that reference a model only care about
   // things _exported_ from that model. In other words, a query with

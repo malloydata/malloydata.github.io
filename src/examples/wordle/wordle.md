@@ -11,7 +11,7 @@ into BigQuery. If you'd like to use DuckDB (which is natively supported) instead
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-source: words is table('malloy-data.malloytest.words_bigger')
+source: words is bigquery.table('malloy-data.malloytest.words_bigger')
 
 query: words -> { project: * }
 ```
@@ -22,7 +22,7 @@ limit the results to 5 letter words.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-source: words is table('malloy-data.malloytest.words_bigger') {
+source: words is bigquery.table('malloy-data.malloytest.words_bigger') {
   query: five_letter_words is {
     where: length(word) = 5 // add a filter
     project: word
@@ -37,7 +37,7 @@ and Uppercase words in the output of our query.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/w1.malloy"}
-source: words is table('malloy-data.malloytest.words_bigger') {
+source: words is bigquery.table('malloy-data.malloytest.words_bigger') {
   query: five_letter_words is {
     where: length(word) = 5 and word ~ r'^[a-z]{5}$'
     project: word is upper(word)

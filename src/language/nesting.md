@@ -5,7 +5,7 @@ Nested queries, more formally known as "aggregating subqueries" are queries incl
 When a named query is nested inside of another query, it produces an aggregating subquery and the results include a nested subtable.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy"}
+--! {"isRunnable": true, "showAs":"html", "source": "airports.malloy"}
 query: airports -> {
   group_by: state
   aggregate: airport_count
@@ -21,7 +21,7 @@ query: airports -> {
 Aggregating subqueries can be nested infinitely, meaning that a nested query can contain another nested query.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "size": "large"}
+--! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large"}
 query: airports -> {
   group_by: state
   aggregate: airport_count
@@ -42,7 +42,7 @@ query: airports -> {
 Filters can be applied at any level within nested queries.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/airports.malloy", "size": "large"}
+--! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large"}
 query: airports -> {
   where: state ? 'CA' | 'NY' | 'MN'
   group_by: state

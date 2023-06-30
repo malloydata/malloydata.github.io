@@ -12,7 +12,7 @@ word we were searching for.  We found a larger dictionary and uploaded and re-ra
 ## Query for the best starting words.
 
 ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words
 ```
 
@@ -24,7 +24,7 @@ Skipping 'SAREE' and 'SOOTY' to avoid duplicates this early in the game, let's g
 'C' as yellow in the 4th position.
 
 ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words {
   where:
     word ~ r'C'
@@ -41,7 +41,7 @@ Wow, lots of double letter words, let's skip them this early in the game and pic
 In three.
 
 ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words {
   where:
     word ~ r'C' and word ~r'I' and word ~r'R'
@@ -60,7 +60,7 @@ query: wordle -> find_words {
 
 ```malloy
 // Make a table of 5 letter words
-source: words is table('malloy-data.malloytest.words') {
+source: words is bigquery.table('malloy-data.malloytest.words') {
   query: five_letter_words is {
     where: length(word) = 5 and word ~ r'^[a-z]{5}$'
     project: word is upper(word)
@@ -68,7 +68,7 @@ source: words is table('malloy-data.malloytest.words') {
 }
 
 // Cross join numbers
-source: numbers is table('malloy-data.malloytest.numbers') {
+source: numbers is bigquery.table('malloy-data.malloytest.numbers') {
   where: num <= 5
 }
 

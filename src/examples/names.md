@@ -6,8 +6,8 @@ The Data set consists of name, gender, state and year with the number of people 
 were born with that name in that gender, state and year.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto",   "isPaginationEnabled": false, "pageSize": 100}
-query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+--! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+query: duckdb.table('data/usa_names.parquet') -> {
   top: 10
   project: *
 }
@@ -23,7 +23,7 @@ and `year` are reserved words, we have to quote the names with back-tics.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+query: duckdb.table('data/usa_names.parquet') -> {
   group_by: name
   aggregate: population is `number`.sum()
 }
@@ -44,7 +44,7 @@ Expressions work much the same as they do in SQL.  We can look at population ove
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+query: duckdb.table('data/usa_names.parquet') -> {
   top: 10
   group_by: decade is floor(`year` / 10) * 10
   aggregate: population is sum(`number`)
@@ -54,9 +54,9 @@ query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
 ## Cohorts
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "pageSize":20, "size":"large" }
+--! {"isRunnable": true, "isPaginationEnabled": true, "pageSize":20, "size":"large" }
 source: names is from(
-  table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+  duckdb.table('data/usa_names.parquet') -> {
     group_by:
       decade is floor(`year` / 10) * 10
       state
@@ -91,7 +91,7 @@ query: names -> {
 ## Dashboard
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "names/names.malloy", "isPaginationEnabled": false, "pageSize": 100, "size":"large"}
+--! {"isRunnable": true, "source": "names.malloy", "isPaginationEnabled": false, "pageSize": 100, "size":"large"}
 query: names -> name_dashboard { where: name ~ 'Mich%' }
 ```
 
@@ -99,7 +99,7 @@ query: names -> name_dashboard { where: name ~ 'Mich%' }
 Calculate the births per 100K for a name in general and a name within a state. Compute and sort by a ratio to figure out relative popularity.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "names/names.malloy", "isPaginationEnabled": false, "pageSize": 100, "size":"large"}
+--! {"isRunnable": true, "source": "names.malloy", "isPaginationEnabled": false, "pageSize": 100, "size":"large"}
 query: names { where: decade < 1970 } -> {
   group_by: name
   group_by: gender

@@ -14,7 +14,7 @@ We recommend looking at the individual visualization documents in this section a
 While the above approach is preferred, the extension additionally allows the renderer to utilize naming conventions as a shortcut for visualization specification. For example:
 
 ```malloy
-query: flights_bar_chart is table('malloy-data.faa.flights') -> {
+query: flights_bar_chart is duckdb.table('data/flights.parquet') -> {
   group_by: origin
   aggregate: flight_count is count()
 }
@@ -37,7 +37,7 @@ Styles apply to standalone queries as well as when nested.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
   query: by_state_and_county is {
     limit: 10
@@ -63,7 +63,7 @@ source: airports is table('malloy-data.faa.airports') {
 The `dashboard` style can be invoked either through the styles file or the `_dashboard` suffix.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size":"large", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy", "queryName": "county_dashboard"}
+--! {"isRunnable": true, "showAs":"html", "size":"large", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy", "queryName": "county_dashboard"}
 query: county_dashboard is airports -> by_state_and_county
 ```
 
@@ -83,7 +83,7 @@ Data Style:
 ```
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size":"large", "isPaginationEnabled": true, "queryName": "county_dashboard", "source": "/inline/airports_mini.malloy", "dataStyles": {"by_fac_type": {"renderer": "bar_chart"},"by_county": {"renderer": "bar_chart"}}}
+--! {"isRunnable": true, "showAs":"html", "size":"large", "isPaginationEnabled": true, "queryName": "county_dashboard", "source": "/inline/airports_mini.malloy", "dataStyles": {"by_fac_type": {"renderer": "bar_chart"},"by_county": {"renderer": "bar_chart"}}}
 query: county_dashboard is airports -> by_state_and_county
 ```
 

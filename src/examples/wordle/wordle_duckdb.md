@@ -7,7 +7,7 @@ Instead of loading the word list from BigQuery, import the local word file direc
 
 ```
 // INSTEAD OF THIS
-// source: words is table('malloy-data.malloytest.words_bigger')
+// source: words is bigquery.table('malloy-data.malloytest.words_bigger')
 
 // USE THIS
 sql: words_sql is  {
@@ -31,7 +31,7 @@ Instead of loading the numbers table from BigQuery, generate the same table usin
 
 ```
 // INSTEAD OF THIS
-// source: numbers is table('malloy-data.malloytest.numbers') {
+// source: numbers is bigquery.table('malloy-data.malloytest.numbers') {
 //   where: num <= 5
 // }
 

@@ -14,6 +14,7 @@ sql: my_sql_query is {
   select: """
     SELECT 1
   """
+  connection: "duckdb"
 }
 
 source: empty is from_sql(my_sql_query) {}
@@ -92,7 +93,7 @@ If no values are given, `concat` returns the empty string.
 Behavior for `null` depends on dialect: in BigQuery, if any argument is `null`, the result is `null`; in DuckDB and Postgres, `null` is treated as an empty string.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is concat('foo', 'bar')
@@ -111,7 +112,7 @@ lower(value)
 Returns a string like `value` but with all alphabetic characters in lowercase.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: e1 is lower('FOO')
 }
@@ -126,7 +127,7 @@ upper(value)
 Returns a string like `value` but with all alphabetic characters in uppercase.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: e1 is upper('foo')
 }
@@ -141,7 +142,7 @@ strpos(test_string, search_string)
 Returns the 1-based position of the first occurrence of `search_string` in `test_string`, or `0` if `search_string` is not found.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is strpos('abc', 'b')
@@ -160,7 +161,7 @@ starts_with(value, prefix)
 Returns `true` if `value` begins with `prefix` and `false` otherwise. If either `value` or `prefix` is `null`, the result is `false` (unlike in SQL, where it would be `null`).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is starts_with('abc', 'a')
@@ -179,7 +180,7 @@ ends_with(value, suffix)
 Returns `true` if `value` ends with `prefix` and `false` otherwise. If either `value` or `suffix` is `null`, the result is `false` (unlike in SQL, where it would be `null`).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is ends_with('abc', 'c')
@@ -199,7 +200,7 @@ trim(value, trim_characters)
 Returns a string with leading and trailing characters in `trim_characters` (or whitespace, if `trim_characters` is unspecified) removed.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"json", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is trim('  keep this  ')
@@ -220,7 +221,7 @@ ltrim(value, trim_characters)
 Like `trim(value, trim_characters)` but only removes leading characters.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"json", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is ltrim('  keep this ->  ')
@@ -241,7 +242,7 @@ rtrim(value, trim_characters)
 Like `trim(value, trim_characters)` but only removes trailing characters.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"json", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is rtrim('  <- keep this  ')
@@ -262,7 +263,7 @@ substr(value, position, length)
 Returns a substring of `value` starting at the 1-based index `position`. If `length` is specified, the returned string will be at most `length` characters long; otherwise the returned string will extend to the end of `value`. Negative values of `position` index the starting value from the end of the string (with `-1` for the last character of the string). A `position` of `0` is equivalent to a `position` of `1`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is substr('123456789', 1)
@@ -286,7 +287,7 @@ regexp_extract(value, pattern)
 Returns the first substring of `value` which matches `pattern`. Returns `null` if there is no matching substring.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is regexp_extract('the Malloy language', r'M....y')
@@ -309,7 +310,7 @@ If `pattern` is empty, no replacement occurs and `value` is returned unchanged.
 If `pattern` is a regular expression, parenthesized capturing groups can be included in the `replacement` string with `'\\1'` to `'\\9'`. In BigQuery and DuckDB, the full matched string can be referenced with `'\\0'`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is replace('the SQL language', 'SQL', 'Malloy')
@@ -333,7 +334,7 @@ length(value)
 Returns the number of characters in `value`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is length('Malloy')
@@ -352,7 +353,7 @@ byte_length(value)
 Returns the number of bytes in the unicode encoding of `value`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is byte_length('Malloy')
@@ -371,7 +372,7 @@ chr(value)
 Returns a unicode code point `value` and returns a string containing the character with the matching code point. If `value` is 0, returns an empty string _not_ a string containing the null character.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"json", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is chr(65)
@@ -394,7 +395,7 @@ Returns the ASCII code point of the first character of `value`. If `value` is em
 In BigQuery, `ascii` errors if the first character of `value` is not representable in ASCII. In Postgres and DuckDB, `ascii` returns the Unicode code point of the first character.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is ascii('Malloy')
@@ -412,7 +413,7 @@ unicode(value)
 Returns the Unicode code point of the first character of `value`. If `value` is empty, returns 0.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is unicode('Malloy')
@@ -433,7 +434,7 @@ Return a string consisting of `value` repeated `num_repetitions` times.
 Undefined behavior if `num_repetitions` is negative or a non-integer.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is repeat('(A)', 3)
@@ -454,7 +455,7 @@ reverse(value)
 Return a copy of `value` with the characters in reverse order.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is reverse('Malloy')
@@ -513,7 +514,7 @@ Round `value` to the nearest integer, or if `precision` is specified, round to `
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is round(1.49)
@@ -550,7 +551,7 @@ trunc(value, precision)
 Truncate `value` to an integer, or if `precision` is specified, truncate after that many decimal places. If `precision` is negative, truncate to that many decimal places to the left of the decimal point. Similar to `round(value, precision)` but always rounds toward zero.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     e1 is trunc(1.49)
@@ -574,7 +575,7 @@ floor(value)
 Round `value` down to the greatest integer not larger than `value`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is floor(1.0)
@@ -593,7 +594,7 @@ ceil(value)
 Round `value` up to the smallest integer not less than `value`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is ceil(1.0)
@@ -612,7 +613,7 @@ cos(angle)
 Computes the cosine of `angle` where `angle` is specified in radians.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is cos(0)
@@ -631,7 +632,7 @@ acos(value)
 Computes the principal value of the inverse cosine of `value`. The return value is in the range [0,π]. Generates an error if `value` is a value outside of the range [-1, 1].
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is acos(0)
@@ -651,7 +652,7 @@ Computes the sine of `angle` where `angle` is specified in radians.
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is sin(0)
@@ -670,7 +671,7 @@ asin(value)
 Computes the principal value of the inverse sine of `value`. The return value is in the range [-π/2,π/2]. Generates an error if `value` is outside of the range [-1, 1].
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is asin(0)
@@ -690,7 +691,7 @@ tan(angle)
 Computes the tangent of `angle` where `angle` is specified in radians.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is tan(0)
@@ -710,7 +711,7 @@ atan(value)
 Computes the principal value of the inverse tangent of `value`. The return value is in the range [-π/2,π/2].
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is atan(0)
@@ -730,7 +731,7 @@ Calculates the principal value of the inverse tangent of `x / y` using the signs
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is atan2(1, 0)
@@ -752,7 +753,7 @@ Computes the square root of `value`. Generates an error if `value < 0`.
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is sqrt(9)
@@ -770,7 +771,7 @@ pow(base, exponent)
 Returns `base` raised to the power of `exponent`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is pow(2, 3)
@@ -795,7 +796,7 @@ abs(value)
 Returns the absolute value of `value`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is abs(100)
@@ -814,7 +815,7 @@ sign(value)
 Returns `-1`, `0`, or `1` for negative, zero and positive arguments respectively. For floating point arguments, this function does not distinguish between positive and negative zero.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is sign(100)
@@ -833,7 +834,7 @@ is_inf(value)
 Returns `true` if `value` is infinite (positive or negative), `false` otherwise. Unlike in SQL, `is_inf(null) = false` (not `null`).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is is_inf(100)
@@ -853,7 +854,7 @@ is_nan(value)
 Returns `true` if `value` is `NaN`, `false` otherwise. Unlike in SQL, `is_nan(null) = false` (not `null`).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is is_nan(100)
@@ -872,7 +873,7 @@ div(dividend, divisor)
 Returns the (truncated) integer part of the division of `dividend` by `divisor`. Division by zero returns an error. 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is div(9, 2)
@@ -893,7 +894,7 @@ rand()
 Returns a random number in the range [0, 1).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is rand()
@@ -911,7 +912,7 @@ pi()
 Returns the value of π.
 
 ```malloy
---! {"isRunnable": true, "showAs":"json", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"json", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: pi is pi()
 }
@@ -926,7 +927,7 @@ log(value, base)
 Returns the logarithm of `value` with the specified `base`. Note that `base` is required. Errors if `value <= 0`, `base <= 0`, or if `base = 1`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is log(10, 10)
@@ -946,7 +947,7 @@ ln(value)
 Returns the natural log (log base _e_) of `value`. Equivalent to `log(value, exp(1))`. Errors if `value <= 0`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is ln(exp(1))
@@ -965,7 +966,7 @@ exp(power)
 Returns _e_ (Euler's number) raised to the given `power`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is exp(1)
@@ -1060,7 +1061,7 @@ Calculate the number of years in `interval`. Note: this function does not curren
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is seconds(now to now + 1 second)
@@ -1180,7 +1181,7 @@ second(time)
 Returns the second of the minute (from 0 to 59) of `time`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty { dimension: t is @2023-12-31 23:59:59 } -> {
   group_by: 
     doy is day_of_year(t)
@@ -1226,7 +1227,7 @@ greatest(value, ...)
 Returns the greatest value of all arguments, supporting, `number`, `string`, `date`, and `timestamp`. Returns `null` if any argument is `null`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is greatest(3, 1, 8)
@@ -1247,7 +1248,7 @@ Returns the least value of all arguments, supporting, `number`, `string`, `date`
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is least(3, 1, 8)
@@ -1269,7 +1270,7 @@ Return `value` unless it is `null`, or `default` otherwise.
 Note: it is more idiomatic in Malloy to use `??`, the null-coalescing operator.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a_sql is ifnull(null, 1)
@@ -1288,7 +1289,7 @@ Return the first `value` which is not `null`, or `null` if all `value`s are `nul
 Note: it is more idiomatic in Malloy to use `??`, the null-coalescing operator.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a_sql is coalesce(null, 1, 2)
@@ -1307,7 +1308,7 @@ Equivalent to the SQL <code>NULLIF</code> function: returns `value` unless `valu
 Note: the use of `nullif` is not idiomatic to Malloy; use `pick` statements instead, as they are more flexible.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty { dimension: value is 1 } -> {
   group_by: 
     a_sql is nullif(value, 2)
@@ -1325,7 +1326,7 @@ There are many functions which are useful in SQL which are not part of Malloy fo
 Neither <code>IFNULL</code> nor <code>COALESCE</code> is available in Malloy, because Malloy has a specific coalescing operator: `??`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty -> {
   group_by: 
     a is null ?? 1      // same as IFNULL(NULL, 1)
@@ -1338,7 +1339,7 @@ query: empty -> {
 The <code>NULLIF</code> SQL function is not available in Malloy, because the same thing is expressible in a more Malloy-like way, using a `pick` statement. This is also more flexible, as the pick statement allows for partial comparisons.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "/inline/empty.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "/inline/empty.malloy" }
 query: empty { dimension: value is 1 } -> {
   group_by: 
     a is value ? pick null when 2   // same as NULLIF(value, 2)
@@ -1377,7 +1378,7 @@ stddev(value)
 Returns the standard deviation of values of `value` across all rows.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
 query: flights -> {
   group_by: carrier
   aggregate: dep_delay_avg is avg(dep_delay)
@@ -1407,7 +1408,7 @@ Analytic functions can only appear in a `calculate:` statement:
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
 query: flights -> {
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
@@ -1419,7 +1420,7 @@ For more detailed information, see the [Calculations](./calculations.md) section
 <!-- Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: 
     carrier is 'CA'
@@ -1475,7 +1476,7 @@ row_number()
 Returns the row number of the current result row after grouping and aggregating.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   calculate: row is row_number()
@@ -1491,7 +1492,7 @@ rank()
 Returns the rank according to the query ordering, with values having equal ordering value getting equal rank.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count_bucket is round(flight_count, -6)
@@ -1515,7 +1516,7 @@ Generates an error if `offset` is `null`, negative, or not an integer.
 The value of `offset` must be a _constant_.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
@@ -1539,7 +1540,7 @@ Generates an error if `offset` is `null`, negative, or not an integer.
 The value of `offset` must be a _constant_.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> { 
   group_by: carrier
   limit: 5 
@@ -1560,7 +1561,7 @@ first_value(expr)
 Returns the first value of `expr` across all rows (i.e. the value for the first row).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   calculate: first_carrier is first_value(carrier)
@@ -1576,7 +1577,7 @@ last_value(expr)
 Returns the last value of `expr` across all rows (i.e. the value for the last row).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> { 
   group_by: carrier
   limit: 5 
@@ -1595,7 +1596,7 @@ min_cumulative(expr)
 Returns the minimum value of `expr` among rows from the first row to the current row.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   order_by: carrier asc
@@ -1613,7 +1614,7 @@ max_cumulative(expr)
 Returns the maximum value of `expr` among rows from the first row to the current row.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   order_by: carrier asc
@@ -1631,7 +1632,7 @@ sum_cumulative(expr)
 Returns the cumulative sum of values of `expr` from the first row to the current row.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   order_by: carrier asc
@@ -1649,7 +1650,7 @@ min_window(expr)
 Returns the minimum of all values of `expr` across all rows.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -1666,7 +1667,7 @@ max_window(expr)
 Returns the maximum of all values of `expr` across all rows.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -1683,7 +1684,7 @@ sum_window(expr)
 Returns the sum of all values of `expr` across all rows.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -1706,7 +1707,7 @@ Both `preceding` and `following` must be _literals_.
 Note: `avg_moving(value, 3)` means that the average is computed over 4 rows (the current row and 3 preceding).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count

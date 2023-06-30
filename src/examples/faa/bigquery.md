@@ -9,7 +9,7 @@ Where can you fly from SJC? For each destination; Which carriers?  How long have
 Are they on time?
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "runMode": "auto",  "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy",  "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
 query: flights -> airport_dashboard { where: origin.code ? 'SJC' }
 ```
 
@@ -21,7 +21,7 @@ the major hubs?  For each destination, How many flights? Where can you? Have the
 flying there long?  Increasing or decreasing year by year?  Any seasonality?
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "runMode": "auto",  "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy",  "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
 query: flights -> carrier_dashboard { where: carriers.nickname  ? 'Jetblue' }
 ```
 
@@ -32,7 +32,7 @@ in the future instead of the past.  The query below will fetch all the data need
 to render a Kayak page in a singe query.
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "runMode": "auto", "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
 query: flights -> kayak {
   where:
     origin.code = 'SJC',
@@ -70,7 +70,7 @@ query: sessionize is {
 
 
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "runMode": "auto", "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": false, "pageSize": 100, "size": "large"}
 query: flights { where: carrier ?'WN', dep_time ? @2002-03-03 } -> sessionize
 ```
 
@@ -79,30 +79,30 @@ query: flights { where: carrier ?'WN', dep_time ? @2002-03-03 } -> sessionize
 All of the queries above are executed against the following model:
 
 ```malloy
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   primary_key: code
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
-source: carriers is table('malloy-data.faa.carriers') {
+source: carriers is duckdb.table('data/carriers.parquet') {
   primary_key: code
   measure: carrier_count is count()
 }
 
-source: aircraft_models is table('malloy-data.faa.aircraft_models') {
+source: aircraft_models is duckdb.table('data/aircraft_models.parquet') {
   primary_key: aircraft_model_code
   measure: aircraft_model_count is count()
 }
 
-source: aircraft is table('malloy-data.faa.aircraft') {
+source: aircraft is duckdb.table('data/aircraft.parquet') {
   primary_key: tail_num
   measure: aircraft_count is count()
   join_one: aircraft_models with aircraft_model_code
 }
 
 source: aircraft_facts is from(
-  table('malloy-data.faa.flights') -> {
+  duckdb.table('data/flights.parquet') -> {
     group_by: tail_num
     aggregate:
       lifetime_flights is count()
@@ -113,7 +113,7 @@ source: aircraft_facts is from(
   dimension: lifetime_flights_bucketed is floor(lifetime_flights / 1000) * 1000
 }
 
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   primary_key: id2
   rename: origin_code is origin
   rename: destination_code is destination

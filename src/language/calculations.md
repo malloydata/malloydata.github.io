@@ -9,7 +9,7 @@ A _calculation_ is a kind of field which appears in a `calculate:` operation in 
 For more details, see a [full list of available analytic functions](./functions.md#analytic-functions).
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
 query: flights -> {
   where: carrier = 'WN'
   group_by: dep_year is dep_time.year
@@ -24,7 +24,7 @@ query: flights -> {
 Because calculations operate logically on the output of the grouping/projecting/aggregating operations, field references behave somewhat differently inside a `calculate:` block. In particular, field references refer by default to output names from those operations.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: lower_carrier is lower(carrier)
   calculate: prev_carrier is lag(lower_carrier)

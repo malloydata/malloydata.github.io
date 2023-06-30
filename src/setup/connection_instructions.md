@@ -43,6 +43,6 @@ Add the relevant database connection information. Once you click save, the passw
 
 ## Parquet and CSV Files (via DuckDB)
 
-Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is table('duckdb:babynames.csv')`
+Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is duckdb.table('babynames.csv')`
 
 There are a number of examples on public data using DuckDB available [here](https://github.com/lloydtabb/malloy_examples).

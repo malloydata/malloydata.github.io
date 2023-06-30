@@ -97,7 +97,7 @@ class Renderer {
             this.setModel(options.modelPath, modelCode);
           }
         } catch (error) {
-          log(`  !! Error: ${error.toString()}`);
+          log(`  !! Error: ${error.toString()}\n${error.stack}`);
           result = `<div class="error">Error: ${error.toString()}</div>`;
           this._errors.push({ snippet: code, error: error.message });
         }

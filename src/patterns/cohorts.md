@@ -17,8 +17,8 @@ We can see that in the population of the the people named 'Billie', the cohort o
 Texas makes up 18% of the total population of Billies.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto",   "isPaginationEnabled": true, "pageSize":20, "size":"small" }
-query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+--! {"isRunnable": true, "showAs":"html",   "isPaginationEnabled": true, "pageSize":20, "size":"small" }
+query: duckdb.table('data/usa_names.parquet') -> {
   where: name = 'Billie'
   aggregate: total_population is `number`.sum()
   nest: main_query is {
@@ -38,8 +38,8 @@ We could run this same query, but instead look by decade to see when the Billies
 Using the query below we can see that 26% of all Billies were born in the 1930s.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto",   "isPaginationEnabled": true, "pageSize":20, "size":"small" }
-query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+--! {"isRunnable": true, "showAs":"html",   "isPaginationEnabled": true, "pageSize":20, "size":"small" }
+query: duckdb.table('data/usa_names.parquet') -> {
   where: name = 'Billie'
   aggregate: total_population is `number`.sum()
   nest: main_query is {
@@ -63,8 +63,8 @@ Let's limit our population to California in 1990 and look at the most cohorts (p
 to measure a little differently.  Instead of looking at a percentage, let's look at births per 100,000 people.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto",   "isPaginationEnabled": true, "pageSize":20, "size":"small" }
-query: table('bigquery-public-data.usa_names.usa_1910_2013') -> {
+--! {"isRunnable": true, "showAs":"html",   "isPaginationEnabled": true, "pageSize":20, "size":"small" }
+query: duckdb.table('data/usa_names.parquet') -> {
   where: state = 'CA' and `year` = 1990
   aggregate: total_population is `number`.sum()
   nest: main_query is {

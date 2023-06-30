@@ -47,7 +47,7 @@ const DOCS_ROOT_PATH = path.join(__dirname, "../src");
 const OUT_PATH = path.join(__dirname, "../docs/");
 const JS_OUT_PATH = path.join(__dirname, "../docs/js/generated");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
-const MODELS_BIGQUERY_PATH = path.join(__dirname, "../models/bigquery");
+const MODELS_PATH = path.join(__dirname, "../models");
 const LAYOUTS_PATH = path.join(__dirname, "../layouts");
 const INCLUDES_PATH = path.join(__dirname, "../includes");
 
@@ -366,9 +366,8 @@ function validateLinks(
         }
       }
     });
-    watchDebouncedRecursive(MODELS_BIGQUERY_PATH, (type, file) => {
+    watchDebouncedRecursive(MODELS_PATH, (type, file) => {
       log(`Model file ${file} ${type}d. Recompiling dependent documents...`);
-      console.log(DEPENDENCIES);
       for (const doc of DEPENDENCIES.get(file) || []) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
         compileDoc(fullPath, footers);

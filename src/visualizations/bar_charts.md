@@ -8,8 +8,8 @@ This chart looks at flights and counts the number of aircraft owned by each carr
 shows the number of flights made per plane.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "size": "medium", "dataStyles": {"by_carrier":{"renderer":"bar_chart","size":"large"}}}
-query: table('malloy-data.faa.flights') -> {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "dataStyles": {"by_carrier":{"renderer":"bar_chart","size":"large"}}}
+query: duckdb.table('data/flights.parquet') -> {
   nest: by_carrier is {
     group_by: carrier
     aggregate: aircraft_count is count(distinct tail_num)
@@ -33,8 +33,8 @@ In this case we are going to look at carriers by flight count and stack the dest
 with the destination SFO, OAK or SJC.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "size": "medium", "dataStyles": {"by_carrier":{"renderer":"bar_chart","size":"large"}}}
-query: table('malloy-data.faa.flights') -> {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "dataStyles": {"by_carrier":{"renderer":"bar_chart","size":"large"}}}
+query: duckdb.table('data/flights.parquet') -> {
   where: destination ? 'SFO' | 'OAK' | 'SJC'
   top: 10
   nest: by_carrier is {
@@ -57,8 +57,8 @@ Data Style
 We could flip the dimensions around and look at the airports' flights by carrier.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "isPaginationEnabled": true, "size": "medium", "dataStyles": {"by_carrier":{"renderer":"bar_chart","size":"large"}}}
-query: table('malloy-data.faa.flights') -> {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "dataStyles": {"by_carrier":{"renderer":"bar_chart","size":"large"}}}
+query: duckdb.table('data/flights.parquet') -> {
   where: destination ? 'SFO'| 'OAK' | 'SJC'
   nest: by_carrier is {
     group_by: destination

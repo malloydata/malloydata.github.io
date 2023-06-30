@@ -5,7 +5,7 @@ The plugin currently supports US maps and state names. The model and data styles
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   primary_key: code
   measure: airport_count is count()
   query: by_state is {
@@ -28,7 +28,7 @@ Data Styles
 ## Run as a simple query
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "size": "medium", "source": "/inline/e.malloy","dataStyles":{"by_state": {"renderer": "shape_map"}}}
+--! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy","dataStyles":{"by_state": {"renderer": "shape_map"}}}
 query: airports -> { nest: by_state }
 ```
 
@@ -38,7 +38,7 @@ By calling the configured map as a nested subtable, a trellis is formed.
 
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "size": "medium", "source": "/inline/e.malloy","dataStyles":{"by_state": {"renderer": "shape_map"}}}
+--! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy","dataStyles":{"by_state": {"renderer": "shape_map"}}}
 query: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -49,7 +49,7 @@ query: airports -> {
 ## Run as a trellis, repeated with different filters
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "size": "large", "source": "/inline/e.malloy", "dataStyles": { "heliports": { "renderer": "shape_map" }, "seaplane_bases": { "renderer": "shape_map" } } }
+--! {"isRunnable": true, "size": "large", "source": "/inline/e.malloy", "dataStyles": { "heliports": { "renderer": "shape_map" }, "seaplane_bases": { "renderer": "shape_map" } } }
 query: airports -> {
   group_by: faa_region
   aggregate: airport_count

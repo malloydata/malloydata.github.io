@@ -9,7 +9,7 @@ Wordlebot is written in [Malloy](https://github.com/malloydata/malloy/). Read ab
 ## Query for the best starting words
 
 ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words
 ```
 
@@ -21,7 +21,7 @@ We'll open up with 'SAUCE' again today (skipping those double-letter words this 
 Nothing on 'SAUCE'--let's look for our top scoring words excluding these characters.
 
 ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words {
   where: word !~ r'[SAUCE]'
 }
@@ -35,7 +35,7 @@ Still feels a bit early for double letters, so we're running with 'DOILY'
  With one green and one yellow match we're down to two possible words.
 
  ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words {
   where:
     word ~ r'O',
@@ -47,7 +47,7 @@ query: wordle -> find_words {
  Today, why don't we see whether 'KN' or 'TR' appear more commonly as starts for words in our dataset.
 
 ```malloy
---! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordle/wordlebot.malloy", "showAs":"html"}
+--! {"isRunnable": true,  "isPaginationEnabled": false, "pageSize": 100, "size":"small","source": "wordlebot.malloy", "showAs":"html"}
 query: wordle -> find_words {
   where: word ~ r'^KN' or word ~ r'^TR'
 } -> {
@@ -67,7 +67,7 @@ Our luck on these tie-breakers really hasn't been so great, but all in all anoth
 
 ```malloy
 // Make a table of 5 letter words
-source: words is table('malloy-data.malloytest.words') {
+source: words is bigquery.table('malloy-data.malloytest.words') {
   query: five_letter_words is {
     where: length(word) = 5 and word ~ r'^[a-z]{5}$'
     project: word is upper(word)
@@ -75,7 +75,7 @@ source: words is table('malloy-data.malloytest.words') {
 }
 
 // Cross join numbers
-source: numbers is table('malloy-data.malloytest.numbers') {
+source: numbers is bigquery.table('malloy-data.malloytest.numbers') {
   where: num <= 5
 }
 

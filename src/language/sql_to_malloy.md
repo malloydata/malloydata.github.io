@@ -117,7 +117,7 @@ ORDER BY 1 ASC
 
 In Malloy, this is expressed:
 ```malloy
-query: table('malloy-data.ecomm.order_items') -> {
+query: duckdb.table('data/order_items.parquet') -> {
  where: created_at = @2021-Q1, status != 'Cancelled' & 'Returned'
  group_by: order_date is created_at.day
  aggregate:
@@ -150,9 +150,9 @@ ORDER BY 3 ASC
 
 In Malloy, this can be expressed in a query:
 ```malloy
-query: inventory_items is table('malloy-data.ecomm.inventory_items'){
-  join_one: order_items is table('malloy-data.ecomm.order_items') on id = order_items.inventory_item_id
-  join_one: users is table('malloy-data.ecomm.users') on order_items.user_id = users.id
+query: inventory_items is duckdb.table('data/inventory_items.parquet'){
+  join_one: order_items is duckdb.table('data/order_items.parquet') on id = order_items.inventory_item_id
+  join_one: users is duckdb.table('data/users.parquet') on order_items.user_id = users.id
 } -> {
 declare:					–- declare reusable metrics for use in query
   gross_margin is (product_retail_price - cost)
@@ -176,12 +176,12 @@ order_by: avg_gross_margin asc
 Note that if we intend to query these tables and re-use these field definitions frequently, thinking about placing reusable definitions into the model will begin to save us a lot of time in the future.
 
 ```malloy
-source: users is table('malloy-data.ecomm.users')
-source: order_items is table('malloy-data.ecomm.order_items'){
+source: users is duckdb.table('data/users.parquet')
+source: order_items is duckdb.table('data/order_items.parquet'){
  join_one: users on user_id = users.id
  dimension: valid_order is status != 'Cancelled' & 'Returned'
 }
-source: inventory_items is table('malloy-data.ecomm.inventory_items'){
+source: inventory_items is duckdb.table('inventory_items.parquet'){
  join_one: order_items on id = order_items.inventory_item_id
  dimension:
    gross_margin is (product_retail_price - cost)
@@ -230,12 +230,12 @@ ORDER BY 2 desc
 In Malloy, the user_facts CTE becomes a source of its own, defined from a query using `from()`. Any aggregates in this query (for now, just lifetime_orders) become dimensions of that source.
 ```malloy
 source: user_facts is from(
-  table('malloy-data.ecomm.order_items') -> {
+  duckdb.table('data/order_items.parquet') -> {
     group_by: user_id
     aggregate: lifetime_orders is count()
   }
 )
-source: order_items is table('malloy-data.ecomm.order_items'){
+source: order_items is duckdb.table('data/order_items.parquet'){
   join_one: user_facts on user_id = user_facts.user_id
 }
 

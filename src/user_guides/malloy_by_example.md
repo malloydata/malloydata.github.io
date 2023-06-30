@@ -25,7 +25,7 @@ Equivalent in Malloy
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-query: table('malloy-data.faa.airports') -> {
+query: duckdb.table('data/airports.parquet') -> {
   project: code, full_name, state, faa_region, fac_type, elevation
   order_by: code
 }
@@ -48,7 +48,7 @@ Equivalent in Malloy
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-query: table('malloy-data.faa.airports') -> {
+query: duckdb.table('data/airports.parquet') -> {
   group_by: fac_type
   aggregate: airport_count is count()
   where: state = 'CA'
@@ -68,7 +68,7 @@ Malloy separates a query from the source of the data. A source can be thought of
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/source1.malloy", "isHidden": false}
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   dimension: elevation_in_meters is elevation * 0.3048
   dimension: state_and_county is concat(state,' - ', county)
   measure: airport_count is count()
@@ -119,7 +119,7 @@ A source can also contain a set of useful queries relating to that source.
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/source2.malloy", "isHidden": false}
 
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
 
   query: by_state is {        // <-- can be called by name
@@ -179,7 +179,7 @@ For the next section assume the following source declaration.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/source3.malloy", "isHidden": false}
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
   measure: avg_elevation is elevation.avg()
 
@@ -317,7 +317,7 @@ First let's model some simple tables... ([Join Documentation](../language/join.m
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-source: carriers is table('malloy-data.faa.carriers') {
+source: carriers is duckdb.table('data/carriers.parquet') {
   measure: carrier_count is count()
 }
 
@@ -331,7 +331,7 @@ query: carriers-> {
 *simple source declaration used in example below*
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
@@ -348,11 +348,11 @@ Join carriers to flights.  Each flight has one carrier so we use `join_one:`.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/join1.malloy", "isHidden": false}
-source: carriers is table('malloy-data.faa.carriers') {
+source: carriers is duckdb.table('data/carriers.parquet') {
   measure: carrier_count is count()
 }
 
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
 
   join_one: carriers on carrier=carriers.code
 
@@ -415,12 +415,12 @@ Many `flights` have the same
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/join2.malloy", "isHidden": false}
-source: carriers is table('malloy-data.faa.carriers') {
+source: carriers is duckdb.table('data/carriers.parquet') {
   primary_key: code
   measure: carrier_count is count()
 }
 
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
 
   join_one: carriers with carrier  // <-- each flight has 1 carrier
 
@@ -430,7 +430,7 @@ source: flights is table('malloy-data.faa.flights') {
     avg_distance is distance.avg()
 }
 
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
 
   join_many: flights on code = flights.origin  // <-- each airport has many flights
 
@@ -474,7 +474,7 @@ The output of a query can be used as the source for the next query.
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
 
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
 }
 
@@ -497,7 +497,7 @@ Queries can be chained together (pipelined), the output of one becoming the inpu
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
 
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
 }
 
@@ -526,7 +526,7 @@ query: airports -> {
 Pipelines can do pretty complex things.  They can be built into source objects.
 
 ```malloy
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
   query: county_rollup is  {
     where: fac_type = 'HELIPORT'
@@ -571,7 +571,7 @@ source: newname is from(oldname) {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium"}
-query: /* q_airport_facts is */ table('malloy-data.faa.flights') -> {
+query: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     origin
@@ -584,7 +584,7 @@ query: /* q_airport_facts is */ table('malloy-data.faa.flights') -> {
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/query1.malloy", "isHidden": true}
-query: q_airport_facts is table('malloy-data.faa.flights') -> {
+query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     origin

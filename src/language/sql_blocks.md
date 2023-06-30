@@ -9,16 +9,17 @@ An SQL statement has two properties.
 
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large", "sqlBlockName": "my_sql_query" }
+--! {"isRunnable": true, "showAs":"html", "size": "large", "sqlBlockName": "my_sql_query" }
 sql: my_sql_query is {
   select: """
     SELECT
       first_name,
       last_name,
       gender
-    FROM malloy-data.ecomm.users
+    FROM 'data/users.parquet'
     LIMIT 10
   """
+  connection: "duckdb"
 }
 ```
 
@@ -27,16 +28,17 @@ sql: my_sql_query is {
 Sources can be created from a SQL block, e.g.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "size": "large" }
+--! {"isRunnable": true, "showAs":"html", "size": "large" }
 sql: my_sql_query is {
   select: """
     SELECT
       first_name,
       last_name,
       gender
-    FROM malloy-data.ecomm.users
+    FROM 'data/users.parquet'
     LIMIT 10
   """
+  connection: "duckdb"
 }
 
 source: limited_users is from_sql(my_sql_query) {
@@ -54,10 +56,11 @@ query: limited_users -> {
 Malloy queries can be embedded in SQL blocks as well. When `%{` and `}%` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with the `SELECT` statement generated from the query.
 
 ```malloy
---! {"isRunnable": true, "showAs":"sql", "runMode": "auto", "size": "large", "sqlBlockName": "malloy_in_sql_query" }
-source: users is table('malloy-data.ecomm.users')
+--! {"isRunnable": true, "showAs":"sql", "size": "large", "sqlBlockName": "malloy_in_sql_query" }
+source: users is duckdb.table('data/users.parquet')
 
 sql: malloy_in_sql_query is {
+  connection: "duckdb"
   select: """
 -- BEGIN MALLOY QUERY
 %{

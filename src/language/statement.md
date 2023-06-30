@@ -32,7 +32,7 @@ A Malloy model file can contain several _sources_, which can be thought of as a 
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   dimension: distance_km is distance / 1.609344
 
   measure: flight_count is count()
@@ -49,27 +49,27 @@ See [Source Documentation](source.md) for more information on sources.
 
 ### Referencing a modeled query
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
+--! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
 query: flights -> by_carrier
 ```
 
 ### Running a named query with a filter
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
+--! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
 query: flights { where: origin = 'SFO' } -> by_carrier
 ```
 
 
 ### Adding a limit on the Query
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
+--! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
 query: flights { where: origin = 'SFO' } -> by_carrier { limit: 2 }
 ```
 
 ### Putting it all together
 First, we'll create a brand new query:
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
+--! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
 query: flights -> {
   group_by: destination
   aggregate:
@@ -81,7 +81,7 @@ query: flights -> {
 Now we'll compose a query which contains both modeled and ad-hoc components:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
+--! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
 query: flights -> {
   group_by: destination
   aggregate:

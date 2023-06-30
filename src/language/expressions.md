@@ -41,7 +41,7 @@ Fields may be referenced by name, and fields in joins or nested structures can b
 ```
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
 query: flights -> {
   where: origin.county != null
   group_by: origin.state
@@ -108,7 +108,7 @@ Aggregations may included in an expression to create [measures](fields.md#measur
 Aggregate expressions may be filtered, using the [usual filter syntax](filters.md).
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
 query: flights -> {
   aggregate:
     distance_2003 is sum(distance) { where: dep_time ? @2003 }
@@ -125,7 +125,7 @@ Type cast may be accomplished with the :: operator.
 Type casting may be accomplished with the `::type` syntax.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
 query: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
 }
@@ -142,7 +142,7 @@ if an error occurs during the cast operation. Safe Type Cast is particularly use
 Type casting may be accomplished with the `:::type` syntax.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
 query: flights -> {
   aggregate: distance_summary is concat(total_distance:::string, ' miles')
 }

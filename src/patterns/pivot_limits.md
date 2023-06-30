@@ -6,7 +6,7 @@ Let's suppose we wanted to look flight data but only at only the top 5 carriers 
 
 ## Carriers by destination produces 1958 rows
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> {
   group_by:
     carriers.nickname
@@ -18,7 +18,7 @@ query: flights -> {
 ## Query for the top 5 carriers
 Query to find the most interesting carriers.
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> {
   top: 5
   group_by: carriers.nickname
@@ -28,7 +28,7 @@ query: flights -> {
 
 ## Top 5 Destinations
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> {
   top: 5
   group_by: destination_code
@@ -39,7 +39,7 @@ query: flights -> {
 ## Run all three queries together as Aggregating Subqueries.
 Produces a table with a single row and three columns.  Each column essentially contains a table
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> {
   nest: main_query is {
     group_by:
@@ -64,7 +64,7 @@ query: flights -> {
 Project produces a cross join of the tables.  The filter essentially does an inner join, limiting the main queries results to
 dimensional values that are produce in the filtering queries.
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> {
   nest: main_query is {
     group_by:
@@ -92,7 +92,7 @@ query: flights -> {
 
 ## Render the results as a pivot table
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> {
   nest: main_query is {
     group_by:

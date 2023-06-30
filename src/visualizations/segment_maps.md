@@ -4,13 +4,13 @@ The plugin currently supports US maps. Segment maps take as input 4 columns: sta
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: airports is table('malloy-data.faa.airports') {
+source: airports is duckdb.table('data/airports.parquet') {
   primary_key: code
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
-source: flights is table('malloy-data.faa.flights') {
+source: flights is duckdb.table('data/flights.parquet') {
   primary_key: id2
   rename: origin_code is origin
   rename: destination_code is destination
@@ -44,7 +44,7 @@ and data styles are
 Departing from Chicago
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "/inline/e.malloy", "size": "medium", "pageSize": 100000, "dataStyles":{"routes_map": {"renderer": "segment_map"}}}
+--! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "pageSize": 100000, "dataStyles":{"routes_map": {"renderer": "segment_map"}}}
 query: flights { where: dep_time = @2003-02 and origin.code = 'ORD' } -> routes_map
 ```
 
@@ -52,7 +52,7 @@ query: flights { where: dep_time = @2003-02 and origin.code = 'ORD' } -> routes_
 By calling the configured map as a nested query, a trellis is formed.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "/inline/e.malloy", "size": "medium", "dataStyles":{"routes_map": {"renderer": "segment_map"}}}
+--! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "dataStyles":{"routes_map": {"renderer": "segment_map"}}}
 query: flights { where: dep_time = @2003-02 and origin.code = 'ORD' } -> {
   group_by: carrier
   aggregate: flight_count
@@ -63,7 +63,7 @@ query: flights { where: dep_time = @2003-02 and origin.code = 'ORD' } -> {
 ## Run as a trellis, repeated with different filters
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "size": "large", "source": "faa/flights.malloy"}
+--! {"isRunnable": true, "size": "large", "source": "flights.malloy"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count

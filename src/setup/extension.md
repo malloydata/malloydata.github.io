@@ -61,4 +61,4 @@ If you are logged into Github, any repository on Github can be opened into a web
 
 Once you have opened the repository on github.dev, install the Malloy extension by clicking the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install".
 
-DuckDB is available without needing to explicitly configure a connection - you can simply reference your local files in the `source` of the Malloy model, i.e. `source: my_data_table is table('duckdb:my_file.csv')`
+DuckDB is available without needing to explicitly configure a connection - you can simply reference your local files in the `source` of the Malloy model, i.e. `source: my_data_table is duckdb.table('my_file.csv')`

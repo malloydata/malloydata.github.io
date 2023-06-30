@@ -5,7 +5,7 @@ _You can find the complete source code for this model [here](https://github.com/
 Start by defining a source based on a query.
 
 ```malloy
-source: ga_sesions is table('bigquery-public-data.google_analytics_sample.ga_sessions_20170801') {
+source: ga_sesions is bigquery.table('bigquery-public-data.google_analytics_sample.ga_sessions_20170801') {
   dimension: start_time is timestamp_seconds(visitStartTime)
   measure:
     user_count is count(distinct fullVisitorId)
@@ -46,7 +46,7 @@ We can then add a few named queries to the model to easily access or reference e
 ## Putting it all together
 
 ```malloy
---! {"isRunnable": true, "source": "ga_sessions/ga_sessions.malloy", "isPaginationEnabled": true, "size":"large", "queryName": "session_dashboard"}
+--! {"isRunnable": true, "source": "ga_sessions.malloy", "isPaginationEnabled": true, "size":"large", "queryName": "session_dashboard"}
 query: session_dashboard is ga_sessions -> {
   nest:
     by_region

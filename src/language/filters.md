@@ -27,7 +27,7 @@ A filter can be applied to the source of a query, to just one stage of a query, 
 When filtering a query's source, the filter applies to the whole query.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size":"large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
 query: flights { where: distance > 1000 } -> { aggregate: flight_count }
 ```
 
@@ -36,7 +36,7 @@ query: flights { where: distance > 1000 } -> { aggregate: flight_count }
 A filter can also be applied to an individual query stage.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size":"large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -51,7 +51,7 @@ query: flights -> {
 Any measure can be filtered by adding a where clause.
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size":"large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
 query: flights -> {
   aggregate:
     ca_flights is flight_count { where: origin.state = 'CA' }
@@ -67,7 +67,7 @@ measure and then create that as a percent of total.
 
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size":"large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
 // add a couple of measures to the `flights` source
 source: my_flights is flights {
   measure: delayed_flights is flight_count { where: dep_delay > 30 }
@@ -92,7 +92,7 @@ measure and then create that as a percent of total.
 
 
 ```malloy
---! {"isRunnable": true, "runMode": "auto", "source": "faa/flights.malloy", "size":"large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
 // add a couple of measures to the `flights` source
 source: my_flights is flights {
   measure: delayed_flights is flight_count { where: dep_delay > 30 }

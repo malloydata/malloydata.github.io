@@ -8,13 +8,13 @@ flight performed by a particular carrier.
 
 ## Query for all flights ever made
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
 query: flights -> { aggregate: flight_count }
 ```
 
 ## Query for Flights By Carrier
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 query: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count
@@ -24,7 +24,7 @@ query: flights -> {
 ## In Malloy, can make both calculations at once with [*nested subtables*](../language/nesting.md).
 The results are returned as a single row in a table with two columns, `flight_count` and `main_query`.
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 query: flights -> {
   aggregate: flight_count
   nest: main_query is {
@@ -38,7 +38,7 @@ query: flights -> {
 Using a pipeline with a `project` calculation to combine (essentially cross joining) the queries back into a single table.
 We also add an additional column, the percentage of total calculation.
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 query: flights -> {
   aggregate: flight_count
   nest: main_query is {
@@ -57,7 +57,7 @@ query: flights -> {
 ## Using a *wildcard* against the Nested Query
 We can use a wildcard against the nested query to to make this pattern easier to write.
 ```malloy
---! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 query: flights -> {
   aggregate: flight_count
   nest: main_query is {
