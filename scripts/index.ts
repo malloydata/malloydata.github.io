@@ -27,6 +27,7 @@ import { performance } from "perf_hooks";
 import { renderDoc } from "./render_document.js";
 import { renderFooter, renderSidebar, Section } from "./page.js";
 import {
+  hashForHeading,
   isMarkdown,
   readDirRecursive,
   timeString,
@@ -65,6 +66,10 @@ for (const file of fs.readdirSync(LAYOUTS_PATH)) {
   }
 }
 
+Handlebars.registerHelper('ifeq', function(arg1, arg2, options) {
+  return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
+
 const WATCH_ENABLED = process.argv.includes("--watch");
 
 async function compileDoc(file: string, footers: Record<string, string>): Promise<{
@@ -77,6 +82,9 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       | { type: "code"; text: string }
     )[];
   }[];
+  links: {link: string, style: "md" | "html"}[];
+  file: string;
+  hashes: string[];
   renderedDocument: string;
 }> {
   try {
@@ -96,7 +104,14 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     //     searchSegments: [],
     //   }
     // }
-    const { renderedDocument, errors, searchSegments, frontmatter } = await renderDoc(
+    const { 
+      renderedDocument, 
+      errors, 
+      searchSegments, 
+      frontmatter, 
+      links, 
+      hashes 
+    } = await renderDoc(
       markdown,
       shortPath
     );
@@ -106,6 +121,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       ...DEFAULT_CONTEXT,
       page: {
         ...frontmatter,
+        url: shortOutPath,
         title: "Malloy Documentation",
         content: renderedDocument,
         footer: footers[shortPath],
@@ -124,6 +140,9 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         ...segment,
         path: shortPath,
       })),
+      links,
+      file,
+      hashes,
       renderedDocument
     };
   } catch(e) {
@@ -234,6 +253,76 @@ function handleStaticFile(file: string) {
   }
 }
 
+function validateLinks(
+  links: Record<string, {link: string, style: "md" | "html"}[]>, 
+  docs: string[], 
+  hashes?: Record<string, string[]>
+): { file: string, error: string }[] {
+  const linkErrors = [];
+  const docsRootedPaths = docs.map(f => f.substring(DOCS_ROOT_PATH.length));
+  function validateHash(origFile: string, origLink: string, file: string, hash: string) {
+    if (hashes === undefined) return;
+    const hashesForFile = hashes[file];
+    if (!hashesForFile || !hashesForFile.includes(hash.slice(1))) {
+      linkErrors.push({
+        file: origFile.substring(DOCS_ROOT_PATH.length),
+        error: `Link ${origLink} is invalid: hash ${hash} doesn't exist in doc ${file.substring(DOCS_ROOT_PATH.length)}`
+      });
+    }
+  }
+  function checkLink(file: string, originalLink: string, style: "md" | "html", rootedLink: string) {
+    const linkWithoutHash = rootedLink.replace(/#.*$/, '');
+    const hashMatch = rootedLink.match(/#.*$/);
+    const hash = hashMatch ? hashMatch[0] : undefined;
+    const linkHasExtension = linkWithoutHash.endsWith(".html") || linkWithoutHash.endsWith(".md");
+    const linkWithExtension = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".md");
+    if (!docsRootedPaths.includes(linkWithExtension)) {
+      const mdVersion = linkWithExtension.replace(/\.html$/, ".md");
+      const existsInMd = docsRootedPaths.includes(mdVersion);
+      linkErrors.push({ 
+        file: file.substring(DOCS_ROOT_PATH.length), 
+        error: `Link '${originalLink}' is invalid${existsInMd ? style === "html" ? ' (remove .html extension)' : '(use .md instead)' : ''}.`
+      });
+    } else if (linkHasExtension && style === 'html') {
+      linkErrors.push({ 
+        file: file.substring(DOCS_ROOT_PATH.length), 
+        error: `HTML Link '${originalLink}' should not end with file extension.`
+      });
+    } else if (style === 'md' && !linkWithoutHash.endsWith(".md")) {
+      linkErrors.push({ 
+        file: file.substring(DOCS_ROOT_PATH.length), 
+        error: `Markdown Link '${originalLink}' should end with .md`
+      });
+    } else if (hash && hashes) {
+      validateHash(file, originalLink, path.join(DOCS_ROOT_PATH, linkWithExtension), hash);
+    }
+
+    // TODO check in section info
+  }
+  for (const file in links) {
+    for (const link of links[file]) {
+      if (link.link.startsWith("https://") || link.link.startsWith("http://")) {
+        continue;
+      }
+      if (link.link.startsWith("/")) {
+        linkErrors.push({ 
+          file: file.substring(DOCS_ROOT_PATH.length), 
+          error: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`
+        });
+      } else if (link.link.startsWith("#")) {
+        if (hashes) {
+          validateHash(file, link.link, file, link.link);
+        }
+      } else {
+        const resolvedLink = path.resolve(file, '..', link.link);
+        const rootedLink = resolvedLink.substring(DOCS_ROOT_PATH.length);
+        checkLink(file, link.link, link.style, rootedLink);
+      }
+    }
+  }
+  return linkErrors;
+}
+
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
   const allDocs = allFiles.filter(isMarkdown);
@@ -243,15 +332,24 @@ function handleStaticFile(file: string) {
     handleStaticFile(file);
   }
   const startTime = performance.now();
-  const results = await Promise.all(allDocs.map(f => compileDoc(f, footers)));
-  const allErrors = results.map(({ errors }) => errors).flat();
+  const results = await Promise.all(allDocs.map(async f => {
+    const result = await compileDoc(f, footers);
+    const linkErrors = validateLinks({ [f]: result.links}, allDocs);
+    for (const error of linkErrors) {
+      log(`Error in file ${error.file}: ${error.error}`);
+    }
+    return result;
+  }));
+  const snippetErrors = results.map(({ errors }) => errors).flat();
+  const allLinks = Object.fromEntries(results.map(({ links, file }) => [file, links]));
+  const allHashes = Object.fromEntries(results.map(({ file, hashes }) => [file, hashes]));
+  const linkErrors = validateLinks(allLinks, allDocs, allHashes);
   const allSegments = results
     .map(({ searchSegments }) => searchSegments)
     .flat();
   // TODO make this update in watch mode
   outputSearchSegmentsFile(allSegments);
   log(`All docs compiled in ${timeString(startTime, performance.now())}`);
-  fs.writeFileSync(path.join(OUT_PATH, "done.txt"), "done");
   if (WATCH_ENABLED) {
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
@@ -283,19 +381,30 @@ function handleStaticFile(file: string) {
       // TODO rebuild all docs to have the new toc....
     });
   } else {
-    if (allErrors.length > 0) {
+    const anyErrors = snippetErrors.length > 0 || linkErrors.length > 0;
+    if (linkErrors.length > 0) {
       log(
-        `Failure: ${allErrors.length} example snippet${
-          allErrors.length === 1 ? "" : "s"
+        `Failure: ${linkErrors.length} link${
+          linkErrors.length === 1 ? " was" : "s were"
+        } invalid`
+      );
+      for (const error of linkErrors) {
+        log(`Error in file ${error.file}: ${error.error}`);
+      }
+    }
+    if (snippetErrors.length > 0) {
+      log(
+        `Failure: ${snippetErrors.length} example snippet${
+          snippetErrors.length === 1 ? "" : "s"
         } had errors`
       );
-      allErrors.forEach((error) => {
+      snippetErrors.forEach((error) => {
         log(`Error in file ${error.path}: ${error.error}`);
         log("```");
         log(error.snippet);
         log("```");
       });
-      exit(1);
     }
+    if (anyErrors) exit(1);
   }
 })();

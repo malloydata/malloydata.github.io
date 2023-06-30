@@ -30,6 +30,8 @@ import { runCode } from "./run_code.js";
 import { log } from "./log.js";
 import { highlight } from "./highlighter.js";
 import yaml from "yaml";
+import { DEFAULT_CONTEXT } from "./context.js";
+import { hashForHeading } from "./utils.js";
 
 /*
  * A Renderer is capable of converting a parsed `Markdown` document into HTML,
@@ -41,6 +43,8 @@ class Renderer {
   private models: Map<string, string>;
   private _errors: { snippet: string; error: string }[] = [];
   private readonly titleStack: { level: number; title: string }[] = [];
+  public readonly links: { link: string; style: "md" | "html" }[] = [];
+  public readonly hashes: string[] = [];
   public readonly searchSegments: {
     titles: string[];
     paragraphs: (
@@ -119,6 +123,12 @@ class Renderer {
   }
 
   protected async html(html: string) {
+    // HTML parsing with Regex lol
+    const linkRegex = /<a\s+href=["']([^"']*)["']/g;
+    const matches = html.matchAll(linkRegex);
+    for (const match of matches) {
+      this.links.push({ link: match[1], style: "html" });
+    }
     return html;
   }
 
@@ -141,7 +151,9 @@ class Renderer {
   protected async heading(content: Markdown[], level: 1 | 2 | 3 | 4 | 5 | 6) {
     const text = await this.children(content);
     this.registerTitle(text, level);
-    const escapedText = text.toLowerCase().replace(/[^\w]+/g, "-");
+    const escapedText = hashForHeading(text);
+    this.hashes.push(escapedText);
+    // TODO handle ambiguous hashes?
 
     return `
       <h${level}>
@@ -290,9 +302,10 @@ class Renderer {
     if (href === null) {
       return text;
     }
-    href = href.replace(/\.md/, ".html");
+    this.links.push({ link: href, style: "md" });
+    href = href.replace(/\.md/, "");
     let out = href.startsWith("/")
-      ? `<a href="{{ '${href}' | relative_url }}"`
+      ? `<a href="${DEFAULT_CONTEXT.site.baseurl}${href}"`
       : `<a href="${href}"`;
     if (title) {
       out += ' title="' + title + '"';
@@ -384,6 +397,7 @@ export async function renderDoc(
 ): Promise<{
   renderedDocument: string;
   errors: { snippet: string; error: string }[];
+  links: {link: string, style: "md" | "html"}[];
   searchSegments: {
     titles: string[];
     paragraphs: (
@@ -391,6 +405,7 @@ export async function renderDoc(
       | { type: "code"; text: string }
     )[];
   }[];
+  hashes: string[],
   frontmatter: any,
 }> {
   const ast = unified()
@@ -411,5 +426,7 @@ export async function renderDoc(
     errors: renderer.errors,
     searchSegments: renderer.searchSegments,
     frontmatter,
+    hashes: renderer.hashes,
+    links: renderer.links
   };
 }

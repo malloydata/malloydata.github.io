@@ -118,3 +118,7 @@ export function watchDebouncedRecursive(
     });
   });
 }
+
+export function hashForHeading(heading: string) {
+  return heading.toLowerCase().replace(/[^\w]+/g, "-");;
+}

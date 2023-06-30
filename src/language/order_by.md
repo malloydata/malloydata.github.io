@@ -1,6 +1,6 @@
 # Ordering and Limiting
 
-The following uses the [NTSB Flight Model](../examples/faa.md) for examples.
+The following uses the [NTSB Flight Model](../examples/faa/bigquery.md) for examples.
 
 Often when querying data the amount of data returned to look at is much smaller than the full result set, so the ordering of the data makes a big difference in what you actually see. To make things easier, Malloy has some smart defaults in the way it presents data.  For the most part, you don't have to think too much about it, but in order to understand it, this document will show you how Malloy makes decisions about what to show you.
 

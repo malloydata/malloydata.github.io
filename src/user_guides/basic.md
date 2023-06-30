@@ -397,7 +397,7 @@ query: table('malloy-data.faa.flights') -> {
 
 ### Extraction
 
-Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](../language/time-ranges.md#extraction).
+Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](../language/timestamp-operations.md#extraction).
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "pageSize": 7, "size": "large"}
@@ -549,8 +549,8 @@ query: table('malloy-data.faa.airports') -> {
 This was a whirlwind tour of the syntax and features of Malloy. To continue on your Malloy journey:
 
 - Explore sample analyses and data models built in Malloy in our [Patterns Github repo](https://github.com/malloydata/patterns).
-- Learn how to [connect Malloy to your own database](../setup/connection_instructions.html).
-- Take a look at our [guide for translating SQL to Malloy](../language/sql_to_malloy.html).
+- Learn how to [connect Malloy to your own database](../setup/connection_instructions.md).
+- Take a look at our [guide for translating SQL to Malloy](../language/sql_to_malloy.md).
 - Join the [Malloy community Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1t32mufpy-THwP1o1ADJVkd3o2L2zaZw)!
 
 <!-- ## Joins are between primary and foreign keys.

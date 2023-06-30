@@ -58,9 +58,9 @@ query: table('malloy-data.faa.airports') -> {
 
 ## Source: A data source for queries
 
-Malloy separates a query from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table.  ([Source Documentation](language/source.html)).
+Malloy separates a query from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table.  ([Source Documentation](../language/source.md)).
 
-[Fields](language/fields.html) can be defined as part of a source.
+[Fields](../language/fields.md) can be defined as part of a source.
 
 
 * A `measure:` is a declared aggregate calculation (think function that operates across the table) which can be used in `aggregate:` elements in a query stage
@@ -78,7 +78,7 @@ source: airports is table('malloy-data.faa.airports') {
 
 ## Querying against a Source
 
-Queries can be run against `source:` objects and can utilize the modeled fields from that source, as well as introduce new ones. ([Query Documentation](language/query.html))
+Queries can be run against `source:` objects and can utilize the modeled fields from that source, as well as introduce new ones. ([Query Documentation](../language/query.md))
 
 
 *using the above declared `airports` source*
@@ -146,7 +146,7 @@ query: airports -> by_state
 
 ## Filtering a Source
 
-You can filter a source by adding a filter expression using the `where:` keyword and then use this refined version of `airports` to run the `by_state` query.  ([Filter Documentation](language/filters.html))
+You can filter a source by adding a filter expression using the `where:` keyword and then use this refined version of `airports` to run the `by_state` query.  ([Filter Documentation](../language/filters.md))
 
 *using the above declared `airports` source*
 
@@ -200,7 +200,7 @@ source: airports is table('malloy-data.faa.airports') {
 
 Malloy allows you to create nested subtables easily in a query.
 In the case below, the top level query groups by state and nested query groups by facility type.
-This mechanism is really useful for understanding data and creating complex data structures. ([Nesting Documentation](language/nesting.html))
+This mechanism is really useful for understanding data and creating complex data structures. ([Nesting Documentation](../language/nesting.md))
 
 *using the above declared `airports` source*
 
@@ -310,7 +310,7 @@ query: airports-> by_facility_type {
 
 ## Joining
 
-First let's model some simple tables... ([Join Documentation](language/join.html))
+First let's model some simple tables... ([Join Documentation](../language/join.md))
 
 ### Carrier table
 *simple source declaration used in example below*
@@ -344,7 +344,7 @@ query: flights -> {
 ## Declare a Join
 
 Join carriers to flights.  Each flight has one carrier so we use `join_one:`.
-([Join Documentation](language/join.html))
+([Join Documentation](../language/join.md))
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/join1.malloy", "isHidden": false}
@@ -380,7 +380,7 @@ query: flights -> {
 
 ## Aggregates can be computed from anywhere in the Join Tree
 
-([Aggregate Documentation](language/aggregates.html))
+([Aggregate Documentation](../language/aggregates.md))
 
 
 *using the above declared `flights` source*
@@ -448,7 +448,7 @@ source: airports is table('malloy-data.faa.airports') {
 ## Calculations work properly regardless of where you are in the graph
 
 This query is very difficult to express in SQL. Malloy's understanding of source relationships allows it to compute aggregate computations at any node of the join path,unlike SQL which can only do aggregate computation at the. outermost level.
-([Aggregate Documentation](language/aggregates.html))
+([Aggregate Documentation](../language/aggregates.md))
 
 *using the above declared `airports` source*
 
@@ -567,7 +567,7 @@ source: newname is from(oldname) {
 
 ### Named Query
 
-*documentation bug: name should not be commented out* ([Source Documentation](language/source.html))
+*documentation bug: name should not be commented out* ([Source Documentation](../language/source.md))
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium"}
@@ -644,9 +644,9 @@ query: airport_facts -> flights_by_origin
 
 ### Group by on Joined Subtrees
 
-### Date/Timestamp filters and Timezones ([Time Documentation](../language/expressions.html#time-ranges))
+### Date/Timestamp filters and Timezones ([Time Documentation](../language/expressions.md#time-ranges))
 
-### Nested data and Symmetric aggregates  ([Aggregates Documentation](../language/aggregates.html))
+### Nested data and Symmetric aggregates  ([Aggregates Documentation](../language/aggregates.md))
 
 ### Import ([Import Documentation](../language/imports.md))
 

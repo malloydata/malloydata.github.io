@@ -1355,16 +1355,16 @@ Note: Aggregate locality is currently not supported in BigQuery for `stddev`.
 
 <table class="transpose">
   <tr>
-    <td><a href="./aggregates.html#avg">avg</a></td>
-    <td><a href="./aggregates.html#count">count</a></td>
+    <td><a href="./aggregates#avg">avg</a></td>
+    <td><a href="./aggregates#count">count</a></td>
   </tr>
   <tr>
-    <td><a href="./aggregates.html#max">max</a></td>
-    <td><a href="./aggregates.html#min">min</a></td>
+    <td><a href="./aggregates#max">max</a></td>
+    <td><a href="./aggregates#min">min</a></td>
   </tr>
   <tr>
     <td><a href="#stddev">stddev</a></td>
-    <td><a href="./aggregates.html#sum">sum</a></td>
+    <td><a href="./aggregates#sum">sum</a></td>
   </tr>
 </table>
 
@@ -1392,10 +1392,10 @@ Malloy has two [ungrouped aggregate functions](./ungrouped-aggregates.md), `all(
 
 <table class="transpose">
   <tr>
-    <td><a href="./ungrouped-aggregates.html#all">all</a></td>
+    <td><a href="./ungrouped-aggregates#all">all</a></td>
   </tr>
   <tr>
-    <td><a href="./ungrouped-aggregates.html#exclude">exclude</a></td>
+    <td><a href="./ungrouped-aggregates#exclude">exclude</a></td>
   </tr>
 </table>
 
@@ -1726,12 +1726,12 @@ query: flights -> {
   <tr>
     <td><a href="#abs">abs</a></td>
     <td><a href="#acos">acos</a></td>
-    <td><a href="./ungrouped-aggregates.html#all">all</a></td>
+    <td><a href="./ungrouped-aggregates#all">all</a></td>
     <td><a href="#ascii">ascii</a></td>
     <td><a href="#asin">asin</a></td>
     <td><a href="#atan">atan</a></td>
     <td><a href="#atan2">atan2</a></td>
-    <td><a href="./aggregates.html#avg">avg</a></td>
+    <td><a href="./aggregates#avg">avg</a></td>
     <td><a href="#avg_moving">avg_moving</a></td>
     <td><a href="#byte_length">byte_length</a></td>
     <td><a href="#ceil">ceil</a></td>
@@ -1739,7 +1739,7 @@ query: flights -> {
     <td><a href="#coalesce">coalesce</a></td>
     <td><a href="#cos">cos</a></td>
     <td><a href="#concat">concat</a></td>
-    <td><a href="./aggregates.html#count">count</a></td>
+    <td><a href="./aggregates#count">count</a></td>
     <td><a href="#day">day</a></td>
     <td><a href="#days">days</a></td>
     <td><a href="#day_of_week">day_of_week</a></td>
@@ -1748,7 +1748,7 @@ query: flights -> {
     <td><a href="#ends_with">ends_with</a></td>
   </tr>
   <tr>
-    <td><a href="./ungrouped-aggregates.html#exclude">exclude</a></td>
+    <td><a href="./ungrouped-aggregates#exclude">exclude</a></td>
     <td><a href="#exp">exp</a></td>
     <td><a href="#first_value">first_value</a></td>
     <td><a href="#floor">floor</a></td>
@@ -1767,12 +1767,12 @@ query: flights -> {
     <td><a href="#log">log</a></td>
     <td><a href="#lower">lower</a></td>
     <td><a href="#ltrim">ltrim</a></td>
-    <td><a href="./aggregates.html#max">max</a></td>
+    <td><a href="./aggregates#max">max</a></td>
     <td><a href="#max_cumulative">max_cumulative</a></td>
     <td><a href="#max_window">max_window</a></td>
   </tr>
   <tr>
-    <td><a href="./aggregates.html#min">min</a></td>
+    <td><a href="./aggregates#min">min</a></td>
     <td><a href="#min_cumulative">min_cumulative</a></td>
     <td><a href="#min_window">min_window</a></td>
     <td><a href="#minute">minute</a></td>
@@ -1804,7 +1804,7 @@ query: flights -> {
     <td><a href="#stddev">stddev</a></td>
     <td><a href="#strpos">strpos</a></td>
     <td><a href="#substr">substr</a></td>
-    <td><a href="./aggregates.html#sum">sum</a></td>
+    <td><a href="./aggregates#sum">sum</a></td>
     <td><a href="#sum_cumulative">sum_cumulative</a></td>
     <td><a href="#sum_window">sum_window</a></td>
     <td><a href="#tan">tan</a></td>

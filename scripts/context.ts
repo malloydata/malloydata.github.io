@@ -21,8 +21,15 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+const argIndex = process.argv.indexOf("--baseurl");
+const BASEURL =  argIndex != -1 ? process.argv[argIndex + 1] : undefined;
+
+if (BASEURL === undefined) {
+  throw new Error("--baseurl is required");
+}
+
 export const DEFAULT_CONTEXT = {
   site: {
-    baseurl: "http://localhost:8080"
+    baseurl: BASEURL
   },
 }

@@ -21,7 +21,7 @@ query: flights -> {
 }
 ```
 
-## In Malloy, can make both calculations at once with [*nested subtables*](nesting.md).
+## In Malloy, can make both calculations at once with [*nested subtables*](../language/nesting.md).
 The results are returned as a single row in a table with two columns, `flight_count` and `main_query`.
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "runMode": "auto", "source": "faa/flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}

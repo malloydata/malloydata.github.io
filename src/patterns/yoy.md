@@ -47,7 +47,7 @@ query: flights->{
 
 ### Using Relative Timeframes
 Often you want to show up-to-date information.  You can write timeframes relatively so the queries always show
-current data.  Read more about it in the [filters](filter_expressions.md) section.
+current data.  Read more about it in the [filters](../language/filters.md) section.
 
 ```malloy
 --! {"isRunnable": true, "runMode": "auto",   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}

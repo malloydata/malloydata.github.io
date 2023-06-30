@@ -159,7 +159,7 @@ pick 'medium' when size < 20
 else 'large'
 ```
 
-Pick expressions are also compatible with the [apply operator](#apply-operator) and partial comparisons.
+Pick expressions are also compatible with the [apply operator](#application) and partial comparisons.
 
 ```malloy
 size ?
@@ -204,9 +204,7 @@ Malloy has built in constructs to simplify many time-related operations, which a
 
 ### Time Ranges
 
-<a id="numeric-ranges"></a>
-
-A time value can be compared to a range. If you [apply](#apply-operator) a time to a range, (for example, `event_time ? @2003 to @2004`) that will check if the value is within the range. You can also use `=` to see if a time is with a range, or `<` to test for before the range it will be `<`, or `>` for after the range.
+A time value can be compared to a range. If you [apply](#application) a time to a range, (for example, `event_time ? @2003 to @2004`) that will check if the value is within the range. You can also use `=` to see if a time is with a range, or `<` to test for before the range it will be `<`, or `>` for after the range.
 
 See [Time Ranges](time-ranges.md) for more details.
 
@@ -219,7 +217,7 @@ at the moment of truncation and the duration is the timeframe unit
 used to specify the truncation, so for example `time.year`
 would be a range covering the entire year which contains `time`.
 
-This is extremely useful with the [apply operator](#apply-operator), `?`. To see if two events happen in the same calendar year, for example, the boolean expression in Malloy is `one_time ? other_time.year`.
+This is extremely useful with the [apply operator](#application), `?`. To see if two events happen in the same calendar year, for example, the boolean expression in Malloy is `one_time ? other_time.year`.
 
 ### Time Extraction
 
@@ -241,6 +239,10 @@ can act like a range. See [Timestamp literals](datatypes.md#timestamp-literals) 
 In addition the `@` based literal syntax, Malloy also has one built in time constant.
 
 * `now` -- The current time
+
+## Numeric Ranges
+
+A numeric value can be compared to a range. If you [apply](#application) a number to a range, (for example, `distance ? 10 to 20`) that will check if the value is within the range (left inclusive, right exclusive). 
 
 ## Special Filter Expression Syntax
 
@@ -266,6 +268,7 @@ The _union alternation_ operator `|` represents the logical union of two conditi
 The _conjunction alternation_ operator `&` represents the logical conjunction of two conditions. An expression like "`x & y` can be read "if both `x` and `y`." For example, `> 5 & < 10` represents the condition "is greater than 5 and less than 10".
 
 Values can be used directly with the alternation operators, in which case the operator is assumed to be `=`. For example, `'CA' | 'NY'` is equivalent to `= 'CA' | = 'NY'`.
+
 ### Application
 
 <!-- * `state ? 'CA'` -->

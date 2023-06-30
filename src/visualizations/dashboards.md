@@ -23,11 +23,11 @@ query: flights_bar_chart is table('malloy-data.faa.flights') -> {
 Will render as a Bar Chart because of the `bar_chart` suffix.
 
 These naming convention shortcuts currently include:
-* [Bar Chart](/documentation/visualizations/bar_charts.html): `_bar_chart`
-* [Line Chart](/documentation/visualizations/charts_line_chart.html): `_line_chart`
-* [Scatter Chart](/documentation/visualizations/scatter_charts.html): `_scatter_chart`
-* [Shape Map](/documentation/visualizations/shape_maps.html): `_shape_map`
-* [Segment Map](/documentation/visualizations/segment_maps.html): `_segment_map`
+* [Bar Chart](bar_charts.md): `_bar_chart`
+* [Line Chart](charts_line_chart.md): `_line_chart`
+* [Scatter Chart](scatter_charts.md): `_scatter_chart`
+* [Shape Map](shape_maps.md): `_shape_map`
+* [Segment Map](segment_maps.md): `_segment_map`
 * Dashboard: `_dashboard`
 
 Styles apply to standalone queries as well as when nested.
@@ -88,4 +88,4 @@ query: county_dashboard is airports -> by_state_and_county
 ```
 
 ## Additional Charting with Vega Lite
-The `vega` renderer allows much more customization of rendering than the default visualization options provided in the Extension, using the [Vega-Lite](https://vega.github.io/vega-lite/) library. For examples of using these in Malloy, check out the `flights_custom_vis` model and styles files in the FAA [Sample Models](/documentation/samples.html) download.
+The `vega` renderer allows much more customization of rendering than the default visualization options provided in the Extension, using the [Vega-Lite](https://vega.github.io/vega-lite/) library. For examples of using these in Malloy, check out the `flights_custom_vis` model and styles files in the FAA [Sample Models](../samples.md) download.

@@ -59,10 +59,9 @@ function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
       title: section.title,
       items: section.items.map((item) => {
         if (isSectionItem(item)) {
-          const htmlLink = item.link.replace(/\.md$/, ".html");
-          const compareLink =
-            htmlLink === "/index.html" ? "/" : htmlLink;
-
+          const compareLink = item.link.replace(/\.md$/, ".html");
+          const htmlLinkRaw = item.link.replace(/\.md$/, "");
+          const htmlLink = htmlLinkRaw === "/index" ? "" : htmlLinkRaw;
           return { title: item.title, link: item.link, htmlLink, compareLink };
         } else {
           return enrichTableOfContents([item])[0];
@@ -88,7 +87,7 @@ function extractItems(sections: (Section | SectionItem)[]): SectionItem[] {
 
 function renderSection(section: EnrichedSection | EnrichedSectionItem): string {
   if (isSectionItem(section)) {
-    return `<div class='sidebar-item {% if page.url == "${section.compareLink}" %}active{% endif %}'>
+    return `<div class='sidebar-item {{#ifeq page.url "${section.compareLink}" }}active{{/ifeq}}'>
       <a href="{{ site.baseurl }}${section.htmlLink}">
         <img src="{{ site.baseurl }}/img/article_icon.svg" alt="document"/>
         ${section.title}
