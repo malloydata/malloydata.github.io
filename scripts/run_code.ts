@@ -36,7 +36,6 @@ import {
   FixedConnectionMap,
   Connection,
 } from "@malloydata/malloy";
-import { BigQueryConnection } from "@malloydata/db-bigquery";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
 import { promises as fs } from "fs";
@@ -137,20 +136,9 @@ class DocsURLReader implements URLReader {
   }
 }
 
-const BIGQUERY_CONNECTION = new BigQueryConnection("bigquery", {
-  rowLimit: 5,
-});
-
 const DUCKDB_CONNECTION = new DuckDBConnection("duckdb", undefined, MODELS_PATH, {
   rowLimit: 5,
 });
-
-const CONNECTIONS = new FixedConnectionMap(
-  new Map<string, Connection>([
-    ["bigquery", BIGQUERY_CONNECTION],
-    ["duckdb", DUCKDB_CONNECTION]
-  ])
-);
 
 function resolveSourcePath(sourcePath: string) {
   return `file://${path.resolve(path.join(MODELS_PATH, sourcePath))}`;
@@ -179,7 +167,7 @@ export async function runCode(
     documentPath,
     mapKeys(inlineModels, resolveSourcePath)
   );
-  const runtime = new Runtime(urlReader, CONNECTIONS);
+  const runtime = new Runtime(urlReader, DUCKDB_CONNECTION);
 
   // Here, we assume that docs queries that reference a model only care about
   // things _exported_ from that model. In other words, a query with

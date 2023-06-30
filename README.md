@@ -25,8 +25,6 @@ To compile the documentation, run:
  npm run build
  ```
 
-Your system must be authenticated to a BigQuery instance with access to all the public tables referenced in the `/models` models.
-
 ### Develop
 
 For developing the documentation:
