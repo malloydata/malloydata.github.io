@@ -46,9 +46,9 @@ import { log } from "./log.js";
 import { JSDOM } from "jsdom";
 import { highlight } from "./highlighter.js";
 
-const __dirname = path.resolve("./docs/_scripts/build_docs");
+const __dirname = path.resolve("./scripts/index.ts");
 
-const MODELS_PATH = path.join(__dirname, "../../../models");
+const MODELS_PATH = path.join(__dirname, "../../models");
 
 export const DEPENDENCIES = new Map<string, string[]>();
 

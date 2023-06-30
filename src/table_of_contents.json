@@ -173,35 +173,6 @@
           "link": "/visualizations/segment_maps.md"
         }
       ]
-    },
-    {
-      "title": "Examples",
-      "items": [
-        {
-          "title": "Iowa Liquor Sales",
-          "link": "/examples/iowa/iowa.md"
-        },
-        {
-          "title": "The Name Game",
-          "link": "/examples/names.md"
-        },
-        {
-          "title": "eCommerce Analysis",
-          "link": "/examples/ecommerce.md"
-        },
-        {
-          "title": "NTSB Flight Database",
-          "link": "/examples/faa/bigquery.md"
-        },
-        {
-          "title": "Google Analytics GA360",
-          "link": "/examples/ga_sessions.md"
-        },
-        {
-          "title": "Wordle Solver",
-          "link": "/examples/wordle/wordle.md"
-        }
-      ]
     }
   ]
 }
