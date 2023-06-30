@@ -9,7 +9,7 @@ produce SQL.
 ### Filtering Data
 The first step in working with data, often is isolating the data you are interested in.
 Malloy introduces [simplified filtering](../language/filters.md) for all types and allows these filters to be
-applied.  [Time calculations](../language/time-ranges.md) are powerful and understandable.
+applied.  [Time calculations](../language/expressions.md#time-expressions) are powerful and understandable.
 
 ### Reusable Aggregates
 In a Malloy Data Model, an aggregate computation need only be defined once (for example revenue).  Once defined, it can be used
