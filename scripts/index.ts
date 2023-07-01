@@ -40,6 +40,7 @@ import { exit } from "process";
 import Handlebars from "handlebars";
 import yaml from "yaml";
 import { DEFAULT_CONTEXT } from "./context.js";
+import { Position } from "./markdown_types.js";
 
 const __dirname = path.resolve("./scripts/");
 
@@ -73,7 +74,7 @@ Handlebars.registerHelper('ifeq', function(arg1, arg2, options) {
 const WATCH_ENABLED = process.argv.includes("--watch");
 
 async function compileDoc(file: string, footers: Record<string, string>): Promise<{
-  errors: { path: string; snippet: string; error: string }[];
+  errors: { path: string; snippet: string; error: string; position: Position }[];
   searchSegments: {
     path: string;
     titles: string[];
@@ -82,7 +83,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       | { type: "code"; text: string }
     )[];
   }[];
-  links: {link: string, style: "md" | "html"}[];
+  links: {link: string, style: "md" | "html", position: Position}[];
   file: string;
   hashes: string[];
   renderedDocument: string;
@@ -146,7 +147,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       renderedDocument
     };
   } catch(e) {
-    log("Error compiling:")
+    log("Error compiling:", 'error')
     log(e)
   }
 }
@@ -173,8 +174,8 @@ function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, stri
     log(`Files _includes/footers/** written.`);
     return { toc: renderedSidebar, footers };
   } catch(e) {
-    log(`Error parsing JSON`);
-    log(e);
+    log(`Error parsing JSON`, 'error');
+    log(e, 'error');
     return { toc: "", footers: {}};
   }
 }
@@ -254,23 +255,24 @@ function handleStaticFile(file: string) {
 }
 
 function validateLinks(
-  links: Record<string, {link: string, style: "md" | "html"}[]>, 
+  links: Record<string, {link: string, style: "md" | "html", position: Position}[]>, 
   docs: string[], 
   hashes?: Record<string, string[]>
-): { file: string, error: string }[] {
+): { file: string, error: string, position: Position }[] {
   const linkErrors = [];
   const docsRootedPaths = docs.map(f => f.substring(DOCS_ROOT_PATH.length));
-  function validateHash(origFile: string, origLink: string, file: string, hash: string) {
+  function validateHash(origFile: string, origLink: string, file: string, hash: string, position: Position) {
     if (hashes === undefined) return;
     const hashesForFile = hashes[file];
     if (!hashesForFile || !hashesForFile.includes(hash.slice(1))) {
       linkErrors.push({
         file: origFile.substring(DOCS_ROOT_PATH.length),
-        error: `Link ${origLink} is invalid: hash ${hash} doesn't exist in doc ${file.substring(DOCS_ROOT_PATH.length)}`
+        error: `Link ${origLink} is invalid: hash ${hash} doesn't exist in doc ${file.substring(DOCS_ROOT_PATH.length)}`,
+        position,
       });
     }
   }
-  function checkLink(file: string, originalLink: string, style: "md" | "html", rootedLink: string) {
+  function checkLink(file: string, originalLink: string, style: "md" | "html", rootedLink: string, position: Position) {
     const linkWithoutHash = rootedLink.replace(/#.*$/, '');
     const hashMatch = rootedLink.match(/#.*$/);
     const hash = hashMatch ? hashMatch[0] : undefined;
@@ -281,20 +283,23 @@ function validateLinks(
       const existsInMd = docsRootedPaths.includes(mdVersion);
       linkErrors.push({ 
         file: file.substring(DOCS_ROOT_PATH.length), 
-        error: `Link '${originalLink}' is invalid${existsInMd ? style === "html" ? ' (remove .html extension)' : '(use .md instead)' : ''}.`
+        error: `Link '${originalLink}' is invalid${existsInMd ? style === "html" ? ' (remove .html extension)' : '(use .md instead)' : ''}.`,
+        position,
       });
     } else if (linkHasExtension && style === 'html') {
       linkErrors.push({ 
         file: file.substring(DOCS_ROOT_PATH.length), 
-        error: `HTML Link '${originalLink}' should not end with file extension.`
+        error: `HTML Link '${originalLink}' should not end with file extension.`,
+        position
       });
     } else if (style === 'md' && !linkWithoutHash.endsWith(".md")) {
       linkErrors.push({ 
         file: file.substring(DOCS_ROOT_PATH.length), 
-        error: `Markdown Link '${originalLink}' should end with .md`
+        error: `Markdown Link '${originalLink}' should end with .md`,
+        position
       });
     } else if (hash && hashes) {
-      validateHash(file, originalLink, path.join(DOCS_ROOT_PATH, linkWithExtension), hash);
+      validateHash(file, originalLink, path.join(DOCS_ROOT_PATH, linkWithExtension), hash, position);
     }
 
     // TODO check in section info
@@ -307,16 +312,17 @@ function validateLinks(
       if (link.link.startsWith("/")) {
         linkErrors.push({ 
           file: file.substring(DOCS_ROOT_PATH.length), 
-          error: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`
+          error: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`,
+          position: link.position
         });
       } else if (link.link.startsWith("#")) {
         if (hashes) {
-          validateHash(file, link.link, file, link.link);
+          validateHash(file, link.link, file, link.link, link.position);
         }
       } else {
         const resolvedLink = path.resolve(file, '..', link.link);
         const rootedLink = resolvedLink.substring(DOCS_ROOT_PATH.length);
-        checkLink(file, link.link, link.style, rootedLink);
+        checkLink(file, link.link, link.style, rootedLink, link.position);
       }
     }
   }
@@ -336,7 +342,7 @@ function validateLinks(
     const result = await compileDoc(f, footers);
     const linkErrors = validateLinks({ [f]: result.links}, allDocs);
     for (const error of linkErrors) {
-      log(`Error in file ${error.file}: ${error.error}`);
+      log(`Error in file ${error.file}:${error.position.start.line}:${error.position.start.column}: ${error.error}`, 'error');
     }
     return result;
   }));
@@ -349,7 +355,7 @@ function validateLinks(
     .flat();
   // TODO make this update in watch mode
   outputSearchSegmentsFile(allSegments);
-  log(`All docs compiled in ${timeString(startTime, performance.now())}`);
+  log(`All docs compiled in ${timeString(startTime, performance.now())}`, 'success');
   if (WATCH_ENABLED) {
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
@@ -385,20 +391,22 @@ function validateLinks(
       log(
         `Failure: ${linkErrors.length} link${
           linkErrors.length === 1 ? " was" : "s were"
-        } invalid`
+        } invalid`,
+        'error'
       );
       for (const error of linkErrors) {
-        log(`Error in file ${error.file}: ${error.error}`);
+        log(`Error in file ${error.file}:${error.position.start.line}:${error.position.end.column}: ${error.error}`, 'error');
       }
     }
     if (snippetErrors.length > 0) {
       log(
         `Failure: ${snippetErrors.length} example snippet${
           snippetErrors.length === 1 ? "" : "s"
-        } had errors`
+        } had errors`,
+        'error'
       );
       snippetErrors.forEach((error) => {
-        log(`Error in file ${error.path}: ${error.error}`);
+        log(`Error in file ${error.path}:${error.position.start.line}:${error.position.end.column}: ${error.error}`, 'error');
         log("```");
         log(error.snippet);
         log("```");

@@ -25,7 +25,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import { Markdown } from "./markdown_types.js";
+import { Markdown, Position } from "./markdown_types.js";
 import { runCode } from "./run_code.js";
 import { log } from "./log.js";
 import { highlight } from "./highlighter.js";
@@ -41,9 +41,9 @@ class Renderer {
   // The path where the document being rendered exists.
   private readonly path: string;
   private models: Map<string, string>;
-  private _errors: { snippet: string; error: string }[] = [];
+  private _errors: { snippet: string; error: string; position: Position }[] = [];
   private readonly titleStack: { level: number; title: string }[] = [];
-  public readonly links: { link: string; style: "md" | "html" }[] = [];
+  public readonly links: { link: string; style: "md" | "html", position: Position }[] = [];
   public readonly hashes: string[] = [];
   public readonly searchSegments: {
     titles: string[];
@@ -65,7 +65,8 @@ class Renderer {
   protected async code(
     code: string,
     infostring: string | undefined,
-    _escaped: boolean
+    _escaped: boolean,
+    position: Position,
   ) {
     const lang = (infostring || "txt").trim();
     let showCode = code;
@@ -97,9 +98,9 @@ class Renderer {
             this.setModel(options.modelPath, modelCode);
           }
         } catch (error) {
-          log(`  !! Error: ${error.toString()}\n${error.stack}`);
+          log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
           result = `<div class="error">Error: ${error.toString()}</div>`;
-          this._errors.push({ snippet: code, error: error.message });
+          this._errors.push({ snippet: code, error: error.message, position });
         }
       }
 
@@ -122,12 +123,26 @@ class Renderer {
     return "<blockquote>\n" + quote + "</blockquote>\n";
   }
 
-  protected async html(html: string) {
+  protected async html(html: string, position: Position) {
     // HTML parsing with Regex lol
     const linkRegex = /<a\s+href=["']([^"']*)["']/g;
-    const matches = html.matchAll(linkRegex);
-    for (const match of matches) {
-      this.links.push({ link: match[1], style: "html" });
+    let match: RegExpExecArray;
+    while ((match = linkRegex.exec(html)) != null) {
+      const before = html.slice(0, match.index);
+      const beforeLines = before.split("\n");
+      const linkPosition: Position = {
+        start: {
+          line: position.start.line + beforeLines.length - 1,
+          column: beforeLines.length > 1 ? beforeLines[beforeLines.length - 1].length : beforeLines[beforeLines.length - 1].length + position.start.column,
+          offset: position.start.offset + before.length
+        },
+        end: {
+          line: position.start.line + beforeLines.length - 1,
+          column: beforeLines.length > 1 ? match[0].length : position.start.column + match[0].length,
+          offset: position.start.offset + before.length + match[0].length
+        }
+      }
+      this.links.push({ link: match[1], style: "html", position: linkPosition });
     }
     return html;
   }
@@ -296,13 +311,14 @@ class Renderer {
   protected async link(
     href: string | null,
     title: string | null,
-    content: Markdown[]
+    content: Markdown[],
+    position: Position,
   ) {
     const text = await this.children(content);
     if (href === null) {
       return text;
     }
-    this.links.push({ link: href, style: "md" });
+    this.links.push({ link: href, style: "md", position });
     href = href.replace(/\.md/, "");
     let out = href.startsWith("/")
       ? `<a href="${DEFAULT_CONTEXT.site.baseurl}${href}"`
@@ -356,7 +372,7 @@ class Renderer {
       case "paragraph":
         return this.paragraph(ast.children);
       case "link":
-        return this.link(ast.url, ast.title, ast.children);
+        return this.link(ast.url, ast.title, ast.children, ast.position);
       case "emphasis":
         return this.emphasis(ast.children);
       case "strong":
@@ -368,7 +384,7 @@ class Renderer {
       case "inlineCode":
         return this.codeSpan(ast.value);
       case "code":
-        return this.code(ast.value, ast.lang, false);
+        return this.code(ast.value, ast.lang, false, ast.position);
       case "blockquote":
         return this.blockquote(ast.children);
       case "break":
@@ -376,7 +392,7 @@ class Renderer {
       case "thematicBreak":
         return this.hr();
       case "html":
-        return this.html(ast.value);
+        return this.html(ast.value, ast.position);
       case "image":
         return this.image(ast.url, ast.title, ast.alt);
       case "delete":
@@ -396,8 +412,8 @@ export async function renderDoc(
   path: string
 ): Promise<{
   renderedDocument: string;
-  errors: { snippet: string; error: string }[];
-  links: {link: string, style: "md" | "html"}[];
+  errors: { snippet: string; error: string; position: Position }[];
+  links: {link: string, style: "md" | "html", position: Position}[];
   searchSegments: {
     titles: string[];
     paragraphs: (

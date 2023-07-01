@@ -21,6 +21,18 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export function log(message: string): void {
-  process.stdout.write(message + "\n");
+const RED = "\x1b[31m";
+const YELLOW = "\x1b[33m";
+const GREEN = "\x1b[32m";
+const RESET = "\x1b[0m";
+
+export function log(message: string, style: "error" | "info" | "warning" | "success" = "info"): void {
+  const color = {
+    error: RED,
+    info: "",
+    success: GREEN,
+    warning: YELLOW,
+  }[style];
+  const reset = color === "" ? "" : RESET;
+  process.stdout.write(color + message + reset + "\n");
 }

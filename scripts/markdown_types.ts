@@ -46,78 +46,87 @@ export type Markdown =
   | Delete
   | ThematicBreak;
 
-export interface Root {
+export interface Position {
+  start: { line: number, column: number, offset: number },
+  end: { line: number, column: number, offset: number }
+};
+
+export interface Node {
+  position: Position;
+}
+
+export interface Root extends Node {
   type: "root";
   children: Markdown[];
 }
 
-export interface Break {
+export interface Break extends Node {
   type: "break";
 }
 
-export interface Image {
+export interface Image extends Node {
   type: "image";
   url: string;
   title: string | null;
   alt: string;
 }
 
-export interface Delete {
+export interface Delete extends Node {
   type: "delete";
   children: Markdown[];
 }
 
-export interface Blockquote {
+export interface Blockquote extends Node {
   type: "blockquote";
   children: Markdown[];
 }
 
-export interface Heading {
+export interface Heading extends Node {
   type: "heading";
   children: Markdown[];
   depth: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-export interface Text {
+export interface Text extends Node {
   type: "text";
   value: string;
 }
 
-export interface HTML {
+export interface HTML extends Node {
   type: "html";
   value: string;
 }
 
-export interface Code {
+export interface Code extends Node {
   type: "code";
   lang: string;
   meta: string | null;
   value: string;
 }
 
-export interface Link {
+export interface Link extends Node {
   type: "link";
   title: string | null;
   url: string;
   children: Markdown[];
 }
 
-export interface Paragraph {
+export interface Paragraph extends Node {
   type: "paragraph";
   children: Markdown[];
 }
 
-export interface Emphasis {
+export interface Emphasis extends Node {
   type: "emphasis";
   children: Markdown[];
 }
 
-export interface Strong {
+export interface Strong extends Node {
   type: "strong";
   children: Markdown[];
 }
 
-export interface List {
+export interface List extends Node {
   type: "list";
   ordered: boolean;
   start: number | null;
@@ -125,34 +134,34 @@ export interface List {
   children: Markdown[];
 }
 
-export interface ListItem {
+export interface ListItem extends Node {
   type: "listItem";
   checked: boolean | null;
   spread: boolean;
   children: Markdown[];
 }
 
-export interface Table {
+export interface Table extends Node {
   type: "table";
   align: ("left" | "right" | null)[];
   children: Markdown[];
 }
 
-export interface TableRow {
+export interface TableRow extends Node {
   type: "tableRow";
   children: Markdown[];
 }
 
-export interface TableCell {
+export interface TableCell extends Node {
   type: "tableCell";
   children: Markdown[];
 }
 
-export interface InlineCode {
+export interface InlineCode extends Node {
   type: "inlineCode";
   value: string;
 }
 
-export interface ThematicBreak {
+export interface ThematicBreak extends Node {
   type: "thematicBreak";
 }
