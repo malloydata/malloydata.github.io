@@ -1,33 +1,17 @@
 ## Documentation Development
 
-Documentation is a static site built by [Jekyll](https://jekyllrb.com/) with
-some custom preprocessing.
+Documentation is a static site built using entirely custom generation.
 
-Source for documentation lives in the `/docs/_src` directory. Any `.md`
+Source for documentation lives in the `/src` directory. Any `.md`
 files will be included in compiled documentation, `table_of_contents.json`
-specifies the sidebar, and any other files will be copied as static files.
+specifies the sidebar, and any other files will be copied as static files,
+with some handlebars replacement.
 
-Custom preprocessing is done in `/docs/_scripts/build_docs/index.ts`.
+Custom preprocessing is done in `/scripts/index.ts`.
 
 ### Installation
 
-Jekyll is a Ruby Gem, so you will need to have Ruby 2.5.0+, RubyGems, GCC,
-Make, and Bundler installed. See [here](https://jekyllrb.com/docs/installation/)
-for more info on Jekyll's requirements.
-
-To install Bundler, run
-
-```
-gem install bundler
-```
-
-Once all that is installed, you can install Jekyll and its Ruby dependencies:
-
-```
-bundle install
-```
-
-Then update npm:
+Jekyll and Ruby are no longer required! Just install `npm` and then install dependencies:
 
 ```
 npm install
@@ -38,17 +22,15 @@ npm install
 To compile the documentation, run:
 
 ```
- npm run docs-build
+ npm run build
  ```
-
-Your system must be authenticated to a BigQuery instance with access to all the public tables referenced in the `/models` models.
 
 ### Develop
 
 For developing the documentation:
 
 ```
-npm run docs-serve
+npm run serve
 ```
 
 This will build the docs, watch for file changes in any of the docs, static files, or sample models, and serve the result at [http://127.0.0.1:4000](http://127.0.0.1:4000).
@@ -62,7 +44,7 @@ line in a comment with an `!`, like: `--! { "isRunnable": true }`. For example,
 
 ````
 ```malloy
---! {"isRunnable": true, "source": "faa/flights.malloy", "size": "large"}
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
 flights -> sessionize
 ```
 ````
@@ -88,4 +70,4 @@ To deploy the docs, use the following steps:
 
 1. Merge any docs changes into `main`
 2. A CloudBuild trigger will automatically publish the changes once they are built,
-   which can take around 15 minutes.
+   which can take around 2-4 minutes.

@@ -1,52 +1,74 @@
 {
   "scopeName": "source.malloy",
   "patterns": [
-    { "include": "#sql-statement" },
-    { "include": "#comments" },
-    { "include": "#strings" },
-    { "include": "#numbers" },
-    { "include": "#keywords" },
-    { "include": "#properties" },
-    { "include": "#functions" },
-    { "include": "#dates" },
-    { "include": "#identifiers-quoted" },
-    { "include": "#types" },
-    { "include": "#constants" },
-    { "include": "#timeframes" },
-    { "include": "#identifiers-unquoted" }
+    {"include": "#sql-string"},
+    {"include": "#comments"},
+    {"include": "#tags"},
+    {"include": "#strings"},
+    {"include": "#numbers"},
+    {"include": "#keywords"},
+    {"include": "#properties"},
+    {"include": "#functions"},
+    {"include": "#dates"},
+    {"include": "#identifiers-quoted"},
+    {"include": "#types"},
+    {"include": "#constants"},
+    {"include": "#timeframes"},
+    {"include": "#identifiers-unquoted"}
   ],
   "repository": {
-    "sql-statement": {
-      "begin": "\\|\\|",
-      "end": ";;",
+    "query-in-sql": {
+      "begin": "%{",
+      "name": "source.internal-query-stuff",
+      "end": "}%",
+      "patterns": [
+        {"include": "#sql-string"},
+        {"include": "#comments"},
+        {"include": "#tags"},
+        {"include": "#strings"},
+        {"include": "#numbers"},
+        {"include": "#keywords"},
+        {"include": "#properties"},
+        {"include": "#functions"},
+        {"include": "#dates"},
+        {"include": "#identifiers-quoted"},
+        {"include": "#types"},
+        {"include": "#constants"},
+        {"include": "#timeframes"},
+        {"include": "#identifiers-unquoted"}
+      ]
+    },
+    "sql-string": {
+      "begin": "\"\"\"",
+      "end": "\"\"\"",
       "beginCaptures": {
-        "0": { "name": "punctuation.sql-block.open" }
+        "0": {"name": "punctuation.sql-block.open"}
       },
       "endCaptures": {
-        "0": { "name": "punctuation.sql-block.close" }
+        "0": {"name": "punctuation.sql-block.close"}
       },
       "name": "source.sql",
-      "patterns": [{ "include": "source.sql"}]
+      "patterns": [{"include": "#query-in-sql"}, {"include": "source.sql"}]
     },
     "functions": {
       "patterns": [
         {
           "match": "(?i)\\b(count)(\\s*\\()(distinct)",
           "captures": {
-            "1": { "name": "entity.name.function" },
-            "3": { "name": "entity.name.function.modifier" }
+            "1": {"name": "entity.name.function"},
+            "3": {"name": "entity.name.function.modifier"}
           }
         },
         {
           "match": "(?i)\\b(AVG|COUNT|FIRST|FORMAT|LAST|LCASE|LEN|MAX|MID|MIN|MOD|NOW|ROUND|SUM|UCASE|TABLE|FROM|FROM_SQL|UNGROUPED)(\\s*\\()",
           "captures": {
-            "1": { "name": "entity.name.function" }
+            "1": {"name": "entity.name.function"}
           }
         },
         {
           "match": "(?i)\\b([a-zA-Z_][a-zA-Z_0-9]*)(\\s*\\()",
           "captures": {
-            "1": { "name": "entity.name.function" }
+            "1": {"name": "entity.name.function"}
           }
         },
         {
@@ -69,7 +91,7 @@
     "identifiers-quoted": {
       "patterns": [
         {
-          "match": "(?i)`[A-z_][A-z_0-9]*`",
+          "match": "`[^`]*`",
           "name": "variable.other.quoted"
         }
       ]
@@ -100,10 +122,10 @@
           "begin": "/\\*",
           "end": "\\*/",
           "beginCaptures": {
-            "0": { "name": "punctuation.definition.comment.begin"}
+            "0": {"name": "punctuation.definition.comment.begin"}
           },
           "endCaptures": {
-            "0": { "name": "punctuation.definition.comment.end" }
+            "0": {"name": "punctuation.definition.comment.end"}
           },
           "name": "comment.block"
         },
@@ -111,7 +133,7 @@
           "begin": "//",
           "end": "\\n",
           "beginCaptures": {
-            "0": { "name": "punctuation.definition.comment"}
+            "0": {"name": "punctuation.definition.comment"}
           },
           "name": "comment.line.double-slash"
         },
@@ -119,11 +141,75 @@
           "begin": "--",
           "end": "\\n",
           "beginCaptures": {
-            "0": { "name": "punctuation.definition.comment"}
+            "0": {"name": "punctuation.definition.comment"}
           },
           "name": "comment.line.double-hyphen"
         }
       ]
+    },
+    "tags": {
+      "patterns": [
+        {
+          "match": "##\\n",
+          "name": "string.quoted",
+          "captures": {
+            "0": {"name": "string.quoted"}
+          }
+        },
+        {
+          "begin": "#\"",
+          "end": "\\n",
+          "beginCaptures": {
+            "0": {"name": "punctuation.definition.comment"}
+          },
+          "name": "comment.line.double-slash"
+        },
+        {
+          "match": "#\\n",
+          "name": "string.quoted",
+          "captures": {
+            "0": {"name": "string.quoted"}
+          }
+        },
+        {
+          "begin": "#\\s",
+          "end": "\\n",
+          "beginCaptures": {
+            "0": {"name": "support.type.property-name.json"}
+          },
+          "name": "comment.line.double-slash",
+          "patterns": [{"include": "#tag-values"}]
+        },
+        {
+          "begin": "##\\s",
+          "end": "\\n",
+          "beginCaptures": {
+            "0": {"name": "support.type.property-name.json"}
+          },
+          "name": "comment.line.double-slash",
+          "patterns": [{"include": "#tag-values"}]
+        },
+        {
+          "begin": "#",
+          "end": "\\n",
+          "beginCaptures": {
+            "0": {"name": "string.quoted"}
+          },
+          "name": "string.quoted"
+        }
+      ],
+      "repository": {
+        "tag-values": {
+          "name": "support.type.property-name.json",
+          "match": "(-)?((?:[^\\s=#]+)|(?:\"[^#]+\"))(?:\\s*(=)\\s*((?:[^\\s=#]+)|(?:\"[^#]+\")))?",
+          "captures": {
+            "1": {"name": "keyword.control.negate"},
+            "2": {"name": "support.type.property-name.json"},
+            "3": {"name": "keyword.operator.comparison.ts"},
+            "4": {"name": "string.quoted"}
+          }
+        }
+      }
     },
     "strings": {
       "patterns": [
@@ -131,37 +217,31 @@
           "begin": "'",
           "end": "'",
           "beginCaptures": {
-            "0": { "name": "punctuation.definition.string.begin"}
+            "0": {"name": "punctuation.definition.string.begin"}
           },
           "endCaptures": {
-            "0": { "name": "punctuation.definition.string.end" }
+            "0": {"name": "punctuation.definition.string.end"}
           },
           "name": "string.unquoted.single",
-          "patterns": [
-            { "include": "#escapes" }
-          ]
+          "patterns": [{"include": "#escapes"}]
         },
         {
           "begin": "\"",
           "end": "\"",
           "beginCaptures": {
-            "0": { "name": "punctuation.definition.string.begin"}
+            "0": {"name": "punctuation.definition.string.begin"}
           },
           "endCaptures": {
-            "0": { "name": "punctuation.definition.string.end" }
+            "0": {"name": "punctuation.definition.string.end"}
           },
           "name": "string.unquoted.double",
-          "patterns": [
-            { "include": "#escapes" }
-          ]
+          "patterns": [{"include": "#escapes"}]
         },
         {
           "begin": "(?i)[r|/]'",
           "end": "'",
           "name": "string.regexp",
-          "patterns": [
-            { "include": "#escapes" }
-          ]
+          "patterns": [{"include": "#escapes"}]
         }
       ],
       "repository": {
@@ -169,7 +249,7 @@
           "name": "constant.character.escape",
           "match": "\\\\(x\\h{2}|[0-2][0-7]{0,2}|3[0-6][0-7]|37[0-7]?|[4-7][0-7]?|.)",
           "captures": {
-            "0": { "name": "constant.character.escape"}
+            "0": {"name": "constant.character.escape"}
           }
         }
       }
@@ -229,8 +309,28 @@
           "name": "keyword.control.sql"
         },
         {
+          "match": "(?i)\\bselect\\b",
+          "name": "keyword.control.select"
+        },
+        {
+          "match": "(?i)\\bconnection\\b",
+          "name": "keyword.control.connection"
+        },
+        {
+          "match": "(?i)\\brun\\b",
+          "name": "keyword.control.run"
+        },
+        {
+          "match": "(?i)\\bextend\\b",
+          "name": "keyword.control.extend"
+        },
+        {
           "match": "(?i)\\baggregate\\b",
           "name": "keyword.control.aggregate"
+        },
+        {
+          "match": "(?i)\\bsample\\b",
+          "name": "keyword.control.sample"
         },
         {
           "match": "(?i)\\bcalculate\\b",

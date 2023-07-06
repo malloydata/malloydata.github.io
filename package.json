@@ -7,18 +7,17 @@
   "config": {
     "malloy_packages": [
       "@malloydata/malloy",
-      "@malloydata/db-bigquery",
+      "@malloydata/db-duckdb",
       "@malloydata/render"
     ]
   },
   "scripts": {
-    "docs-clean": "rm -rf docs/.jekyll-cache/ && rm -rf docs/_includes/generated/ && rm -rf docs/documentation && rm -rf js/generated/",
-    "docs-prebuild": "npm run docs-clean",
-    "docs-build": "npm run docs-prebuild && ts-node --project tsconfig.docs.json --esm ./docs/_scripts/build_docs/index.ts && cd docs && bundle exec jekyll build",
-    "docs-preprocess": "ts-node --esm --project tsconfig.docs.json docs/_scripts/build_docs/index.ts --watch",
-    "docs-postprocess": "wait-on ./docs/_includes/generated/toc.html && cd docs && bundle exec jekyll serve -l -o",
-    "docs-serve": "npm run docs-prebuild && concurrently --kill-others 'npm run docs-preprocess' 'npm run docs-postprocess'",
-    "docs-deploy": "npm run docs-prebuild && ts-node --esm ./docs/_scripts/build_docs/index.ts",
+    "clean": "rm -rf docs",
+    "build": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --baseurl 'http://localhost:4000'",
+    "build-watch": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --watch --baseurl 'http://localhost:4000'",
+    "start-server": "http-server docs -p 4000",
+    "build-prod": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --baseurl ''",
+    "serve": "concurrently --kill-others 'npm run build-watch' 'npm run start-server'",
     "malloy-update-next": "npm install --no-fund --no-audit --save-exact $(echo $npm_package_config_malloy_packages | sed -E 's/(@malloydata\\/[-a-z]+)/\\1@next/g')",
     "malloy-update": "npm install --no-fund --no-audit --save-exact $(echo $npm_package_config_malloy_packages | sed -E 's/(@malloydata\\/[-a-z]+)/\\1@latest/g')",
     "malloy-link": "npm --no-fund --no-audit link $npm_package_config_malloy_packages",
@@ -35,21 +34,24 @@
   },
   "homepage": "https://github.com/malloydata/malloydata.github.io#readme",
   "devDependencies": {
-    "@malloydata/db-bigquery": "0.0.43",
-    "@malloydata/malloy": "0.0.43",
-    "@malloydata/render": "0.0.43",
+    "@malloydata/db-duckdb": "0.0.50",
+    "@malloydata/malloy": "0.0.50",
+    "@malloydata/render": "0.0.50",
     "@types/jsdom": "^20.0.0",
     "concurrently": "^6.2.1",
     "fs-extra": "^10.1.0",
+    "http-server": "^14.1.1",
     "jsdom": "^19.0.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^10.0.1",
     "shiki": "^0.10.1",
     "ts-node": "^10.9.1",
-    "unified": "^10.1.2",
-    "wait-on": "^6.0.0"
+    "unified": "^10.1.2"
   },
   "dependencies": {
-    "@types/fs-extra": "^9.0.13"
+    "@types/fs-extra": "^9.0.13",
+    "handlebars": "^4.7.7",
+    "remark-frontmatter": "^4.0.1",
+    "yaml": "^2.3.1"
   }
 }

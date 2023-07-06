@@ -1,0 +1,156 @@
+# Data Types In Malloy
+
+Because Malloy writes SQL expressions, when queries are actually executed, all data will be in types understood by the SQL engine which is running the query.
+
+Malloy does have a set of data types and there is a mapping between the types of the SQL engine and the Malloy datatypes, mostly this mapping is invisible.
+
+## Numeric
+
+An engine will have a large variety of storage formats for numeric data. Malloy doesn't distinguish between these, and simply folds them all into one type.
+
+Although Malloy can use columns of any numberic type, there is no way to write a pure Malloy query to generate columns in a specific engine type.
+
+### Numeric Literals
+
+Malloy has a fairly basic syntax for numeric literals
+
+* `123`
+* `123.4`
+* `.4`
+* `0.4`
+* `123E4`
+* `123E+4`
+* `123E-4`
+
+## String
+
+Malloy uses single quotes to wrap strings and uses the "backslash" (reverse virgule) to quote a single character within the string
+
+* `'My name is Michael'`
+* `'My name isn\'t Mike'`
+
+## Boolean
+
+### Boolean literals
+
+* `true`
+* `false`
+
+### Boolean Comparison Nullability 
+
+Malloy has one interesting difference from most SQL engines in how it handles null values.
+
+For expressions which return a `boolean`, e.g. `might_be_null > 0`:
+* in SQL, the result is a boolean column where the value could be `true`, `false`, or `NULL`
+* in Malloy, the result will only be `true` or `false`
+
+This is true for all the comparison operators (`>`, `=`, etc.) as well as functions which return a boolean (e.g. `starts_with`, `is_inf`, etc.).
+
+## Timestamp
+
+A timestamp represents an instant in time.
+
+Malloy's approach to timezone related computations relating to timestamp data is explained in [Timezones](timezones.md)
+
+### Timestamp literals
+
+Timestamp literals are specified in Malloy with the `@` character. Seconds, and subsecond resolution maybe be specified and an optional locale may also be added.
+
+* `@2001-02-03 04:05:06.001 [America/Mexico_City]`
+* `@2001-02-03 04:05:06.001`
+* `@2001-02-03 04:05:06`
+* `@2001-02-03 04:05`
+
+In addition, in any of the above, a `T` can be used instead of a space between the date and time portion of the timestamp string, as in
+
+* `@2001-02-03T04:05:06.001`
+
+A date literal, when used in an expression with a timestamp, also functions as a timestamp literal. That is
+
+* `myTimestamp > @2003` is equivalent to `myTimestamp > @2003-01-01 00:00`
+
+## Date
+
+A date represents combination of year, month, day into a single data item.
+
+### Date Literals
+
+Date literals are specified in Malloy with the `@` character. A literal can specify a date, a week, a month, a quarter or a year.
+
+* Date: `@2001-02-03`
+* Week: `@2001-02-04-WK` ( the sunday week containing 2001-02-04 )
+   * `@2001-02-03-WK` will generate an error because that day does not start a week. The week containing 2001-02-03 that would be `@2001-02-03.week`
+* Month: `@2001-02`
+* Quarter: `@2001-Q2`
+* Year: `@2001`
+
+
+## Unsupported
+
+Columns in sources which Malloy does not have a datatype for are considered "unsupported". The following operations are legal on unsupported types
+
+* Two expressions of the same unsupported type can be compared
+* An unsupported type can be compared to `NULL`
+* An expression of unsupported type can be cast to a supported type
+
+## Unknown
+
+When parsing expressions, an error in an expression may result in an expression where the compiler does not know the resulting type. Error messages containing the phrase `type 'unknown'` indicate that there is an eariler error which has produced this condition.
+
+
+## Intermediate Types
+
+The following types are not assignable to fields, and are
+therefore considered _intermediate types_, in that they are
+primarily used to represent part of a computation that
+yields a regular scalar type, often `boolean`.
+
+### Regular Expressions
+
+Literal regular expressions are enclosed in single quotation
+marks `'` and preceded by either `/` or `r`, e.g. `/'.*'` or `r'.*'`. Both syntaxes are semantically equivalent.
+
+In the future, the literal regular expressions will likely
+be simply slash-enclosed, e.g <code>/.*/</code>.
+
+Values of type `string` may be compared against regular
+expressions using either the [apply operator](apply.md),`name: r'c.*'` or the like operator, `name ~ r'c.*'`.
+
+### Ranges
+
+There are three types of ranges today: `string` ranges, `date` ranges, and `timestamp` ranges. The most basic ranges
+are of the form `start to end` and represent the inclusive range between `start` and `end`, e.g. `10 to 20` or `@2004-01 to @2005-05`.
+
+Ranges may be used in conjunction with the [apply operator](apply.md) to test whether a value falls within a given range.
+
+In the future, other ranges may be allowed, such as `string` ranges.
+
+### Alternations and Partials
+
+_Partials_ represent a "part of" a comparison.
+Specifically, a partial is a comparison missing its
+left-hand side, and represents the condition of the
+comparison yielding `true` if a given value were to be
+filled in for that missing left-hand side. For example, `> 10` is a partial that represents the condition "is greater
+than ten." Likewise, `!= 'CA'` is a partial that represents the condition of not being equal to `'CA'`.
+
+_Alternations_ are combinations of partials representing
+either the logical union ("or") or conjunction ("and") of
+their conditions. Alternations are represented using the
+union alternation operator `|` and the conjunction
+alternation operator `&`.
+
+For example, `= 'CA' | = 'NY'` represents the condition of being equal to 'CA' or _alternatively_ being equal to 'NY'. On the other hand, `!= 'CA' & != 'NY'` represents the condition of being not equal to 'CA' _as well as_ being not equal to 'NY'.
+
+Scalar values, regular expressions, and
+ranges may also be used in alternations, in which case the
+condition is assumed to be that of equality, matching, and
+inclusion respectively.
+
+For example, `'CA' | r'N.*'` represents the condition of being equal to 'CA' or starting with 'N', and `10 to 20 | 20 to 30` represents the condition of being _either_ between 10 and 20 _or_ 20 and 30.
+
+Alternations and partials may be used in conjunction with the [apply operator](apply.md) to test whether a value meets the given condition.
+
+## Nullability
+
+Today, all Malloy types include the value `null`.
