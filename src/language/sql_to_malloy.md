@@ -2,7 +2,7 @@
 Basic structure of a Malloy Query:
 
 ```malloy
-query: <source> {
+run: <source> {
   join_one: <source> with …
   join_many: <source> on …
 } -> {
@@ -47,9 +47,9 @@ This document is intended to serve as a reference for those who already know SQL
 | SQL | Malloy | Description / Docs |
 |---|---|---|
 | <pre><code>userName AS user_name</code><code>malloy-data.ecomm.users AS users</code></pre>  | <pre> `user_name is userName  ` `users is malloy-data.ecomm.users `</pre> | **AS**: Names come before definitions in Malloy. |
-| <pre><code>SELECT id FROM order_items</code></pre>   | <pre> `query: order_items -> {project: id}`</pre> | **SELECT / FROM**: [Malloy by Example](../user_guides/malloy_by_example.md) |
+| <pre><code>SELECT id FROM order_items</code></pre>   | <pre> `run: order_items -> {project: id}`</pre> | **SELECT / FROM**: [Malloy by Example](../user_guides/malloy_by_example.md) |
 | <pre><code>LEFT JOIN users</code><code> ON users.id = order_items.user_id </pre></code> | <pre> `join_one: users on users.id = order_items.user_id`</pre> | **JOIN**: [Documentation](../language/join.md) covers more join types and complex relationships. [Example](../language/sql_to_malloy.md#more-complex-example) |
-| <pre><code> SELECT </code> <code>  status</code> <code>  , COUNT(*) AS items_count</code> <code>FROM order_items </code> <code>GROUP BY 1</code> </code></pre>  | <pre> `query: order_items -> {` `  group_by: status` `  aggregate: items_count is count()` `}`</pre> | **GROUP BY**: Any field included in Malloy’s group_by selection will be included in both the generated <code>SELECT</code> and <code>GROUP BY</code>. |
+| <pre><code> SELECT </code> <code>  status</code> <code>  , COUNT(*) AS items_count</code> <code>FROM order_items </code> <code>GROUP BY 1</code> </code></pre>  | <pre> `run: order_items -> {` `  group_by: status` `  aggregate: items_count is count()` `}`</pre> | **GROUP BY**: Any field included in Malloy’s group_by selection will be included in both the generated <code>SELECT</code> and <code>GROUP BY</code>. |
 | <pre><code>WHERE status = 'Complete'</code></pre>  | <pre> `where: status = 'Complete'`</pre> | **WHERE** |
 | <pre><code>ORDER BY flight_count, avg_elevation</code></pre>  | <pre> `order_by: flight_count, avg(elevation)`</pre> | **ORDER BY**. By default, <code>ORDER BY</code> is generated following [implicit rules](../language/order_by.md); this can be overridden.  |
 | <pre><code>HAVING flight_count > 5</code></pre>  | <pre> `having: flight_count > 5`</pre> | **HAVING** |
@@ -69,7 +69,7 @@ Many SQL functions supported by the database can simply be used unchanged in Mal
 | <pre><code>SUM(), AVG(), MAX(), MIN(), COUNT(), etc </code></prE> | <pre> `sum(), avg(), max(), min(), count(), etc...` </pre> | Basic SQL aggregations are supported verbatim, but it’s worth learning about Malloy’s additional [aggregate locality](../language/aggregates.md#aggregate-locality) / [symmetric aggregate](https://help.looker.com/hc/en-us/articles/360023722974-A-Simple-Explanation-of-Symmetric-Aggregates-or-Why-On-Earth-Does-My-SQL-Look-Like-That-) handling. |
 | <pre> <code>CASE</code> <code>  WHEN size_n < 3 THEN 'S'</code> <code>  WHEN size_n <5 THEN 'M'</code> <code>ELSE 'L' END</code> </pre> | <pre> `size_n ?` `  pick 'S' when < 3` `  pick 'M' when <5` `  else 'L' ` </pre> | [Pick](../language/expressions.md#pick-expressions) is Malloy’s improvement of SQL’s <code>CASE</code> statement. This example also introduces the `?` [Apply](../language/expressions.md#application) operator, which  "applies" a value to another value, condition, or computation. This is most often used with [partial](../language/expressions.md#partial-comparison) comparisons or [alternations](../language/expressions.md#alternation). |
 | <pre> <code>COUNT(CASE WHEN status = 'Returned' THEN 1 END),</code> <code>AVG(CASE WHEN brand = 'Levi\'s' THEN price END)</code> </pre> | <pre> `count() {where: status = 'Returned'}` `avg_price {where ? brand = 'Levi\'s'}` </pre> | Aggregates may be filtered using filter expressions. [Doc](../language/expressions.md#filtered-expressions) |
-| <pre> <code>CAST(distance AS string),</code> <code>distance::string</code> </pre> | <pre>`distance::string`</pre> | [Safe Type Cast](../language/expressions.md#safe-type-cast). Also worth reviewing [Types](../language/datatypes.md) doc. |
+| <pre> <code>CAST(distance AS string),</code> <code>distance::string</code> </pre> | <pre>`distance::string`</pre> | [Type Cast](../language/expressions.md#safe-type-cast). Also worth reviewing [Types](../language/datatypes.md) doc. |
 
 
 #### Working with Time
@@ -117,7 +117,7 @@ ORDER BY 1 ASC
 
 In Malloy, this is expressed:
 ```malloy
-query: duckdb.table('data/order_items.parquet') -> {
+run: duckdb.table('data/order_items.parquet') -> {
  where: created_at = @2021-Q1, status != 'Cancelled' & 'Returned'
  group_by: order_date is created_at.day
  aggregate:
@@ -150,7 +150,7 @@ ORDER BY 3 ASC
 
 In Malloy, this can be expressed in a query:
 ```malloy
-query: inventory_items is duckdb.table('data/inventory_items.parquet'){
+run: inventory_items is duckdb.table('data/inventory_items.parquet'){
   join_one: order_items is duckdb.table('data/order_items.parquet') on id = order_items.inventory_item_id
   join_one: users is duckdb.table('data/users.parquet') on order_items.user_id = users.id
 } -> {
@@ -195,7 +195,7 @@ source: inventory_items is duckdb.table('inventory_items.parquet'){
    avg_gross_margin is gross_margin.avg()
 }
 
-query: inventory_items -> {
+run: inventory_items -> {
  group_by: gross_margin_pct_tier
  aggregate:
    total_retail_price
@@ -239,7 +239,7 @@ source: order_items is duckdb.table('data/order_items.parquet'){
   join_one: user_facts on user_id = user_facts.user_id
 }
 
-query: order_items -> {
+run: order_items -> {
   group_by: customer_category is user_facts.lifetime_orders ?
     pick 'One-Time' when = 1
     else 'Repeat'
@@ -278,7 +278,7 @@ source: order_items is from_sql(order_items_sql){
  measure: order_count is count(distinct order_id)
 }
 
-query: order_items -> {
+run: order_items -> {
  group_by: order_facts.user_order_sequence_number
  aggregate: order_count
 }

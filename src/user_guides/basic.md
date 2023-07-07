@@ -12,7 +12,7 @@ The following query is equivalent to <code>SELECT id, code, city FROM airports L
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   project:
     id
     code
@@ -22,7 +22,7 @@ query: duckdb.table('data/airports.parquet') -> {
 ```
 
 Let's break down each part of this query.
-- `query:` is the opening statement that indicates we're starting to write a query
+- `run:` is the opening statement that indicates we're starting to write a query
 - `duckdb.table('data/airports.parquet')` defines the source for the query. The `table()` function creates a source from a table or view in the database.
   - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
 - The `->` operator begins the query. All queries take the form `source -> { ... }`, with the query logic specified inside of the curly braces.
@@ -40,7 +40,7 @@ In the query below, the data will be grouped by `state` and `county`, and will p
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   group_by:
     state
     county
@@ -55,7 +55,7 @@ In Malloy, "project" is a verb, not a noun. As in "to project something", rather
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   project: code, full_name, city, county
   where: county = 'SANTA CRUZ'
   limit: 10
@@ -66,7 +66,7 @@ Operator statements can be placed in any order within a query. `where` can come 
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   limit: 10
   where: county = 'SANTA CRUZ'
   project: code, full_name, city, county
@@ -81,7 +81,7 @@ it must be named. _(unlike SQL, which allows un-named expressions)_
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   aggregate: max_elevation is max(elevation)
 }
 ```
@@ -94,7 +94,7 @@ Named objects, like columns from a table, and fields defined in a source, can be
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   project:
     full_name
     elevation
@@ -107,7 +107,7 @@ Many SQL expressions will work unchanged in Malloy, and many functions available
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "size": "large"}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   group_by: county_and_state is concat(county, ', ', state)
   aggregate:
     airport_count is count()
@@ -136,7 +136,7 @@ source: airports is duckdb.table('data/airports.parquet') {
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: county_and_state
   aggregate: airport_count
 }
@@ -147,7 +147,7 @@ Sources that are defined in one file can be imported into another using `import 
 ```malloy
 import "flights.malloy"
 
-query: airports -> {
+run: airports -> {
   group_by: county_and_state
   aggregate: average_elevation
 }
@@ -171,7 +171,7 @@ source: airports_with_named_query is duckdb.table('data/airports.parquet') {
 }
 
 // The named query can now be referenced by name, and run without having to rewrite the logic:
-query: airports_with_named_query -> top_county_and_state
+run: airports_with_named_query -> top_county_and_state
 ```
 
 ## Joins
@@ -193,7 +193,7 @@ source: flights is duckdb.table('data/flights.parquet') {
   join_one: aircraft on tail_num = aircraft.tail_num
 }
 
-query: flights -> {
+run: flights -> {
   where: dep_time ? @2003-01
   group_by: aircraft.aircraft_models.manufacturer
   aggregate:
@@ -215,7 +215,7 @@ source: airports is duckdb.table('data/airports.parquet')
 
 source: flights is duckdb.table('data/flights.parquet')
 
-query: flights -> {
+run: flights -> {
   join_one: airports on destination = airports.code
   group_by: airports.full_name
   aggregate: flight_count is count()
@@ -231,7 +231,7 @@ The following query grabs the top 5 counties in California with the highest airp
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   where: state = 'CA'
   top: 5
   group_by: county
@@ -247,7 +247,7 @@ source: airports_in_california is duckdb.table('data/airports.parquet') {
   where: state = 'CA'
 }
 
-query: airports_in_california -> {
+run: airports_in_california -> {
   top: 5
   group_by: county
   aggregate: airport_count is count()
@@ -262,7 +262,7 @@ A filter on an aggregate calculation (a _measure_) narrows down the data used in
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   group_by: state
   aggregate:
     airports is count() { where: fac_type = 'AIRPORT' }
@@ -300,7 +300,7 @@ In Malloy, queries can be [nested](../language/nesting.md) to produce subtables 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "isPaginationEnabled": true}
 
-query: airports -> {
+run: airports -> {
   group_by: state
   aggregate: airport_count
   nest: by_facility is {
@@ -319,7 +319,7 @@ Queries can be nested infinitely, allowing for rich, complex output structures. 
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large"}
-query: airports -> {
+run: airports -> {
   group_by: state
   aggregate: airport_count
   nest: top_5_counties is {
@@ -340,7 +340,7 @@ Filters can be isolated to any level of nesting. In the following example, we li
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large"}
-query: airports -> {
+run: airports -> {
   where: state = 'CA'
   group_by: county
   aggregate: airport_count
@@ -368,7 +368,7 @@ shows the number of flights in 2003.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-query: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 } -> {
+run: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 } -> {
   aggregate: flight_count is count()
 }
 ```
@@ -387,7 +387,7 @@ Time values can be truncated to a given timeframe, which can be `second`, `minut
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-query: duckdb.table('data/flights.parquet') -> {
+run: duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     flight_month is dep_time.month
@@ -401,7 +401,7 @@ Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` 
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "pageSize": 7, "size": "large"}
-query: duckdb.table('data/flights.parquet') -> {
+run: duckdb.table('data/flights.parquet') -> {
   order_by: 1
   group_by: day_of_week is day(dep_time)
   aggregate: flight_count is count()
@@ -419,7 +419,7 @@ Two kinds of time ranges are given special syntax: the range between two times a
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-query: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 to @2005 } -> {
+run: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 to @2005 } -> {
   aggregate: flight_count is count()
 }
 ```
@@ -431,7 +431,7 @@ When a time range is used in a comparison, `=` checks for "is in the range", `>`
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-query: duckdb.table('data/flights.parquet') { where: dep_time > @2003 } -> {
+run: duckdb.table('data/flights.parquet') { where: dep_time > @2003 } -> {
   top: 3; order_by: departure_date asc
   group_by: departure_date is dep_time.day
   aggregate: flight_count is count()
@@ -444,7 +444,7 @@ The output from one stage of a query can be passed into another stage using `->`
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "small"}
-query: airports -> {
+run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
   aggregate: airport_count
@@ -460,7 +460,7 @@ percentage of airports compared to the whole state, taking advantage of the nest
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large", "dataStyles": { "percent_in_county": { "renderer": "percent" }}}
-query: airports -> {
+run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
   aggregate: airport_count
@@ -486,7 +486,7 @@ _**NOTE:**: to pipeline a named query, the syntax to reference that named query 
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "flights.malloy"}
-query: aircraft -> {
+run: aircraft -> {
   aggregate:
     // The average number of seats on models of registered aircraft
     models_avg_seats is aircraft_models.seats.avg()
@@ -504,7 +504,7 @@ and may span multiple lines.
 
 ```malloy
 -- The total number of flight entries
-query: flights -> {
+run: flights -> {
   aggregate: flight_count // Defined simply as `count()`
 }
 
@@ -512,7 +512,7 @@ query: flights -> {
  * A comparison of the total number of flights
  * for each of the tracked carriers.
  */
-query: flights -> {
+ run: flights -> {
   group_by: carrier
   aggregate: flight_count /* , total_distance */
 }
@@ -526,7 +526,7 @@ The `top:` and `limit:` statements are synonyms and limits the number of rows re
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   top: 2
   group_by: state
   aggregate: airport_count is count()
@@ -537,7 +537,7 @@ Default ordering can be overridden with `order_by:`, as in the following query, 
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   order_by: state
   group_by: state
   aggregate: airport_count is count()
