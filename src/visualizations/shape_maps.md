@@ -9,27 +9,32 @@ source: airports is duckdb.table('data/airports.parquet') {
   primary_key: code
   measure: airport_count is count()
   query: by_state is {
-    where: state != null
     group_by: state
     aggregate: airport_count
   }
+  # shape_map
+  query: by_state_shaped is by_state
 }
 ```
 
-Data Styles
-```json
-{
-  "by_state": {
-    "renderer": "shape_map"
-  }
-}
-```
 
-## Run as a simple query
+## Run a query and tag the reusults as a shape map
+
+We can explicitly return a result as a shape map.
 
 ```malloy
---! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy","dataStyles":{"by_state": {"renderer": "shape_map"}}}
-query: airports -> { nest: by_state }
+--! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy"}
+# shape_map
+run: airports -> by_state
+```
+
+## The tag is in the semantic model 
+
+In the query below the tag is in the semantic model.
+
+```malloy
+--! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy"}
+run: airports -> by_state_shaped {where: fac_type='SEAPLANE BASE'}
 ```
 
 
@@ -38,10 +43,11 @@ By calling the configured map as a nested subtable, a trellis is formed.
 
 
 ```malloy
---! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy","dataStyles":{"by_state": {"renderer": "shape_map"}}}
-query: airports -> {
+--! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy"}
+run: airports -> {
   group_by: faa_region
   aggregate: airport_count
+  # shape_map
   nest: by_state
 }
 ```
@@ -49,12 +55,14 @@ query: airports -> {
 ## Run as a trellis, repeated with different filters
 
 ```malloy
---! {"isRunnable": true, "size": "large", "source": "/inline/e.malloy", "dataStyles": { "heliports": { "renderer": "shape_map" }, "seaplane_bases": { "renderer": "shape_map" } } }
+--! {"isRunnable": true, "size": "large", "source": "/inline/e.malloy" }
 query: airports -> {
   group_by: faa_region
   aggregate: airport_count
   nest:
-    heliports is by_state { where: fac_type = 'HELIPORT' }
+    // shape map is declared in the model
+    heliports is by_state_shaped { where: fac_type = 'HELIPORT' }
+    # shape_map
     seaplane_bases is by_state { where: fac_type = 'SEAPLANE BASE' }
 }
 ```
