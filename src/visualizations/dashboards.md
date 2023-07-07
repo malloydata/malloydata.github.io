@@ -1,37 +1,63 @@
 # Rendering Results
 
-Malloy simply returns the data when running a query.  In the VS Code extension, this is rendered as an HTML table, JSON, or can show the generated SQL by  toggling in the top right of the Query Results window.
+When Malloy runs a query, it returns two things.  The *results* of the query and *metadata* about the results.  The metadata are the schema for the results, type information.  Malloy also provides a mechanism to tag things in the source code and return tags with this meta data. 
 
-The extension additionally includes the [Vega-Lite](https://vega.github.io/vega-lite/) rendering library for charting, allowing visualization of results. This rendering library is a separate layer from Malloy's data access layer. The preferred approach to specify visualization in the extension is to use a styles file.
+In Malloy, anything that can be named can be tagged.  A tag start with a `#`.  Tags that start on a new line tag the thing on the following line.
 
-To set up a styles file for a Malloy model:
-1. Create a new file with the `.styles.json` suffix (for example, `flights.styles.json`).
-2. Specify styles
-3. Reference your styles document in your `.malloy` file, by adding `--! styles ecommerce.styles.json` to the first line.
+Malloy's rendering library can read these tags and to change how results are rendered.
 
-We recommend looking at the individual visualization documents in this section as well as the [sample models](http://github.com/malloydata/malloy-samples/) for examples of how this looks in action.
-
-While the above approach is preferred, the extension additionally allows the renderer to utilize naming conventions as a shortcut for visualization specification. For example:
+## Tagging individual elements
+In the query below, the measure **percent_of_total** is tagged as a percentage.  Anytime *percent_of_total* is used in a query, it will be displayed as a percentage.
 
 ```malloy
-query: flights_bar_chart is duckdb.table('data/flights.parquet') -> {
-  group_by: origin
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
+source: flights is duckdb.table('data/flights.parquet') {
+  measure:
+    flight_count is count()
+    # percent
+    percent_of_flights is flight_count/all(flight_count)
+}
+
+run: flights ->  {
+  group_by: carrier
+  aggregate: 
+    flight_count 
+    percent_of_flights
+}
+```
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
+run: duckdb.table('data/flights.parquet') ->  {
+  group_by: carrier
   aggregate: flight_count is count()
 }
 ```
 
-Will render as a Bar Chart because of the `bar_chart` suffix.
+Simply adding `# bar_chart` before the query tags it as bar_chart.  The renderer reads the tag and shows the reult as a bar chart.
 
-These naming convention shortcuts currently include:
-* [Bar Chart](bar_charts.md): `_bar_chart`
-* [Line Chart](charts_line_chart.md): `_line_chart`
-* [Scatter Chart](scatter_charts.md): `_scatter_chart`
-* [Shape Map](shape_maps.md): `_shape_map`
-* [Segment Map](segment_maps.md): `_segment_map`
-* Dashboard: `_dashboard`
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "pageSize":5000}
+# bar_chart
+run: duckdb.table('data/flights.parquet') ->  {
+  group_by: carrier
+  aggregate: flight_count is count()
+}
+```
 
-Styles apply to standalone queries as well as when nested.
 
+The Malloy renderer includes the [Vega-Lite](https://vega.github.io/vega-lite/) rendering library for charting, allowing visualization of results. This rendering library is a separate layer from Malloy's data access layer.:
+
+Tags for Queries in npMalloy's renderer include:
+
+* [Bar Chart](bar_charts.md): `bar_chart`
+* [Line Chart](charts_line_chart.md): `line_chart`
+* [Scatter Chart](scatter_charts.md): scatter_chart`
+* [Shape Map](shape_maps.md): `shape_map`
+* [Segment Map](segment_maps.md): `segment_map`
+* Dashboard: `dashboard`
+
+Tags can be applied in sources, when nested, or when queries are run.
 
 ## Example Model
 
@@ -43,13 +69,7 @@ source: airports is duckdb.table('data/airports.parquet') {
     limit: 10
     group_by: state
     aggregate: airport_count
-    nest: by_county is {
-      limit: 5
-      group_by: county
-      aggregate:
-        airport_count
-        average_elevation is avg(elevation)
-    }
+    # bar_chart
     nest: by_fac_type is {
       group_by: fac_type
       aggregate: airport_count
@@ -60,31 +80,22 @@ source: airports is duckdb.table('data/airports.parquet') {
 
 
 ## Shows results as a Dashboard
-The `dashboard` style can be invoked either through the styles file or the `_dashboard` suffix.
+The `dashboard` style can be invoked on something that will render as a table `# dashboard` tag.
+
+Results shown as a table
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "size":"large", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy", "queryName": "county_dashboard"}
-query: county_dashboard is airports -> by_state_and_county
+--! {"isRunnable": true, "showAs":"html", "size":"large", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+run: airports -> by_state_and_county
 ```
 
-## Example
-Add styles for `by_fac_type` and `by_county`
+Results shown as a dashboard
 
-Data Style:
-```json
-{
-  "by_fac_type": {
-    "renderer": "bar_chart"
-  },
-  "by_county": {
-    "renderer": "bar_chart"
-  }
-}
-```
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "size":"large", "isPaginationEnabled": true, "queryName": "county_dashboard", "source": "/inline/airports_mini.malloy", "dataStyles": {"by_fac_type": {"renderer": "bar_chart"},"by_county": {"renderer": "bar_chart"}}}
-query: county_dashboard is airports -> by_state_and_county
+--! {"isRunnable": true, "showAs":"html", "size":"large", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+# dashboard
+run: airports -> by_state_and_county
 ```
 
 ## Additional Charting with Vega Lite

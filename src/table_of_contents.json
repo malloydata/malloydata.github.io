@@ -61,10 +61,6 @@
               "link": "/patterns/cohorts.md"
             },
             {
-              "title": "Pivot Limits",
-              "link": "/patterns/pivot_limits.md"
-            },
-            {
               "title": "Sessionized Data",
               "link": "/patterns/sessionize.md"
             }

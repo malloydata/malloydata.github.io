@@ -5,72 +5,60 @@ The plugin currently supports US maps. Segment maps take as input 4 columns: sta
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e.malloy"}
 source: airports is duckdb.table('data/airports.parquet') {
-  primary_key: code
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
 source: flights is duckdb.table('data/flights.parquet') {
-  primary_key: id2
-  rename: origin_code is origin
-  rename: destination_code is destination
-
-  join_one: origin is airports with origin_code
-  join_one: destination is airports with destination_code
+  join_one: orig is airports on origin=orig.code
+  join_one: dest is airports on destination = dest.code
 
   measure: flight_count is count()
 
+  # segment_map
   query: routes_map is {
     group_by:
-      origin.latitude
-      origin.longitude
-      latitude2 is destination.latitude
-      longitude2 is destination.longitude
+      orig.latitude
+      orig.longitude
+      latitude2 is dest.latitude
+      longitude2 is dest.longitude
     aggregate: flight_count
   }
 }
 
 ```
 
-and data styles are
-```json
-{
-  "routes_map": {
-    "renderer": "segment_map"
-  }
-}
-```
 ## Run as a simple query
 Departing from Chicago
 
 ```malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "pageSize": 100000, "dataStyles":{"routes_map": {"renderer": "segment_map"}}}
-query: flights { where: dep_time = @2003-02 and origin.code = 'ORD' } -> routes_map
+--! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "pageSize": 100000 }
+run: flights { where: dep_time = @2003-02 and origin = 'ORD' } -> routes_map
 ```
 
 ## Run as a trellis
 By calling the configured map as a nested query, a trellis is formed.
 
 ```malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "dataStyles":{"routes_map": {"renderer": "segment_map"}}}
-query: flights { where: dep_time = @2003-02 and origin.code = 'ORD' } -> {
+--! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium"}
+run: flights { where: dep_time = @2003-02 and origin = 'ORD' } -> {
   group_by: carrier
   aggregate: flight_count
-  nest:routes_map
+  nest: routes_map
 }
 ```
 
 ## Run as a trellis, repeated with different filters
 
 ```malloy
---! {"isRunnable": true, "size": "large", "source": "flights.malloy"}
-query: flights -> {
+--! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "pageSize": 100000 }
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
   nest:
-    ord_segment_map is routes_map { where: origin.code ? 'ORD' }
-    sfo_segment_map is routes_map { where: origin.code ? 'SFO' }
-    jfk_segment_map is routes_map { where: origin.code ? 'JFK' }
+    ord_segment_map is routes_map { where: origin = 'ORD' }
+    sfo_segment_map is routes_map { where: origin = 'SFO' }
+    jfk_segment_map is routes_map { where: origin = 'JFK' }
 }
 
 ```
