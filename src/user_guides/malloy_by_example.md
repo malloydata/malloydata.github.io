@@ -9,9 +9,9 @@ For every Malloy Query you can see the formatted result, or raw result as JSON, 
 
 Click tab to to see the  HTML, JSON or SQL result:  <img src="https://user-images.githubusercontent.com/1093458/154121968-6436d94e-94b2-4f16-b982-bf136a3fcf40.png" style="width:142px"> 👈👈
 
-## SQL SELECT vs Malloy's `query`
+## SQL SELECT vs Malloy's `run:`
 
-The statement to run a query in Malloy is `query:`. There are two types of queries in Malloy, reductions which have `group_by:` or `aggregate:` statements, and projections which have `project:` statements and do not group or aggregate results.
+The statement to run a query in Malloy is `run:`. There are two types of queries in Malloy, reductions which have `group_by:` or `aggregate:` statements, and projections which have `project:` statements and do not group or aggregate results.
 
 ### Projection: SELECT with no GROUP BY
 
@@ -25,7 +25,7 @@ Equivalent in Malloy
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   project: code, full_name, state, faa_region, fac_type, elevation
   order_by: code
 }
@@ -48,7 +48,7 @@ Equivalent in Malloy
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-query: duckdb.table('data/airports.parquet') -> {
+run: duckdb.table('data/airports.parquet') -> {
   group_by: fac_type
   aggregate: airport_count is count()
   where: state = 'CA'
@@ -85,7 +85,7 @@ Queries can be run against `source:` objects and can utilize the modeled fields 
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source1.malloy"}
-query: airports -> {
+run: airports -> {
   limit: 10
   where: fac_type = 'HELIPORT'
   group_by: state
@@ -101,7 +101,7 @@ query: airports -> {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source1.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: state_and_county // <-- declared in source
   aggregate: airport_count
   order_by: 1 desc
@@ -139,7 +139,7 @@ The simplest form of a query in Malloy is the name of a source, the query operat
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
-query: airports -> by_state
+run: airports -> by_state
 ```
 
 
@@ -152,7 +152,7 @@ You can filter a source by adding a filter expression using the `where:` keyword
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
-query: airports  {
+run: airports  {
   where: fac_type = 'SEAPLANE BASE'   // <- run the query with an added filter
 }
 -> by_state
@@ -166,7 +166,7 @@ The input to an aggregate computation can be filtered.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: state
   aggregate: airport_count
   aggregate: heliport_count is airport_count { where: fac_type = 'HELIPORT' } // <-- add a filter
@@ -206,7 +206,7 @@ This mechanism is really useful for understanding data and creating complex data
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: state
   aggregate: airport_count
   limit: 5
@@ -223,7 +223,7 @@ Queries can contain multiple nested queries.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: faa_region
   aggregate: airport_count
   nest: top_5_states
@@ -237,7 +237,7 @@ Queries can be nested to any level of depth.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: faa_region
   aggregate: airport_count
   nest: by_state_and_county is {
@@ -260,7 +260,7 @@ The refinement gesture `{}` extends an existing object, creating a new version w
 For example we can add a limit and an order by to `by_state`
 
 ```malloy
-query: airports -> by_state {
+run: airports -> by_state {
   order_by: state desc    // <-- add order by to query
   limit: 2
 }
@@ -270,7 +270,7 @@ is the same as
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
-query: airports -> {
+run: airports -> {
   group_by: state
   aggregate: airport_count
   order_by: state desc
@@ -282,7 +282,7 @@ query: airports -> {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
-query: airports -> by_facility_type {
+run: airports -> by_facility_type {
   aggregate: avg_elevation
 }
 ```
@@ -291,7 +291,7 @@ query: airports -> by_facility_type {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
-query: airports -> top_5_states {
+run: airports -> top_5_states {
   nest: by_facility_type
 }
 ```
@@ -302,7 +302,7 @@ Changing the inner and outer query in the example above reveals very different i
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
-query: airports-> by_facility_type {
+run: airports-> by_facility_type {
   nest: top_5_states
 }
 ```
@@ -321,7 +321,7 @@ source: carriers is duckdb.table('data/carriers.parquet') {
   measure: carrier_count is count()
 }
 
-query: carriers-> {
+run: carriers-> {
     project: *
 }
 ```
@@ -335,7 +335,7 @@ source: flights is duckdb.table('data/flights.parquet') {
   measure: flight_count is count()
 }
 
-query: flights -> {
+run: flights -> {
   project: id2, tail_num, dep_time, carrier, origin, destination, distance, dep_delay
   limit: 10
 }
@@ -369,7 +369,7 @@ source: flights is duckdb.table('data/flights.parquet') {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/join1.malloy"}
-query: flights -> {
+run: flights -> {
   group_by: carriers.nickname
   aggregate:
     flight_count
@@ -387,7 +387,7 @@ query: flights -> {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/join1.malloy"}
-query: flights -> {
+run: flights -> {
   limit: 10
   group_by: origin
   aggregate: carriers.carrier_count   // <-- calculation in joined table
@@ -454,7 +454,7 @@ This query is very difficult to express in SQL. Malloy's understanding of source
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/join2.malloy"}
-query: airports ->  {
+run: airports ->  {
   group_by: state
   aggregate:
     flights.carriers.carrier_count  // <-- 3 levels
@@ -478,7 +478,7 @@ source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
 }
 
-query: airports -> {
+run: airports -> {
   where: fac_type = 'HELIPORT'
   group_by: state
   aggregate: airport_count
@@ -501,7 +501,7 @@ source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
 }
 
-query: airports -> {
+run: airports -> {
   where: fac_type = 'HELIPORT'
   group_by: state
   aggregate: airport_count
@@ -528,7 +528,7 @@ Pipelines can do pretty complex things.  They can be built into source objects.
 ```malloy
 source: airports is duckdb.table('data/airports.parquet') {
   measure: airport_count is count()
-  query: county_rollup is  {
+  run: county_rollup is  {
     where: fac_type = 'HELIPORT'
     group_by: state
     aggregate: airport_count
@@ -548,7 +548,7 @@ source: airports is duckdb.table('data/airports.parquet') {
   }
 }
 
-query: airports -> county_rollup
+run: airports -> county_rollup
 
 ```
 
@@ -571,7 +571,7 @@ source: newname is from(oldname) {
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium"}
-query: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
+run: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     origin
@@ -584,7 +584,7 @@ query: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/query1.malloy", "isHidden": true}
-query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
+run: q_airport_facts is duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     origin
@@ -626,12 +626,12 @@ source: airport_facts is from(-> q_airport_facts) {  // <-- 'from' instead of 't
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/query2.malloy"}
-query: airport_facts -> flights_by_year
+run: airport_facts -> flights_by_year
 ```
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/query2.malloy"}
-query: airport_facts -> flights_by_origin
+run: airport_facts -> flights_by_origin
 ```
 
 ## Other Interesting Language Features:
