@@ -584,7 +584,7 @@ run: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/query1.malloy", "isHidden": true}
-run: q_airport_facts is duckdb.table('data/flights.parquet') -> {
+query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     origin
