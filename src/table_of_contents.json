@@ -61,6 +61,18 @@
               "link": "/patterns/other.md"
             },
             {
+              "title": "Histograms - Auto-bin",
+              "link": "/patterns/autobin.md"
+            },
+            {
+              "title": "Moving Average",
+              "link": "/patterns/moving_avg.md"
+            },
+            {
+              "title": "Daily Active Users",
+              "link": "/patterns/dau.md"
+            },
+            {
               "title": "Sessionize - Map/Reduce",
               "link": "/patterns/sessionize.md"
             }
