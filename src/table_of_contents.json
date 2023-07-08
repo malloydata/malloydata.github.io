@@ -45,7 +45,7 @@
           "title": "Common Patterns",
           "items": [
             {
-              "title": "Year Over Year Analysis",
+              "title": "Comparing Timeframes",
               "link": "/patterns/yoy.md"
             },
             {
@@ -57,11 +57,11 @@
               "link": "/patterns/percent_of_total.md"
             },
             {
-              "title": "Cohort Analysis",
-              "link": "/patterns/cohorts.md"
+              "title": "Group By with 'OTHER'",
+              "link": "/patterns/other.md"
             },
             {
-              "title": "Sessionized Data",
+              "title": "Sessionize - Map/Reduce",
               "link": "/patterns/sessionize.md"
             }
           ]

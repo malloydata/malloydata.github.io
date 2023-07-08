@@ -1,72 +1,80 @@
 # Percent of Total
-In order to compute a percentage of total, you essentially have to run two queries, one for
-the total and one where you wish to apply the calculation.  In Malloy, you can run these queries at
-at the same time and combine them.
+Malloy provides a wayh to compute percent of total through level of detail (ungrouped aggregates) functions.  Functions `all()` and `exclude()` to escape grouping in aggregate calculations.  These functions are different than window functions as they operate inline with the query and can produce correct results even when the data hits a `limit` or is fanned out.  Use cases below.
 
-Let's suppose we wanted to look at our flight data by carrier and compute the percentage of all
-flight performed by a particular carrier.
-
-## Query for all flights ever made
 ```malloy
---! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"small"}
-query: flights -> { aggregate: flight_count }
+--! {"isModel": true, "modelPath": "/inline/e1.malloy"}
+source: flights is table('duckdb:data/flights.parquet') {
+  join_one: carriers is table('duckdb:data/carriers.parquet') on carrier=carriers.code
+  measure: flight_count is count()
+}
 ```
+## Totals
+You can easily product a cloumn total that includes all the data, not just the data in the table.  Southwest + USAir = 126,434 flights.  Notice that `all_flights` is the total, of all the flight, not just the ones in the table
 
-## Query for Flights By Carrier
 ```malloy
---! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
-query: flights -> {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: flights -> {
   group_by: carriers.nickname
-  aggregate: flight_count
+  aggregate: 
+    flight_count
+    all_flights is all(flight_count)
+    limit: 2
 }
 ```
 
-## In Malloy, can make both calculations at once with [*nested subtables*](../language/nesting.md).
-The results are returned as a single row in a table with two columns, `flight_count` and `main_query`.
+## Percent of Total
+The `all()` function is really useful in percent of total calculations.  The `# percent` tags the result so it is displayed as a percentage.
+
 ```malloy
---! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
-query: flights -> {
-  aggregate: flight_count
-  nest: main_query is {
-    group_by: carriers.nickname
-    aggregate: flight_count
-  }
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: 
+    flight_count
+    # percent
+    percent_of_flights is flight_count/all(flight_count)
+    limit: 2
 }
 ```
 
-## Use *project* to flatten the table and cross join
-Using a pipeline with a `project` calculation to combine (essentially cross joining) the queries back into a single table.
-We also add an additional column, the percentage of total calculation.
+## All of a particular grouping
+The `all()` function can optionally take the names of output columns to show all of a particular value.  You can see that all of Southwests fights is still 88,751.  The output column name for `carriers.nickname` is `nickname` so we use that in the calculation.  The `exclude()` function lets you eliminate a dimension from grouping.
+
 ```malloy
---! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
-query: flights -> {
-  aggregate: flight_count
-  nest: main_query is {
-    group_by: carriers.nickname
-    aggregate: flight_count
-  }
-} -> {
-  project:
-    main_query.nickname
-    main_query.flight_count
-    flight_count_as_a_percent_of_total is main_query.flight_count / flight_count * 100.0
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: flights -> {
+  group_by:
+    carriers.nickname
+    destination
+    origin
+  aggregate: 
+    flight_count
+    flights_by_this_carrier is all(flight_count, nickname)
+    flights_to_this_destination is all(flight_count, destination)
+    flights_by_this_origin is all(flight_count, origin)
+    flights_on_this_route is exclude(flight_count, nickname)
+  limit: 20
 }
-
 ```
+##  As Percentages
+Displaying results as percentages is often gives clues as to how numbers relate.  Is this number a large or small percentage of the group?  Level of detail calculations are great for this.  In Malloy, identifiers enclosed in back-ticks can have spaces.
 
-## Using a *wildcard* against the Nested Query
-We can use a wildcard against the nested query to to make this pattern easier to write.
 ```malloy
---! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
-query: flights -> {
-  aggregate: flight_count
-  nest: main_query is {
-    group_by: carriers.nickname
-    aggregate: flight_count
-  }
-} -> {
-  project:
-    main_query.*
-    flight_count_as_a_percent_of_total is main_query.flight_count / flight_count * 100.0
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: flights -> {
+  group_by:
+    carriers.nickname
+    destination
+    origin
+  aggregate: 
+    flight_count
+    # percent
+    `carrier as a percent of all flights` is all(flight_count, nickname)/all(flight_count)
+    # percent
+    `destination as a percent of all flights` is all(flight_count, destination)/all(flight_count)
+    # percent
+    `origin as a percent of all flights` is all(flight_count, origin)/all(flight_count)
+    # percent
+    `carriers as a percentage of route` is flight_count/exclude(flight_count, nickname)
 }
 ```
