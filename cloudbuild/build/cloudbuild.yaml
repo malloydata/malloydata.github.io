@@ -13,4 +13,6 @@ steps:
       - "./cloudbuild/build/$TRIGGER_NAME.sh"
     waitFor: ["nix-quiet-install"]
     timeout: "1800s"
+options:
+  machineType: "E2_HIGHCPU_8"
 timeout: "1800s"
