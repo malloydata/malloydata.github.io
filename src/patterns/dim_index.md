@@ -27,7 +27,7 @@ run: duckdb.table('data/airports.parquet') -> {
 
 ## Index For filtering queries
 
-Indexes can be used find the best way to filter a dataset.  For example supposed we'd like to find 'SANTA CRUZ' in the dataset, but we don't quite know how to filter for it.  In a UI you might imagine that you type 'SANTA' and let have suggestons for values that might be appropriate.  In the top results we can see that 'SANTA CRUZ' is both a `city` and a `county`..
+Indexes can be used find the best way to filter a dataset.  For example supposed we'd like to find 'SANTA CRUZ' in the dataset, but we don't quite know how to filter for it.  In a UI you might imagine that you type 'SANTA' and let have suggestons for values that might be appropriate.  In the results we can see that top value, 'SANTA ROSA', appears as county on 26 rows in the table.  We can also see that 'SANTA CRUZ' is both a `city` and a `county`..
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
