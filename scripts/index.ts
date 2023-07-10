@@ -234,9 +234,10 @@ function compileOtherFile(contents: string): string {
 }
 
 function handleStaticFile(file: string) {
+  const shortPath = file.substring(DOCS_ROOT_PATH.length);
   const destination = path.join(
     OUT_PATH,
-    file.substring(DOCS_ROOT_PATH.length)
+    shortPath
   );
   fs.mkdirSync(path.join(destination, ".."), { recursive: true });
   if (
@@ -245,8 +246,10 @@ function handleStaticFile(file: string) {
     const contents = fs.readFileSync(file, 'utf-8');
     const compiledContents = compileOtherFile(contents);
     fs.writeFileSync(destination, compiledContents);
+    log(`Templated file ${shortPath} compiled and copied`);
   } else {
     fs.copyFileSync(file, destination);
+    log(`Static file ${shortPath} copied`);
   }
 }
 
@@ -325,6 +328,46 @@ function validateLinks(
   return linkErrors;
 }
 
+function logErrors(
+  snippetErrors: {
+    path: string;
+    snippet: string;
+    error: string;
+    position: Position;
+  }[], 
+  linkErrors: {
+    file: string;
+    error: string;
+    position: Position;
+  }[]
+) {
+  if (linkErrors.length > 0) {
+    log(
+      `Failure: ${linkErrors.length} link${
+        linkErrors.length === 1 ? " was" : "s were"
+      } invalid`,
+      'error'
+    );
+    for (const error of linkErrors) {
+      log(`Error in file ${error.file}:${error.position.start.line}:${error.position.end.column}: ${error.error}`, 'error');
+    }
+  }
+  if (snippetErrors.length > 0) {
+    log(
+      `Failure: ${snippetErrors.length} example snippet${
+        snippetErrors.length === 1 ? "" : "s"
+      } had errors`,
+      'error'
+    );
+    snippetErrors.forEach((error) => {
+      log(`Error in file ${error.path}:${error.position.start.line}:${error.position.end.column}: ${error.error}`, 'error');
+      log("```");
+      log(error.snippet);
+      log("```");
+    });
+  }
+}
+
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
   const allDocs = allFiles.filter(isMarkdown);
@@ -352,13 +395,18 @@ function validateLinks(
   // TODO make this update in watch mode
   outputSearchSegmentsFile(allSegments);
   log(`All docs compiled in ${timeString(startTime, performance.now())}`, 'success');
+  const liveAllDocs = new Map(allDocs.map(d => ([d, true])));
   if (WATCH_ENABLED) {
-    log(`\nWatching /documentation and /models for changes...`);
-    watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
+    log(`\nWatching /src and /models for changes...`);
+    watchDebouncedRecursive(DOCS_ROOT_PATH, async (type, file) => {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
       if (isMarkdown(file)) {
         log(`Markdown file ${file} ${type}d. Recompiling...`);
-        compileDoc(fullPath, footers);
+        const { errors, links } = await compileDoc(fullPath, footers);
+        const allDocs = [...liveAllDocs.keys()];
+        const linkErrors = validateLinks({[fullPath]: links}, allDocs, allHashes);
+        logErrors(errors, linkErrors);
+        liveAllDocs[fullPath] = true;
       } else {
         if (fs.existsSync(fullPath)) {
           handleStaticFile(fullPath);
@@ -368,46 +416,32 @@ function validateLinks(
         }
       }
     });
-    watchDebouncedRecursive(MODELS_PATH, (type, file) => {
+    watchDebouncedRecursive(MODELS_PATH, async (type, file) => {
       log(`Model file ${file} ${type}d. Recompiling dependent documents...`);
       for (const doc of DEPENDENCIES.get(file) || []) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
-        compileDoc(fullPath, footers);
+        const { errors, links } = await compileDoc(fullPath, footers);
+        const allDocs = [...liveAllDocs.keys()];
+        const linkErrors = validateLinks({[fullPath]: links}, allDocs, allHashes);
+        logErrors(errors, linkErrors);
       }
     });
-    watchDebounced(CONTENTS_PATH, (type) => {
-      log(`Table of contents ${type}d. Recompiling...`);
+    watchDebounced(CONTENTS_PATH, async (type) => {
+      log(`Table of contents ${type}d. Recompiling all docs...`);
       const result = rebuildSidebarAndFooters();
       footers = result.footers;
-      // TODO rebuild all docs to have the new toc....
+      // rebuild all docs to have the new toc
+      const allDocs = [...liveAllDocs.keys()];
+      const results = await Promise.all(allDocs.map(async (f) => await compileDoc(f, footers)));
+      const snippetErrors = results.map(({ errors }) => errors).flat();
+      const allLinks = Object.fromEntries(results.map(({ links, file }) => [file, links]));
+      const allHashes = Object.fromEntries(results.map(({ file, hashes }) => [file, hashes]));
+      const linkErrors = validateLinks(allLinks, allDocs, allHashes);
+      logErrors(snippetErrors, linkErrors);
     });
   } else {
     const anyErrors = snippetErrors.length > 0 || linkErrors.length > 0;
-    if (linkErrors.length > 0) {
-      log(
-        `Failure: ${linkErrors.length} link${
-          linkErrors.length === 1 ? " was" : "s were"
-        } invalid`,
-        'error'
-      );
-      for (const error of linkErrors) {
-        log(`Error in file ${error.file}:${error.position.start.line}:${error.position.end.column}: ${error.error}`, 'error');
-      }
-    }
-    if (snippetErrors.length > 0) {
-      log(
-        `Failure: ${snippetErrors.length} example snippet${
-          snippetErrors.length === 1 ? "" : "s"
-        } had errors`,
-        'error'
-      );
-      snippetErrors.forEach((error) => {
-        log(`Error in file ${error.path}:${error.position.start.line}:${error.position.end.column}: ${error.error}`, 'error');
-        log("```");
-        log(error.snippet);
-        log("```");
-      });
-    }
+    logErrors(snippetErrors, linkErrors);
     if (anyErrors) exit(1);
   }
 })();
