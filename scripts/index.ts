@@ -46,7 +46,6 @@ const __dirname = path.resolve("./scripts/");
 
 const DOCS_ROOT_PATH = path.join(__dirname, "../src");
 const OUT_PATH = path.join(__dirname, "../docs/");
-const OUT_PATH2 = path.join(OUT_PATH, '/documentation');
 const JS_OUT_PATH = path.join(__dirname, "../docs/js/generated");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
 const MODELS_PATH = path.join(__dirname, "../models");
@@ -96,7 +95,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     const outPath = path.join(OUT_PATH, shortOutPath);
     const outDirPath = path.join(outPath, "..");
     fs.mkdirSync(outDirPath, { recursive: true });
-    fs.mkdirSync(path.join(OUT_PATH2, shortOutPath, ".."), { recursive: true });
+    fs.mkdirSync(path.join(OUT_PATH, shortOutPath, ".."), { recursive: true });
     const markdown = fs.readFileSync(file, "utf8");
     const template = Handlebars.compile(markdown);
     const templatedMarkdown = template({
@@ -125,7 +124,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         footer: footers[shortPath],
       }
     });
-    fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), compiledPage);
+    fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
     log(
       `File ${outPath.substring(OUT_PATH.length)} compiled in ${timeString(
         startTime,
