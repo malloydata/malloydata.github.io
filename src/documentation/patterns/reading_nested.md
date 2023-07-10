@@ -8,7 +8,7 @@ For example, in Google Analytics data, the top level object is sessions. There a
 
 Below is the *partial* schema for Google Analytics. 
 
-<img src="{{site.baseurl}}/img/ga_schema.webp" style="width: 100%">
+<img src="./ga_schema.webp" style="width: 100%">
 
 To perform aggregate calculation in Malloy, you can simply specify the complete path to the numeric value and select the appropriate aggregate function. Malloy refers to this as aggregate locality, ensuring accurate calculations regardless of the join pattern used.
 

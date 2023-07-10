@@ -15,7 +15,7 @@ source: flights is duckdb.sql("""
 
 ## Querying the Source
 
-``malloy
+```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {aggregate: flight_count}
-``
+```
