@@ -98,14 +98,10 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     fs.mkdirSync(outDirPath, { recursive: true });
     fs.mkdirSync(path.join(OUT_PATH2, shortOutPath, ".."), { recursive: true });
     const markdown = fs.readFileSync(file, "utf8");
-    // If not a standard layout, just copy
-    // if (markdown.startsWith("---\n")) {
-    //   fs.writeFileSync(path.join(OUT_PATH2, shortOutPath), markdown);
-    //   return {
-    //     errors: [],
-    //     searchSegments: [],
-    //   }
-    // }
+    const template = Handlebars.compile(markdown);
+    const templatedMarkdown = template({
+      ...DEFAULT_CONTEXT
+    });
     const { 
       renderedDocument, 
       errors, 
@@ -114,7 +110,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       links, 
       hashes 
     } = await renderDoc(
-      markdown,
+      templatedMarkdown,
       shortPath
     );
     const layoutName = frontmatter.layout ?? "documentation.html";
