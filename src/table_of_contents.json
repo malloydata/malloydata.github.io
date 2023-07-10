@@ -81,6 +81,10 @@
               "link": "/patterns/dau.md"
             },
             {
+              "title": "Transform Data",
+              "link": "/patterns/transform.md"
+            },
+            {
               "title": "Reading JSON from HTTP",
               "link": "/patterns/apijson.md"
             },
