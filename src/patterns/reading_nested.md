@@ -38,7 +38,7 @@ source:ga_sessions is table('duckdb:data/ga_sample.parquet'){
 
 ## Show Data by Traffic Source
 
-```malloy
+```malloyx
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
  query: ga_sessions -> {
     where: trafficSource.source != '(direct)'
@@ -55,7 +55,7 @@ source:ga_sessions is table('duckdb:data/ga_sample.parquet'){
 
 ## Show Data By Browser
 
-```malloy
+```malloyx
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
   query: ga_sessions -> {
     group_by: device.browser
