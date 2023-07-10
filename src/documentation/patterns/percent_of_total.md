@@ -1,5 +1,5 @@
 # Percent of Total
-Malloy provides a wayh to compute percent of total through level of detail (ungrouped aggregates) functions.  Functions `all()` and `exclude()` to escape grouping in aggregate calculations.  These functions are different than window functions as they operate inline with the query and can produce correct results even when the data hits a `limit` or is fanned out.  Use cases below.
+Malloy provides a way to compute percent of total through level of detail (ungrouped aggregates) functions.  Functions `all()` and `exclude()` to escape grouping in aggregate calculations.  These functions are different than window functions as they operate inline with the query and can produce correct results even when the data hits a `limit` or is fanned out.  Use cases below.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
@@ -9,7 +9,7 @@ source: flights is table('duckdb:data/flights.parquet') {
 }
 ```
 ## Totals
-You can easily product a cloumn total that includes all the data, not just the data in the table.  Southwest + USAir = 126,434 flights.  Notice that `all_flights` is the total, of all the flight, not just the ones in the table
+You can easily produce a column total that includes all the data, not just the data in the table.  Southwest + USAir = 126,434 flights.  Notice that `all_flights` is the total, of all the flights, not just the ones in the table
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}

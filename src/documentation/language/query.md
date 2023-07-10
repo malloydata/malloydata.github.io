@@ -193,6 +193,36 @@ Filters may also be applied to a [query's source](filters.md#filtering-in-a-quer
 
 See the [Filters](filters.md) section for more information.
 
+## Refinement
+
+A query can be "refined", which means adding fields such as `project`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
+
+```malloy
+--! {"isModel": true, "modelPath": "/inline/e1.malloy"}
+query: top_destinations is duckdb.table('data/flights.parquet') -> {
+  group_by: destination
+  aggregate: flight_count is count()
+}
+```
+
+Running the query gives us flight count by destination:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "/inline/e1.malloy", "size": "medium"}
+run: top_destinations
+```
+
+
+
+Now let's refine it by adding `+ { group_by: origin }`. This adds a `group_by` clause to the original query
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "/inline/e1.malloy", "size": "medium"}
+run: top_destinations + {
+  group_by: origin
+}
+```
+
 ## Ordering and Limiting
 
 Query stages may also include ordering and limiting
