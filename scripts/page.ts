@@ -59,10 +59,10 @@ function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
       title: section.title,
       items: section.items.map((item) => {
         if (isSectionItem(item)) {
-          const compareLink = item.link.replace(/\.md$/, ".html");
-          const htmlLinkRaw = item.link.replace(/\.md$/, "");
-          const fullLink = path.join("/documentation", htmlLinkRaw);
-          const htmlLink = fullLink === "/index" ? "" : fullLink;
+          const fullLink = path.join("/documentation", item.link);
+          const compareLink = fullLink.replace(/\.md$/, ".html");
+          const htmlLinkRaw = fullLink.replace(/\.md$/, "");
+          const htmlLink = htmlLinkRaw === "/documentation/index" ? "/documentation" : htmlLinkRaw;
           return { title: item.title, link: item.link, htmlLink, compareLink };
         } else {
           return enrichTableOfContents([item])[0];
@@ -148,13 +148,14 @@ export function renderFooter(
   rootPath: string,
   docPath: string
 ): string {
+  const makeFullLink = (l: string) => path.join('/documentation', l.replace(/\.md$/, ".html"));
   const items = extractItems(sections);
   const thisIndex = items.findIndex(
-    (item) => item.link.replace(/\.md$/, ".html") === docPath
+    (item) => makeFullLink(item.link) === docPath
   );
 
   const next = thisIndex > -1 ? items[thisIndex + 1] : null;
-  const nextLink = next && next.link.replace(/\.md$/, ".html");
+  const nextLink = next && makeFullLink(next.link);
   const nextRelative =
     next &&
     path.relative(
@@ -163,7 +164,7 @@ export function renderFooter(
     );
 
   const previous = items[thisIndex - 1];
-  const previousLink = previous && previous.link.replace(/\.md$/, ".html");
+  const previousLink = previous && makeFullLink(previous.link);
   const previousRelative =
     previous &&
     path.relative(
