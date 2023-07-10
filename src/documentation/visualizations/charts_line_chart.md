@@ -1,7 +1,5 @@
 # Line Charts
 
-
-
 The examples below all use the following semantic model.
 
 ```malloy
@@ -34,6 +32,8 @@ run: flights -> {
 
 ## Multi line line_chart
 
+The third parameter in a line chart adds a line for each dimension found.  
+
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # line_chart
@@ -45,6 +45,8 @@ run: flights -> {
 ```
 
 ## Line Charts nested in tables
+
+When line charts are nested in tables the size is reduced.  Nested line charts increase the density of information provided by the result.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
