@@ -12,7 +12,7 @@ source: flights is table('duckdb:data/flights.parquet') {
 You can easily product a cloumn total that includes all the data, not just the data in the table.  Southwest + USAir = 126,434 flights.  Notice that `all_flights` is the total, of all the flight, not just the ones in the table
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   aggregate: 
@@ -26,7 +26,7 @@ run: flights -> {
 The `all()` function is really useful in percent of total calculations.  The `# percent` tags the result so it is displayed as a percentage.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   aggregate: 
@@ -41,7 +41,7 @@ run: flights -> {
 The `all()` function can optionally take the names of output columns to show all of a particular value.  You can see that all of Southwests fights is still 88,751.  The output column name for `carriers.nickname` is `nickname` so we use that in the calculation.  The `exclude()` function lets you eliminate a dimension from grouping.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by:
     carriers.nickname
@@ -60,7 +60,7 @@ run: flights -> {
 Displaying results as percentages is often gives clues as to how numbers relate.  Is this number a large or small percentage of the group?  Level of detail calculations are great for this.  In Malloy, identifiers enclosed in back-ticks can have spaces.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by:
     carriers.nickname

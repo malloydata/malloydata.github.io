@@ -14,7 +14,7 @@ source: order_items is table('duckdb:data/order_items.parquet') + {
 ## Simple Moving average.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   group_by: order_month is created_at.month
   aggregate: 

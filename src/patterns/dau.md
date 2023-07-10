@@ -14,7 +14,7 @@ source: order_items is table('duckdb:data/order_items.parquet') + {
 ## Weekly Active Users and Daily Active users
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   where: created_at ? @2022
   group_by: order_week is created_at.week
@@ -31,7 +31,7 @@ run: order_items -> {
 ## Weekly Active Users and AverageDaily Active users
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   where: created_at ? @2022
   group_by: order_week is created_at.week
