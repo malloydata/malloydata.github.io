@@ -87,6 +87,10 @@
             {
               "title": "Sessionize - Map/Reduce",
               "link": "/patterns/sessionize.md"
+            },
+            {
+              "title": "Dimensional Indexes",
+              "link": "/patterns/dim_index.md"
             }
           ]
         }
