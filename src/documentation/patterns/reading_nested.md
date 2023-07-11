@@ -70,8 +70,6 @@ source:ga_sessions is table('duckdb:data/ga_sample.parquet'){
 
 ## With Nested Results
 
-// disabled for now
-
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
   query: ga_sessions -> {
