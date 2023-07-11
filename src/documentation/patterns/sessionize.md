@@ -1,8 +1,7 @@
 # Sessionized Data - Map/Reduce
 
-Flight data contains time, carrier, origin, destination and the plane that made the flight (`tail_num`).  Take the
-flight data and sessionize it by carrier and date.  Compute statistics and the session, plane and flight level.
-Retain the original flight events.
+Flight event data contains _dep_time_, _carrier_, _origin_, _destination_ and _tail_num_  (the plane that made the flight).  The query below takes the flight event data and maps it into sessions of _flight_date_, _carrier_, and _tail_num_.  For each session, a nested list of _flight_legs_ by the aircraft on that day.  The flight legs are numbered.
+
 
 ```malloy
 --! {"isRunnable": true, "showAs": "json", "isPaginationEnabled": true, "size": "large"}
@@ -10,11 +9,15 @@ run: duckdb.table('data/flights.parquet') {
   where: carrier = 'WN' and dep_time ? @2002-03-03
   measure: flight_count is count()
 } -> {
+  calculate: session_id is row_number()
   group_by:
     flight_date is dep_time.day
     carrier
     tail_num
-    aggregate: flight_count 
+    aggregate: 
+      flight_count 
+      max_delay is max(dep_delay)
+      total_distance is distance.sum()
   nest: flight_legs is {
     order_by: 3
     calculate: flght_leg is row_number() 

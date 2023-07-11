@@ -7,6 +7,7 @@ In the example below, we create a simple semantic model for the table `airports`
 This meachanims can be used to create governed datasets for use in other tooling.  As the code for these transformed tables is centralized and this techniqute takes advantage of Malloy's reusibility.
 
 
+## File: `airports.malloysql`
 ```malloysql
 >>>malloy
 source: airports is duckdb.table('data/airports.parquet') {
@@ -26,7 +27,10 @@ source: airports is duckdb.table('data/airports.parquet') {
     }
   }
 }
+
 >>>sql connection:duckdb
+
+-- create a table using a Malloy query
 
 COPY (
 %{
@@ -35,6 +39,8 @@ COPY (
 ) TO 'major_airports.csv' (HEADER) 
 
 >>>sql
+
+-- create a view using a Malloy query
 
 CREATE OR REPLACE VIEW  by_state as (
 %{
