@@ -33,7 +33,7 @@ This contains a single table of order items, and some measures to calculate sale
 run: order_items -> sales_summary_yoy
 ```
 
-Now suppose we want to drill into the sales numbers. In addition to overall sales growth, we want to calculate year-over-year sales growth by department. To do this in SQL would require either a window functions or a self-join to compute the overall total, and join to the grouped total. In Malloy, none of this is necessary, we simply use a `nest` clause, combined with a query refinement.
+Now suppose we want to drill into the sales numbers. In addition to overall sales growth, we want to calculate year-over-year sales growth by department. To do this in SQL would require either a window functions or a self-join to compute the overall total, and join to the grouped total. In Malloy, none of this is necessary, we simply use a `nest` clause, combined with a [query refinement](../language/query.md#refinement).
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -44,6 +44,10 @@ run: order_items -> sales_summary_yoy + {
   }
 }
 ```
+
+Query refinement is similar to extending a class in object-oriented programming. It allows us to add additional fields to an already-existing query. In this case, we nest the `sales_summary_yoy` query, and refine it with an additional group-by on `product_department`. This allows us to look at revenue, growth, and growth percentage for each department.
+
+To drill down even further, it's trivial to repeat this pattern once again. The following query looks at revenue, growth, and growth percentage for the top 5 product categories for each of the departments:
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -60,3 +64,4 @@ run: order_items -> sales_summary_yoy + {
 }
 ```
 
+These queries are trivial to implement, and easy to understand. If you'd like a challenge, try implementing the same thing in SQL and see what it looks like.
