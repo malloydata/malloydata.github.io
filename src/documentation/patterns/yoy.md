@@ -68,34 +68,34 @@ run: flights -> {
 }
 ```
 
-## Declaring and reusing common expressions
+## Bonus: Relative timeframes and expression reuse
+You might like to write queries that automatically adjust based on the current timeframe.  The query below uses date arrithmetic to filter the data to time frames relative to now.  These measures probably aren't generally useful in the model so we use the `extend:` operation to add these measure so they are only locally accessable within the query.
 
-Often you want to show up-to-date information.  You can write timeframes relatively. `declare:` allows you to add measures that can be reused in the query.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
--- common calculation for order_items
-source: inventory_items is duckdb.table('data/inventory_items.parquet') {
-  primary_key: id
-}
+source: inventory_items is duckdb.table('data/inventory_items.parquet') 
 
 source: order_items is duckdb.table('data/order_items.parquet') {
-  join_one: inventory_items  on inventory_item_id= inventory_items.id
+  join_one: inventory_items  on inventory_item_id=inventory_items.id
   measure: order_item_count is count()
+
+  query: category_growth is {
+    extend: {
+      // add measures for use just in this query
+      measure:
+        last_year is order_item_count { where: created_at ? now.year - 1 year }
+        prior_year is order_item_count { where: created_at ? now.year - 2 years }
+    }
+    top: 10
+    group_by: inventory_items.product_category
+    aggregate:
+      last_year
+      prior_year
+      # percent
+      percent_change is (last_year - prior_year) / nullif(last_year, 0)
+  }
 }
 
-run: order_items -> {
-  declare:
-    last_year is order_item_count { where: created_at ? now.year - 1 year }
-    prior_year is order_item_count { where: created_at ? now.year - 2 years }
-  top: 10
-  group_by: inventory_items.product_category
-  aggregate:
-    last_year
-    prior_year
-    percent_change is round(
-      (last_year - prior_year) / nullif(last_year, 0) * 100,
-      1
-    )
-}
+run: order_items -> category_growth
 ```

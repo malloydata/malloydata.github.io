@@ -44,3 +44,36 @@ run: order_items -> {
   }
 }
 ```
+
+## Bonus: Nested
+Shows reuable how moving avergae queries can be added to a source and used in queries.  Flights by destination code over time.
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+source: flights is duckdb.table('data/flights.parquet')  {
+  measure: flight_count is count()
+  dimension: dep_month is dep_time.month
+
+  # line_chart
+  query: non_averaged is {
+    group_by: dep_month
+    aggregate: 
+      flight_count
+    order_by: dep_month
+  }
+
+  # line_chart
+  query: moving_averaged is {
+    group_by: dep_month
+    calculate: moving_avg_flight_count is avg_moving(flight_count, 3)
+    order_by: dep_month
+  }
+}
+
+run: flights -> {
+  group_by: destination
+  aggregate: flight_count
+  nest: non_averaged
+  nest: moving_averaged
+}
+```
