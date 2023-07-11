@@ -61,6 +61,10 @@
               "link": "/patterns/percent_of_total.md"
             },
             {
+              "title": "Nested Subtotals",
+              "link": "/patterns/nested_subtotals.md"
+            },
+            {
               "title": "Dedup rows with SQL",
               "link": "/patterns/dedup_sql.md"
             },

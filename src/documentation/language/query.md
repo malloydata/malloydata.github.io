@@ -3,7 +3,7 @@
 The basic syntax for a query in Malloy consists of a source and a "pipeline" of one or more _stages_ separated by `->`. The shape of the data defined in the original source is transformed by each stage.
 
 ```malloy
-query: flights -> { group_by: carrier; aggregate: flight_count is count() }
+run: flights -> { group_by: carrier; aggregate: flight_count is count() }
 ```
 
 ## Sources
@@ -14,7 +14,7 @@ The source of a query can be a table, a [source](source.md), or a [named query](
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-query: duckdb.table('data/flights.parquet') -> { aggregate: flight_count is count() }
+run: duckdb.table('data/flights.parquet') -> { aggregate: flight_count is count() }
 ```
 
 **A query against a source**
@@ -23,12 +23,10 @@ query: duckdb.table('data/flights.parquet') -> { aggregate: flight_count is coun
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
 source: flights is duckdb.table('data/flights.parquet')
 
-query: flights -> { aggregate: flight_count is count() }
+run: flights -> { aggregate: flight_count is count() }
 ```
 
 **A query starting from another query**
-
-The leading `->` is used when the source is a query:
 
 ```malloy
 query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
@@ -36,7 +34,7 @@ query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
   aggregate: flight_count is count()
 }
 
-query: -> flights_by_carrier -> { project: carrier; limit: 2 }
+run: flights_by_carrier -> { project: carrier; limit: 2 }
 ```
 
 **Implicit Sources**
@@ -54,7 +52,7 @@ source: flights is duckdb.table('data/flights.parquet'){
 
 Nested inside another query stage:
 ```malloy
-query: duckdb.table('data/flights.parquet') -> {
+run: duckdb.table('data/flights.parquet') -> {
   group_by: dep_year is dep_time.year
   nest: by_carrier is {
     group_by: carrier
@@ -73,7 +71,7 @@ A stage can do one of:
 
 Example of a Reduction:
 ```malloy
-query: flights -> {
+run: flights -> {
   where: distance > 1000        // Filtering
   top: 2                        // Limiting
   order_by: flight_count desc   // Ordering
@@ -84,7 +82,7 @@ query: flights -> {
 
 Example of a Projection:
 ```malloy
-  query: flights -> {
+  run: flights -> {
     project: *
     limit: 20
   }
@@ -95,7 +93,7 @@ Note that the operations in a stage are not order-sensitive like SQL; they can b
 A reference to a [named query](nesting.md) (which defines its own pipeline) can be the first stage in a pipeline.
 
 ```malloy
-query: flights -> by_carrier
+run: flights -> by_carrier
 ```
 
 ### Multi-Stage Pipelines
@@ -103,7 +101,7 @@ query: flights -> by_carrier
 This example shows a pipeline with 3 stages, the multiple stages chained using `->`. Each stage generates a CTE in the SQL (click "SQL" on the right to see what this looks like.)
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large"}
-query: duckdb.table('data/flights.parquet') -> {
+run: duckdb.table('data/flights.parquet') -> {
   project: *
   where: dep_time > @2003
 } -> {
@@ -120,29 +118,6 @@ query: duckdb.table('data/flights.parquet') -> {
     flight_count_as_a_percent_of_total is main_query.flight_count / flight_count * 100.0
 }
 ```
-
-This can also be broken into multiple named queries. The syntax to refer to a top-level query (not defined inside a source) like this for purposes of pipelining is `-> source_query_name`. Used in context:
-
-```malloy
-query: recent_flights is flights -> {
-  project: *
-  where: dep_time > @2003
-}
-
-query: -> recent_flights -> {
-  aggregate: flight_count
-  nest: main_query is {
-    group_by: carrier
-    aggregate: flight_count
-  }
-} -> {
-  project:
-    main_query.carrier
-    main_query.flight_count
-    flight_count_as_a_percent_of_total is main_query.flight_count / flight_count * 100.0
-}
-```
-
 
 ## Fields
 
@@ -192,6 +167,40 @@ Filters may also be applied to a [query's source](filters.md#filtering-in-a-quer
 <!-- TODO: improve link for filtering a measure. -->
 
 See the [Filters](filters.md) section for more information.
+
+## Refinement
+
+A query can be "refined", which means adding fields such as `project:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
+
+```malloy
+--! {"isModel": true, "modelPath": "/inline/e1.malloy"}
+source: flights is duckdb.table('data/flights.parquet') {
+  query: top_destinations is {
+    group_by: destination
+    aggregate: flight_count is count()
+  }
+}
+```
+
+Running the query gives us flight count by destination:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "/inline/e1.malloy", "size": "medium"}
+run: flights -> top_destinations
+```
+
+Now let's refine it by adding `+ { group_by: origin }`. This adds a `group_by` clause to the original query
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "/inline/e1.malloy", "size": "medium"}
+run: flights -> top_destinations + {
+  group_by: origin
+}
+```
+
+The query is now calculating `flight_count` grouped by both `destination` and `origin`.
+
+Query refinement can be thought of as similar to extending a class in object-oriented programming. The new query inherits the properties of the original query, and adds new properties to it. This makes query logic much more reusable, since query fragments can be easily saved and modified.
 
 ## Ordering and Limiting
 
