@@ -65,15 +65,15 @@
               "link": "/patterns/nested_subtotals.md"
             },
             {
-              "title": "Dedup rows with SQL",
+              "title": "Deduplicating Rows with SQL",
               "link": "/patterns/dedup_sql.md"
             },
             {
-              "title": "Group By with 'OTHER'",
+              "title": "Group By with an 'other' bucket",
               "link": "/patterns/other.md"
             },
             {
-              "title": "Histograms - Auto-bin",
+              "title": "Auto-binning Histograms",
               "link": "/patterns/autobin.md"
             },
             {
@@ -89,7 +89,7 @@
               "link": "/patterns/transform.md"
             },
             {
-              "title": "Reading JSON from HTTP",
+              "title": "Reading JSON directly from an API",
               "link": "/patterns/apijson.md"
             },
             {

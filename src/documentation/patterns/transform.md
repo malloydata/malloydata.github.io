@@ -2,9 +2,9 @@
 
 Malloy can be used to for data transformation.  Files with the extension `.malloysql` are interpreted as a combination of both Malloy and SQL.  Each language is blocked by a preceeding `>>>`.  Each block can do anything that is appropriate in the language.  In Malloy, for example, you can import other Malloy files.  In SQL, you can execute any DDL command.
 
-In the example below, we create a simple semantic model for the table `airports`.  There are two SQL sections, one creates a CSV file of the major airports, the other creates a view in the database that return the table as a list of states, whe the facility types nested below.
+In the example below, we create a simple semantic model for the table `airports`.  There are two SQL sections, one creates a CSV file of the major airports, the other creates a view in the database with a list of states, the airport count in each state, and the count of each of the facility types for each state.
 
-This meachanims can be used to create governed datasets for use in other tooling.  As the code for these transformed tables is centralized and this techniqute takes advantage of Malloy's reusibility.
+This mechanism can be used to create governed datasets for use in other tooling: the transformation code for these tables can be governed with source control, and the queries take advantage of Malloy's reusibility.
 
 
 ## File: `airports.malloysql`

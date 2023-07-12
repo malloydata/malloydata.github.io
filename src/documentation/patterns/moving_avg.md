@@ -1,5 +1,6 @@
 # Computing Moving Averages
-Malloy can compute moving averages on result sets.   
+
+Malloy can compute moving averages on resultsets.
 
 The queries below use the following model
 
@@ -11,7 +12,8 @@ source: order_items is table('duckdb:data/order_items.parquet') + {
     order_count is count()
 }
 ```
-## Simple Moving average.
+
+## Simple Moving Average
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -24,7 +26,7 @@ run: order_items -> {
 }
 ```
 
-## In Charts.
+## Visualizing the Results
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -45,8 +47,9 @@ run: order_items -> {
 }
 ```
 
-## Bonus: Nested
-Shows reuable how moving avergae queries can be added to a source and used in queries.  Flights by destination code over time.
+## Displaying Charts in Nested Queries
+
+In this example, we've added two queries to the `flights` source, one showing flights by month without the moving average applied, and one with the moving average applied. We then use these queries to show charts of flight count for each airport over time.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
