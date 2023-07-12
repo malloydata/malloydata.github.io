@@ -1,5 +1,5 @@
 # Computing Daily Active Users
-Daily Active Users, Monthly Active Users and Average Daily active user computations 
+In this example, we'll show how to do basic Daily Active Users, Monthly Active Users and Average Daily Active User computations.
 
 The queries below use the following model
 
@@ -28,7 +28,7 @@ run: order_items -> {
 ```
 
 
-## Weekly Active Users and AverageDaily Active users
+## Weekly Active Users and Average Daily Active Users
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
