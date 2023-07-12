@@ -205,6 +205,15 @@
           "link": "/visualizations/segment_maps.md"
         }
       ]
+    },
+    {
+      "title": "MalloySQL",
+      "items": [
+        {
+          "title": "Using MalloyQL",
+          "link": "/malloy_sql/index.md"
+        }
+      ]
     }
   ]
 }
