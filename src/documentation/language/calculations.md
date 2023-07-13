@@ -34,3 +34,24 @@ query: flights -> {
 In a `group_by` or `aggregate`, you cannot reference `lower_carrier` because it is not a field defined inside of `flights`, but in `calculate`, you can.
 
 For a detailed explanation of the exact semantics, see the [evaluation space documentation](./eval_space.md).
+
+## Ordering
+
+Some window functions in SQL, such as [lag](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#lag), require an <code>ORDER BY</code> clause to determine behavior. In Malloy, such analytic functions use the ordering of the query itself. For example:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
+query: flights -> {
+  where: carrier = 'WN'
+  group_by: dep_year is dep_time.year
+  aggregate: flight_count
+  order_by: dep_year asc
+  calculate: year_change is flight_count - lag(flight_count)
+}
+```
+
+`lag(flight_count)` for each row is calculated with respect to `dep_year asc`. The value of `lag(flight_count)` for the year 2001 is the value of `flight_count` for the year 2000.
+
+Note that Malloy queries use a [default ordering](order_by.md#ordering-and-limiting) if none is explicitly specified:
+1. If a time dimension is specified in the query, default ordering is by "descending time", showing newest rows first
+2. If no time is specified, but there is a numeric measure, default ordering is by "measure values descending", showing largest values first
