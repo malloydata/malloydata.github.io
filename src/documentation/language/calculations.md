@@ -37,7 +37,7 @@ For a detailed explanation of the exact semantics, see the [evaluation space doc
 
 ## Ordering
 
-Some window functions in SQL, such as [lag](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#lag), require an `ORDER BY` clause to determine behavior. In Malloy, such analytic functions use the ordering of the query itself. For example:
+Some window functions in SQL, such as [lag](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#lag), require an <code>ORDER BY</code> clause to determine behavior. In Malloy, such analytic functions use the ordering of the query itself. For example:
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
