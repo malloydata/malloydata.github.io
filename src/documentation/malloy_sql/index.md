@@ -1,6 +1,6 @@
 # MalloySQL
 
-MalloySQL enables mixing dialect-specific DDL with Malloy. For example, MalloySQL can be used to create a new table in BigQuery, based on a model of existing data:
+MalloySQL enables mixing dialect-specific SQL (including DDL) with Malloy. For example, MalloySQL can be used to create a new table in BigQuery, based on a model of existing data:
 
 ```malloy
 >>>malloy
