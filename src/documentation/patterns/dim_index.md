@@ -1,33 +1,45 @@
 # Malloy Dimensional Indexes
-Malloy has a special query operator that builds dimensional search indexes for sources.  Search indexes are generally used by Malloy Composer (Malloy's BI interface), but can also be used for other things.
+Malloy has a special query operator that builds _Dimensional Search Indexes for sources.  A Dimensional Search Index is a table with 4 columns.  Dimensional indexes are useful for a variety of things including filtering suggestions and LLMs.
 
 When filtering data, you might know a term, but not necessarily which column in the one of the join data contains it.  Indexing the data on field names and high cardinality fields let's you qucikly find the term and the associated value.
 
 Indexing could be used by LLMs to find the interesting column/term mapping in the data set.
 
-## Simple Example
-We're going to take the airports table and index it.  Some things to notice.
+* *fieldName* - The path to the column in the source
+* *fieldValue* - The dimensional value for the field (or range if fieldType is not a string)
+* *fieldType* - Type type of the column.
+* *weight* - a weighting to use as to the importance the distinct dimensional value.  Defaults to cardinality of the field.
 
-* The query operator `index:` takes a list of dimensions we would like in our index.  
-* The results of an index are unordered, so we pass the result to another stage to order the results.  
-* In this case, `weight` is the row count of the results returned.  
-* non-string -type fields are represented as ranges across all rows.
-* Click `ShowSQL` to see how this query works in SQL.
+## Simple Example
+We're going to take the airports table and index it.  The results are an un ordered list of distinct *fieldName/fieldValue* pairs appear in the table.  The weight, in this case is the number of rows that partciular occurs on. 
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
-} -> {
+}
+```
+
+## Add Ordering
+Adding a second query stage to filter on _string_ columns and ordering by weight descending shows us the most common *fieldName/fieldValue* pairs in the dataset.  
+
+All Malloy queries run as a single SQL query.  The `index:` operator is no different.  Click the **SQL** tab to see how this works.  
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+run: duckdb.table('data/airports.parquet') -> {
+  index: *
+} 
+-> {
+  where: fieldType = 'string'
   project: *
-  where: fieldType = 'string' and fieldValue != null
   order_by: weight desc
 }
 ```
 
-## Index For filtering queries
+## Index For Filtering User Interfaces
 
-Indexes can be used find the best way to filter a dataset.  For example supposed we'd like to find 'SANTA CRUZ' in the dataset, but we don't quite know how to filter for it.  In a UI you might imagine that you type 'SANTA' and let have suggestons for values that might be appropriate.  In the results we can see that top value, 'SANTA ROSA', appears as county on 26 rows in the table.  We can also see that 'SANTA CRUZ' is both a `city` and a `county`..
+Indexes can be used find the best way to filter a dataset.  For example supposed we'd like to find 'SANTA CRUZ' in the dataset. Upon approaching the dataset, but we don't which column might contain it.  In a UI you might imagine that you type 'SANTA' and let have suggestons for values that might be appropriate.  In the results we can see that top value, 'SANTA ROSA', appears as county on 26 rows in the table.  We can also see that 'SANTA CRUZ' is both a `city` and a `county`..
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
@@ -69,45 +81,119 @@ run: duckdb.table('data/airports.parquet') -> {
 }
 ```
 
-## Weights can be any measure
-Suppose we are looking at the Aircraft Models table and we'd like to produce an index.  In our world, big planes so we are going to weight the values for bigger planes higher.  The query name `search_index` is special.  Composer looks for a query named `search_index` to use to suggest search terms.
+## Sampling
+With large datasets, you can also sample a small subsection using the `sample:` parameter.  Sampled indexes are great at identifing the important low cardinality fields.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') + {
-  measure: total_seats is seats.sum()
-
-  query: search_index is {
-    index: * by total_seats
-  } -> {
-    project: *
+run: duckdb.table('data/airports.parquet') -> {
+  index: *
+  sample: 5000  // sample only 5000 rows
+} -> {
+  group_by: fieldName
+  nest: values is {
+    group_by: fieldValue, weight
     order_by: weight desc
+    limit: 10
   }
-
+  order_by: fieldName
 }
-run:  aircraft_models -> search_index 
+```
+
+<img src="./imdb_schema.png" style="width: 230px; float: right; padding: 3px 3px 3px 3px">
+
+# A More Complex Example
+
+The rest of this pages uses the model below.  The data is an excerpt from the IMDB.  The Malloy schema for this model is shown on the right.  The core value is movies, but joined at the principals (the people that worked on the movie) and the people (the actual data about the individuals).  
+
+We use the measure `total_ratings` to determin a movie's popularity.  An individual's popularity is determined by the some of all the ratings of the movies a person has worked on.
+
+```malloy
+--! {"isModel": true, "modelPath": "/inline/e1.malloy"}
+source: movies is table('duckdb:data/titles.parquet') + {
+  join_many: principals is duckdb.table('data/principals.parquet') {
+    join_one: people is duckdb.table('data/names.parquet') 
+      on nconst = people.nconst
+  } on tconst = principals.tconst
+
+  measure: total_ratings is numVotes.sum()
+}
+```
+
+## Weights can be any measure
+Often a row count will work nicely as a weight, but sometimes there is something better.  In movies, for example the sum of the number of votes will not only find the interesting most interesting movies but will also find the most interesting people.  For example the most interesting people in the dataset.
+
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
+run: movies -> {
+  group_by: principals.people.primaryName
+  aggregate: total_ratings
+} 
 ```
 
 ## Index the entire graph
-Indexing can work across an entire network of joins.  In this case we are going to join flights and airports and carriers.  To speed things up we are going to only sample 5000 rows.
+Indexing can work across an entire network of joins and can be selective.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
-source: flights is duckdb.table('data/flights.parquet') {
-  join_one: carriers is duckdb.table('data/carriers.parquet') on carrier = carriers.code
-  join_one: dest is duckdb.table('data/airports.parquet') on destination = dest.code
-  join_one: orig is duckdb.table('data/airports.parquet') on origin = orig.code
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
+run: movies -> {
+  index:
+    *
+    genres.*
+    principals.category, principals.job
+    principals.characters.*
+    principals.people.primaryName
+  by total_ratings
+}
+-> {
+  project: *
+  order_by: weight desc
+}
+```
+
+# By Convention indexes in sources are named search_index
+
+```malloy
+--! {"isModel": true, "modelPath": "/inline/e2.malloy"}
+source: movies is table('duckdb:data/titles.parquet') + {
+  join_many: principals is duckdb.table('data/principals.parquet') {
+    join_one: people is duckdb.table('data/names.parquet') 
+      on nconst = people.nconst
+  } on tconst = principals.tconst
+
+  measure: total_ratings is numVotes.sum()
 
   query: search_index is {
-    index: *, dest.*, orig.* carriers.*
-    sample: 5000
+    index:
+      *
+      genres.*
+      principals.category, principals.job
+      principals.characters.*
+      principals.people.primaryName
+    by total_ratings
   }
 }
+```
 
-// use the search index to look up values for 'SAN'
-run: flights-> search_index -> {
-  where: fieldValue ~ r'SAN'
+So to look for 'Brad'
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e2.malloy", "pageSize":5000}
+run: movies -> search_index -> { 
   project: *
+  where: fieldValue ~ 'Brad%'
+  order_by: weight desc
+}
+```
+
+So to look for 'Bat'
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e2.malloy", "pageSize":5000}
+run: movies -> search_index -> { 
+  project: *
+  where: fieldValue ~ 'Bat%'
   order_by: weight desc
 }
 ```
