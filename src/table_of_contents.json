@@ -181,8 +181,24 @@
       "title": "Rendering Results",
       "items": [
         {
-          "title": "Intro: Charts & Dashboards",
+          "title": "Overview",
+          "link": "/visualizations/overview.md"
+        },
+        {
+          "title": "Numbers",
+          "link": "/visualizations/numbers.md"
+        },
+        {
+          "title": "Table Transpose",
+          "link": "/visualizations/transpose.md"
+        },
+        {
+          "title": "Dashboards",
           "link": "/visualizations/dashboards.md"
+        },
+        {
+          "title": "Lists",
+          "link": "/visualizations/lists.md"
         },
         {
           "title": "Bar Charts",
