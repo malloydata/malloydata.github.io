@@ -51,7 +51,7 @@ Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-li
 
 * [Number](numbers.md) - number formatting, percentages, duration, and bytes
 * [Transposed Tables](transpose.md)
-* [Dashboards](dashboard.md) 
+* [Dashboards](dashboards.md) 
 * [Lists](lists.md)
 * [Bar Charts](bar_charts.md) - various forms of column charts 
 * [Line Charts](charts_line_chart.md) 
