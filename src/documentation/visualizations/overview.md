@@ -1,13 +1,13 @@
-# Rendering Results
+ # Rendering Results
 
-When Malloy runs a query, it returns two things; the *results* of the query and *metadata* about the results. The metadata contains the schema for the results, including type information. Malloy also provides a mechanism to tag fields and queries in the source code with additional metadata. 
+When Malloy runs a query, it returns two things.  The *results* of the query and *metadata* about the results.  The metadata are the schema for the results, including type information.  Malloy also provides a mechanism to tag things in the source code and return tags with this meta data. 
 
-In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Tags that start on a new line attach to the definition on the following line. For more details about how tagging works, see the [Tags](../language/tags.md) section.
+In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Tags that start on a new line attach the tag the thing on the following line. For more details about how tagging works, see the [Tags](../language/tags.md) section.
 
-Malloy's rendering library interprets these tags to change how results are rendered.
+Malloy's rendering library interprets these tags to change how results are rendered. 
 
-## Tagging Individual Fields
-In the query below, the measure **percent_of_total** is tagged as a percentage.  Anytime *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
+## Tagging individual elements
+In the query below, the measure **percent_of_total** is tagged as a percentage. Any time *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
@@ -45,18 +45,21 @@ run: duckdb.table('data/flights.parquet') ->  {
 }
 ```
 
-Malloy's renderering library uses [Vega-Lite](https://vega.github.io/vega-lite/) for charting, allowing visualization of results. Malloy's rendering library is a separate layer from Malloy's data access layer.
+Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-lite/) for charting, allowing visualization of results. Malloy's rendering library is a separate layer from Malloy's data access layer.:
 
-Tags for Queries in Malloy's renderer include:
+## Rendering tags
 
-* [Bar Chart](bar_charts.md): `bar_chart`
-* [Line Chart](charts_line_chart.md): `line_chart`
-* [Scatter Chart](scatter_charts.md): `scatter_chart`
-* [Shape Map](shape_maps.md): `shape_map`
-* [Segment Map](segment_maps.md): `segment_map`
-* [Dashboard](dashboards.md): `dashboard`
+* [Number](numbers.md) - number formatting, percentages, duration, and bytes
+* [Pivotted Tables](pivots.md)
+* [Transposed Tables](transpose.md)
+* [Dashboards](dashboards.md) 
+* [Lists](lists.md)
+* [Bar Charts](bar_charts.md) - various forms of column charts 
+* [Line Charts](charts_line_chart.md) 
+* [Scatter Charts](scatter_charts.md)
+* [Shape Maps](shape_maps.md)
+* [Segment Maps](segment_maps.md)
 
-Tags can be applied to queries where they are defined in sources, when nested, or when run.
 
 ## Additional Charting with Vega Lite
 The `vega` renderer allows much more customization of rendering than the default visualization options provided in the Extension, using the [Vega-Lite](https://vega.github.io/vega-lite/) library. For examples of using these in Malloy, check out the `flights_custom_vis` model and styles files in the FAA [Sample Models](../samples.md) download.

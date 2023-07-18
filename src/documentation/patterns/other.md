@@ -1,7 +1,7 @@
-## Producing a Chart or table with 'Other'
-Often you want to limit the number of results in a chart and bucket the everything else into an 'other' bucket.  
+## Producing a table with an 'Other' bucket
+Often you want to limit the number of group-by values in a table, and bucket everything else into an 'other' category.  
 
-top_states by elevation calculates the top states and nests the data it is going to need to aggregate.  The seconds pipeline stage produces the actual aggregation.
+In the `top_states_by_eleveation` query below, we have a query with two stages. The first stage calculates the top states and nests the data to be aggregated. The second pipeline stage produces the actual aggregation.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}

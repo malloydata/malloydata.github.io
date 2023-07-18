@@ -34,9 +34,9 @@
   },
   "homepage": "https://github.com/malloydata/malloydata.github.io#readme",
   "devDependencies": {
-    "@malloydata/db-duckdb": "0.0.56",
-    "@malloydata/malloy": "0.0.56",
-    "@malloydata/render": "0.0.56",
+    "@malloydata/db-duckdb": "0.0.58",
+    "@malloydata/malloy": "0.0.58",
+    "@malloydata/render": "0.0.58",
     "@types/jsdom": "^20.0.0",
     "concurrently": "^6.2.1",
     "fs-extra": "^10.1.0",

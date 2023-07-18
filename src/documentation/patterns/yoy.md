@@ -1,10 +1,10 @@
-# Comparing Timeframes Measuring Change over Time
+# Measuring Change over Time by Comparing Timeframes
 There are a couple of different ways to go about this in Malloy.
 
 ## Method 1: Pivoting a Visualization
 
-Compare performance of different years on the same scale.  Line charts take the X-Axis, Y-Axis and Dimensional Axis as parameters.
-In this Case, the X-Axis is `month_of_year`, the Y-Axis is `flight_count` and the Dimensional Axis is the year.
+We can compare performance of different years using the same x and y-axes.  Line charts take the x-axis, y-axis and dimensional (color) axis as parameters.
+In this case, the x-axis is `month_of_year`, the y-axis is `flight_count` and the dimensional (color) axis is the year.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
@@ -12,8 +12,6 @@ source: flights is duckdb.table('data/flights.parquet') extend {
   measure: flight_count is count()
 }
 ```
-
-By adding a thrid column that is year, we can display
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -23,6 +21,8 @@ run: flights -> {
   group_by: flight_year is dep_time.year
 }
 ```
+
+By adding year as the third column, we can display different years on the same chart. Note the `# line_chart` tag above the query. This is a hint to the renderer to display the data as a line chart.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -54,6 +54,8 @@ run: flights -> {
 
 ## Method 3: Calculate with Lag
 
+The `calculate:` clause is Malloy's window function equivalent, and allows us to compute year over year calculations using the `lag` function:
+
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
@@ -68,8 +70,7 @@ run: flights -> {
 ```
 
 ## Bonus: Relative timeframes and expression reuse
-You might like to write queries that automatically adjust based on the current timeframe.  The query below uses date arrithmetic to filter the data to time frames relative to now.  These measures probably aren't generally useful in the model so we use the `extend:` operation to add these measure so they are only locally accessable within the query.
-
+You might like to write queries that automatically adjust based on the current timeframe.  The query below uses date arithmetic to filter the data to time frames relative to now.  These measures probably aren't generally useful in the model so we use the `extend:` operation to add these measure so they are only locally accessable within the query.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}

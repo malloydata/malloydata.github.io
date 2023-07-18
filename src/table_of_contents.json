@@ -69,15 +69,15 @@
               "link": "/patterns/nested_subtotals.md"
             },
             {
-              "title": "Dedup rows with SQL",
+              "title": "Deduplicating Rows with SQL",
               "link": "/patterns/dedup_sql.md"
             },
             {
-              "title": "Group By with 'OTHER'",
+              "title": "Group By with an 'other' bucket",
               "link": "/patterns/other.md"
             },
             {
-              "title": "Histograms - Auto-bin",
+              "title": "Auto-binning Histograms",
               "link": "/patterns/autobin.md"
             },
             {
@@ -93,7 +93,7 @@
               "link": "/patterns/transform.md"
             },
             {
-              "title": "Reading JSON from HTTP",
+              "title": "Reading JSON directly from an API",
               "link": "/patterns/apijson.md"
             },
             {
@@ -185,8 +185,28 @@
       "title": "Rendering Results",
       "items": [
         {
-          "title": "Malloy Renderer",
+          "title": "Overview",
           "link": "/visualizations/overview.md"
+        },
+        {
+          "title": "Numbers",
+          "link": "/visualizations/numbers.md"
+        },
+        {
+          "title": "Pivotted Tables",
+          "link": "/visualizations/pivots.md"
+        },
+        {
+          "title": "Table Transpose",
+          "link": "/visualizations/transpose.md"
+        },
+        {
+          "title": "Dashboards",
+          "link": "/visualizations/dashboards.md"
+        },
+        {
+          "title": "Lists",
+          "link": "/visualizations/lists.md"
         },
         {
           "title": "Bar Charts",
@@ -211,6 +231,15 @@
         {
           "title": "Dashboards",
           "link": "/visualizations/dashboards.md"
+        }
+      ]
+    },
+    {
+      "title": "MalloySQL",
+      "items": [
+        {
+          "title": "Using MalloySQL",
+          "link": "/malloy_sql/index.md"
         }
       ]
     }

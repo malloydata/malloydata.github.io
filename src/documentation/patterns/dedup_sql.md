@@ -1,6 +1,7 @@
-# Deduping rows in a table using a SQL block
+# De-duplicating rows in a table using a SQL block
 
-Sometime data can have duplicate rows.  Malloy can have sources and queries based on SQL queries.  The following example partitions the database by what should be unique and selects just uses the first row it finds.
+Sometimes data has duplicate rows. A common pattern to de-duplicate a table is to use a window function to partition the table by the combination of columns that should be unique, then take the first row. Malloy does not yet natively support this pattern, so to achieve this, we need to use a SQL Block:
+
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
 source: flights is duckdb.sql("""
@@ -10,6 +11,8 @@ source: flights is duckdb.sql("""
   measure: flight_count is count()
 }
 ```
+
+We used `duckdb.sql()` to define a SQL statement, then created a source using that SQL statement.
 
 ## Querying the Source
 

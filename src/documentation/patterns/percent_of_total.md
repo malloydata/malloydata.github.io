@@ -10,7 +10,7 @@ source: flights is table('duckdb:data/flights.parquet') extend {
 ```
 
 ## Totals
-Using `all()`, you can easily produce a aggregate calculation that includes all the data, not just the data on the current row.  Southwest + USAir = 126,434 flights.  Notice that `all_flights` is the total of all the flights accessible in the query.
+Using `all()`, you can easily produce an aggregate calculation that includes all the data, not just the data on the current row.  Southwest + USAir = 126,434 flights.  Notice that `all_flights` is the total of all the flights accessible in the query.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -24,7 +24,7 @@ run: flights -> {
 ```
 
 ## Percent of Total
-The `all()` function is really useful in percent of total calculations.  The `# percent` tags the result so it is displayed as a percentage.
+The `all()` function is useful for percent of total calculations.  The `# percent` tags the result so it is displayed as a percentage.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -57,7 +57,7 @@ run: flights -> {
   limit: 20
 }
 ```
-##  As Percentages
+## As Percentages
 Displaying results as percentages is often gives clues as to how numbers relate.  Is this number a large or small percentage of the group?  Level of detail calculations are great for this.  In Malloy, identifiers enclosed in back-ticks can have spaces.
 
 ```malloy

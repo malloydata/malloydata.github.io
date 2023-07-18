@@ -1,5 +1,5 @@
 # Foreign Sums
-Malloy allows you to compute sums, averages correctly based on your join tree.  This example has flights, joining to aircraft, joining to aircraft_model.
+Malloy allows you to compute sums and averages correctly based on your join tree. Fan-outs based on join relationships will never impact the correctness of these aggregations. This example has `flights`, joining to `aircraft`, joining to `aircraft_model``.
 `aircraft_model` has the number of seats specified on this model of aircraft.  Code below computes sums and averages at various places in the join tree.
 
 ```malloy
