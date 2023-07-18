@@ -5,20 +5,19 @@ top_states by elevation calculates the top states and nests the data it is going
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: airports is table('duckdb:data/airports.parquet') + {
+source: airports is table('duckdb:data/airports.parquet') extend {
   measure: 
     airport_count is count()
     avg_elevation is elevation.avg()
 
-  query: top_states_by_elevation is {
+  query: top_states_by_elevation is -> {
     group_by: state
     aggregate: avg_elevation
     calculate: row_num is row_number()
-    nest: data is {  
-      group_by: code,elevation
+    nest: data is -> {  
+      group_by: code, elevation
     }
-  }
-  -> {
+  } -> {
     group_by: state is 
       pick state when row_num < 5
       else 'OTHER'

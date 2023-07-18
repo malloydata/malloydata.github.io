@@ -1,8 +1,8 @@
-# Query from an API Endpoint (json)
-Malloy, using DuckDB, can query an API endpoint and transform it.  The example below reads exchange rate data from the US Treasury and shows the data by currency over time.
+# Reading JSON from HTTP
+
+Malloy, using DuckDB, can query an API endpoint and transform the response JSON. The example below reads exchange rate data from the US Treasury and shows the data by currency over time.
 
 ## The Semantic Data Model
-
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
@@ -18,7 +18,7 @@ Build a line chart showing values by date.  The rate comes back as a string and 
 run: exchange_rates -> {
   group_by: data.country_currency_desc
   # line_chart
-  nest: by_date is {
+  nest: by_date is -> {
     group_by: 
       data.record_date
       rate is data.exchange_rate::number

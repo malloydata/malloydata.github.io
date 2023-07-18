@@ -4,12 +4,10 @@ Sometime data can have duplicate rows.  Malloy can have sources and queries base
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
 source: flights is duckdb.sql("""
-    SELECT * from 'data/flights.parquet'
-    qualify ROW_NUMBER() over (partition by dep_time, origin, destination, flight_num) = 1
-  """
-) {
-  measure:
-    flight_count is count()
+  SELECT * from 'data/flights.parquet'
+  qualify ROW_NUMBER() over (partition by dep_time, origin, destination, flight_num) = 1
+""") extend {
+  measure: flight_count is count()
 }
 ```
 
@@ -17,5 +15,5 @@ source: flights is duckdb.sql("""
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights -> {aggregate: flight_count}
+run: flights -> { aggregate: flight_count }
 ```

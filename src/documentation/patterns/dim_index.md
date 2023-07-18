@@ -15,7 +15,7 @@ We're going to take the airports table and index it.  Some things to notice.
 * Click `ShowSQL` to see how this query works in SQL.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
 } -> {
@@ -30,7 +30,7 @@ run: duckdb.table('data/airports.parquet') -> {
 Indexes can be used find the best way to filter a dataset.  For example supposed we'd like to find 'SANTA CRUZ' in the dataset, but we don't quite know how to filter for it.  In a UI you might imagine that you type 'SANTA' and let have suggestons for values that might be appropriate.  In the results we can see that top value, 'SANTA ROSA', appears as county on 26 rows in the table.  We can also see that 'SANTA CRUZ' is both a `city` and a `county`..
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
 } -> {
@@ -44,7 +44,7 @@ run: duckdb.table('data/airports.parquet') -> {
 We can then write a simple query to show the rows.  It turns out that 'SANTA CRUZ' is a county in both California and Arizona.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   where: county ~ 'SANTA CRUZ'
   project: *
@@ -55,7 +55,7 @@ run: duckdb.table('data/airports.parquet') -> {
 It is often difficult to approach a new dataset.  The index operator provides an intersting way to quickly gain an understanding of the dataset.  By piping the results of an index another stage, we can quickly see all the interesting values for each of the interesting dimesions.  Again, the weight shows the number of rows for that particular dimension/value.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
 } -> {
@@ -73,11 +73,11 @@ run: duckdb.table('data/airports.parquet') -> {
 Suppose we are looking at the Aircraft Models table and we'd like to produce an index.  In our world, big planes so we are going to weight the values for bigger planes higher.  The query name `search_index` is special.  Composer looks for a query named `search_index` to use to suggest search terms.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') + {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":100}
+source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
   measure: total_seats is seats.sum()
 
-  query: search_index is {
+  query: search_index is -> {
     index: * by total_seats
   } -> {
     project: *
@@ -92,20 +92,20 @@ run:  aircraft_models -> search_index
 Indexing can work across an entire network of joins.  In this case we are going to join flights and airports and carriers.  To speed things up we are going to only sample 5000 rows.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
-source: flights is duckdb.table('data/flights.parquet') {
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium"}
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: carriers is duckdb.table('data/carriers.parquet') on carrier = carriers.code
   join_one: dest is duckdb.table('data/airports.parquet') on destination = dest.code
   join_one: orig is duckdb.table('data/airports.parquet') on origin = orig.code
 
-  query: search_index is {
-    index: *, dest.*, orig.* carriers.*
+  query: search_index is -> {
+    index: *, dest.*, orig.*, carriers.*
     sample: 5000
   }
 }
 
 // use the search index to look up values for 'SAN'
-run: flights-> search_index -> {
+run: flights -> search_index -> {
   where: fieldValue ~ r'SAN'
   project: *
   order_by: weight desc

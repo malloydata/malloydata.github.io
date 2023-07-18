@@ -6,7 +6,7 @@ The easiest way to follow along is by going to the [interactive notebook version
 
 If you'd like to run Malloy locally on your laptop instead, follow the setup instructions to [install the VSCode extension](../setup/extension.md) and [connect to a database](../setup/connection_instructions.md).
 
-## A simple `SELECT`
+## A Simple Select Statement
 
 The following query is equivalent to <code>SELECT id, code, city FROM airports LIMIT 10</code> in SQL:
 
@@ -23,15 +23,15 @@ run: duckdb.table('data/airports.parquet') -> {
 
 Let's break down each part of this query.
 - `run:` is the opening statement that indicates we're starting to write a query
-- `duckdb.table('data/airports.parquet')` defines the source for the query. The `table()` function creates a source from a table or view in the database.
+- `duckdb.table('data/airports.parquet')` defines the source for the query. The `table()` method creates a source from a table or view in the database.
   - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
-- The `->` operator begins the query. All queries take the form `source -> { ... }`, with the query logic specified inside of the curly braces.
-- `project: ` is equivalent to `SELECT` in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
-- `limit: 10` limits the resultset of the query to the first 10 items
+- The `->` operator begins the query. All queries take the form `a_source -> { ... }`, with the query logic specified inside of the curly braces.
+- `project:` is equivalent to <code>SELECT</code> in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
+- `limit: 10` limits the result set of the query to the first 10 items.
 
 ## Query Operators
 
-In SQL, the <code>SELECT</code> command does two very different things.  A <code>SELECT</code> with a <code>GROUP BY</code> aggregates data according to the <code>GROUP BY</code> clause and produces aggregate calculation against every calculation not in the <code>GROUP BY</code>.  In Malloy, the query operator for this is `group_by`.  Calculation about data in the group are made using `aggregate`.
+In SQL, the <code>SELECT</code> command does two very different things.  A <code>SELECT</code> with a <code>GROUP BY</code> aggregates data according to the <code>GROUP BY</code> clause and produces aggregate calculation against every calculation not in the <code>GROUP BY</code>.  In Malloy, the query operator for this is `group_by`. Calculations involving data in the group are made using `aggregate`.
 
 The second type of <code>SELECT</code> in SQL does not perform any aggregation;  All rows in the input table, unless filtered in some way, show up in the output table. In Malloy, this command is called `project`.
 
@@ -51,7 +51,7 @@ run: duckdb.table('data/airports.parquet') -> {
 ```
 
 ### Project
-In Malloy, "project" is a verb, not a noun. As in "to project something", rather than "this is a project". `project` produces a list of fields.  For every row in the input table, there is a row in the output table. This is similar to a simple `SELECT` statement in SQL with no aggregations.
+In Malloy, "project" is a verb, not a noun. As in "to project something", rather than "this is a project". A `project` statement produces a list of fields. For every row in the input table, there is a row in the output table. This is similar to a simple <code>SELECT</code> statement in SQL with no aggregations.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
@@ -62,7 +62,7 @@ run: duckdb.table('data/airports.parquet') -> {
 }
 ```
 
-Operator statements can be placed in any order within a query. `where` can come before or after `project`, and `limit` can be placed anywhere as well. The above query could also be written:
+For the most part, operations can be placed in any order within a query. A `where` can come before or after a `project`, and `limit` can be placed anywhere as well. The above query could also be written:
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
@@ -77,7 +77,7 @@ run: duckdb.table('data/airports.parquet') -> {
 
 In Malloy, all output fields have names. This means that any time a query
 includes a field with a calculated value, like a scalar or aggregate function,
-it must be named. _(unlike SQL, which allows un-named expressions)_
+it must be named _(unlike SQL, which allows un-named expressions)_.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
@@ -86,11 +86,11 @@ run: duckdb.table('data/airports.parquet') -> {
 }
 ```
 
-Notice that Malloy uses the form "_name_ `is` _value_" instead of SQL's "_value_ `as` _name_".
+Notice that Malloy uses the form `name is value` instead of SQL's <code>value AS name</code>.
 Having the output column name written first makes it easier for someone reading
 the code to visualize the resulting query structure.
 
-Named objects, like columns from a table, and fields defined in a source, can be included in field lists without an `is`
+Named objects, like columns from a table or fields defined in a source, can be included in field lists without an `is`:
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
@@ -127,7 +127,7 @@ In the example below, we create a *source* object named `airports` and add a `di
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
   measure: airport_count is count()
   measure: average_elevation is avg(elevation)
@@ -157,20 +157,21 @@ Sources can also contain named queries. These named queries are useful for build
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-source: airports_with_named_query is duckdb.table('data/airports.parquet') {
-    dimension: county_and_state is concat(county, ', ', state)
-    measure: airport_count is count()
-    measure: average_elevation is avg(elevation)
+source: airports_with_named_query is duckdb.table('data/airports.parquet') extend {
+  dimension: county_and_state is concat(county, ', ', state)
+  measure: airport_count is count()
+  measure: average_elevation is avg(elevation)
 
-    // This is a "named query":
-    query: top_county_and_state is {
-        group_by: county_and_state
-        aggregate: airport_count
-        limit:10
-    }
+  // This is a "named query":
+  query: top_county_and_state is -> {
+    group_by: county_and_state
+    aggregate: airport_count
+    limit:10
+  }
 }
 
-// The named query can now be referenced by name, and run without having to rewrite the logic:
+// The named query can now be referenced by name 
+// and run without having to rewrite the logic:
 run: airports_with_named_query -> top_county_and_state
 ```
 
@@ -180,16 +181,17 @@ run: airports_with_named_query -> top_county_and_state
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') {
+source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
 }
 
-source: aircraft is duckdb.table('data/aircraft.parquet') {
+source: aircraft is duckdb.table('data/aircraft.parquet') extend {
   primary_key: tail_num
-  join_one: aircraft_models on aircraft_model_code = aircraft_models.aircraft_model_code
+  join_one: aircraft_models 
+    on aircraft_model_code = aircraft_models.aircraft_model_code
 }
 
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: aircraft on tail_num = aircraft.tail_num
 }
 
@@ -243,7 +245,7 @@ Filters can also be applied to sources:
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-source: airports_in_california is duckdb.table('data/airports.parquet') {
+source: airports_in_california is duckdb.table('data/airports.parquet') extend {
   where: state = 'CA'
 }
 
@@ -288,7 +290,7 @@ GROUP BY state
 The next several examples will use this simple source definition:
 
 ```malloy
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 };
 ```
@@ -299,11 +301,10 @@ In Malloy, queries can be [nested](../language/nesting.md) to produce subtables 
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "isPaginationEnabled": true}
-
 run: airports -> {
   group_by: state
   aggregate: airport_count
-  nest: by_facility is {
+  nest: by_facility is -> {
     group_by: fac_type
     aggregate: airport_count
     top: 3
@@ -322,11 +323,11 @@ Queries can be nested infinitely, allowing for rich, complex output structures. 
 run: airports -> {
   group_by: state
   aggregate: airport_count
-  nest: top_5_counties is {
-    top: 5
+  nest: top_5_counties is -> {
+    limit: 5
     group_by: county
     aggregate: airport_count
-    nest: by_facility is {
+    nest: by_facility is -> {
       group_by: fac_type
       aggregate: airport_count
     }
@@ -344,11 +345,11 @@ run: airports -> {
   where: state = 'CA'
   group_by: county
   aggregate: airport_count
-  nest: major_facilities is {
+  nest: major_facilities is -> {
     where: major = 'Y'
     group_by: name is concat(code, ' (', full_name, ')')
   }
-  nest: by_facility is {
+  nest: by_facility is -> {
     group_by: fac_type
     aggregate: airport_count
   }
@@ -368,7 +369,8 @@ shows the number of flights in 2003.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-run: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 } -> {
+run: duckdb.table('data/flights.parquet') -> {
+  where: dep_time ? @2003 
   aggregate: flight_count is count()
 }
 ```
@@ -376,7 +378,8 @@ run: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 } -> {
 There is a special time literal `now`, referring to the current timestamp, which allows for relative time filters.
 
 ```malloy
-query: duckdb.table('data/flights.parquet') { where: dep_time > now - 6 hours } -> {
+query: duckdb.table('data/flights.parquet') -> {
+  where: dep_time > now - 6 hours
   aggregate: flights_last_6_hours is count()
 }
 ```
@@ -419,7 +422,8 @@ Two kinds of time ranges are given special syntax: the range between two times a
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-run: duckdb.table('data/flights.parquet') { where: dep_time ? @2003 to @2005 } -> {
+run: duckdb.table('data/flights.parquet') -> {
+  where: dep_time ? @2003 to @2005
   aggregate: flight_count is count()
 }
 ```
@@ -431,8 +435,10 @@ When a time range is used in a comparison, `=` checks for "is in the range", `>`
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html"}
-run: duckdb.table('data/flights.parquet') { where: dep_time > @2003 } -> {
-  top: 3; order_by: departure_date asc
+run: duckdb.table('data/flights.parquet') -> {
+  where: dep_time > @2003
+  limit: 3
+  order_by: departure_date asc
   group_by: departure_date is dep_time.day
   aggregate: flight_count is count()
 }
@@ -448,7 +454,7 @@ run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
   aggregate: airport_count
-  nest: by_county is {
+  nest: by_county is -> {
     group_by: county
     aggregate: airport_count
   }
@@ -464,7 +470,7 @@ run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
   aggregate: airport_count
-  nest: by_county is {
+  nest: by_county is -> {
     group_by: county
     aggregate: airport_count
   }
@@ -477,8 +483,6 @@ run: airports -> {
     percent_in_county is by_county.airport_count / airport_count
 }
 ```
-
-_**NOTE:**: to pipeline a named query, the syntax to reference that named query is `-> query_name`. An example of this can be found in the [Query Doc](../language/query.md#multi-stage-pipelines)._
 
 ## Aggregate Locality
 
@@ -512,7 +516,7 @@ run: flights -> {
  * A comparison of the total number of flights
  * for each of the tracked carriers.
  */
- run: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count /* , total_distance */
 }

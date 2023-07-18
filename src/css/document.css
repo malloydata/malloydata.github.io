@@ -270,13 +270,18 @@ h2 {
   border-bottom: 1px solid #4285f4;
 }
 
-h3,
+h3 {
+  font-weight: 500;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
 h4,
 h5,
 h6 {
   font-weight: 500;
   margin-top: 20px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 blockquote {

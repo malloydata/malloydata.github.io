@@ -5,20 +5,18 @@ By examining the range of values over a dataset we can compute the appropriate b
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: airports is table('duckdb:data/airports.parquet') + {
-  measure: 
-    airport_count is count()
+source: airports is table('duckdb:data/airports.parquet') extend {
+  measure: airport_count is count()
   # bar_chart
-  query: by_elevation is {
-    aggregate: bin_size is (max(elevation) - min(elevation))/30
-    nest: data is {
+  query: by_elevation is -> {
+    aggregate: bin_size is (max(elevation) - min(elevation)) / 30
+    nest: data is -> {
       group_by: elevation
       aggregate: row_count is count()
     }
-  }
-  -> {
+  } -> {
     group_by: elevation is 
-      floor(data.elevation/bin_size)*nullif(bin_size,0) + bin_size/2
+      floor(data.elevation / bin_size) * nullif(bin_size, 0) + bin_size / 2
     aggregate: airport_count is data.row_count.sum()
     order_by: elevation
   }
@@ -37,7 +35,7 @@ run: airports -> by_elevation
 Notice that when we look at Florida, notice that the binning is different.
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-run: airports {where: state='FL'} -> by_elevation
+run: airports extend { where: state = 'FL' } -> by_elevation
 ```
 
 ## Elevation within states.

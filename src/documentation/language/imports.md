@@ -1,35 +1,4 @@
-
-<!--
-
-# Imports and Exports
-
-Malloy allows for Sources to be reused between files, or for a set of sources
-to simply be split up among multiple files by using `import` and `export`.
-
-## Exports
-
-Before a source definition, the `export` keyword means that the source should
-be included in the file's _public namespace_.
-
-Consider a file <code>samples/faa/flights.malloy</code>:
-```malloy
-source: airports is duckdb.table('data/airports.parquet') {
-  primary_key: code
-  dimension: name is concat(code, ' - ', full_name)
-  measure: airport_count is count()
-}
-
-source: flights is duckdb.table('data/flights.parquet') {
-  join_one: origin is airports with origin_code
-  join_one: destination is airports with destination_code
-}
-```
-
-In this example, `flights` is exported, but `airports` is not, and therefore
-only `flights` is part of the file's public namespace.
- -->
-
-## Imports
+# Imports
 
 In order to reuse or extend a source from another file, you can include all the
 exported sources from another file using `import "path/to/some/file.malloy"`.
@@ -42,9 +11,7 @@ import "faa/flights.malloy"
 query: flights -> { top: 5; group_by: carrier; aggregate: flight_count }
 ```
 
-<!-- Because `airports` is not exported, referencing it here would be invalid. -->
-
-### Import Locations
+## Import Locations
 
 Imported files may be specified with relative or absolute URLs.
 

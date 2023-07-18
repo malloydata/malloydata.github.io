@@ -1,6 +1,7 @@
 {
   "scopeName": "source.malloy",
   "patterns": [
+    {"include": "#docvar"},
     {"include": "#sql-string"},
     {"include": "#comments"},
     {"include": "#tags"},
@@ -22,6 +23,7 @@
       "name": "source.internal-query-stuff",
       "end": "}%?",
       "patterns": [
+        {"include": "#docvar"},
         {"include": "#sql-string"},
         {"include": "#comments"},
         {"include": "#tags"},
@@ -147,6 +149,21 @@
         }
       ]
     },
+    "docvar": {
+      "patterns": [
+        {
+          "begin": "\\<\\<",
+          "end": "\\>\\>",
+          "beginCaptures": {
+            "0": {"name": "punctuation.definition.comment.begin"}
+          },
+          "endCaptures": {
+            "0": {"name": "punctuation.definition.comment.end"}
+          },
+          "name": "markup.italic.markdown"
+        }
+      ]
+    },
     "tags": {
       "patterns": [
         {
@@ -181,7 +198,7 @@
           "patterns": [{"include": "#tag-values"}]
         },
         {
-          "begin": "##\\s",
+          "begin": "##!?\\s",
           "end": "\\n",
           "beginCaptures": {
             "0": {"name": "support.type.property-name.json"}
@@ -323,6 +340,10 @@
         {
           "match": "(?i)\\bextend\\b",
           "name": "keyword.control.extend"
+        },
+        {
+          "match": "(?i)\\brefine\\b",
+          "name": "keyword.control.refine"
         },
         {
           "match": "(?i)\\baggregate\\b",

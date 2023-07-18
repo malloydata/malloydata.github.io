@@ -53,7 +53,7 @@ query: limited_users -> {
 
 ## Embedding Malloy queries in an SQL block ( Turducken )
 
-Malloy queries can be embedded in SQL blocks as well. When `%{` and `}%` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with the `SELECT` statement generated from the query.
+Malloy queries can be embedded in SQL blocks as well. When `%{` and `}` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with the <code>SELECT</code> statement generated from the query.
 
 ```malloy
 --! {"isRunnable": true, "showAs":"sql", "size": "large", "sqlBlockName": "malloy_in_sql_query" }
@@ -71,8 +71,7 @@ sql: malloy_in_sql_query is {
 }%
 -- END MALLOY QUERY
 """
-
 }
 ```
 
-> _We have referred to this feature the ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinte nesting, but it is amusing_
+> _We have referred to this feature the ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinte nesting, but it is amusing..._

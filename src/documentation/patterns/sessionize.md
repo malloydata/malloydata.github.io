@@ -5,7 +5,7 @@ Flight event data contains _dep_time_, _carrier_, _origin_, _destination_ and _t
 
 ```malloy
 --! {"isRunnable": true, "showAs": "json", "isPaginationEnabled": true, "size": "large"}
-run: duckdb.table('data/flights.parquet') {
+run: duckdb.table('data/flights.parquet') extend {
   where: carrier = 'WN' and dep_time ? @2002-03-03
   measure: flight_count is count()
 } -> {
@@ -18,7 +18,7 @@ run: duckdb.table('data/flights.parquet') {
       flight_count 
       max_delay is max(dep_delay)
       total_distance is distance.sum()
-  nest: flight_legs is {
+  nest: flight_legs is -> {
     order_by: 3
     calculate: flght_leg is row_number() 
     group_by:

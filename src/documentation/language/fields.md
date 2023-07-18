@@ -99,20 +99,22 @@ query: flights -> {
 }
 ```
 
-### Queries
+### Modeled Queries
 
-Queries represent a pipelined data transformation including a source and one or more transformation stages. When queries are defined as part of a source or query stage, their source is implicit.
+A query represents a pipelined data transformation including a source and one or more stages. When a query is defined as part of a source extension, its source is implicit.
 
 ```malloy
 source: flights is duckdb.table('data/flights.parquet') {
-  query: by_carrier is {
+  query: by_carrier is -> {
     group_by: carrier
     aggregate: flight_count is count()
   }
 }
 ```
 
-A named query's pipeline can always begin with another named query.
+Notice how the query is defined like any other query, except that no source name is specified to the left of the `->`.
+
+A modeled query's pipeline can always begin with another modeled query.
 
 ```malloy
 source: flights is duckdb.table('data/flights.parquet') {
@@ -121,7 +123,7 @@ source: flights is duckdb.table('data/flights.parquet') {
     project: carrier
     limit: 5
   }
-);
+}
 ```
 
 <!-- TODO this does not seem to work in a query stage, but it does work in an source or model -->

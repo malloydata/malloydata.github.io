@@ -8,7 +8,7 @@ In this Case, the X-Axis is `month_of_year`, the Y-Axis is `flight_count` and th
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   measure: flight_count is count()
 }
 ```
@@ -40,7 +40,7 @@ Filters make it easy to reuse aggregate calculations for trends analysis.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights->{
+run: flights -> {
   group_by: carrier
   aggregate:
     flights_in_2002 is flight_count { where: dep_time = @2002 }
@@ -54,16 +54,15 @@ run: flights->{
 
 ## Method 3: Calculate with Lag
 
-
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: dep_year is dep_time.year
   aggregate: flight_count
   calculate: 
-    last_year is lag(flight_count,1)
+    last_year is lag(flight_count, 1)
     # percent
-    growth is (lag(flight_count,1) - flight_count)/ (lag(flight_count,1))
+    growth is (lag(flight_count, 1) - flight_count) / lag(flight_count, 1)
   order_by: dep_year
 }
 ```
@@ -76,11 +75,11 @@ You might like to write queries that automatically adjust based on the current t
 --! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
 source: inventory_items is duckdb.table('data/inventory_items.parquet') 
 
-source: order_items is duckdb.table('data/order_items.parquet') {
-  join_one: inventory_items  on inventory_item_id=inventory_items.id
+source: order_items is duckdb.table('data/order_items.parquet') extend {
+  join_one: inventory_items  on inventory_item_id = inventory_items.id
   measure: order_item_count is count()
 
-  query: category_growth is {
+  query: category_growth is -> {
     extend: {
       // add measures for use just in this query
       measure:

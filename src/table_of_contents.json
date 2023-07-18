@@ -42,6 +42,10 @@
           "link": "/user_guides/malloy_by_example.md"
         },
         {
+          "title": "SQL to Malloy",
+          "link": "/language/sql_to_malloy.md"
+        },
+        {
           "title": "Common Patterns",
           "items": [
             {
@@ -108,10 +112,6 @@
       "title": "Language Reference",
       "items": [
         {
-          "title": "SQL to Malloy",
-          "link": "/language/sql_to_malloy.md"
-        },
-        {
           "title": "Models",
           "link": "/language/statement.md"
         },
@@ -172,6 +172,10 @@
           "link": "/language/calculations.md"
         },
         {
+          "title": "Tags",
+          "link": "/language/tags.md"
+        },
+        {
           "title": "Change Log",
           "link": "/language/changelog.md"
         }
@@ -181,8 +185,8 @@
       "title": "Rendering Results",
       "items": [
         {
-          "title": "Intro: Charts & Dashboards",
-          "link": "/visualizations/dashboards.md"
+          "title": "Malloy Renderer",
+          "link": "/visualizations/overview.md"
         },
         {
           "title": "Bar Charts",
@@ -203,6 +207,10 @@
         {
           "title": "Segment Maps",
           "link": "/visualizations/segment_maps.md"
+        },
+        {
+          "title": "Dashboards",
+          "link": "/visualizations/dashboards.md"
         }
       ]
     }

@@ -1,137 +1,105 @@
-# Modeling With Malloy
+# Models
 
 Malloy recognizes modeling as a key aspect of data analytics and provides tools that allow for modularity and reusability of definitions. Whereas in SQL, queries generally define all metrics inline, requiring useful snippets to be saved and managed separately, in Malloy,
-_dimensions_, _measures_, and _queries_ can be saved and attached to a modeled source.
+_dimensions_, _measures_, and _queries_ can be saved and attached to a modeled source, which itself is defined as part of a Malloy document, often referred to as a _model_.
 
-A Malloy document is a collection of [statements](#statements), [comments](#comments), and [tags](#tags)
+A Malloy document is a collection of [statements](#statements), [comments](#comments), and [tags](#tags). These can be separated with an optional semi-colon for clarity, which helps readability when statements appear on the same line.
 
 ## Statements
 
-* [Import Statements](imports.md)
-* [Source Statements](#sources)
-* [Query Statements](#queries)
+There are four kinds of statements that can appear in a Malloy model:
 
-A semicolon can optionally separate two statements
+* [Import Statements](#import-statements)
+* [Query Statements](#query-statements)
+* [Source Statements](#source-statements)
+* [Run Statements](#run-statements)
+
+
+### Import Statements
+
+Import statements allow you to import sources from another <code>.malloy</code> file. 
 
 ```malloy
-// These are all legal
-source: s1 is s2
-query: q2 is s1 -> { project: * }
-
-// Semicolon allowed
-source: s1 is s2; query: q2 is s1 -> { project: * }
-
-// Semicolon is not required
-source: s1 is s2 query: q2 is s1 -> { project: * }
-
+import "flights.malloy"
 ```
 
-## Sources
+See the [Imports](imports.md) section for more information.
 
-A Malloy model file can contain several _sources_, which can be thought of as a table and a collection of computations and relationships which are relevant to that table.
+### Query Statements
+
+A query statement defines a query as a named entity within a model, allowing it to be reused as the basis for other queries.
 
 ```malloy
---! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: flights is duckdb.table('data/flights.parquet') {
+--! {"isModel": true, "modelPath": "/inline/e1.malloy"}
+query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
+  group_by: carrier
+  aggregate: flight_count is count()
+}
+```
+
+See the [Queries](query.md) section for more information on queries.
+
+### Source Statements
+
+In Malloy, a source is the basic unit of reusability for calculations, join relationships, and queries, and can be thought of as a table and a collection of computations and relationships which are relevant to that table.
+
+A source statement defines a source as a reusable part of the model.
+
+```malloy
+--! {"isModel": true, "modelPath": "/inline/e2.malloy"}
+source: flights is duckdb.table('data/flights.parquet') extend {
   dimension: distance_km is distance / 1.609344
 
   measure: flight_count is count()
 
-  query: by_carrier is {
+  query: by_carrier is -> {
     group_by: carrier
     aggregate: flight_count
   }
 }
 ```
-See [Source Documentation](source.md) for more information on sources.
 
-## Queries
+See the [Sources](source.md) section for more information on sources.
 
-### Referencing a modeled query
+### Run Statements
+
+Run statements allow you to write queries in a model without naming them, or to indicate to the host application that a particular named query should be run. You'll see run statements all over the documentation, usually followed by the results of running that query. 
+
+Any query can be run by including it in a run statement.
+
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
-query: flights -> by_carrier
-```
-
-### Running a named query with a filter
-```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
-query: flights { where: origin = 'SFO' } -> by_carrier
-```
-
-
-### Adding a limit on the Query
-```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
-query: flights { where: origin = 'SFO' } -> by_carrier { limit: 2 }
-```
-
-### Putting it all together
-First, we'll create a brand new query:
-```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
-query: flights -> {
-  group_by: destination
-  aggregate:
-    flight_count
-    average_distance_in_km is distance_km.avg()
+--! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e2.malloy"}
+run: flights -> { 
+  group_by: origin
+  aggregate: destination_count is count(distinct destination) 
 }
 ```
 
-Now we'll compose a query which contains both modeled and ad-hoc components:
-
-```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e.malloy"}
-query: flights -> {
-  group_by: destination
-  aggregate:
-    flight_count
-    average_distance_in_km is distance_km.avg()
-  nest: top_carriers is by_carrier { limit: 2 }
-}
-```
-See [Query Documentation](query.md) for more information on queries.
+See the [Queries](query.md) section for more information on queries.
 
 ## Comments
 
-Comments in Malloy can be written with `--` (as in SQL) or `//`.
-A comment continues untli the end of the line containing a comment.
+Comments in Malloy can be written with `--` (as in SQL) or `//`. A comment continues until the end of the line.
+
+```malloy
+// This is a comment
+-- This is also a comment
+```
 
 ## Tags
 
-Tags look like comments, they begin with the `#` (hash, octothorpe, numbersign),
-the tag texts are collected and distributed to objects defined after the tag,
-with the following rules
-
-* Tags with `##` are collected and attached to the document
-* All other tags are attached the the object defined after the tag
-* Statements which define multiple objects, distribute their tags to
-  each object defined in the statement.
+Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). One use case for tagging is to attach rendering information to a query:
 
 ```malloy
-// This tag is attached to the document/model
-## tag_1
-
-// This will be attached top the next query
-# tag_2
-query: myQuery is someSource -> { project: * }
-
-// This tag will be applied to both "a" and "b"
-# tag_3
-dimension:
-  // This tag will only be applied to "a"
-  # tag_4
-  a is 'a'
-  // This tag will only be applied to "b"
-  # tag_5
-  b is 'b'
+--! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
+# json
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  limit: 2
+}
 ```
 
-Tags are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode). This makes annotations extensible for many use cases. In VSCode, annotations are interpreted in two ways:
-* As rendering instructions: `# bar_chart`
-* As documentation comments: `#" This query calculates ...`
+For more information about the rendering tags used in the Malloy rendering library, see the [Visualizations](../visualizations/overview.md) section.
 
-Other formats of tags are ignored:
-* `#bar_chart` without a space after the `#`
-* `#! custom="application" values="here"`
-
+For more information about tag semantics, see the [Tags](./tags.md) section.

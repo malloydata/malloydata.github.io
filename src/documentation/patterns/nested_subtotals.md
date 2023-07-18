@@ -6,22 +6,22 @@ To see how we do this in Malloy, let's look at the following simple model:
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-
-source: order_items is duckdb.table('data/order_items.parquet') {
+source: order_items is duckdb.table('data/order_items.parquet') extend {
   primary_key: id
 
-  join_one: inventory_items is table('duckdb:data/inventory_items.parquet') on inventory_item_id = inventory_items.id
+  join_one: inventory_items is table('duckdb:data/inventory_items.parquet') 
+    on inventory_item_id = inventory_items.id
 
   measure:
     total_sales is sale_price.sum()
     sales_2022 is total_sales { where: created_at.year = @2022 }
     sales_2021 is total_sales { where: created_at.year = @2021}
 
-  query: sales_summary_yoy is {
-      aggregate:
-        sales_2022
-        sales_growth is sales_2022 - sales_2021
-        sales_yoy is sales_2022 / nullif(sales_2021, 0) - 1
+  query: sales_summary_yoy is -> {
+    aggregate:
+      sales_2022
+      sales_growth is sales_2022 - sales_2021
+      sales_yoy is sales_2022 / nullif(sales_2021, 0) - 1
   }
 }
 ```
@@ -37,8 +37,8 @@ Now suppose we want to drill into the sales numbers. In addition to overall sale
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: order_items -> sales_summary_yoy + {
-  nest: by_department is sales_summary_yoy + {
+run: order_items -> sales_summary_yoy refine {
+  nest: by_department is sales_summary_yoy refine {
     group_by: inventory_items.product_department
     order_by: product_department
   }
@@ -51,11 +51,11 @@ To drill down even further, it's trivial to repeat this pattern once again. The 
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: order_items -> sales_summary_yoy + {
-  nest: by_department is sales_summary_yoy + {
+run: order_items -> sales_summary_yoy refine {
+  nest: by_department is sales_summary_yoy refine {
     group_by: inventory_items.product_department
     order_by: product_department
-    nest: by_category is sales_summary_yoy + {
+    nest: by_category is sales_summary_yoy refine {
       group_by: inventory_items.product_category
       order_by: sales_growth desc
       limit: 5

@@ -3,6 +3,81 @@ _Breaking changes indicated with *_
 
 We will use this space to highlight major and/or breaking changes to Malloy.
 
+## M4 (v0.0.40 - v0.0.56)
+
+In this set of changes, several new syntactical constructs have been introduced, in some cases directly replacing existing syntaxes. These old syntaxes will be deprecated in a future release. For the time being, both sets of syntaxes are legal. To preview warnings (and eventually errors) that will be added when they are deprecated, you can include the `m4warnings` [compiler flag]() in your source code: `##! m4warnings`.
+
+### Connection Table Method
+
+New syntax for defining sources based on tables, `duckdb.table('data/users.parquet')` has been introduced. The old syntax, `table('duckdb:data/users.parquet')` still works for the time being, but will be deprecated.
+
+See the [Connections](./connections.md#table-connection-method) section for more details.
+
+### SQL Source Method
+
+New syntax for defining sources based on SQL queries `duckdb.sql("""select * ... """)` has been introduced. The old syntax, `sql: name is { select: """select * ..."""; connection: "duckdb" }` still works for the time being, but will be deprecated.
+
+This makes `from_sql` no longer necessary, and it will be deprecated with the `sql:` statement.
+
+See the [SQL Sources](./sql_sources.md) section for more details.
+
+### Source Extensions and Query Refinements
+
+Previously, there was one gesture used for source extensions and query refinements, `source_or_query { extensions_or_refinements }`. Now there is new sepearate syntax for each: `some_source extend { source_extensions }` and `some_query refine { source_refinements }`. The old syntax still works for the time being, but wll be deprecated.
+
+This makes `from` no longer required, and it will be deprecated with the old extension/refinement syntax.
+
+See the [Query Refinement]() and [Source Extension]()sections for more details.
+
+### Deprecation of Leading Arrows for Query References
+
+Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { project: *}`. Now that leading arrow is no longer required, and will be deprecated.
+
+### Addition of Leading Arrow for Queries Defined in Sources
+
+An optional leading arrow can now be placed in query definitions inside of sources:
+
+```malloy
+source: my_source is duckdb.table('some_table') extend {
+  query: my_query is -> {
+    ...
+  }
+}
+```
+
+### *New Rules for Query Refinement
+
+There are now new rules for query refinement of multi-stage queries. `where:` statements apply to the first stage, `having:`, `limit:`, and `order_by:` apply to the last stage, and `dimension:`, `measure:`, `calculate:` and `nest:` are illegal (specifically for multi-stage queries; for single-stage queries, they are still allowed).
+
+See the [Query Refinement]() section for more details.
+
+### Deprecation of The Filter Shortcut
+
+Previously you could use a shortcut syntax for filtering sources, queries, or measures, `{? condition }`. This will be removed in a future version, and there is a new deprecation warning when the shortcut is used.
+
+Instead of the shortcut, use `source_name extend { where: condition }`, `query_name refine { where: condition }`, or `measure_name { where: condition }`.
+
+### New Syntax for Source Extensions Defined in Queries
+
+There is new syntax for specifying source extensions inside queries:
+
+```malloy
+query: my_query is some_source -> {
+  extend: {
+    dimension: value is 1
+  }
+  group_by: value
+}
+```
+
+This will replace `declare:` and `join_*:` in queries, and they will be deprecated.
+
+See the [Source extensions]() section for more details.
+
+### Run Statement
+
+There is new syntax for specifying an unnamed query that should be runnable in the host application, `run: flights -> by_carrier`. This will replace the old syntax, `query: flights -> by_carrier`, which still works for the time being, but will be deprecated.
+
 ## v0.0.39
 
 ### *More strict expression types

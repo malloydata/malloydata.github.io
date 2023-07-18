@@ -24,11 +24,15 @@
 import * as shiki from "shiki";
 import * as fs from "fs";
 
-const json = fs.readFileSync(
+const malloyTMGrammar = JSON.parse(fs.readFileSync(
   "./malloy.tmGrammar.json",
   "utf-8"
-);
-const malloyTMGrammar = JSON.parse(json);
+));
+
+const malloySQLTMGrammar = JSON.parse(fs.readFileSync(
+  "./malloy-sql.tmGrammar.json",
+  "utf-8"
+));
 
 const HIGHLIGHTER = shiki.getHighlighter({
   theme: "light-plus",
@@ -40,6 +44,12 @@ const HIGHLIGHTER = shiki.getHighlighter({
       scopeName: "source.malloy",
       embeddedLangs: ["sql"],
       grammar: malloyTMGrammar as any,
+    },
+    {
+      id: "malloysql",
+      scopeName: "source.malloy-sql",
+      embeddedLangs: ["sql"],
+      grammar: malloySQLTMGrammar as any,
     },
   ],
 });
@@ -54,14 +64,19 @@ export async function highlight(
     lang = "txt";
   }
   const highlightedRaw = highlighter.codeToHtml(code, { lang });
+  // In docs, the highlighter recognizes <<foo>> as a way to make
+  // "foo" look like a meta-variable. Here we remove the << and >>
+  const removeDocVarEnclosing = highlightedRaw
+    .replace(/>(&lt;&lt;)</g, "")
+    .replace(/>(&gt;&gt;)</g, "");
   if (inline) {
-    return highlightedRaw
+    return removeDocVarEnclosing
       .replace(/^<pre class="shiki"/, `<code class="language-${lang}"`)
       .replace("<code>", "")
       .replace(/<\/pre>$/, "")
       .replace("background-color: #FFFFFF", "background-color: #FBFBFB");
   } else {
-    return highlightedRaw
+    return removeDocVarEnclosing
       .replace(/^<pre class="shiki"/, `<pre class="language-${lang}"`)
       .replace("<code>", "")
       .replace(/<\/code><\/pre>$/, "</pre>")
