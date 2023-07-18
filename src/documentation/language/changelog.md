@@ -5,7 +5,7 @@ We will use this space to highlight major and/or breaking changes to Malloy.
 
 ## M4 (v0.0.40 - v0.0.56)
 
-In this set of changes, several new syntactical constructs have been introduced, in some cases directly replacing existing syntaxes. These old syntaxes will be deprecated in a future release. For the time being, both sets of syntaxes are legal. To preview warnings (and eventually errors) that will be added when they are deprecated, you can include the `m4warnings` [compiler flag]() in your source code: `##! m4warnings`.
+In this set of changes, several new syntactical constructs have been introduced, in some cases directly replacing existing syntaxes. These old syntaxes will be deprecated in a future release. For the time being, both sets of syntaxes are legal. To preview warnings (and eventually errors) that will be added when they are deprecated, you can include the <code>m4warnings</code> [compiler flag](./tags.md) in your source code: `##! m4warnings`.
 
 ### Connection Table Method
 
@@ -27,11 +27,11 @@ Previously, there was one gesture used for source extensions and query refinemen
 
 This makes `from` no longer required, and it will be deprecated with the old extension/refinement syntax.
 
-See the [Query Refinement]() and [Source Extension]()sections for more details.
+See the [Query Refinement](./query.md#refinement) and [Source Extension](./source.md#source-extensions) sections for more details.
 
 ### Deprecation of Leading Arrows for Query References
 
-Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { project: *}`. Now that leading arrow is no longer required, and will be deprecated.
+Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { project: * }`. Now the leading arrow is no longer required, and will be deprecated.
 
 ### Addition of Leading Arrow for Queries Defined in Sources
 
@@ -49,7 +49,7 @@ source: my_source is duckdb.table('some_table') extend {
 
 There are now new rules for query refinement of multi-stage queries. `where:` statements apply to the first stage, `having:`, `limit:`, and `order_by:` apply to the last stage, and `dimension:`, `measure:`, `calculate:` and `nest:` are illegal (specifically for multi-stage queries; for single-stage queries, they are still allowed).
 
-See the [Query Refinement]() section for more details.
+See the [Query Refinement](./query.md#refinement) section for more details.
 
 ### Deprecation of The Filter Shortcut
 
@@ -72,7 +72,7 @@ query: my_query is some_source -> {
 
 This will replace `declare:` and `join_*:` in queries, and they will be deprecated.
 
-See the [Source extensions]() section for more details.
+See the [Source extensions](./source.md#source-extensions) section for more details.
 
 ### Run Statement
 

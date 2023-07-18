@@ -29,6 +29,32 @@ const malloyTMGrammar = JSON.parse(fs.readFileSync(
   "utf-8"
 ));
 
+const malloyDocsTMGrammar = {
+  ...malloyTMGrammar,
+  patterns: [
+    ...malloyTMGrammar.patterns,
+    { include: "#docvar" },
+  ],
+  repository: {
+    ...malloyTMGrammar.repository,
+    docvar: {
+      patterns: [
+        {
+          begin: "\\<\\<",
+          end: "\\>\\>",
+          beginCaptures: {
+            0: { name: "punctuation.definition.comment.begin" }
+          },
+          endCaptures: {
+            0: { name: "punctuation.definition.comment.end" }
+          },
+          name: "markup.italic.markdown"
+        }
+      ]
+    }
+  }
+};
+
 const malloySQLTMGrammar = JSON.parse(fs.readFileSync(
   "./malloy-sql.tmGrammar.json",
   "utf-8"
@@ -43,7 +69,7 @@ const HIGHLIGHTER = shiki.getHighlighter({
       id: "malloy",
       scopeName: "source.malloy",
       embeddedLangs: ["sql"],
-      grammar: malloyTMGrammar as any,
+      grammar: malloyDocsTMGrammar as any,
     },
     {
       id: "malloysql",

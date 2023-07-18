@@ -7,7 +7,6 @@ The `dashboard` style can be invoked on something that will render as a table `#
 source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 
-  # dashboard
   query: by_state_and_county is -> {
     limit: 10
     group_by: state

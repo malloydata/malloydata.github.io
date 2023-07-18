@@ -1,12 +1,13 @@
 # Pivotting Results
+
 Malloy's rederer has flexible and powerful way of pivotting data.  
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is duckdb.table('data/flights.parquet') {
-  join_one: carriers is duckdb.table('data/carriers.parquet') on carrier=carriers.code
-  join_one: dest is  duckdb.table('data/airports.parquet') on destination=dest.code
-  join_one: orig is  duckdb.table('data/airports.parquet') on destination=orig.code
+source: flights is duckdb.table('data/flights.parquet') extend {
+  join_one: carriers is duckdb.table('data/carriers.parquet') on carrier = carriers.code
+  join_one: dest is  duckdb.table('data/airports.parquet') on destination = dest.code
+  join_one: orig is  duckdb.table('data/airports.parquet') on destination = orig.code
 
   measure: 
     flight_count is count()
@@ -16,16 +17,16 @@ source: flights is duckdb.table('data/flights.parquet') {
 
 ## The Classic Pivot
 
-A classic data pivot is data is dimensionalized by two attributes the data can be rendered with one dimension along the x-axis and one dimension on the y-axis with the aggregate computations making up the center of the table.  The cross section of the data allows for easy comparison.  In Malloy, pivots columns are nested queries.
+A classic data pivot is data is dimensionalized by two attributes the data can be rendered with one dimension along the x-axis and one dimension on the y-axis with the aggregate computations making up the center of the table. The cross section of the data allows for easy comparison. In Malloy, pivots columns are nested queries.
 
 Carriers by FAA Region
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   # pivot
-  nest: by_faa_region is {
+  nest: by_faa_region is -> {
     group_by: orig.faa_region
     aggregate: flight_count 
   }
@@ -41,7 +42,7 @@ You can control which dimension are shown in the pivot with a filter (and their 
 run: flights ->  {
   group_by: carriers.nickname
   # pivot
-  nest: by_state is {
+  nest: by_state is -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
@@ -52,14 +53,14 @@ run: flights ->  {
 
 ## The Pivot with multiple aggreagtes
 
-Pivots can have multiple aggregates.  In this case we show `flight_count` and `total_distance` for each of the states.
+Pivots can have multiple aggregates. In this case we show `flight_count` and `total_distance` for each of the states.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   # pivot
-  nest: by_state is {
+  nest: by_state is -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: 
@@ -76,13 +77,13 @@ Malloy allows you to intermix unpivotted data along with pivotted data through n
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   aggregate: 
     total_flights is flight_count   // outside the pivot
     total_distance
   # pivot
-  nest: by_state is {
+  nest: by_state is -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
@@ -97,19 +98,19 @@ Malloy allows you to intermix unpivotted data along with pivotted data through n
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   aggregate: 
     total_flights is flight_count   // outside the pivot
   # pivot
-  nest: by_state is {
+  nest: by_state is -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
     order_by: state   // sort order of the pivotted columns
   }
   # pivot
-  nest: by_year is {
+  nest: by_year is -> {
     where: dep_time.year > @2003
     group_by: dep_year is dep_time.year
     aggregate: flight_count
@@ -124,12 +125,12 @@ Rows sorted by 'CA' flights
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   # hidden
-  aggregate: ca_count is flight_count {where: orig.state='CA'}
+  aggregate: ca_count is flight_count { where: orig.state = 'CA' }
   # pivot
-  nest: by_state is {
+  nest: by_state is -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
@@ -147,13 +148,12 @@ run: flights ->  {
   group_by: carriers.nickname
   aggregate: total_flights is flight_count
   # pivot dimensions="dep_year"
-  nest: by_year is {
+  nest: by_year is -> {
     group_by: dep_year is dep_time.year
     aggregate: flight_count
-    calculate: growth is (flight_count-lag(flight_count,1))/flight_count
+    calculate: growth is (flight_count - lag(flight_count, 1)) / flight_count
     order_by: dep_year
-  }
-  -> {
+  } -> {
     where: dep_year > @2003
     project:
       dep_year

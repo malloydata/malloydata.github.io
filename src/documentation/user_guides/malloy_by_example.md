@@ -470,7 +470,6 @@ The output of a query can be used as the source for the next query.
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-
 source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 }
@@ -493,7 +492,6 @@ Queries can be chained together (pipelined), the output of one becoming the inpu
 
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
-
 source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 }
@@ -562,11 +560,9 @@ source: <<new name>> is <<old name>> extend {
 
 ### Named Query
 
-*documentation bug: name should not be commented out* ([Source Documentation](../language/source.md))
-
 ```malloy
 --! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium"}
-run: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
+query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
     origin
@@ -575,6 +571,8 @@ run: /* q_airport_facts is */ duckdb.table('data/flights.parquet') -> {
     num_flights is count()
     distance is distance.sum()
 }
+
+run: q_airport_facts
 ```
 
 ```malloy
@@ -594,13 +592,11 @@ query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/query2.malloy", "source":"/inline/query1.malloy", "isHidden": false}
-
-source: airport_facts is from(-> q_airport_facts) {  // <-- 'from' instead of 'table'
-                                                      //      '->' indicates a query name
+source: airport_facts is q_airport_facts extend {
   measure: flight_count is num_flights.sum()
   measure: total_distance is distance.sum()
 
-  query: flights_by_year is {
+  query: flights_by_year is -> {
     group_by: flight_year
     aggregate:
       flight_count
@@ -608,7 +604,7 @@ source: airport_facts is from(-> q_airport_facts) {  // <-- 'from' instead of 't
       origin_count is count(distinct origin)
   }
 
-  query: flights_by_origin is {
+  query: flights_by_origin is -> {
     group_by: origin
     aggregate:
       flight_count

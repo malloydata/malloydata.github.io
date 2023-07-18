@@ -1,7 +1,6 @@
 {
   "scopeName": "source.malloy",
   "patterns": [
-    {"include": "#docvar"},
     {"include": "#sql-string"},
     {"include": "#comments"},
     {"include": "#tags"},
@@ -23,7 +22,6 @@
       "name": "source.internal-query-stuff",
       "end": "}%?",
       "patterns": [
-        {"include": "#docvar"},
         {"include": "#sql-string"},
         {"include": "#comments"},
         {"include": "#tags"},
@@ -146,21 +144,6 @@
             "0": {"name": "punctuation.definition.comment"}
           },
           "name": "comment.line.double-hyphen"
-        }
-      ]
-    },
-    "docvar": {
-      "patterns": [
-        {
-          "begin": "\\<\\<",
-          "end": "\\>\\>",
-          "beginCaptures": {
-            "0": {"name": "punctuation.definition.comment.begin"}
-          },
-          "endCaptures": {
-            "0": {"name": "punctuation.definition.comment.end"}
-          },
-          "name": "markup.italic.markdown"
         }
       ]
     },
