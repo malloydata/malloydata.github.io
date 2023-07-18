@@ -189,6 +189,10 @@
           "link": "/visualizations/numbers.md"
         },
         {
+          "title": "Pivotted Tables",
+          "link": "/visualizations/pivot.md"
+        },
+        {
           "title": "Table Transpose",
           "link": "/visualizations/transpose.md"
         },
