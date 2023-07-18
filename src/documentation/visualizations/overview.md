@@ -50,7 +50,7 @@ Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-li
 ## Rendering tags
 
 * [Number](numbers.md) - number formatting, percentages, duration, and bytes
-* [Pivotted Tables](pivot.md)
+* [Pivotted Tables](pivots.md)
 * [Transposed Tables](transpose.md)
 * [Dashboards](dashboards.md) 
 * [Lists](lists.md)
