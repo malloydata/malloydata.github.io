@@ -139,14 +139,14 @@ run: flights ->  {
 ```
 
 # Multistage queries in a pivot
-Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivoted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'dimensions="..."' property on the pivot tag.
+Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivoted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'pivot_dimensions="..."' property on the pivot tag.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights ->  {
   group_by: carriers.nickname
   aggregate: total_flights is flight_count
-  # pivot pivotDimensions="dep_year"
+  # pivot pivot_dimensions="dep_year"
   nest: by_year is {
     group_by: dep_year is dep_time.year
     aggregate: flight_count
