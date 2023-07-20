@@ -5,7 +5,7 @@ The examples below use the following models
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 }
 ```
@@ -17,7 +17,7 @@ source: airports is duckdb.table('data/airports.parquet') {
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
-  nest: by_state is {
+  nest: by_state is -> {
     group_by: state
     aggregate: airport_count 
   }
@@ -33,7 +33,7 @@ run: airports -> {
   group_by: faa_region
   aggregate: airport_count
   # list
-  nest: by_state is {
+  nest: by_state is -> {
     group_by: state
     aggregate: airport_count
   }
@@ -50,7 +50,7 @@ run: airports -> {
   group_by: faa_region
   aggregate: airport_count
   # list_detail
-  nest: by_state is {
+  nest: by_state is -> {
     group_by: state
     aggregate: airport_count
   }

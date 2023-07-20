@@ -18,11 +18,11 @@ run: flights -> {
 ## Run as a trellis
 
 ```malloy
---! {"isRunnable": true, "size": "medium", "source": "flights.malloy", "pageSize":5000}
+--! {"isRunnable": true, "size": "medium", "source": "flights.malloy", "pageSize":10}
 run: flights -> {
   group_by: origin_code
   # scatter_chart
-  nest: seats_by_distance_scatter_chart is {
+  nest: seats_by_distance_scatter_chart is -> {
     group_by: seats is aircraft.aircraft_models.seats
     group_by: distance is distance
     aggregate: route_count is count(distinct concat(origin_code, destination_code))

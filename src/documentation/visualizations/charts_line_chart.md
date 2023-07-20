@@ -4,9 +4,9 @@ The examples below all use the following semantic model.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: carriers is duckdb.table('data/carriers.parquet') 
-    on carrier=carriers.code
+    on carrier = carriers.code
   measure: 
     flight_count is count()
     aircraft_count is count(distinct tail_num)
@@ -55,7 +55,7 @@ run: flights -> {
   group_by: destination
   aggregate: flight_count
   # line_chart
-  nest: by_month is {
+  nest: by_month is -> {
     group_by: departure_month is dep_time.month
     aggregate: flight_count
     group_by: carriers.nickname
