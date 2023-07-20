@@ -1,6 +1,40 @@
-# Pivotting Results
+# Pivoting Results
+Malloy's rederer has flexible and powerful way of pivoting data. 
 
-Malloy's rederer has flexible and powerful way of pivotting data.  
+## Nesting first
+Malloy's ability to nest queries allows you to compute two levels of queries simultaneously.  The query below first groups airports by *state* and then groups by the type of facility (*fac_type*).  For each state we see count of all the facilities.
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+run: duckdb.table('data/airports.parquet') -> {
+  group_by: state
+  aggregate: facility_count is count()
+  nest: by_fac_type is -> {
+    group_by: fac_type
+    aggregate: facility_count is count()
+  }
+}
+```
+
+## Just add '# pivot'
+
+We can take this exact same query above (and same output) and have it simply rendered as a pivot table by adding a '# pivot' tag on the nested query.
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+run: duckdb.table('data/airports.parquet') -> {
+  group_by: state
+  aggregate: facility_count is count()
+  # pivot
+  nest: by_fac_type is -> {
+    group_by: fac_type
+    aggregate: facility_count is count()
+  }
+}
+```
+
+##  Pivots are really powerful
+The model below is used in all the following examples.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
@@ -39,14 +73,14 @@ You can control which dimension are shown in the pivot with a filter (and their 
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   # pivot
   nest: by_state is -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
-    order_by: state   // sort order of the pivotted columns
+    order_by: state   // sort order of the pivoted columns
   }
 }
 ```
@@ -66,14 +100,14 @@ run: flights -> {
     aggregate: 
       flight_count 
       total_distance
-    order_by: state   // sort order of the pivotted columns
+    order_by: state   // sort order of the pivoted columns
   }
 }
 ```
 
 ## Aggregates outside the pivot (and row ordering)
 
-Malloy allows you to intermix unpivotted data along with pivotted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
+Malloy allows you to intermix unpivoted data along with pivoted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -87,14 +121,14 @@ run: flights -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
-    order_by: state   // sort order of the pivotted columns
+    order_by: state   // sort order of the pivoted columns
   }
 }
 ```
 
 ## Multiple pivots in the same table
 
-Malloy allows you to intermix unpivotted data along with pivotted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
+Malloy allows you to intermix unpivoted data along with pivoted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
@@ -107,7 +141,7 @@ run: flights -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
-    order_by: state   // sort order of the pivotted columns
+    order_by: state   // sort order of the pivoted columns
   }
   # pivot
   nest: by_year is -> {
@@ -134,20 +168,20 @@ run: flights -> {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
-    order_by: state   // sort order of the pivotted columns
+    order_by: state   // sort order of the pivoted columns
   }
 }
 ```
 
 # Multistage queries in a pivot
-Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivotted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'dimensions="..."' property on the pivot tag.
+Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivoted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'pivot_dimensions="..."' property on the pivot tag.
 
 ```malloy
 --! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights ->  {
+run: flights -> {
   group_by: carriers.nickname
   aggregate: total_flights is flight_count
-  # pivot dimensions="dep_year"
+  # pivot pivot_dimensions="dep_year"
   nest: by_year is -> {
     group_by: dep_year is dep_time.year
     aggregate: flight_count
