@@ -1,5 +1,40 @@
 # Pivoting Results
-Malloy's rederer has flexible and powerful way of pivoting data.  
+Malloy's rederer has flexible and powerful way of pivoting data. 
+
+## Nesting first
+Malloy's ability to nest queries allows you to compute two levels of queries simultaneously.  The query below first groups airports by *state* and then groups by the type of facility (*fac_type*).  For each state we see count of all the facilities.
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+run: duckdb.table('data/airports.parquet') -> {
+  group_by: state
+  aggregate: facility_count is count()
+  nest: by_fac_type is {
+    group_by: fac_type
+    aggregate: facility_count is count()
+  }
+}
+```
+
+## Just add '# pivot'
+
+We can take this exact same query above (and same output) and have it simply rendered as a pivot table by adding a '# pivot' tag on the nested query.
+
+```malloy
+--! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+run: duckdb.table('data/airports.parquet') -> {
+  group_by: state
+  aggregate: facility_count is count()
+  # pivot
+  nest: by_fac_type is {
+    group_by: fac_type
+    aggregate: facility_count is count()
+  }
+}
+```
+
+##  Pivots are really powerful
+The model below is used in all the following examples.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
