@@ -5,20 +5,19 @@ In the `top_states_by_eleveation` query below, we have a query with two stages. 
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: airports is table('duckdb:data/airports.parquet') + {
+source: airports is table('duckdb:data/airports.parquet') extend {
   measure: 
     airport_count is count()
     avg_elevation is elevation.avg()
 
-  query: top_states_by_elevation is {
+  query: top_states_by_elevation is -> {
     group_by: state
     aggregate: avg_elevation
     calculate: row_num is row_number()
-    nest: data is {  
-      group_by: code,elevation
+    nest: data is -> {  
+      group_by: code, elevation
     }
-  }
-  -> {
+  } -> {
     group_by: state is 
       pick state when row_num < 5
       else 'OTHER'
@@ -31,13 +30,13 @@ source: airports is table('duckdb:data/airports.parquet') + {
 
 ## Basic Query
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports -> top_states_by_elevation
 ```
 
 ## Nested Query
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports -> {
   group_by: `Facility Type` is fac_type
   aggregate: 

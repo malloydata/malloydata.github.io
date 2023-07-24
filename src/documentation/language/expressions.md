@@ -36,8 +36,8 @@ Fields may be referenced by name, and fields in joins or nested structures can b
 
 * If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword.
 
-```
-  dimension: year_plus_one is `year` + 1
+```malloy
+dimension: year_plus_one is `year` + 1
 ```
 
 ```malloy
@@ -45,7 +45,7 @@ Fields may be referenced by name, and fields in joins or nested structures can b
 query: flights -> {
   where: origin.county != null
   group_by: origin.state
-  nest: by_county is {
+  nest: by_county is -> {
     group_by: origin.county
     aggregate: flight_count
   }
@@ -109,7 +109,7 @@ Aggregate expressions may be filtered, using the [usual filter syntax](filters.m
 
 ```malloy
 --! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
-query: flights -> {
+run: flights -> {
   aggregate:
     distance_2003 is sum(distance) { where: dep_time ? @2003 }
     ca_flights is count() { where: origin.state ? 'CA' }
@@ -117,7 +117,7 @@ query: flights -> {
 ```
 
 ## Type Cast
-Type cast may be accomplished with the :: operator.
+Type cast may be accomplished with the `::` operator.
 
 <!-- * `total_distance::string` -->
 <!-- * `some_date::timestamp` -->
@@ -126,15 +126,15 @@ Type casting may be accomplished with the `::type` syntax.
 
 ```malloy
 --! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
-query: flights -> {
+run: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
 }
 ```
 
 ## Safe Type Cast
 
-Safe Type cast may be accomplished with the ::: operator.  A safe type cast will return NULL
-if an error occurs during the cast operation. Safe Type Cast is particularly useful in loading data.  Not all databases support safe type cast.
+Safe Type cast may be accomplished with the `:::` operator.  A safe type cast will return `null`
+if an error occurs during the cast operation. Safe Type Cast is particularly useful in loading data. Not all databases support safe type cast.
 
 <!-- * `total_distance:::string` -->
 <!-- * `some_date:::timestamp` -->
@@ -143,7 +143,7 @@ Type casting may be accomplished with the `:::type` syntax.
 
 ```malloy
 --! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
-query: flights -> {
+run: flights -> {
   aggregate: distance_summary is concat(total_distance:::string, ' miles')
 }
 ```
@@ -191,11 +191,11 @@ status ?
 If you need to match on multiple fields and conditions, use a dimension.
 
 ```malloy
-  dimension: Facility_Type_State is
-      pick 'Cali Heli' when state = 'CA' and fac_type = 'HELIPORT'
-      pick 'Seaplane at SeaTac' when state = 'WA' and city = 'SEATTLE' and fac_type = 'SEAPLANE BASE'
-      pick 'Phoenix Ultra' when state = 'AZ' and fac_type = 'ULTRALIGHT' and city = 'PHOENIX'
-      else 'Not Needed'
+dimension: Facility_Type_State is
+  pick 'Cali Heli' when state = 'CA' and fac_type = 'HELIPORT'
+  pick 'Seaplane at SeaTac' when state = 'WA' and city = 'SEATTLE' and fac_type = 'SEAPLANE BASE'
+  pick 'Phoenix Ultra' when state = 'AZ' and fac_type = 'ULTRALIGHT' and city = 'PHOENIX'
+  else 'Not Needed'
 ```
 
 ## Time Expressions
@@ -265,7 +265,7 @@ Conditions can be logically combined with the two alternation operators, `&` and
 
 The _union alternation_ operator `|` represents the logical union of two conditions. An expression like `x | y` can be read "if either `x` or `y`." For example `= 'CA' | = 'NY'` represents the condition "is either CA or NY".
 
-The _conjunction alternation_ operator `&` represents the logical conjunction of two conditions. An expression like "`x & y` can be read "if both `x` and `y`." For example, `> 5 & < 10` represents the condition "is greater than 5 and less than 10".
+The _conjunction alternation_ operator `&` represents the logical conjunction of two conditions. An expression like `x & y` can be read "if both `x` and `y`." For example, `> 5 & < 10` represents the condition "is greater than 5 and less than 10".
 
 Values can be used directly with the alternation operators, in which case the operator is assumed to be `=`. For example, `'CA' | 'NY'` is equivalent to `= 'CA' | = 'NY'`.
 
@@ -301,20 +301,19 @@ size ?
 
 ### Null Operations
 
-Malloy has the keyword `null` (or `NULL` if you prefer) to represent
-the null value.
+Malloy has the keyword `null` to represent the null value.
 
-To check to see if a value is null, simply compare it to NULL, there is no `IS NULL` or `IS NOT NULL` operator in Malloy.
+To check to see if a value is null, simply compare it to `null`, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.
 
-```
-   dimension: name_not_present is name = NULL
-   dimension: name_present is name != NULL
+```malloy
+dimension: name_not_present is name = null
+dimension: name_present is name != null
 ```
 
 Malloy also has the operator `??`, which in other languages is sometimes called the "Nullish Coalescing" operator, for providing a value to use in case an expression is null.
 
-```
-  dimension: name_cleaned is name ?? '(No Name Provided)'
+```malloy
+dimension: name_cleaned is name ?? '(No Name Provided)'
 ```
 
 ### Operator Precedence

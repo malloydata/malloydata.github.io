@@ -1,6 +1,6 @@
 -- --! styles airports.styles.json
 
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   primary_key: code
 
   measure: airport_count is count()
@@ -17,33 +17,35 @@ source: airports is duckdb.table('data/airports.parquet') {
     pick 'Western Pacific' when 'AWP'
     pick 'Alaska' when 'AAL'
 
-  query: by_region is {
+  query: by_region is -> {
     group_by: faa_region
     group_by: faa_region_name
     aggregate: airport_count
   }
-  query: by_state is {
+
+  query: by_state is -> {
     where: state != null
     group_by: state
     aggregate: airport_count
   }
 
-  query: by_facility_type is {
+  query: by_facility_type is -> {
     group_by: fac_type
     aggregate:
       airport_count
       avg_elevation is elevation.avg()
   }
 
-  query: major_airports is {
+  query: major_airports is -> {
     where: major = 'Y'
     group_by: name is concat(state, '-', full_name)
   }
 
-  query: airports_by_region_dashboard is by_region {
+  query: airports_by_region_dashboard is by_region refine {
     where: faa_region != null
     nest:
-      by_state_shape_map is by_state {}
+      # shape_map
+      by_state
       by_facility_type
       major_airports
   }

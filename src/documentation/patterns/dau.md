@@ -5,7 +5,7 @@ The queries below use the following model
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: order_items is table('duckdb:data/order_items.parquet') + {
+source: order_items is table('duckdb:data/order_items.parquet') extend {
   measure: 
     user_count is count(distinct user_id)
     order_count is count()
@@ -14,13 +14,13 @@ source: order_items is table('duckdb:data/order_items.parquet') + {
 ## Weekly Active Users and Daily Active users
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   where: created_at ? @2022
   group_by: order_week is created_at.week
   aggregate: 
     weekly_active_users is user_count
-  nest: by_day is {
+  nest: by_day is -> {
     group_by: order_date is created_at.day
     aggregate: daily_active_users is user_count
   }
@@ -31,18 +31,17 @@ run: order_items -> {
 ## Weekly Active Users and Average Daily Active Users
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   where: created_at ? @2022
   group_by: order_week is created_at.week
   aggregate: 
     weekly_active_users is user_count
-  nest: by_day is {
+  nest: by_day is -> {
     group_by: order_date is created_at.day
     aggregate: daily_active_users is user_count
   }
-}
--> {
+} -> {
   group_by: 
     order_week
     weekly_active_users

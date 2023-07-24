@@ -6,7 +6,7 @@ The queries below use the following model
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: order_items is table('duckdb:data/order_items.parquet') + {
+source: order_items is table('duckdb:data/order_items.parquet') extend {
   measure: 
     user_count is count(distinct user_id)
     order_count is count()
@@ -16,7 +16,7 @@ source: order_items is table('duckdb:data/order_items.parquet') + {
 ## Simple Moving Average
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   group_by: order_month is created_at.month
   aggregate: 
@@ -29,17 +29,18 @@ run: order_items -> {
 ## Visualizing the Results
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   # line_chart
-  nest: non_averaged is {
+  nest: non_averaged is -> {
     group_by: order_month is created_at.month
     aggregate: 
       order_count
     order_by: order_month
   }
+
   # line_chart
-   nest: moving_averaged is {
+  nest: moving_averaged is -> {
     group_by: order_month is created_at.month
     calculate: moving_avg_order_count is avg_moving(order_count, 3)
     order_by: order_month
@@ -52,13 +53,13 @@ run: order_items -> {
 In this example, we've added two queries to the `flights` source, one showing flights by month without the moving average applied, and one with the moving average applied. We then use these queries to show charts of flight count for each airport over time.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-source: flights is duckdb.table('data/flights.parquet')  {
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+source: flights is duckdb.table('data/flights.parquet') extend {
   measure: flight_count is count()
   dimension: dep_month is dep_time.month
 
   # line_chart
-  query: non_averaged is {
+  query: non_averaged is -> {
     group_by: dep_month
     aggregate: 
       flight_count
@@ -66,7 +67,7 @@ source: flights is duckdb.table('data/flights.parquet')  {
   }
 
   # line_chart
-  query: moving_averaged is {
+  query: moving_averaged is -> {
     group_by: dep_month
     calculate: moving_avg_flight_count is avg_moving(flight_count, 3)
     order_by: dep_month

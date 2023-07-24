@@ -6,18 +6,16 @@ The following examples that follow use the Malloy semantic data model below.
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
-source: flights is duckdb.table('data/flights.parquet') {
-  join_one: orig is airports on origin=orig.code
+source: flights is duckdb.table('data/flights.parquet') extend {
+  join_one: orig is airports on origin = orig.code
   join_one: dest is airports on destination = dest.code
 
-  measure: 
-    flight_count is count()
-
+  measure: flight_count is count()
 }
 
 ```
@@ -30,15 +28,15 @@ Carriers as percentage of flights
 run: flights -> {
   group_by: carrier
   # percent
-  aggregate: percent_of_flights is flight_count/all(flight_count)
+  aggregate: percent_of_flights is flight_count / all(flight_count)
 }
 ```
 
 ## # value_format
 
-Malloy uses LookMLs (Excel) string definitions for formatting numbers.
+Malloy uses LookML's (Excel) string definitions for formatting numbers.
 
-```
+```malloy
 # format="0"             # Integer (123)
 # format="*00#"          # Integer zero-padded to 3 places (001)
 # format="0 \" String\"" # Integer followed by a string (123 String)
@@ -79,13 +77,13 @@ run: flights -> {
   # value_format="$#,##0;($#,##0)"
   aggregate:
     dollars is flight_count
-    neg_dollars is 0-flight_count
+    neg_dollars is 0 - flight_count
 }
 ```
 
-# # duration
-Displaying a duration in human adusted scale can make data more readable.
+## Durations
 
+The `# duration` renderer interprets a value as a number of seconds and renders it as a human-adjusted duration. Other units can be specified like `# duration="minutes"`, with possible units of `"nanoseconds"`, `"microseconds"`, `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, and `"days"`.
 
 ```malloy
 --! {"isRunnable": true, "source": "/inline/e.malloy", "size": "small", "pageSize": 100000 }
@@ -97,6 +95,6 @@ run: flights -> {
     total_flight_time is flight_time.sum()
   aggregate:
     flight_count    
-  limit: 100
+  limit: 20
 }
 ```

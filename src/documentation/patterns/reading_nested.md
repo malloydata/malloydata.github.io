@@ -18,10 +18,11 @@ Here is a very simple Malloy model describing some interesting calculations on G
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source:ga_sessions is table('duckdb:data/ga_sample.parquet'){
+source: ga_sessions is table('duckdb:data/ga_sample.parquet') extend {
   measure:
     user_count is count(distinct fullVisitorId)
-    percent_of_users is user_count/all(user_count)*100
+    # percent
+    percent_of_users is user_count / all(user_count)
     session_count is count()
     total_visits is totals.visits.sum()
     total_hits is totals.hits.sum()
@@ -36,10 +37,52 @@ source:ga_sessions is table('duckdb:data/ga_sample.parquet'){
 ## Show Data by Traffic Source
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
- query: ga_sessions -> {
-    where: trafficSource.source != '(direct)'
-    group_by: trafficSource.source
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: ga_sessions -> {
+  where: trafficSource.`source` != '(direct)'
+  group_by: trafficSource.`source`
+  aggregate:
+    user_count
+    percent_of_users
+    hits_count
+    total_visits
+    session_count
+  limit: 10
+}
+```
+
+## Show Data By Browser
+
+```malloy
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: ga_sessions -> {
+  group_by: device.browser
+  aggregate:
+    user_count
+    percent_of_users
+    total_visits
+    total_hits
+    total_page_views
+    sold_count
+}
+```
+
+## With Nested Results
+
+```malloy
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: ga_sessions -> {
+  group_by: device.browser
+  aggregate:
+    user_count
+    percent_of_users
+    total_visits
+    total_hits
+    total_page_views
+    sold_count
+  nest: by_source is -> {
+    where: trafficSource.`source` != '(direct)'
+    group_by: trafficSource.`source`
     aggregate:
       user_count
       percent_of_users
@@ -48,47 +91,5 @@ source:ga_sessions is table('duckdb:data/ga_sample.parquet'){
       session_count
     limit: 10
   }
-```
-
-## Show Data By Browser
-
-```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-  query: ga_sessions -> {
-    group_by: device.browser
-    aggregate:
-      user_count
-      percent_of_users
-      total_visits
-      total_hits
-      total_page_views
-      sold_count
-  }
-```
-
-## With Nested Results
-
-```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-  query: ga_sessions -> {
-    group_by: device.browser
-    aggregate:
-      user_count
-      percent_of_users
-      total_visits
-      total_hits
-      total_page_views
-      sold_count
-    nest: by_source is {
-      where: trafficSource.source != '(direct)'
-      group_by: trafficSource.source
-      aggregate:
-        user_count
-        percent_of_users
-        hits_count
-        total_visits
-        session_count
-      limit: 10
-    }
-  }
+}
 ```

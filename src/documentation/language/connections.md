@@ -1,0 +1,39 @@
+# Connections
+
+In Malloy, named connection objects are used to interact with a database, including fetching schemas for SQL queries and tables, as well as actually running queries.
+
+Connection objects are defined implicitly on their first use when referencing a table or SQL source:
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "size": "medium"}
+// This creates a model-level connection definition, `duckdb`
+source: users is duckdb.table('data/users.parquet')
+
+run: users -> { group_by: first_name; limit: 5 }
+```
+
+# Connection Methods
+
+There are currently two connection methods, `.table()` and `.sql()`.
+
+## Table Connection Method
+
+The `.table()` connection method is used to reference a table or view in a database. It accepts a single string representing a table. The exact semantics of how that string is resolved into a table schema depend on the database and application. 
+
+In the official Malloy connection implementations, the behavior is as follows:
+
+### BigQuery
+
+In BigQuery, the string passed to the `.table()` connection method can be a two- or three-segment path including the (optional) project ID, dataset ID, and table name, e.g. `bigquery.table('project-id.dataset-id.table-name')` or `bigquery.table('dataset-id.table-name')`. If the project ID is left off, the default project ID for the connection will be used, or else the system default if none is set on the connection.
+
+### DuckDB
+
+In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.md).
+
+### Postgres
+
+In Postgres, the string passed to the `.table()` connection method can be a two- or three-segment path including the (optional) database ID, schema name, and table name, e.g. `postgres.table('database-id.schema-name.table-name')` or `postgres.table('schema-name.table-name')`. If the database ID is left off, the default database for the connection will be used, or else the system default if none is set on the connection.
+
+## SQL Connection Method
+
+The `.sql()` connection method is used to define a source or query based on a SQL query. See the [SQL Sources](./sql_sources.md) section for more information.

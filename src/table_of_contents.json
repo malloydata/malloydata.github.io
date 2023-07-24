@@ -42,6 +42,10 @@
           "link": "/user_guides/malloy_by_example.md"
         },
         {
+          "title": "SQL to Malloy",
+          "link": "/language/sql_to_malloy.md"
+        },
+        {
           "title": "Common Patterns",
           "items": [
             {
@@ -89,7 +93,7 @@
               "link": "/patterns/transform.md"
             },
             {
-              "title": "Reading JSON directly from an API",
+              "title": "Data from JSON APIs",
               "link": "/patterns/apijson.md"
             },
             {
@@ -107,10 +111,6 @@
     {
       "title": "Language Reference",
       "items": [
-        {
-          "title": "SQL to Malloy",
-          "link": "/language/sql_to_malloy.md"
-        },
         {
           "title": "Models",
           "link": "/language/statement.md"
@@ -160,8 +160,8 @@
           "link": "/language/functions.md"
         },
         {
-          "title": "SQL Blocks",
-          "link": "/language/sql_blocks.md"
+          "title": "SQL Sources",
+          "link": "/language/sql_sources.md"
         },
         {
           "title": "Imports",
@@ -170,6 +170,14 @@
         {
           "title": "Calculations",
           "link": "/language/calculations.md"
+        },
+        {
+          "title": "Connections",
+          "link": "/language/connections.md"
+        },
+        {
+          "title": "Tags",
+          "link": "/language/tags.md"
         },
         {
           "title": "Change Log",

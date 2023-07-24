@@ -2,23 +2,23 @@
 
 When Malloy runs a query, it returns two things.  The *results* of the query and *metadata* about the results.  The metadata are the schema for the results, including type information.  Malloy also provides a mechanism to tag things in the source code and return tags with this meta data. 
 
-In Malloy, anything that can be named can be tagged.  A tag start with a `#`.  Tags that start on a new line attach the tag the thing on the following line.
+In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Tags that start on a new line attach the tag the thing on the following line. For more details about how tagging works, see the [Tags](../language/tags.md) section.
 
-Malloy's rendering library can read these tags and to change how results are rendered.
+Malloy's rendering library interprets these tags to change how results are rendered. 
 
 ## Tagging individual elements
-In the query below, the measure **percent_of_total** is tagged as a percentage.  Anytime *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
+In the query below, the measure **percent_of_total** is tagged as a percentage. Any time *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
-source: flights is duckdb.table('data/flights.parquet') {
+--! {"isRunnable": true,  "size": "small", "pageSize":5000}
+source: flights is duckdb.table('data/flights.parquet') extend {
   measure:
     flight_count is count()
     # percent
-    percent_of_flights is flight_count/all(flight_count)
+    percent_of_flights is flight_count / all(flight_count)
 }
 
-run: flights ->  {
+run: flights -> {
   group_by: carrier
   aggregate: 
     flight_count 
@@ -27,17 +27,17 @@ run: flights ->  {
 ```
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "pageSize":5000}
 run: duckdb.table('data/flights.parquet') ->  {
   group_by: carrier
   aggregate: flight_count is count()
 }
 ```
 
-Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart.
+Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart. See the docs on the [Bar Chart tag](./bar_charts.md) for more information.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "pageSize":5000}
 # bar_chart
 run: duckdb.table('data/flights.parquet') ->  {
   group_by: carrier

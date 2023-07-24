@@ -181,7 +181,7 @@
           "patterns": [{"include": "#tag-values"}]
         },
         {
-          "begin": "##\\s",
+          "begin": "##!?\\s",
           "end": "\\n",
           "beginCaptures": {
             "0": {"name": "support.type.property-name.json"}
@@ -323,6 +323,10 @@
         {
           "match": "(?i)\\bextend\\b",
           "name": "keyword.control.extend"
+        },
+        {
+          "match": "(?i)\\brefine\\b",
+          "name": "keyword.control.refine"
         },
         {
           "match": "(?i)\\baggregate\\b",

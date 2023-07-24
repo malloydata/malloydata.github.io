@@ -14,7 +14,7 @@ Indexing could be used by LLMs to find the interesting column/term mapping in th
 We're going to take the airports table and index it.  The results are an un ordered list of distinct *fieldName/fieldValue* pairs appear in the table.  The weight, in this case is the number of rows that partciular occurs on. 
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
 }
@@ -26,11 +26,10 @@ Adding a second query stage to filter on _string_ columns and ordering by weight
 All Malloy queries run as a single SQL query.  The `index:` operator is no different.  Click the **SQL** tab to see how this works.  
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
-} 
--> {
+} -> {
   where: fieldType = 'string'
   project: *
   order_by: weight desc
@@ -42,7 +41,7 @@ run: duckdb.table('data/airports.parquet') -> {
 Indexes can be used find the best way to filter a dataset.  For example supposed we'd like to find 'SANTA CRUZ' in the dataset. Upon approaching the dataset, but we don't which column might contain it.  In a UI you might imagine that you type 'SANTA' and let have suggestons for values that might be appropriate.  In the results we can see that top value, 'SANTA ROSA', appears as county on 26 rows in the table.  We can also see that 'SANTA CRUZ' is both a `city` and a `county`..
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
 } -> {
@@ -56,7 +55,7 @@ run: duckdb.table('data/airports.parquet') -> {
 We can then write a simple query to show the rows.  It turns out that 'SANTA CRUZ' is a county in both California and Arizona.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   where: county ~ 'SANTA CRUZ'
   project: *
@@ -67,7 +66,7 @@ run: duckdb.table('data/airports.parquet') -> {
 It is often difficult to approach a new dataset.  The index operator provides an intersting way to quickly gain an understanding of the dataset.  By piping the results of an index another stage, we can quickly see all the interesting values for each of the interesting dimesions.  Again, the weight shows the number of rows for that particular dimension/value.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
 } -> {
@@ -85,13 +84,13 @@ run: duckdb.table('data/airports.parquet') -> {
 With large datasets, you can also sample a small subsection using the `sample:` parameter.  Sampled indexes are great at identifing the important low cardinality fields.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":100}
 run: duckdb.table('data/airports.parquet') -> {
   index: *
   sample: 5000  // sample only 5000 rows
 } -> {
   group_by: fieldName
-  nest: values is {
+  nest: values is -> {
     group_by: fieldValue, weight
     order_by: weight desc
     limit: 10
@@ -125,7 +124,7 @@ Often a row count will work nicely as a weight, but sometimes there is something
 
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
 run: movies -> {
   group_by: principals.people.primaryName
   aggregate: total_ratings
@@ -136,7 +135,7 @@ run: movies -> {
 Indexing can work across an entire network of joins and can be selective.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "source": "/inline/e1.malloy", "pageSize":100}
 run: movies -> {
   index:
     *
@@ -145,8 +144,8 @@ run: movies -> {
     principals.characters.*
     principals.people.primaryName
   by total_ratings
-}
--> {
+  sample: 5000
+} -> {
   project: *
   order_by: weight desc
 }
@@ -157,14 +156,14 @@ run: movies -> {
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e2.malloy"}
 source: movies is table('duckdb:data/titles.parquet') + {
-  join_many: principals is duckdb.table('data/principals.parquet') {
+  join_many: principals is duckdb.table('data/principals.parquet') extend {
     join_one: people is duckdb.table('data/names.parquet') 
       on nconst = people.nconst
   } on tconst = principals.tconst
 
   measure: total_ratings is numVotes.sum()
 
-  query: search_index is {
+  query: search_index is -> {
     index:
       *
       genres.*
@@ -179,7 +178,7 @@ source: movies is table('duckdb:data/titles.parquet') + {
 So to look for 'Brad'
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e2.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "source": "/inline/e2.malloy", "pageSize":100}
 run: movies -> search_index -> { 
   project: *
   where: fieldValue ~ 'Brad%'
@@ -190,7 +189,7 @@ run: movies -> search_index -> {
 So to look for 'Bat'
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e2.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "source": "/inline/e2.malloy", "pageSize":100}
 run: movies -> search_index -> { 
   project: *
   where: fieldValue ~ 'Bat%'

@@ -3,22 +3,22 @@ Malloy allows you to compute sums and averages correctly based on your join tree
 `aircraft_model` has the number of seats specified on this model of aircraft.  Code below computes sums and averages at various places in the join tree.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": true, "size":"large"}
+--! {"isRunnable": true,    "size":"large"}
 // join 3 tables, flights, aircraft and aircraft models.
 // `flights` is individual flights
 // `aircraft` is the plane that made the flight
 // `aircraft_models` is data about the kind of aircraft
 
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') {
+source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
 }
 
-source: aircraft is duckdb.table('data/aircraft.parquet') {
+source: aircraft is duckdb.table('data/aircraft.parquet') extend {
   primary_key: tail_num
   join_one: aircraft_models with aircraft_model_code
 }
 
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: aircraft with tail_num
 }
 

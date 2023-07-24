@@ -8,13 +8,13 @@ In this case, the x-axis is `month_of_year`, the y-axis is `flight_count` and th
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   measure: flight_count is count()
 }
 ```
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "source": "/inline/e1.malloy", "pageSize":100}
 run: flights -> {
   group_by: month_of_year is month(dep_time)
   aggregate: flight_count
@@ -22,15 +22,15 @@ run: flights -> {
 }
 ```
 
-By adding year as the third column, we can display different years on the same chart. Note the `# line_chart` tag above the query. This is a hint to the renderer to display the data as a line chart.
+By adding year as the third column, we can display different years on the same chart. Note the `# line_chart` tag above the query. This is a hint to the renderer to display the data as a line chart. Changing the definition of `flight_year` to `year(dep_time)::string` makes the line chart interpret the year as "categorical," giving distinct colors for each year rather than a gradient.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # line_chart
 run: flights -> {
   group_by: month_of_year is month(dep_time)
   aggregate: flight_count
-  group_by: flight_year is dep_time.year
+  group_by: flight_year is year(dep_time)::string
 }
 ```
 
@@ -39,8 +39,8 @@ Filters make it easy to reuse aggregate calculations for trends analysis.
 
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
-run: flights->{
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+run: flights -> {
   group_by: carrier
   aggregate:
     flights_in_2002 is flight_count { where: dep_time = @2002 }
@@ -57,14 +57,14 @@ run: flights->{
 The `calculate:` clause is Malloy's window function equivalent, and allows us to compute year over year calculations using the `lag` function:
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: dep_year is dep_time.year
   aggregate: flight_count
   calculate: 
-    last_year is lag(flight_count,1)
+    last_year is lag(flight_count, 1)
     # percent
-    growth is (lag(flight_count,1) - flight_count)/ (lag(flight_count,1))
+    growth is (lag(flight_count, 1) - flight_count) / lag(flight_count, 1)
   order_by: dep_year
 }
 ```
@@ -73,21 +73,21 @@ run: flights -> {
 You might like to write queries that automatically adjust based on the current timeframe.  The query below uses date arithmetic to filter the data to time frames relative to now.  These measures probably aren't generally useful in the model so we use the `extend:` operation to add these measure so they are only locally accessable within the query.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": true, "pageSize":100, "size":"medium"}
+--! {"isRunnable": true,    "pageSize":100, "size":"medium"}
 source: inventory_items is duckdb.table('data/inventory_items.parquet') 
 
-source: order_items is duckdb.table('data/order_items.parquet') {
-  join_one: inventory_items  on inventory_item_id=inventory_items.id
+source: order_items is duckdb.table('data/order_items.parquet') extend {
+  join_one: inventory_items  on inventory_item_id = inventory_items.id
   measure: order_item_count is count()
 
-  query: category_growth is {
+  query: category_growth is -> {
     extend: {
       // add measures for use just in this query
       measure:
         last_year is order_item_count { where: created_at ? now.year - 1 year }
         prior_year is order_item_count { where: created_at ? now.year - 2 years }
     }
-    top: 10
+    limit: 10
     group_by: inventory_items.product_category
     aggregate:
       last_year

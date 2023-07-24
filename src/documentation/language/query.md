@@ -3,94 +3,129 @@
 The basic syntax for a query in Malloy consists of a source and a "pipeline" of one or more _stages_ separated by `->`. The shape of the data defined in the original source is transformed by each stage.
 
 ```malloy
-run: flights -> { group_by: carrier; aggregate: flight_count is count() }
+--! {"isRunnable": true, "source": "flights.malloy"}
+run: flights -> { 
+  group_by: carrier 
+  aggregate: flight_count
+}
 ```
 
-## Sources
+## Query Sources
 
-The source of a query can be a table, a [source](source.md), or a [named query](statement.md#queries).
+Every query begins with a source, which can be thought of as a table with an associated collection of calculations and join relationships. The most common kind of source is a table source, e.g. `duckdb.table('flights.csv')`; see the [Sources](./source.md) section for more information on creating and extending sources.
 
-**A query against a table**
+Generally, ad-hoc queries will use one of these kinds of sources directly:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-run: duckdb.table('data/flights.parquet') -> { aggregate: flight_count is count() }
+--! {"isRunnable": true, "showAs":"html"}
+run: duckdb.table('data/flights.parquet') -> { 
+  aggregate: total_flight_count is count() 
+}
 ```
 
-**A query against a source**
+However, as analysis becomes more involved, it is often useful to define reusable computations in a named source, then use that named source as the basis for queries.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
-source: flights is duckdb.table('data/flights.parquet')
+--! {"isRunnable": true, "showAs":"html"}
+source: flights is duckdb.table('data/flights.parquet') extend { 
+  measure: 
+    flight_count is count() 
+    total_distance is sum(distance)
+}
 
-run: flights -> { aggregate: flight_count is count() }
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count, total_distance
+}
 ```
 
-**A query starting from another query**
+It is also sometimes useful to define a query and then later use that query as the source for another query:
 
 ```malloy
+--! {"isRunnable": true, "showAs":"html"}
 query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
   group_by: carrier
   aggregate: flight_count is count()
 }
 
-run: flights_by_carrier -> { project: carrier; limit: 2 }
+run: flights_by_carrier -> { 
+  project: carrier
+  limit: 2 
+}
 ```
 
-**Implicit Sources**
-When a query is defined as part of a source or nested inside another query stage, the source is implicit.
+### Implicit Sources
 
-Defined as part of a source:
+There are two cases where a query's source is implicit: when it is defined within a source and when it is nested inside another query stage.
+
+Here, `by_carrier` is defined within `flights`, so its source is implicit:  
 ```malloy
-source: flights is duckdb.table('data/flights.parquet'){
-  query: flights_by_carrier is {
+--! {"isRunnable": true}
+source: flights is duckdb.table('data/flights.parquet') extend {
+  query: by_carrier is -> {
     group_by: carrier
     aggregate: flight_count is count()
   }
 }
+run: flights -> by_carrier
 ```
 
-Nested inside another query stage:
+Here, `by_carrier` is a query defined nested inside another query stage, and its source is also implicit:
+
 ```malloy
+--! {"isRunnable": true, "size": "large"}
 run: duckdb.table('data/flights.parquet') -> {
   group_by: dep_year is dep_time.year
-  nest: by_carrier is {
+  nest: by_carrier is -> {
     group_by: carrier
     aggregate: flight_count is count()
+    limit: 2
   }
+  limit: 3
 }
 ```
 
 ## Pipelines
 
-A each stage of a pipeline performs transformation on the the source or a previous stage.
+Each stage of a pipeline performs a transformation on the source or a previous stage. A stage can be one of two kinds:
+* **reduction**: reduce the grain of the data being transformed using `group_by` and/or `aggregate`
+* **projection**: select fields without reducing using `project`
 
-A stage can do one of:
-* a Reduction: a query containing `group_by`/`aggregate` which includes aggregation and/or a group_by to reduce the grain of the data being transformed
-* a Projection: select fields without reducing using `project`.
-
-Example of a Reduction:
+### Reduction 
+The following is an example of a **reduction**:
 ```malloy
+--! {"isRunnable": true, "source": "flights.malloy"}
 run: flights -> {
-  where: distance > 1000        // Filtering
-  top: 2                        // Limiting
-  order_by: flight_count desc   // Ordering
-  group_by: carrier             // Reducing
-  aggregate: flight_count is count()
+  // Filtering
+  where: distance > 1000       
+  // Limiting 
+  limit: 10     
+  // Reducing 
+  group_by: carrier        
+  aggregate: flight_count is count()              
+  // Ordering      
+  order_by: flight_count desc  
+  // Calculating (window functions)
+  calculate: prev_flight_count is lag(flight_count)
+  // Post-aggregation filtering
+  having: flight_count > 10000
 }
 ```
 
-Example of a Projection:
+### Projection
+
+The following is an example of a **projection**:
 ```malloy
-  run: flights -> {
-    project: *
-    limit: 20
-  }
+--! {"isRunnable": true, "source": "flights.malloy"}
+run: flights -> {
+  project: *
+  limit: 20
+}
 ```
 
-Note that the operations in a stage are not order-sensitive like SQL; they can be arranged in any order.
+Note that the operations in a stage are for the most part not order-sensitive like SQL; they can be arranged in any order.
 
-A reference to a [named query](nesting.md) (which defines its own pipeline) can be the first stage in a pipeline.
+A reference to a [source-level query](./fields.md#source-level-queries) (which defines its own pipeline) can be the first stage in a pipeline.
 
 ```malloy
 run: flights -> by_carrier
@@ -104,8 +139,9 @@ This example shows a pipeline with 3 stages, the multiple stages chained using `
 run: duckdb.table('data/flights.parquet') -> {
   project: *
   where: dep_time > @2003
-} -> {
-  declare: flight_count is count()     -- declare defines a measure or dimension for use within query
+} -> {    
+  -- extend: allows you to define fields for use within the query
+  extend: { measure: flight_count is count() }   
   aggregate: flight_count
   nest: main_query is {
     group_by: carrier
@@ -115,7 +151,8 @@ run: duckdb.table('data/flights.parquet') -> {
   project:
     main_query.carrier
     main_query.flight_count
-    flight_count_as_a_percent_of_total is main_query.flight_count / flight_count * 100.0
+    # percent
+    flight_count_as_a_percent_of_total is main_query.flight_count / flight_count
 }
 ```
 
@@ -132,9 +169,7 @@ query: flights -> {
 }
 ```
 
-When referencing existing fields, wildcard expressions `*`, `**`, and `some_join.*` may be used.
-
-<!-- TODO explain what these all do. -->
+When referencing existing fields in a `project` clause, wildcard expressions `*`, `**`, and `some_join.*` may be used.
 
 See the [Fields](fields.md) section for more information
 about the different kinds of fields and how they can be
@@ -142,18 +177,17 @@ defined.
 
 ## Filters
 
-Filters specified at the top level of query stage apply to
-the whole stage.
+Filters specified at the top level of query stage apply to the whole stage.
 
-At the query level
+At the source level
 ```malloy
-query: flights { where: distance > 1000 } -> {
+query: flights extend { where: distance > 1000 } -> {
   group_by: distance
   aggregate: flight_count
 }
 ```
 
-or in the stage.
+or in the query stage.
 ```malloy
 query: flights -> {
   where: distance > 1000
@@ -162,7 +196,7 @@ query: flights -> {
 }
 ```
 
-Filters may also be applied to a [query's source](filters.md#filtering-in-a-query-stage), an [entire source](source.md#filtering-sources), or to a [measure](expressions.md).
+Filters may be applied to a [query's source](filters.md#filtering-in-a-query-stage), an [entire source](source.md#filtering-sources), or to a [measure](expressions.md#filtered-expressions).
 
 <!-- TODO: improve link for filtering a measure. -->
 
@@ -170,11 +204,11 @@ See the [Filters](filters.md) section for more information.
 
 ## Refinement
 
-A query can be "refined", which means adding fields such as `project:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
+A query can be "refined", which means adding clauses such as `project:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
 
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   query: top_destinations is {
     group_by: destination
     aggregate: flight_count is count()
@@ -189,18 +223,18 @@ Running the query gives us flight count by destination:
 run: flights -> top_destinations
 ```
 
-Now let's refine it by adding `+ { group_by: origin }`. This adds a `group_by` clause to the original query
+Now let's refine it by adding `refine { group_by: origin }`. This adds a `group_by` clause to the original query
 
 ```malloy
 --! {"isRunnable": true, "showAs":"html", "source": "/inline/e1.malloy", "size": "medium"}
-run: flights -> top_destinations + {
+run: flights -> top_destinations refine {
   group_by: origin
 }
 ```
 
 The query is now calculating `flight_count` grouped by both `destination` and `origin`.
 
-Query refinement can be thought of as similar to extending a class in object-oriented programming. The new query inherits the properties of the original query, and adds new properties to it. This makes query logic much more reusable, since query fragments can be easily saved and modified.
+Query refinement can be thought of as similar to extending a class in object-oriented programming. The new query inherits the properties of the original query, and adds new properties to it. (That said, it should not be confused with the similar concept of [source extension](./source.md#source-extensions).) This makes query logic much more reusable, since query fragments can be easily saved and modified. 
 
 ## Ordering and Limiting
 
@@ -208,11 +242,38 @@ Query stages may also include ordering and limiting
 specifications.
 
 ```malloy
-query: flights -> {
-  top: 10
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "size": "medium"}
+run: flights -> {
+  limit: 4
   group_by: carrier
   aggregate: flight_count
 }
 ```
 
 For detailed information on ordering and limiting, see the [Ordering and Limiting](order_by.md) section.
+
+## Post-Aggregation Filtering
+
+Query stages may filter groupings based on aggregate values using the `having:` clause, which corresponds to SQL's <code>HAVING</code> clause.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "size": "medium"}
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  having: flight_count > 35000
+}
+```
+
+## Calculations (Window Functions)
+
+Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.md) section for details.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "size": "medium"}
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  calculate: flight_count_rank is rank()
+}
+```
