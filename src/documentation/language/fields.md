@@ -28,7 +28,7 @@ The right hand side of this kind of definition can be any
 field expression. See the [Expressions](expressions.md)
 section for more information.
 
-Queries (see [below](#queries)) can also be defined as
+Queries (see [below](#source-level-queries)) can also be defined as
 part of a source or query stage. When a query is defined in a query stage, it is known as a "nested query" or an "aggregating
 subquery." See the [Nesting](nesting.md) section for a
 detailed discussion of nested queries.

@@ -56,9 +56,9 @@ LIMIT <limit>
 | <pre><code>HAVING flight_count > 5</code></pre>  | <pre> `having: flight_count > 5`</pre> | **HAVING** |
 | <pre> <code>LIMIT 100</code> <code>TOP 100</code> </pre>  | <pre> `limit: 100` </pre> | **LIMIT**  |
 | <pre><code>SELECT</code> <code>  ...</code> <code>FROM (</code> <code>  SELECT</code> <code>    ...</code> <code>  FROM order_items</code> <code>)</code></pre>  | <pre> `order_items -> { ... } -> { ... }`</pre> | **Pipelines** allow the output of one query to be used as the input to the next. |
-| <pre><code> WITH user_facts AS (...) ... </code></pre>  | <pre> `source: user_facts is from(...)` </pre> | **CTEs**: can be generated through [Pipelines](../user_guides/basic.md#pipelines-and-multi-stage-queries) and [Sources from queries](../language/source.md#sources-from-queries). |
+| <pre><code> WITH user_facts AS (...) ... </code></pre>  | <pre> `source: user_facts is from(...)` </pre> | **CTEs**: can be generated through [Pipelines](../user_guides/basic.md#pipelines-and-multi-stage-queries) and [Sources from queries](../language/source.md#sources-from-malloy-queries). |
 | <pre><code>FROM (...) AS user_facts</code></pre> | <pre> `source: user_facts is duckdb.sql("""SELECT ...""")` </pre> | **Subqueries** Can be written into [SQL Blocks](../language/sql_blocks.md). Example below |
-| <pre><code> WITH user_facts AS (...) ... </code></pre>  | <pre> `source: user_facts is from(...)` </pre> | **CTEs**: can be generated through [Pipelines](../user_guides/basic.md#pipelines-and-multi-stage-queries) and [Sources from queries](../language/source.md#sources-from-queries). |
+| <pre><code> WITH user_facts AS (...) ... </code></pre>  | <pre> `source: user_facts is from(...)` </pre> | **CTEs**: can be generated through [Pipelines](../user_guides/basic.md#pipelines-and-multi-stage-queries) and [Sources from queries](../language/source.md#sources-from-malloy-queries). |
 
 <!-- TODO fix up the SQL subqueries example above -->
 
