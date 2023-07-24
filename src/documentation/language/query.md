@@ -196,7 +196,7 @@ query: flights -> {
 }
 ```
 
-Filters may also be applied to a [query's source](filters.md#filtering-in-a-query-stage), an [entire source](source.md#filtering-sources), or to a [measure](expressions.md#filtered-expressions).
+Filters may be applied to a [query's source](filters.md#filtering-in-a-query-stage), an [entire source](source.md#filtering-sources), or to a [measure](expressions.md#filtered-expressions).
 
 <!-- TODO: improve link for filtering a measure. -->
 
