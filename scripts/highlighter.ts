@@ -40,8 +40,7 @@ const malloyDocsTMGrammar = {
     docvar: {
       patterns: [
         {
-          begin: "\\<\\<",
-          end: "\\>\\>",
+          match: "\\<\\<[^(\\>\\>)]*\\>\\>",
           beginCaptures: {
             0: { name: "punctuation.definition.comment.begin" }
           },
@@ -93,8 +92,7 @@ export async function highlight(
   // In docs, the highlighter recognizes <<foo>> as a way to make
   // "foo" look like a meta-variable. Here we remove the << and >>
   const removeDocVarEnclosing = highlightedRaw
-    .replace(/>(&lt;&lt;)</g, "")
-    .replace(/>(&gt;&gt;)</g, "");
+    .replace(/(>)(&lt;&lt;)(.*?)(&gt;&gt;)(<)/g, "$1$3$5");
   if (inline) {
     return removeDocVarEnclosing
       .replace(/^<pre class="shiki"/, `<code class="language-${lang}"`)

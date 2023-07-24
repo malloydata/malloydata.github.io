@@ -61,14 +61,14 @@ query: flights -> {
 
 ## Limiting
 
-In Malloy, you can limit the number of results returned using a `top: n` or `limit: n`.  Both are provided for readability.
+In Malloy, you can limit the number of results returned using `limit: <<integer literal>>`.  Both are provided for readability.
 
 In the example below, the results are limited to 2 rows, which are sorted by `dep_month` with newest results first (due to Rule 1).
 
 ```malloy
 --! {"isRunnable": true, "source": "flights.malloy", "size":"small" }
 query: flights -> {
-  top: 2
+  limit: 2
   group_by: dep_month is dep_time.month
   aggregate: flight_count is count()
 }

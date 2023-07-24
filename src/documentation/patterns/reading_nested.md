@@ -37,7 +37,7 @@ source: ga_sessions is table('duckdb:data/ga_sample.parquet') extend {
 ## Show Data by Traffic Source
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: ga_sessions -> {
   where: trafficSource.`source` != '(direct)'
   group_by: trafficSource.`source`
@@ -54,7 +54,7 @@ run: ga_sessions -> {
 ## Show Data By Browser
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: ga_sessions -> {
   group_by: device.browser
   aggregate:
@@ -70,7 +70,7 @@ run: ga_sessions -> {
 ## With Nested Results
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: ga_sessions -> {
   group_by: device.browser
   aggregate:

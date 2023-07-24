@@ -65,7 +65,7 @@ sql: malloy_in_sql_query is {
 -- BEGIN MALLOY QUERY
 %{
   users -> {
-    top: 10 group_by: first_name, last_name, gender
+    limit: 10 group_by: first_name, last_name, gender
     aggregate: n_with_this_name is count()
   }
 }%

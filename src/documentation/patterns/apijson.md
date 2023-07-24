@@ -12,7 +12,7 @@ source: exchange_rates is
 This query builds a line chart showing exchange rate values over time. With a simple Malloy query, we can easily transform and analyze a dataset directly from an HTTP API, without any intermediate database required.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: exchange_rates -> {
   group_by: data.country_currency_desc
   # line_chart

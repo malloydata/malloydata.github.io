@@ -24,7 +24,7 @@ ORDER BY code
 Equivalent in Malloy
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+--! {"isRunnable": true, "pageSize": 100}
 run: duckdb.table('data/airports.parquet') -> {
   project: code, full_name, state, faa_region, fac_type, elevation
   order_by: code
@@ -47,7 +47,7 @@ ORDER BY 2 desc
 Equivalent in Malloy
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+--! {"isRunnable": true, "pageSize": 100}
 run: duckdb.table('data/airports.parquet') -> {
   group_by: fac_type
   aggregate: airport_count is count()
@@ -84,7 +84,7 @@ Queries can be run against `source:` objects and can utilize the modeled fields 
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source1.malloy"}
+--! {"isRunnable": true, "size":"small","source": "/inline/source1.malloy"}
 run: airports -> {
   limit: 10
   where: fac_type = 'HELIPORT'
@@ -100,7 +100,7 @@ run: airports -> {
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source1.malloy"}
+--! {"isRunnable": true, "size":"small","source": "/inline/source1.malloy"}
 run: airports -> {
   group_by: state_and_county // <-- declared in source
   aggregate: airport_count
@@ -109,7 +109,7 @@ run: airports -> {
 ```
 
 
-## Defining Named Queries inside a Source
+## Defining Queries inside a Source
 
 A source can also contain a set of useful queries relating to that source.
 
@@ -129,16 +129,16 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 }
 ```
 
-Note that the source is implied, so the query operator (`->`) and source are not needed to define the named query.
+Note that the source is implied, so the source name is not needed to define the query. 
 
-##  Executing Named Queries
+##  Executing Source-Level Queries
 
 The simplest form of a query in Malloy is the name of a source, the query operator `->`, and the name of one of its contained queries.
 
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
+--! {"isRunnable": true, "size":"small","source": "/inline/source2.malloy"}
 run: airports -> by_state
 ```
 
@@ -151,7 +151,7 @@ You can filter a source by adding a filter expression using the `where:` keyword
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
+--! {"isRunnable": true, "size":"small","source": "/inline/source2.malloy"}
 run: airports extend {
   where: fac_type = 'SEAPLANE BASE'   // <- run the query with an added filter
 }
@@ -165,7 +165,7 @@ The input to an aggregate computation can be filtered.
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
+--! {"isRunnable": true, "size":"small","source": "/inline/source2.malloy"}
 run: airports -> {
   group_by: state
   aggregate: airport_count
@@ -222,7 +222,7 @@ Queries can contain multiple nested queries.
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/source3.malloy"}
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -236,7 +236,7 @@ Queries can be nested to any level of depth.
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/source3.malloy"}
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -253,7 +253,7 @@ run: airports -> {
 }
 ```
 
-## Refining a Named Query
+## Refining a Source-Level Query
 
 The refinement gesture `{}` extends an existing object, creating a new version with added properties
 
@@ -269,7 +269,7 @@ run: airports -> by_state refine {
 is the same as
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"small","source": "/inline/source2.malloy"}
+--! {"isRunnable": true, "size":"small","source": "/inline/source2.malloy"}
 run: airports -> {
   group_by: state
   aggregate: airport_count
@@ -281,7 +281,7 @@ run: airports -> {
 ### You can add a measure or dimension
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/source3.malloy"}
 run: airports -> by_facility_type refine {
   aggregate: avg_elevation
 }
@@ -290,7 +290,7 @@ run: airports -> by_facility_type refine {
 ### You can nest another query
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/source3.malloy"}
 run: airports -> top_5_states refine {
   nest: by_facility_type
 }
@@ -301,7 +301,7 @@ run: airports -> top_5_states refine {
 Changing the inner and outer query in the example above reveals very different information.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/source3.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/source3.malloy"}
 run: airports -> by_facility_type refine {
   nest: top_5_states
 }
@@ -316,7 +316,7 @@ First let's model some simple tables... ([Join Documentation](../language/join.m
 *simple source declaration used in example below*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+--! {"isRunnable": true, "pageSize": 100}
 source: carriers is duckdb.table('data/carriers.parquet') extend {
   measure: carrier_count is count()
 }
@@ -330,7 +330,7 @@ run: carriers -> {
 
 *simple source declaration used in example below*
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+--! {"isRunnable": true, "pageSize": 100}
 source: flights is duckdb.table('data/flights.parquet') extend {
   measure: flight_count is count()
 }
@@ -367,7 +367,7 @@ source: flights is duckdb.table('data/flights.parquet') extend {
 *using the above declared `flights` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/join1.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/join1.malloy"}
 run: flights -> {
   group_by: carriers.nickname
   aggregate:
@@ -385,7 +385,7 @@ run: flights -> {
 *using the above declared `flights` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/join1.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/join1.malloy"}
 run: flights -> {
   limit: 10
   group_by: origin
@@ -450,7 +450,7 @@ This query is very difficult to express in SQL. Malloy's understanding of source
 *using the above declared `airports` source*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/join2.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/join2.malloy"}
 run: airports ->  {
   group_by: state
   aggregate:
@@ -469,7 +469,7 @@ The output of a query can be used as the source for the next query.
 *Assume the following query as a starting point.*
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+--! {"isRunnable": true, "pageSize": 100}
 source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 }
@@ -491,7 +491,7 @@ run: airports -> {
 Queries can be chained together (pipelined), the output of one becoming the input of the next one, by simply adding another `->` operator and a new query definition.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "pageSize": 100}
+--! {"isRunnable": true, "pageSize": 100}
 source: airports is duckdb.table('data/airports.parquet') extend {
   measure: airport_count is count()
 }
@@ -558,10 +558,14 @@ source: <<new name>> is <<old name>> extend {
 
 ## Sources based on Queries
 
-### Named Query
+Sometimes it is helpful to pre-process data before modeling it out with a source. To do this, you can first define a model-level query using a [query statement](../language/statement.md#query-statements), then [extend](../language/source.md#source-extensions) the query to add reusable definitions.
+
+### Model-Level Queries
+
+Here, we define a model-level query `q_airport_facts` based on the <code>flights.parquet</code> table.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium"}
+--! {"isRunnable": true, "size":"medium"}
 query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
@@ -590,6 +594,8 @@ query: q_airport_facts is duckdb.table('data/flights.parquet') -> {
 
 ### Source based on a query
 
+Next, we can define a source based on `q_airport_facts` to add reusable fields and source-level queries.
+
 ```malloy
 --! {"isModel": true, "modelPath": "/inline/query2.malloy", "source":"/inline/query1.malloy", "isHidden": false}
 source: airport_facts is q_airport_facts extend {
@@ -616,18 +622,20 @@ source: airport_facts is q_airport_facts extend {
 ### Querying the Summary source
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/query2.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/query2.malloy"}
 run: airport_facts -> flights_by_year
 ```
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": false, "size":"medium","source": "/inline/query2.malloy"}
+--! {"isRunnable": true, "size":"medium","source": "/inline/query2.malloy"}
 run: airport_facts -> flights_by_origin
 ```
 
 ## Other Interesting Language Features:
 
-### SQL BLocks ([SQL Block Documentation](../language/sql_blocks.md))
+### SQL Sources
+
+See the [SQL Sources](../language/sql_sources.md) section.
 
 ### Embedding Malloy queries in SQL ([SQL Block Documentation](../language/sql_blocks.md#embedding-malloy-queries-in-an-sql-block-turducken-))
 

@@ -17,7 +17,7 @@ source: order_items is duckdb.table('data/order_items.parquet') extend {
 This contains a single table of order items, and a measure to calculate sales. We can use this to calculate sales by year:
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   group_by: fiscal_year is created_at.year
   aggregate: total_sales
@@ -28,7 +28,7 @@ run: order_items -> {
 Now suppose we want to drill into the sales numbers by quarter. To do this in SQL would require either a window function, a self-join, or a `GROUP BY ROLLUP`, all of which are complicated to implement, and produce results that are difficult to interpret. In Malloy, none of this is necessary, we simply use a `nest` clause:
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   group_by: fiscal_year is created_at.year
   aggregate: total_sales
@@ -45,7 +45,7 @@ run: order_items -> {
 To drill down even further, it's trivial to repeat this pattern once again. The following query looks at the top 5 sales days for each fiscal quarter
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: order_items -> {
   group_by: fiscal_year is created_at.year
   aggregate: total_sales
@@ -59,7 +59,7 @@ run: order_items -> {
     nest: top_days is -> {
       group_by: sale_date is created_at.day
       aggregate: total_sales
-      top: 5
+      limit: 5
     }
   }
 }

@@ -93,7 +93,7 @@
               "link": "/patterns/transform.md"
             },
             {
-              "title": "Reading JSON directly from an API",
+              "title": "Data from JSON APIs",
               "link": "/patterns/apijson.md"
             },
             {
@@ -160,8 +160,8 @@
           "link": "/language/functions.md"
         },
         {
-          "title": "SQL Blocks",
-          "link": "/language/sql_blocks.md"
+          "title": "SQL Sources",
+          "link": "/language/sql_sources.md"
         },
         {
           "title": "Imports",
@@ -170,6 +170,10 @@
         {
           "title": "Calculations",
           "link": "/language/calculations.md"
+        },
+        {
+          "title": "Connections",
+          "link": "/language/connections.md"
         },
         {
           "title": "Tags",

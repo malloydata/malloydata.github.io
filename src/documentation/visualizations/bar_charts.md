@@ -19,7 +19,7 @@ source: flights is duckdb.table('data/flights.parquet') extend {
 A basic bar chart takes a table where the first column is a string and the second is a number.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # bar_chart
 run: flights -> {
   group_by: carriers.nickname
@@ -33,7 +33,7 @@ This chart looks at flights and counts the number of aircraft owned by each carr
 shows the number of flights made per plane.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # bar_chart
 run: flights -> {
   group_by: carriers.nickname
@@ -48,7 +48,7 @@ In this case we are going to look at carriers by flight count and stack the dest
 with the destination SFO, OAK or SJC.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # bar_chart
 run: flights -> {
   where: destination ? 'SFO' | 'OAK' | 'SJC'
@@ -62,7 +62,7 @@ run: flights -> {
 We could flip the dimensions around and look at the airports' flights by carrier.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # bar_chart
 run: flights -> {
   where: destination ? 'SFO' | 'OAK' | 'SJC'
@@ -76,7 +76,7 @@ run: flights -> {
 Barcharts can be used in nested queries
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count 

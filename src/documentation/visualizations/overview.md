@@ -10,7 +10,7 @@ Malloy's rendering library interprets these tags to change how results are rende
 In the query below, the measure **percent_of_total** is tagged as a percentage. Any time *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "pageSize":5000}
 source: flights is duckdb.table('data/flights.parquet') extend {
   measure:
     flight_count is count()
@@ -27,7 +27,7 @@ run: flights -> {
 ```
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "small", "pageSize":5000}
+--! {"isRunnable": true,  "size": "small", "pageSize":5000}
 run: duckdb.table('data/flights.parquet') ->  {
   group_by: carrier
   aggregate: flight_count is count()
@@ -37,7 +37,7 @@ run: duckdb.table('data/flights.parquet') ->  {
 Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart. See the docs on the [Bar Chart tag](./bar_charts.md) for more information.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "pageSize":5000}
 # bar_chart
 run: duckdb.table('data/flights.parquet') ->  {
   group_by: carrier

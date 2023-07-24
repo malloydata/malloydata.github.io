@@ -53,7 +53,7 @@ the source table are available for use in field definitions
 or queries.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e1.malloy"}
+--! {"isRunnable": true,  "source": "/inline/e1.malloy"}
 run: flights -> {
   // Columns from the source table are available
   group_by:
@@ -81,7 +81,7 @@ query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
 And here, we use the query `flights_by_carrier` as a source:
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e2.malloy"}
+--! {"isRunnable": true,  "source": "/inline/e2.malloy"}
 run: flights_by_carrier -> {
   project: 
     carrier
@@ -94,7 +94,7 @@ run: flights_by_carrier -> {
 We can also explicitly define the query as a source, which is useful when adding reusable computations: 
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e2.malloy"}
+--! {"isRunnable": true,  "source": "/inline/e2.malloy"}
 source: carrier_facts is flights_by_carrier extend {
   dimension:
     lifetime_flights_bucketed is round(lifetime_flights, -4)
@@ -122,7 +122,7 @@ source: carrier_facts is duckdb.table('data/flights.parquet') -> {
 ```
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "source": "/inline/e3.malloy"}
+--! {"isRunnable": true,  "source": "/inline/e3.malloy"}
 run: carrier_facts -> {
   project: carrier, lifetime_flights_bucketed, lifetime_flights
   limit: 3

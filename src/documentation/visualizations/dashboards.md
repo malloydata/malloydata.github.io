@@ -22,14 +22,14 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 Queries in Malloy are often very complex and multifaceted, which makes them difficult to read in one nested table:
 
 ```malloy
---! {"isRunnable": true, "size":"medium", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
 run: airports -> by_state_and_county
 ```
 
 In such cases, the `# dashboard` renderer is useful for making the results easier to read:
 
 ```malloy
---! {"isRunnable": true, "size":"large", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"large",  "source": "/inline/airports_mini.malloy"}
 # dashboard
 run: airports -> by_state_and_county
 ```

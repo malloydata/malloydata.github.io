@@ -65,31 +65,31 @@ source: order_items is duckdb.table('data/order_items.parquet') {
     average_gross_margin is gross_margin.avg()
 
   query: top_categories is {
-    top: 5
+    limit: 5
     group_by: inventory_items.product_category
     aggregate: total_sales
   }
 
   query: top_brands is {
-    top: 5
+    limit: 5
     group_by: inventory_items.product_brand
     aggregate: total_sales, total_gross_margin, order_item_count
   }
 
   query: top_products is {
-    top: 5
+    limit: 5
     group_by: inventory_items.product_name
     aggregate: total_sales, total_gross_margin, order_item_count
   }
 
   query: top_customers is {
-    top: 5
+    limit: 5
     group_by: users.full_name
     aggregate: total_sales, order_item_count
   }
 
   query: recent_purchases is {
-    top: 5
+    limit: 5
     group_by: id, order_id, created_at, sale_price, inventory_items.product_name
     order_by: created_at desc
   }
@@ -135,7 +135,7 @@ source: order_items is duckdb.table('data/order_items.parquet') {
   }
 
   query: customer_dashboard is {
-    top: 5
+    limit: 5
     group_by: users.full_name, users.city, users.state, users.country
     aggregate:
       total_sales

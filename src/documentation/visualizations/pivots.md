@@ -5,7 +5,7 @@ Malloy's rederer has flexible and powerful way of pivoting data.
 Malloy's ability to nest queries allows you to compute two levels of queries simultaneously.  The query below first groups airports by *state* and then groups by the type of facility (*fac_type*).  For each state we see count of all the facilities.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":5000}
 run: duckdb.table('data/airports.parquet') -> {
   group_by: state
   aggregate: facility_count is count()
@@ -21,7 +21,7 @@ run: duckdb.table('data/airports.parquet') -> {
 We can take this exact same query above (and same output) and have it simply rendered as a pivot table by adding a '# pivot' tag on the nested query.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "pageSize":5000}
 run: duckdb.table('data/airports.parquet') -> {
   group_by: state
   aggregate: facility_count is count()
@@ -56,7 +56,7 @@ A classic data pivot is data is dimensionalized by two attributes the data can b
 Carriers by FAA Region
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   # pivot
@@ -72,7 +72,7 @@ run: flights -> {
 You can control which dimension are shown in the pivot with a filter (and their order)
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   # pivot
@@ -90,7 +90,7 @@ run: flights -> {
 Pivots can have multiple aggregates. In this case we show `flight_count` and `total_distance` for each of the states.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   # pivot
@@ -110,7 +110,7 @@ run: flights -> {
 Malloy allows you to intermix unpivoted data along with pivoted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   aggregate: 
@@ -131,7 +131,7 @@ run: flights -> {
 Malloy allows you to intermix unpivoted data along with pivoted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   aggregate: 
@@ -158,7 +158,7 @@ Malloy sorts by the first aggregate column in finds, generally.  The `# hidden` 
 Rows sorted by 'CA' flights
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   # hidden
@@ -177,7 +177,7 @@ run: flights -> {
 Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivoted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'pivot_dimensions="..."' property on the pivot tag.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "medium", "source": "/inline/e1.malloy", "pageSize":5000}
 run: flights -> {
   group_by: carriers.nickname
   aggregate: total_flights is flight_count

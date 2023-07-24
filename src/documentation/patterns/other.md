@@ -30,13 +30,13 @@ source: airports is table('duckdb:data/airports.parquet') extend {
 
 ## Basic Query
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports -> top_states_by_elevation
 ```
 
 ## Nested Query
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports -> {
   group_by: `Facility Type` is fac_type
   aggregate: 

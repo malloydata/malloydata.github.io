@@ -11,7 +11,7 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 ## Normal Table
 
 ```malloy
---! {"isRunnable": true, "size":"medium", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
 run: airports -> {
   group_by: fac_type
   aggregate: 
@@ -28,7 +28,7 @@ run: airports -> {
 Great for comparison
 
 ```malloy
---! {"isRunnable": true, "size":"medium", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
 # transpose
 run: airports -> {
   group_by: fac_type

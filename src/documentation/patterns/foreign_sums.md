@@ -3,7 +3,7 @@ Malloy allows you to compute sums and averages correctly based on your join tree
 `aircraft_model` has the number of seats specified on this model of aircraft.  Code below computes sums and averages at various places in the join tree.
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": true, "size":"large"}
+--! {"isRunnable": true,    "size":"large"}
 // join 3 tables, flights, aircraft and aircraft models.
 // `flights` is individual flights
 // `aircraft` is the plane that made the flight

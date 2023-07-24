@@ -26,14 +26,14 @@ The query can be used to show the overall distribution of the data.
 
 We are showing the bin_size in this exmaple for clarity.
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports -> by_elevation
 ```
 
 ## Distribution Adapts Automatically
 Notice that when we look at Florida, the bin-width is different.
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports extend { where: state = 'FL' } -> by_elevation
 ```
 
@@ -42,7 +42,7 @@ This binning even adapts when the queries are nested.
 
 Notice that all the binning is local to the individual states.  For example the bottom bin in Colorado starts at an elevation of 3000ish feet.
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 run: airports -> {
   group_by: state is state
   aggregate: airport_count

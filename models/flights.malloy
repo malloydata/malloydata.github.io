@@ -2,35 +2,33 @@
 
 import "airports.malloy"
 
-source: carriers is duckdb.table('data/carriers.parquet') {
+source: carriers is duckdb.table('data/carriers.parquet') extend {
   primary_key: code
   measure: carrier_count is count()
 }
 
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') {
+source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
   measure: aircraft_model_count is count()
 }
 
-source: aircraft is duckdb.table('data/aircraft.parquet') {
+source: aircraft is duckdb.table('data/aircraft.parquet') extend {
   primary_key: tail_num
   measure: aircraft_count is count()
   join_one: aircraft_models with aircraft_model_code
 }
 
-source: aircraft_facts is from(
-  duckdb.table('data/flights.parquet') -> {
-    group_by: tail_num
-    aggregate:
-      lifetime_flights is count()
-      lifetime_distance is distance.sum()
-  }
-) {
+source: aircraft_facts is duckdb.table('data/flights.parquet') -> {
+  group_by: tail_num
+  aggregate:
+    lifetime_flights is count()
+    lifetime_distance is distance.sum()
+} extend {
   primary_key: tail_num
   dimension: lifetime_flights_bucketed is floor(lifetime_flights / 1000) * 1000
 }
 
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   primary_key: id2
   rename: origin_code is origin
   rename: destination_code is destination
@@ -48,67 +46,67 @@ source: flights is duckdb.table('data/flights.parquet') {
     seats_owned is aircraft.sum(aircraft.aircraft_models.seats)
 
   // shows carriers and number of destinations (bar chart)
-  query: by_carrier is {
+  query: by_carrier is -> {
     group_by: carriers.nickname
     aggregate: flight_count
     aggregate: destination_count is destination.count()
   }
 
-  query: carrier_overview is {
-    where: origin.state='CA'
+  query: carrier_overview is -> {
+    where: origin.state = 'CA'
     group_by: carrier_name is carriers.nickname
     aggregate:
       flight_count
       percent_of_this_carriers_flights_to_all_flights
-        is flight_count/all(flight_count)*100
-    nest: top_destinations is {
+        is flight_count / all(flight_count) * 100
+    nest: top_destinations is -> {
       where: aircraft.aircraft_models.manufacturer = 'BOEING'
       group_by: destination.code, destination.full_name
       aggregate:
         flight_count
-        flights_to_dest is exclude(flight_count, carrier_name)*100
+        flights_to_dest is exclude(flight_count, carrier_name) * 100
         percentage_of_this_carriers_flights_to_this_destination
-          is flight_count/all(flight_count)*100
+          is flight_count / all(flight_count) * 100
         percentage_of_all_flights_on_all_carriers_to_this_destination
-          is flight_count/exclude(flight_count, carrier_name)*100
+          is flight_count / exclude(flight_count, carrier_name) * 100
       limit: 3
     }
   }
 
   // shows year over year growth (line chart)
-  query: year_over_year is {
+  query: year_over_year is -> {
     group_by: dep_month is month(dep_time)
     aggregate: flight_count
     group_by: dep_year is dep_time.year
   }
 
   // shows plane manufacturers and frequency of use
-  query: by_manufacturer is {
-    top: 5
+  query: by_manufacturer is -> {
+    limit: 5
     group_by: aircraft.aircraft_models.manufacturer
     aggregate: aircraft.aircraft_count, flight_count
   }
 
-  query: delays_by_hour_of_day is {
+  query: delays_by_hour_of_day is -> {
     where: dep_delay > 30
     group_by: dep_hour is hour(dep_time)
     aggregate: flight_count
     group_by: delay is floor(dep_delay) / 30 * 30
   }
 
-  query: carriers_by_month is {
+  query: carriers_by_month is -> {
     group_by: dep_month is dep_time.month
     aggregate: flight_count
     group_by: carriers.nickname
   }
 
-  query: seats_by_distance is {
+  query: seats_by_distance is -> {
     group_by: seats is floor(aircraft.aircraft_models.seats / 5) * 5    -- seats rounded to 5
     aggregate: flight_count
     group_by: distance is floor(distance / 20) * 20     -- distance rounded to 20
   }
 
-  query: routes_map is {
+  query: routes_map is -> {
     group_by:
       origin.latitude
       origin.longitude
@@ -117,13 +115,13 @@ source: flights is duckdb.table('data/flights.parquet') {
     aggregate: flight_count
   }
 
-  query: destinations_by_month is {
+  query: destinations_by_month is -> {
     group_by: dep_month is dep_time.month
     aggregate: flight_count
     group_by: destination.name
   }
 
-  query: measures is {
+  query: measures is -> {
     aggregate:
       flight_count
       aircraft.aircraft_count
@@ -132,8 +130,8 @@ source: flights is duckdb.table('data/flights.parquet') {
   }
 
   // query: flights -> { where: origin.code = 'SJC' } -> airport_dashboard
-  query: airport_dashboard is {
-    top: 10
+  query: airport_dashboard is -> {
+    limit: 10
     group_by: code is destination_code
     group_by: destination is destination.full_name
     aggregate: flight_count
@@ -143,7 +141,7 @@ source: flights is duckdb.table('data/flights.parquet') {
       delays_by_hour_of_day
   }
 
-  query: plane_usage is {
+  query: plane_usage is -> {
     order_by: 1 desc
     where: aircraft.aircraft_count > 1
     group_by: aircraft_facts.lifetime_flights_bucketed
@@ -153,22 +151,22 @@ source: flights is duckdb.table('data/flights.parquet') {
 
 
   // query: southwest_flights is carrier_dashboard { where: carriers.nickname = 'Southwest' }
-  query: carrier_dashboard is { //# dashboard
+  query: carrier_dashboard is -> { //# dashboard
     aggregate: destination_count is destination.airport_count
     aggregate: flight_count
     nest: by_manufacturer
-    nest: by_month is {         //# line_chart
+    nest: by_month is -> {         //# line_chart
       group_by: dep_month is dep_time.month
       aggregate: flight_count
     }
-    nest: hubs is {
-      top: 10
+    nest: hubs is -> {
+      limit: 10
       where: destination.airport_count > 1
       group_by: hub is origin.name
       aggregate: destination_count is destination.airport_count
     }
-    nest: origin_dashboard is {   //# dashboard
-      top: 10
+    nest: origin_dashboard is -> {   //# dashboard
+      limit: 10
       group_by:
         code is origin_code,
         origin is origin.full_name,
@@ -181,8 +179,9 @@ source: flights is duckdb.table('data/flights.parquet') {
     }
   }
 
-  query: detail is {
-    top: 30 by dep_time
+  query: detail is -> {
+    limit: 30
+    order_by: dep_time
     project:
       id2, dep_time, tail_num, carrier, origin_code,
       destination_code, distance, aircraft.aircraft_model_code
@@ -190,17 +189,17 @@ source: flights is duckdb.table('data/flights.parquet') {
 
   // query that you might run for to build a flight search interface
   // query: flights { where: origin.code: 'SJC', destination.code ? 'LAX' | 'BUR', dep_time ? @2004-01-01 } -> kayak
-  query: kayak is {
-    nest: carriers is {
+  query: kayak is -> {
+    nest: carriers is -> {
       group_by: carriers.nickname
       aggregate: flight_count
     }
-    nest: by_hour is {
+    nest: by_hour is -> {
       order_by: 1
       group_by: dep_hour is hour(dep_time)
       aggregate: flight_count
     }
-    nest: flights is {
+    nest: flights is -> {
       group_by:
         dep_minute is dep_time.minute
         carriers.name
@@ -213,15 +212,15 @@ source: flights is duckdb.table('data/flights.parquet') {
   }
 
 // example query that shows how you can build a map reduce job to sessionize flights
-  query: sessionize is {
+  query: sessionize is -> {
     group_by: flight_date is dep_time.day
     group_by: carrier
     aggregate: daily_flight_count is flight_count
-    nest: per_plane_data is {
-      top: 20
+    nest: per_plane_data is -> {
+      limit: 20
       group_by: tail_num
       aggregate: plane_flight_count is flight_count
-      nest: flight_legs is {
+      nest: flight_legs is -> {
         order_by: 2
         group_by:
           tail_num
@@ -234,29 +233,31 @@ source: flights is duckdb.table('data/flights.parquet') {
     }
   }
 
-  query: search_index is {index: * where: dep_time? @2004-01}
+  query: search_index is -> { index: *; where: dep_time? @2004-01 }
 }
 
 query: sessionize_delta_southwest is
   flights -> sessionize { where: carrier ? 'WN' | 'DL', dep_time ? @2002-03-03 }
 
 query: kayak_query_sj_to_la is
-  flights -> kayak {
+  flights -> kayak refine {
     where:
       origin.code ? 'SJC',
       destination.code ? 'LAX' | 'BUR',
       dep_time ? @2004-01-01
   }
 
-query: southwest_dashboard is flights -> carrier_dashboard {
+query: southwest_dashboard is flights -> carrier_dashboard refine {
   where: carriers.nickname ? 'Southwest'
 }
-query: jetblue_dashbaord is flights -> carrier_dashboard {
+
+query: jetblue_dashbaord is flights -> carrier_dashboard refine {
   where: carriers.nickname ? 'Jetblue'
 }
 query: sjc_dashboard is flights -> airport_dashboard {
   where: origin.code ? 'SJC'
 }
-query: sfo_dashboard is flights -> airport_dashboard {
+
+query: sfo_dashboard is flights -> airport_dashboard refine {
   where:  origin.code ? 'SFO'
 }

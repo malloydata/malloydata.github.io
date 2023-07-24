@@ -13,7 +13,7 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 ## Normal Table
 
 ```malloy
---! {"isRunnable": true, "size":"medium", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -28,7 +28,7 @@ run: airports -> {
 With a `list`, just the first element in the table is shown.
 
 ```malloy
---! {"isRunnable": true, "size":"small", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"small",  "source": "/inline/airports_mini.malloy"}
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -45,7 +45,7 @@ run: airports -> {
 With `list_detail` the element and value are shown.
 
 ```malloy
---! {"isRunnable": true, "size":"small", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "size":"small",  "source": "/inline/airports_mini.malloy"}
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count

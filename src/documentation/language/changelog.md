@@ -3,19 +3,19 @@ _Breaking changes indicated with *_
 
 We will use this space to highlight major and/or breaking changes to Malloy.
 
-## M4 (v0.0.40 - v0.0.56)
+## Malloy 4.0 Preview (v0.0.40 - v0.0.56)
 
-In this set of changes, several new syntactical constructs have been introduced, in some cases directly replacing existing syntaxes. These old syntaxes will be deprecated in a future release. For the time being, both sets of syntaxes are legal. To preview warnings (and eventually errors) that will be added when they are deprecated, you can include the <code>m4warnings</code> [compiler flag](./tags.md) in your source code: `##! m4warnings`.
+In this set of changes, several new syntactical constructs have been introduced, in some cases directly replacing existing syntaxes. The old syntaxes will be deprecated in version 4.0. For the time being, both sets of syntaxes are legal. To preview warnings (and eventually errors) that will be added in 4.0, you can include the <code>m4warnings</code> [compiler flag](./tags.md) in your source code: `##! m4warnings`.
 
 ### Connection Table Method
 
-New syntax for defining sources based on tables, `duckdb.table('data/users.parquet')` has been introduced. The old syntax, `table('duckdb:data/users.parquet')` still works for the time being, but will be deprecated.
+New syntax for defining sources based on tables, `duckdb.table('data/users.parquet')` has been introduced. The old syntax, `table('duckdb:data/users.parquet')` still works for the time being, but will be deprecated in 4.0.
 
 See the [Connections](./connections.md#table-connection-method) section for more details.
 
 ### SQL Source Method
 
-New syntax for defining sources based on SQL queries `duckdb.sql("""select * ... """)` has been introduced. The old syntax, `sql: name is { select: """select * ..."""; connection: "duckdb" }` still works for the time being, but will be deprecated.
+New syntax for defining sources based on SQL queries, `duckdb.sql("""select * ... """)`, has been introduced. The old syntax, `sql: name is { select: """select * ..."""; connection: "duckdb" }` still works for the time being, but will be deprecated in 4.0.
 
 This makes `from_sql` no longer necessary, and it will be deprecated with the `sql:` statement.
 
@@ -23,7 +23,7 @@ See the [SQL Sources](./sql_sources.md) section for more details.
 
 ### Source Extensions and Query Refinements
 
-Previously, there was one gesture used for source extensions and query refinements, `source_or_query { extensions_or_refinements }`. Now there is new sepearate syntax for each: `some_source extend { source_extensions }` and `some_query refine { source_refinements }`. The old syntax still works for the time being, but wll be deprecated.
+Previously, there was one gesture used for source extensions and query refinements, `source_or_query { extensions_or_refinements }`. Now there is new sepearate syntax for each: `some_source extend { source_extensions }` and `some_query refine { source_refinements }`. The old syntax still works for the time being, but will be deprecated in 4.0.
 
 This makes `from` no longer required, and it will be deprecated with the old extension/refinement syntax.
 
@@ -31,7 +31,7 @@ See the [Query Refinement](./query.md#refinement) and [Source Extension](./sourc
 
 ### Deprecation of Leading Arrows for Query References
 
-Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { project: * }`. Now the leading arrow is no longer required, and will be deprecated.
+Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { project: * }`. Now the leading arrow is no longer required, and will be deprecated in 4.0.
 
 ### Addition of Leading Arrow for Queries Defined in Sources
 
@@ -45,15 +45,9 @@ source: my_source is duckdb.table('some_table') extend {
 }
 ```
 
-### *New Rules for Query Refinement
-
-There are now new rules for query refinement of multi-stage queries. `where:` statements apply to the first stage, `having:`, `limit:`, and `order_by:` apply to the last stage, and `dimension:`, `measure:`, `calculate:` and `nest:` are illegal (specifically for multi-stage queries; for single-stage queries, they are still allowed).
-
-See the [Query Refinement](./query.md#refinement) section for more details.
-
 ### Deprecation of The Filter Shortcut
 
-Previously you could use a shortcut syntax for filtering sources, queries, or measures, `{? condition }`. This will be removed in a future version, and there is a new deprecation warning when the shortcut is used.
+Previously you could use a shortcut syntax for filtering sources, queries, or measures, `{? condition }`. This will be deprecated in version 4.0.
 
 Instead of the shortcut, use `source_name extend { where: condition }`, `query_name refine { where: condition }`, or `measure_name { where: condition }`.
 
@@ -70,13 +64,13 @@ query: my_query is some_source -> {
 }
 ```
 
-This will replace `declare:` and `join_*:` in queries, and they will be deprecated.
+This will replace `declare:` and `join_*:` in queries, and they will be deprecated in 4.0.
 
 See the [Source extensions](./source.md#source-extensions) section for more details.
 
 ### Run Statement
 
-There is new syntax for specifying an unnamed query that should be runnable in the host application, `run: flights -> by_carrier`. This will replace the old syntax, `query: flights -> by_carrier`, which still works for the time being, but will be deprecated.
+There is new syntax for specifying an unnamed query that should be runnable in the host application, `run: flights -> by_carrier`. This will replace the old syntax, `query: flights -> by_carrier`, which still works for the time being, but will be deprecated in 4.0. See the [Run Statement](../language/statement.md#run-statements) section for details.
 
 ## v0.0.39
 

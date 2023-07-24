@@ -11,7 +11,7 @@ If you'd like to run Malloy locally on your laptop instead, follow the setup ins
 The following query is equivalent to <code>SELECT id, code, city FROM airports LIMIT 10</code> in SQL:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   project:
     id
@@ -39,7 +39,7 @@ The second type of <code>SELECT</code> in SQL does not perform any aggregation; 
 In the query below, the data will be grouped by `state` and `county`, and will produce an aggregate calculation for `airport_count` and `average_elevation`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   group_by:
     state
@@ -54,7 +54,7 @@ run: duckdb.table('data/airports.parquet') -> {
 In Malloy, "project" is a verb, not a noun. As in "to project something", rather than "this is a project". A `project` statement produces a list of fields. For every row in the input table, there is a row in the output table. This is similar to a simple <code>SELECT</code> statement in SQL with no aggregations.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   project: code, full_name, city, county
   where: county = 'SANTA CRUZ'
@@ -65,7 +65,7 @@ run: duckdb.table('data/airports.parquet') -> {
 For the most part, operations can be placed in any order within a query. A `where` can come before or after a `project`, and `limit` can be placed anywhere as well. The above query could also be written:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   limit: 10
   where: county = 'SANTA CRUZ'
@@ -80,7 +80,7 @@ includes a field with a calculated value, like a scalar or aggregate function,
 it must be named _(unlike SQL, which allows un-named expressions)_.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   aggregate: max_elevation is max(elevation)
 }
@@ -93,7 +93,7 @@ the code to visualize the resulting query structure.
 Named objects, like columns from a table or fields defined in a source, can be included in field lists without an `is`:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   project:
     full_name
@@ -106,7 +106,7 @@ run: duckdb.table('data/airports.parquet') -> {
 Many SQL expressions will work unchanged in Malloy, and many functions available in Standard SQL are usable in Malloy as well. This makes expressions fairly straightforward to understand, given a knowledge of SQL.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "size": "large"}
+--! {"isRunnable": true, "showAs":"html",  "size": "large"}
 run: duckdb.table('data/airports.parquet') -> {
   group_by: county_and_state is concat(county, ', ', state)
   aggregate:
@@ -135,7 +135,7 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 ```
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/airports_mini.malloy"}
+--! {"isRunnable": true, "showAs":"html",  "source": "/inline/airports_mini.malloy"}
 run: airports -> {
   group_by: county_and_state
   aggregate: airport_count
@@ -153,16 +153,16 @@ run: airports -> {
 }
 ```
 
-Sources can also contain named queries. These named queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.
+Sources can also contain named queries. These "source-level" queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 source: airports_with_named_query is duckdb.table('data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
   measure: airport_count is count()
   measure: average_elevation is avg(elevation)
 
-  // This is a "named query":
+  // This is a "source-level" query:
   query: top_county_and_state is -> {
     group_by: county_and_state
     aggregate: airport_count
@@ -170,7 +170,7 @@ source: airports_with_named_query is duckdb.table('data/airports.parquet') exten
   }
 }
 
-// The named query can now be referenced by name 
+// The source-level query can now be referenced by name 
 // and run without having to rewrite the logic:
 run: airports_with_named_query -> top_county_and_state
 ```
@@ -180,7 +180,7 @@ run: airports_with_named_query -> top_county_and_state
 [Joins](../language/join.md) are declared as part of a source. When joining a source to another, it brings with it all child joins.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
 }
@@ -212,7 +212,7 @@ Now, any query that uses the `flights` source has access to fields in both `airc
 An ad hoc join can also be specified in a query block. In the query below, we join in the `airports` table using the `destination` column as a join key, then compute the top 5 destination airports by flight count.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 source: airports is duckdb.table('data/airports.parquet')
 
 source: flights is duckdb.table('data/flights.parquet')
@@ -221,7 +221,7 @@ run: flights -> {
   join_one: airports on destination = airports.code
   group_by: airports.full_name
   aggregate: flight_count is count()
-  top: 5
+  limit: 5
 }
 ```
 
@@ -232,10 +232,10 @@ When working with data, filtering is something you do in almost every query. Mal
 The following query grabs the top 5 counties in California with the highest airport count:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   where: state = 'CA'
-  top: 5
+  limit: 5
   group_by: county
   aggregate: airport_count is count()
 }
@@ -244,13 +244,13 @@ run: duckdb.table('data/airports.parquet') -> {
 Filters can also be applied to sources:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 source: airports_in_california is duckdb.table('data/airports.parquet') extend {
   where: state = 'CA'
 }
 
 run: airports_in_california -> {
-  top: 5
+  limit: 5
   group_by: county
   aggregate: airport_count is count()
 }
@@ -263,7 +263,7 @@ Any query run on the `airports_in_california` source will run against the `airpo
 A filter on an aggregate calculation (a _measure_) narrows down the data used in that specific calculation. In the example below, the calculations for `airports` and `heliports` are filtered separately.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   group_by: state
   aggregate:
@@ -300,14 +300,14 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 In Malloy, queries can be [nested](../language/nesting.md) to produce subtables on each output row.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html", "source": "airports.malloy"}
 run: airports -> {
   group_by: state
   aggregate: airport_count
   nest: by_facility is -> {
     group_by: fac_type
     aggregate: airport_count
-    top: 3
+    limit: 3
   }
 }
 ```
@@ -475,7 +475,7 @@ run: airports -> {
     aggregate: airport_count
   }
 } -> {
-  top: 10; order_by: 4 desc
+  limit: 10; order_by: 4 desc
   project:
     by_county.county
     airports_in_county is by_county.airport_count
@@ -526,12 +526,12 @@ run: flights -> {
 
 In Malloy, ordering and limiting work pretty much the same way they do in SQL, though Malloy introduces some [reasonable defaults](../language/order_by.md).
 
-The `top:` and `limit:` statements are synonyms and limits the number of rows returned. Results below are sorted by the first measure descending--in this case, `airport_count`.
+The `limit:` statement limits the number of rows returned. Results below are sorted by the first measure descending—in this case, `airport_count`.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
-  top: 2
+  limit: 2
   group_by: state
   aggregate: airport_count is count()
 }
@@ -540,7 +540,7 @@ run: duckdb.table('data/airports.parquet') -> {
 Default ordering can be overridden with `order_by:`, as in the following query, which shows the states in alphabetical order.  `order_by:` can take a field index number or the name of a field.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/airports.parquet') -> {
   order_by: state
   group_by: state

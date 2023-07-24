@@ -8,7 +8,7 @@ For example, if you wanted to create a file <code>samples/flights_by_carrier.mal
 ```malloy
 import "faa/flights.malloy"
 
-query: flights -> { top: 5; group_by: carrier; aggregate: flight_count }
+query: flights -> { limit: 5; group_by: carrier; aggregate: flight_count }
 ```
 
 ## Import Locations

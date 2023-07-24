@@ -63,12 +63,12 @@ See the [Sources](source.md) section for more information on sources.
 
 ### Run Statements
 
-Run statements allow you to write queries in a model without naming them, or to indicate to the host application that a particular named query should be run. You'll see run statements all over the documentation, usually followed by the results of running that query. 
+Run statements allow you to write queries in a model without naming them, or to indicate to the host application that a particular model-level query should be run. You'll see run statements all over the documentation, usually followed by the results of running that query. 
 
 Any query can be run by including it in a run statement.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true, "source": "/inline/e2.malloy"}
+--! {"isRunnable": true, "showAs":"html",  "source": "/inline/e2.malloy"}
 run: flights -> { 
   group_by: origin
   aggregate: destination_count is count(distinct destination) 

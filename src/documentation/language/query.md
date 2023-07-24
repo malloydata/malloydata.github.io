@@ -17,7 +17,7 @@ Every query begins with a source, which can be thought of as a table with an ass
 Generally, ad-hoc queries will use one of these kinds of sources directly:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 run: duckdb.table('data/flights.parquet') -> { 
   aggregate: total_flight_count is count() 
 }
@@ -26,7 +26,7 @@ run: duckdb.table('data/flights.parquet') -> {
 However, as analysis becomes more involved, it is often useful to define reusable computations in a named source, then use that named source as the basis for queries.
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 source: flights is duckdb.table('data/flights.parquet') extend { 
   measure: 
     flight_count is count() 
@@ -42,7 +42,7 @@ run: flights -> {
 It is also sometimes useful to define a query and then later use that query as the source for another query:
 
 ```malloy
---! {"isRunnable": true, "showAs":"html", "isPaginationEnabled": true}
+--! {"isRunnable": true, "showAs":"html"}
 query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
   group_by: carrier
   aggregate: flight_count is count()
@@ -99,12 +99,16 @@ run: flights -> {
   // Filtering
   where: distance > 1000       
   // Limiting 
-  limit: 2                
-  // Ordering      
-  order_by: flight_count desc       
+  limit: 10     
   // Reducing 
   group_by: carrier        
-  aggregate: flight_count is count()
+  aggregate: flight_count is count()              
+  // Ordering      
+  order_by: flight_count desc  
+  // Calculating (window functions)
+  calculate: prev_flight_count is lag(flight_count)
+  // Post-aggregation filtering
+  having: flight_count > 10000
 }
 ```
 
@@ -121,7 +125,7 @@ run: flights -> {
 
 Note that the operations in a stage are for the most part not order-sensitive like SQL; they can be arranged in any order.
 
-A reference to a [modeled query](./fields.md#modeled-queries) (which defines its own pipeline) can be the first stage in a pipeline.
+A reference to a [source-level query](./fields.md#source-level-queries) (which defines its own pipeline) can be the first stage in a pipeline.
 
 ```malloy
 run: flights -> by_carrier
@@ -173,10 +177,9 @@ defined.
 
 ## Filters
 
-Filters specified at the top level of query stage apply to
-the whole stage.
+Filters specified at the top level of query stage apply to the whole stage.
 
-At the query level
+At the source level
 ```malloy
 query: flights extend { where: distance > 1000 } -> {
   group_by: distance
@@ -184,7 +187,7 @@ query: flights extend { where: distance > 1000 } -> {
 }
 ```
 
-or in the stage.
+or in the query stage.
 ```malloy
 query: flights -> {
   where: distance > 1000
@@ -239,11 +242,38 @@ Query stages may also include ordering and limiting
 specifications.
 
 ```malloy
-query: flights -> {
-  limit: 10
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "size": "medium"}
+run: flights -> {
+  limit: 4
   group_by: carrier
   aggregate: flight_count
 }
 ```
 
 For detailed information on ordering and limiting, see the [Ordering and Limiting](order_by.md) section.
+
+## Post-Aggregation Filtering
+
+Query stages may filter groupings based on aggregate values using the `having:` clause, which corresponds to SQL's <code>HAVING</code> clause.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "size": "medium"}
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  having: flight_count > 35000
+}
+```
+
+## Calculations (Window Functions)
+
+Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.md) section for details.
+
+```malloy
+--! {"isRunnable": true, "showAs":"html", "source": "flights.malloy", "size": "medium"}
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  calculate: flight_count_rank is rank()
+}
+```

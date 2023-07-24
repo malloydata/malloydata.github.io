@@ -22,7 +22,7 @@ Line charts take two or three parameters.
 ## Single line line_chart
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # line_chart
 run: flights -> {
   group_by: departure_month is dep_time.month
@@ -35,7 +35,7 @@ run: flights -> {
 The third parameter in a line chart adds a line for each dimension found.  
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 # line_chart
 run: flights -> {
   group_by: departure_month is dep_time.month
@@ -49,7 +49,7 @@ run: flights -> {
 When line charts are nested in tables the size is reduced.  Nested line charts increase the density of information provided by the result.
 
 ```malloy
---! {"isRunnable": true, "isPaginationEnabled": true, "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+--! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
 
 run: flights -> {
   group_by: destination

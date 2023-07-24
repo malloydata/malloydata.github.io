@@ -4,9 +4,9 @@ In Malloy, named connection objects are used to interact with a database, includ
 
 Connection objects are defined implicitly on their first use when referencing a table or SQL source:
 
-```
+```malloy
 --! {"isRunnable": true, "showAs":"html", "size": "medium"}
-// This creates a top level model object called `duckdb`
+// This creates a model-level connection definition, `duckdb`
 source: users is duckdb.table('data/users.parquet')
 
 run: users -> { group_by: first_name; limit: 5 }
@@ -28,7 +28,7 @@ In BigQuery, the string passed to the `.table()` connection method can be a two-
 
 ### DuckDB
 
-In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of a CSV or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`.
+In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.md).
 
 ### Postgres
 

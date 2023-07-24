@@ -10,18 +10,18 @@ the locality of computation, so they are always computed correctly regardless of
 In Malloy, syntaxes for join are:
 
 ```malloy
-join_one: <source-name> [is <source-exp>] on <boolean expression>
-join_one: <source-name> [is <source-exp>] with <foreign key expression>
-join_many: <source-name> [is <source-exp>] on <boolean expression>
-join_cross: <source-name> [is <source-exp>] [on <boolean expression>]
+join_one: <<source name>> [is <<source>>] on <<boolean expression>>
+join_one: <<source name>> [is <<source>>] with <<foreign key expression>>
+join_many: <<source name>> [is <<source>>] on <<boolean expression>>
+join_cross: <<source name>> [is <<source>>] [on <<boolean expression>>]
 ```
 
 Examples of the above, with `orders` as the implied source:
 ```malloy
-join_one: users is duckdb.table('data/users.parquet') on orders.user_id = users.id
-join_one: users on orders.user_id = users.id
+join_one: users is duckdb.table('data/users.parquet') on user_id = users.id
+join_one: users on user_id = users.id
 join_one: users with user_id
-join_many: order_items on order_items.id = orders.id
+join_many: order_items on order_items.id = id
 join_cross: order_items2 is duckdb.table('data/order_items.parquet') on user_id = order_items2.user_id
 ```
 
@@ -42,16 +42,16 @@ Since Malloy deals in graphs, some SQL Join types don't make sense (RIGHT JOIN, 
 
 The easiest, most error-proof way to perform a join is using the following syntax:
 
-`join_one: <source> with <foreign_key>`
+`join_one: <<source>> with <<foreign key>>`
 
 To join based on a foreign key through the `primary_key` of a joined source, use `with` to specify an expression, which could be as simple as a field name in the source. This expression is matched against the declared `primary_key` of the joined source. Sources without a `primary_key` cannot use `with` joins.
 
 ```malloy
-source: users is duckdb.table('data/users.parquet'){
+source: users is duckdb.table('data/users.parquet') extend {
   primary_key: id
 }
 
-source: order_items is duckdb.table('data/order_items.parquet'){
+source: order_items is duckdb.table('data/order_items.parquet') extend {
   join_one: users with user_id
 }
 ```
@@ -59,7 +59,7 @@ source: order_items is duckdb.table('data/order_items.parquet'){
 This is simply a shortcut, when joining based on the primary key of a joined source. It is exactly equivalent to the `on` join written like this.
 
 ```malloy
-source: order_items is duckdb.table('data/order_items.parquet'){
+source: order_items is duckdb.table('data/order_items.parquet') extend {
   join_one: users on order_items.user_id = users.id
 }
 ```
@@ -71,11 +71,11 @@ If no alias is specified using `is`, the name of the join will be the name of th
 
 ```malloy
 
-source: carriers is duckdb.table('data/carriers.parquet') {
+source: carriers is duckdb.table('data/carriers.parquet') extend {
   primary_key: code
 }
 
-source: flights is duckdb.table('data/flights.parquet'){
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: carriers with carrier
 }
 ```
@@ -83,11 +83,11 @@ source: flights is duckdb.table('data/flights.parquet'){
 To give the joined source a different name within the context source, use `is` to alias it.
 
 ```malloy
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   primary_key: code
 }
 
-source: flights is duckdb.table('data/flights.parquet'){
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: origin_airport is airports with origin
 }
 ```
@@ -97,8 +97,9 @@ source: flights is duckdb.table('data/flights.parquet'){
 Sources do not need to be modeled before they are used in a join, though the join must be named using `is`.
 
 ```malloy
-source: flights is duckdb.table('data/flights.parquet'){
-  join_one: carriers is duckdb.table('data/carriers.parquet'){primary_key: code} with carrier
+source: flights is duckdb.table('data/flights.parquet') extend {
+  join_one: carriers is 
+    duckdb.table('data/carriers.parquet') extend { primary_key: code } with carrier
 }
 ```
 
@@ -108,7 +109,7 @@ When a source is joined in, its fields become nested within the parent source. F
 
 ```malloy
 --! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
-query: flights->{
+query: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count is count()
 }
@@ -118,7 +119,7 @@ Measures and queries defined in joined sources may be used in addition to dimens
 
 ```malloy
 --! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
-query: flights->{
+query: flights -> {
   group_by: destination_code
   aggregate: carriers.carrier_count
 }
@@ -128,38 +129,40 @@ query: flights->{
 
 This example demonstrates the definition of several different joins in a model and their use in a query.
 Entire subtrees of data can be joined.  In the example below, `aircraft` joins `aircraft_models`.  `flights`
-joins aircraft (which already has a join to aircraft manufacturer).  The tree nature of the join relationship
+joins aircraft (which already has a join to aircraft manufacturer). The tree nature of the join relationship
 retained.
 
-  `group_by: aircraft.aircraft_models.manufacturer`
+```malloy
+group_by: aircraft.aircraft_models.manufacturer
+```
 
 ```malloy
---! {"isRunnable": true,   "isPaginationEnabled": true, "size":"large"}
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') {
+--! {"isRunnable": true, "size":"large"}
+source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
   measure: aircraft_model_count is count()
 }
 
 /* Individual airplanes */
-source: aircraft is duckdb.table('data/aircraft.parquet') {
+source: aircraft is duckdb.table('data/aircraft.parquet') extend {
   primary_key: tail_num
   measure: aircraft_count is count()
   join_one: aircraft_models with aircraft_model_code
 }
 
 /* The airports that the aircraft fly to and from */
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('data/airports.parquet') extend {
   primary_key: code
   measure: airport_count is count()
 }
 
-source: flights is duckdb.table('data/flights.parquet') {
+source: flights is duckdb.table('data/flights.parquet') extend {
   join_one: origin_airport is airports with origin
   join_one: destination_airport is airports with destination
   join_one: aircraft with tail_num
 }
 
-query: flights->{
+run: flights -> {
   group_by: aircraft.aircraft_models.manufacturer
   aggregate:
     flight_count is count()
@@ -172,10 +175,10 @@ For more examples and how to reason about aggregation across joins, review the [
 
 ## Inner Joins
 
-Inner join are essentially left joins with an additional condition that the parent table has matches in the joined table. The example below functions logically as an INNER JOIN, returning only users that have at least one row in the orders table, and only orders that have an associated user.
+Inner join are essentially left joins with an additional condition that the parent table has matches in the joined table. The example below functions logically as an <code>INNER JOIN</code>, returning only users that have at least one row in the orders table, and only orders that have an associated user.
 
 ```malloy
-source: users is duckdb.table('data/users.parquet') {
+source: users is duckdb.table('data/users.parquet') extend {
   join_many: orders is duckdb.table('data/order_items.parquet') on id = orders.user_id
   where: orders.user_id != null
 }
