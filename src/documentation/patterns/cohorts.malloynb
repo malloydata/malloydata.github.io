@@ -24,7 +24,7 @@ source: order_items is duckdb.table('../data/order_items.parquet') + {
 In the example below, we look at the first 6 months of 2022.  In this example we are looking in terms of numbers of users.
 
 >>>malloy
-## page_size=5000 size=medium
+#(docs) limit=5000 size=medium
 run: order_items -> {
   // limit the data to 6 months
   where: (users.created_at.month ? @2022 for 6 months) and
@@ -52,7 +52,7 @@ run: order_items -> {
 ## Cohorts as a percentage of Sales.
 
 >>>malloy
-## page_size=5000 size=medium
+#(docs) limit=5000 size=medium
 run: order_items -> {
   where: (users.created_at.month ? @2022 for 6 months) and
     created_at ? @2022 for 6 months

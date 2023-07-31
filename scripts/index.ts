@@ -29,9 +29,9 @@ import { renderFooter, renderSidebar, Section } from "./page.js";
 import {
   convertDocPathToHTML,
   hashForHeading,
-  isMalloySQL,
+  isMalloyNB,
   isMarkdown,
-  isMarkdownOrMalloySQL,
+  isMarkdownOrMalloyNB,
   readDirRecursive,
   timeString,
   watchDebounced,
@@ -161,7 +161,7 @@ function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, stri
     log(`File _includes/toc.html written.`);
 
     const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-    const allDocs = allFiles.filter(isMarkdownOrMalloySQL);
+    const allDocs = allFiles.filter(isMarkdownOrMalloyNB);
 
     const footers = {};
     for (const file of allDocs) {
@@ -330,8 +330,8 @@ function validateLinks(
 
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMarkdownOrMalloySQL);
-  const staticFiles = allFiles.filter((file) => !isMarkdownOrMalloySQL(file));
+  const allDocs = allFiles.filter(isMarkdownOrMalloyNB);
+  const staticFiles = allFiles.filter((file) => !isMarkdownOrMalloyNB(file));
   let { toc, footers } = rebuildSidebarAndFooters();
   for (const file of staticFiles) {
     handleStaticFile(file);
@@ -359,7 +359,7 @@ function validateLinks(
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
-      if (isMarkdownOrMalloySQL(file)) {
+      if (isMarkdownOrMalloyNB(file)) {
         log(`Documentation file ${file} ${type}d. Recompiling...`);
         compileDoc(fullPath, footers);
       } else {

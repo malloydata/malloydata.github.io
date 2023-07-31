@@ -28,16 +28,16 @@ export function isMarkdown(file: string): boolean {
   return file.endsWith(".md");
 }
 
-export function isMalloySQL(file: string): boolean {
-  return file.endsWith(".malloysql");
+export function isMalloyNB(file: string): boolean {
+  return file.endsWith(".malloysql") || file.endsWith(".malloynb");
 }
 
-export function isMarkdownOrMalloySQL(file: string): boolean {
-  return isMarkdown(file) || isMalloySQL(file);
+export function isMarkdownOrMalloyNB(file: string): boolean {
+  return isMarkdown(file) || isMalloyNB(file);
 }
 
 export function convertDocPathToHTML(file: string): string {
-  return file.replace(/\.md$/, ".html").replace(/\.malloysql$/, ".html");
+  return file.replace(/\.md$/, ".html").replace(/\.malloysql$/, ".html").replace(/\.malloynb$/, ".html");
 }
 
 export function timeString(start: number, end: number): string {

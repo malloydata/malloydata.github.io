@@ -37,6 +37,7 @@ import {
   Connection,
   Result,
   ModelDef,
+  Tags,
 } from "@malloydata/malloy";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
@@ -317,9 +318,6 @@ export async function runNotebookCode(
     .extendModel(fakeURL);
   const model = await newModel.getModel();
   const tags = model.getTags().getMalloyTags().properties;
-  options.isHidden = "hidden" in tags;
-  options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
-  options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
   const newModelDef = model._modelDef;
   let hasQuery = false;
   try {
@@ -330,6 +328,17 @@ export async function runNotebookCode(
 
   if (hasQuery) {
     const runnable = newModel.loadFinalQuery();
+    const query = await runnable.getPreparedQuery();
+    const tags = new Tags({ 
+      notes: query
+        .getTags()
+        .getTagList()
+        .filter(t => t.startsWith("#(docs) "))
+        .map(t => t.replace(/^#\(docs\) /, "# "))
+    }).getMalloyTags().properties;
+    options.isHidden = "hidden" in tags;
+    options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
+    options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
     });

@@ -31,7 +31,7 @@ import { log } from "./log.js";
 import { highlight } from "./highlighter.js";
 import yaml from "yaml";
 import { DEFAULT_CONTEXT } from "./context.js";
-import { hashForHeading, isMalloySQL } from "./utils.js";
+import { hashForHeading, isMalloyNB } from "./utils.js";
 import {MalloySQLParser, MalloySQLStatementType} from '@malloydata/malloy-sql';
 import { DocumentPosition, DocumentRange, ModelDef } from "@malloydata/malloy";
 
@@ -60,7 +60,7 @@ class Renderer {
   constructor(path: string) {
     this.path = path;
     this.models = new Map();
-    this.isNotebook = isMalloySQL(path);
+    this.isNotebook = isMalloyNB(path);
   }
 
   private setModel(modelPath: string, source: string) {
@@ -80,7 +80,7 @@ class Renderer {
     let highlightedCode: string;
     if (lang === "malloy-x") {
       if (this.isNotebook) {
-        showCode = removeLeadingLinesWithTags(code);
+        showCode = removeDocsTags(code);
         try {
           const { rendered, newModel } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
           result = rendered;
@@ -458,7 +458,7 @@ function convertRange(text: string, documentRange: DocumentRange): Position {
   };
 } 
 
-function parseMalloySQL(text: string, path: string): Root {
+function parseMalloyNB(text: string, path: string): Root {
   const parse = MalloySQLParser.parse(text, path);
   // if (parse.errors) {
   //   // TODO map these errors better...
@@ -510,8 +510,8 @@ function parseMalloySQL(text: string, path: string): Root {
 }
 
 function parse(text: string, path: string): Root {
-  if (isMalloySQL(path)) {
-    return parseMalloySQL(text, path);
+  if (isMalloyNB(path)) {
+    return parseMalloyNB(text, path);
   } else {
     // TODO remove this
     return { 
@@ -562,14 +562,6 @@ export async function renderDoc(
   };
 }
 
-function removeLeadingLinesWithTags(code: string) {
-  const lines = code.split("\n");
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].trim().startsWith("## ")) {
-      continue;
-    } else {
-      return lines.slice(i).join("\n");
-    }
-  }
-  return "";
+function removeDocsTags(code: string) {
+  return code.split("\n").filter(l => !l.match(/^#\(docs\) /)).join("\n");
 }
