@@ -28,6 +28,18 @@ export function isMarkdown(file: string): boolean {
   return file.endsWith(".md");
 }
 
+export function isMalloySQL(file: string): boolean {
+  return file.endsWith(".malloysql");
+}
+
+export function isMarkdownOrMalloySQL(file: string): boolean {
+  return isMarkdown(file) || isMalloySQL(file);
+}
+
+export function convertDocPathToHTML(file: string): string {
+  return file.replace(/\.md$/, ".html").replace(/\.malloysql$/, ".html");
+}
+
 export function timeString(start: number, end: number): string {
   return `${((end - start) / 1000).toLocaleString()}s`;
 }

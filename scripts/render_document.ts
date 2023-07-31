@@ -25,13 +25,15 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import { Markdown, Position } from "./markdown_types.js";
-import { runCode } from "./run_code.js";
+import { Markdown, Position, Root } from "./markdown_types.js";
+import { runCode, runNotebookCode } from "./run_code.js";
 import { log } from "./log.js";
 import { highlight } from "./highlighter.js";
 import yaml from "yaml";
 import { DEFAULT_CONTEXT } from "./context.js";
-import { hashForHeading } from "./utils.js";
+import { hashForHeading, isMalloySQL } from "./utils.js";
+import {MalloySQLParser, MalloySQLStatementType} from '@malloydata/malloy-sql';
+import { DocumentPosition, DocumentRange, ModelDef } from "@malloydata/malloy";
 
 /*
  * A Renderer is capable of converting a parsed `Markdown` document into HTML,
@@ -52,10 +54,13 @@ class Renderer {
       | { type: "code"; text: string }
     )[];
   }[] = [];
+  private readonly isNotebook: boolean;
+  private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}};
 
   constructor(path: string) {
     this.path = path;
     this.models = new Map();
+    this.isNotebook = isMalloySQL(path);
   }
 
   private setModel(modelPath: string, source: string) {
@@ -68,13 +73,26 @@ class Renderer {
     _escaped: boolean,
     position: Position,
   ) {
-    const lang = (infostring || "txt").trim();
+    let lang = (infostring || "txt").trim();
     let showCode = code;
     let hidden = false;
-
     let result = "";
-    let highlightedCode;
-    if (lang === "malloy") {
+    let highlightedCode: string;
+    if (lang === "malloy-x") {
+      if (this.isNotebook) {
+        showCode = removeLeadingLinesWithTags(code);
+        try {
+          const { rendered, newModel } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
+          result = rendered;
+          this.modelDef = newModel;
+        } catch (error) {
+          log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
+          result = `<div class="error">Error: ${error.toString()}</div>`;
+          this._errors.push({ snippet: code, error: error.message, position });
+        }
+      } 
+      highlightedCode = await highlight(showCode, "malloy");
+    } else if (lang === "malloy") {
       if (code.startsWith("--!")) {
         try {
           const options = JSON.parse(
@@ -115,7 +133,7 @@ class Renderer {
       segment.paragraphs.push({ type: "code", text: highlightedCode });
     }
 
-    return `${hidden ? "" : highlightedCode}${result}`;
+    return `${hidden ? "" : highlightedCode}${result ?? ""}`;
   }
 
   protected async blockquote(content: Markdown[]) {
@@ -352,9 +370,17 @@ class Renderer {
   }
 
   protected async children(children: Markdown[]) {
-    return (
-      await Promise.all(children.map((child) => this.render(child)))
-    ).join("");
+    // Must be executed in order, because notebook-style queries have side effects
+    let result = "";
+    for (const child of children) {
+      result += await this.render(child);
+    }
+    return result;
+
+
+    // return (
+    //   await Promise.all(children.map((child) => this.render(child)))
+    // ).join("");
   }
 
   private async root(children: Markdown[]) {
@@ -407,6 +433,99 @@ class Renderer {
   }
 }
 
+function parseMarkdown(text: string): Root {
+  const ast = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkFrontmatter, ['yaml'])
+    .parse(text);
+  return ast as unknown as Root;
+}
+
+function convertPosition(text: string, documentPosition: DocumentPosition): { line: number, column: number, offset: number} {
+  const lines = text.split("\n");
+  return {
+    line: documentPosition.line,
+    column: documentPosition.character,
+    offset: documentPosition.character + lines.slice(documentPosition.line).join("\n").length,
+  };
+}
+
+function convertRange(text: string, documentRange: DocumentRange): Position {
+  return {
+    start: convertPosition(text, documentRange.start),
+    end: convertPosition(text, documentRange.end)
+  };
+} 
+
+function parseMalloySQL(text: string, path: string): Root {
+  const parse = MalloySQLParser.parse(text, path);
+  // if (parse.errors) {
+  //   // TODO map these errors better...
+  //   const errors = parse.errors.map(e => ({snippet: "", error: e.message, position: {
+  //     start: { line: 0, column: 0, offset: 0 },
+  //     end: { line: 0, column: 0, offset: 0 },
+  //   }}));
+  //   return { result: { 
+  //     type: "root", 
+  //     children: [], 
+  //     position: { 
+  //       start: { line: 0, column: 0, offset: 0 }, 
+  //       end: { line: 0, column: 0, offset: 0 }
+  //     }
+  //   }, errors };
+  // }
+  const children: Markdown[] = parse.statements.flatMap(stmt => {
+    const position = convertRange(text, stmt.range);
+    if (stmt.type === MalloySQLStatementType.MALLOY) {
+      return [{
+        type: 'code',
+        lang: 'malloy-x',
+        value: stmt.text,
+        meta: undefined,
+        position, 
+      }];
+    } else if (stmt.type === MalloySQLStatementType.SQL) {
+      return [{
+        type: 'code',
+        lang: 'sql',
+        value: stmt.text,
+        meta: undefined,
+        position,
+      }];
+    } else {
+      // TODO map positions...
+      const markdown = parseMarkdown(stmt.text);
+      return markdown.children;
+    }
+  });
+  return { 
+    type: "root", 
+    children, 
+    position: { 
+      start: { line: 0, column: 0, offset: 0 }, 
+      end: { line: 0, column: 0, offset: 0 }
+    }
+  };
+}
+
+function parse(text: string, path: string): Root {
+  if (isMalloySQL(path)) {
+    return parseMalloySQL(text, path);
+  } else {
+    // TODO remove this
+    return { 
+      type: "root", 
+      children: [], 
+      position: { 
+        start: { line: 0, column: 0, offset: 0 }, 
+        end: { line: 0, column: 0, offset: 0 }
+      }
+    };
+    return parseMarkdown(text);
+  }
+}
+
 export async function renderDoc(
   text: string,
   path: string
@@ -424,14 +543,10 @@ export async function renderDoc(
   hashes: string[],
   frontmatter: any,
 }> {
-  const ast = unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkFrontmatter, ['yaml'])
-    .parse(text);
+  const ast = parse(text, path);
   const renderer = new Renderer(path);
   let frontmatter: unknown = {};
-  if (ast.children[0].type === 'yaml') {
+  if (ast.children[0]?.type === 'yaml') {
     const frontmatterRaw = ast.children[0].value;
     frontmatter = yaml.parse(frontmatterRaw);
     ast.children = ast.children.slice(1);
@@ -445,4 +560,16 @@ export async function renderDoc(
     hashes: renderer.hashes,
     links: renderer.links
   };
+}
+
+function removeLeadingLinesWithTags(code: string) {
+  const lines = code.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim().startsWith("## ")) {
+      continue;
+    } else {
+      return lines.slice(i).join("\n");
+    }
+  }
+  return "";
 }

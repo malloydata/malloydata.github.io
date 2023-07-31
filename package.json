@@ -49,6 +49,7 @@
     "unified": "^10.1.2"
   },
   "dependencies": {
+    "@malloydata/malloy-sql": "^0.0.62",
     "@types/fs-extra": "^9.0.13",
     "handlebars": "^4.7.7",
     "remark-frontmatter": "^4.0.1",

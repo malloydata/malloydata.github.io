@@ -27,8 +27,11 @@ import { performance } from "perf_hooks";
 import { renderDoc } from "./render_document.js";
 import { renderFooter, renderSidebar, Section } from "./page.js";
 import {
+  convertDocPathToHTML,
   hashForHeading,
+  isMalloySQL,
   isMarkdown,
+  isMarkdownOrMalloySQL,
   readDirRecursive,
   timeString,
   watchDebounced,
@@ -91,7 +94,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
   try {
     const startTime = performance.now();
     const shortPath = file.substring(DOCS_ROOT_PATH.length);
-    const shortOutPath = shortPath.replace(/\.md$/, ".html");
+    const shortOutPath = convertDocPathToHTML(shortPath);
     const outPath = path.join(OUT_PATH, shortOutPath);
     const outDirPath = path.join(outPath, "..");
     fs.mkdirSync(outDirPath, { recursive: true });
@@ -158,12 +161,12 @@ function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, stri
     log(`File _includes/toc.html written.`);
 
     const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-    const allDocs = allFiles.filter(isMarkdown);
+    const allDocs = allFiles.filter(isMarkdownOrMalloySQL);
 
     const footers = {};
     for (const file of allDocs) {
       const shortPath = file.substring(DOCS_ROOT_PATH.length);
-      const htmlLink = shortPath.replace(/\.md$/, ".html");
+      const htmlLink = convertDocPathToHTML(shortPath);
       const footer = renderFooter(tableOfContents, DOCS_ROOT_PATH, htmlLink);
       footers[shortPath] = footer;
     }
@@ -327,8 +330,8 @@ function validateLinks(
 
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMarkdown);
-  const staticFiles = allFiles.filter((file) => !isMarkdown(file));
+  const allDocs = allFiles.filter(isMarkdownOrMalloySQL);
+  const staticFiles = allFiles.filter((file) => !isMarkdownOrMalloySQL(file));
   let { toc, footers } = rebuildSidebarAndFooters();
   for (const file of staticFiles) {
     handleStaticFile(file);
@@ -356,8 +359,8 @@ function validateLinks(
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
-      if (isMarkdown(file)) {
-        log(`Markdown file ${file} ${type}d. Recompiling...`);
+      if (isMarkdownOrMalloySQL(file)) {
+        log(`Documentation file ${file} ${type}d. Recompiling...`);
         compileDoc(fullPath, footers);
       } else {
         if (fs.existsSync(fullPath)) {
