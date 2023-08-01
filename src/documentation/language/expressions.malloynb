@@ -1,3 +1,4 @@
+>>>markdown
 # Expressions
 
 Expressions in Malloy are much like expressions in any other language; they can have variables and operators and function calls in
@@ -36,13 +37,17 @@ Fields may be referenced by name, and fields in joins or nested structures can b
 
 * If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword.
 
+>>>markdown
 ```malloy
 dimension: year_plus_one is `year` + 1
 ```
+>>>markdown
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
-query: flights -> {
+>>>malloy
+##(docs) hidden
+import "flights.malloy"
+>>>malloy
+query: flights -> { 
   where: origin.county != null
   group_by: origin.state
   nest: by_county is -> {
@@ -53,7 +58,7 @@ query: flights -> {
   project: by_county.county
   limit: 3
 }
-```
+>>>markdown
 
 Identifiers that share a name with a keyword in Malloy must be enclosed in back ticks `` ` ``, e.g. `` `year` ``.
 
@@ -107,14 +112,13 @@ Aggregations may included in an expression to create [measures](fields.md#measur
 
 Aggregate expressions may be filtered, using the [usual filter syntax](filters.md).
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
+>>>malloy
 run: flights -> {
   aggregate:
     distance_2003 is sum(distance) { where: dep_time ? @2003 }
     ca_flights is count() { where: origin.state ? 'CA' }
 }
-```
+>>>markdown
 
 ## Type Cast
 Type cast may be accomplished with the `::` operator.
@@ -124,12 +128,11 @@ Type cast may be accomplished with the `::` operator.
 
 Type casting may be accomplished with the `::type` syntax.
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
+>>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
 }
-```
+>>>markdown
 
 ## Safe Type Cast
 
@@ -141,55 +144,63 @@ if an error occurs during the cast operation. Safe Type Cast is particularly use
 
 Type casting may be accomplished with the `:::type` syntax.
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
+>>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance:::string, ' miles')
 }
-```
+>>>markdown
 
 
 ## Pick Expressions
 
 The `pick` construction in Malloy is similar to <code>CASE</code> statements in SQL.
 
+>>>markdown
 ```malloy
 pick 'small'  when size < 10
 pick 'medium' when size < 20
 else 'large'
 ```
+>>>markdown
 
 Pick expressions are also compatible with the [apply operator](#application) and partial comparisons.
 
+>>>markdown
 ```malloy
 size ?
   pick 'small' when < 10
   pick 'medium' when < 20
   else 'large'
 ```
+>>>markdown
 
 Pick can be used to "clean" data, combining similar dirty values into one clean value. In the following example, the `pick` statement collects all the "this actually
 shipped" statuses, and because there is no `else`, leaves the other
 status values alone.
 
+>>>markdown
 ```malloy
 shipping_status ?
   pick 'shipped' when 'will call' | 'shipped'
   pick 'ignore' when 'bad1' | 'bad2' | 'testing'
 ```
+>>>markdown
 
 Another common kind of cleaning is to have a small set you want to group
 by and all other values are compressed into `null`. A `pick` clause with no value
 picks an applied value when the condition is met.
 
+>>>markdown
 ```malloy
 status ?
   pick when 'good' | 'ok' | 'fine' // leave these alone
   else null                        // ignore the rest
 ```
+>>>markdown
 
 If you need to match on multiple fields and conditions, use a dimension.
 
+>>>markdown
 ```malloy
 dimension: Facility_Type_State is
   pick 'Cali Heli' when state = 'CA' and fac_type = 'HELIPORT'
@@ -197,6 +208,7 @@ dimension: Facility_Type_State is
   pick 'Phoenix Ultra' when state = 'AZ' and fac_type = 'ULTRALIGHT' and city = 'PHOENIX'
   else 'Not Needed'
 ```
+>>>markdown
 
 ## Time Expressions
 
@@ -292,12 +304,14 @@ Applying a value to another value applies a default comparison on the two values
 
 Values can be applied to [pick expressions](#pick-expressions) to make them more succinct.
 
+>>>markdown
 ```malloy
 size ?
   pick 'small' when < 10
   pick 'medium' when < 20
   else 'large'
 ```
+>>>markdown
 
 ### Null Operations
 
@@ -305,16 +319,20 @@ Malloy has the keyword `null` to represent the null value.
 
 To check to see if a value is null, simply compare it to `null`, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.
 
+>>>markdown
 ```malloy
 dimension: name_not_present is name = null
 dimension: name_present is name != null
 ```
+>>>markdown
 
 Malloy also has the operator `??`, which in other languages is sometimes called the "Nullish Coalescing" operator, for providing a value to use in case an expression is null.
 
+>>>markdown
 ```malloy
 dimension: name_cleaned is name ?? '(No Name Provided)'
 ```
+>>>markdown
 
 ### Operator Precedence
 

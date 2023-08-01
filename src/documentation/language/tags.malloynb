@@ -1,3 +1,4 @@
+>>>markdown
 # Tags
 
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
@@ -9,6 +10,7 @@ Tags look similar to comments, but they begin with the `#` (hash, octothorpe, nu
 * All other tags are attached the the object defined after the tag
 * Statements which define multiple objects, distribute their tags to each object defined in the statement.
 
+>>>markdown
 ```malloy
 // Compiler flag
 ##! enable_cool_malloy_feature
@@ -30,6 +32,7 @@ dimension:
   # tag_5
   b is 'b'
 ```
+>>>markdown
 
 Tags are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode), making them extensible for many use cases. In VSCode, tags are interpreted in two ways:
 * As rendering instructions: `# bar_chart`

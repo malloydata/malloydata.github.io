@@ -1,3 +1,4 @@
+>>>markdown
 # Filters
 
 Filtering which data is used in a query is an incredibly important aspect of data analysis. Malloy makes it easy to target specific parts of a query to apply individual filters.
@@ -6,9 +7,11 @@ Filtering which data is used in a query is an incredibly important aspect of dat
 
 Regardless of the placement of a filter, the syntax looks the same.
 
+>>>markdown
 ```malloy
 { where: filter_one, filter_two }
 ```
+>>>markdown
 
 Each filter can be any expression of type `boolean`, whether that's a boolean field `is_commercial_flight`, a comparison `distance > 1000`, or any of the other kinds of boolean expressions that Malloy supports. For examples see [the table below](#examples-of-filter-expressions), or for detailed information on the kinds of expressions Malloy supports, see the [Expressions](expressions.md) section.
 
@@ -26,17 +29,18 @@ A filter can be applied to the source of a query, to just one stage of a query, 
 
 When filtering a query's source, the filter applies to the whole query.
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
-query: flights { where: distance > 1000 } -> { aggregate: flight_count }
-```
+>>>malloy
+##(docs) hidden
+import "flights.malloy"
+>>>malloy
+query: flights { where: distance > 1000 } -> { aggregate: flight_count } 
+>>>markdown
 
 ### Filtering in a Query Stage
 
 A filter can also be applied to an individual query stage.
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
+>>>malloy
 query: flights -> {
   group_by: carrier
   aggregate: flight_count
@@ -44,21 +48,20 @@ query: flights -> {
   where: carrier ? 'UA' | 'AA'
   project: carrier, flight_count
 }
-```
+>>>markdown
 
 ### Filtering Aggregate Calculations
 
 Any measure can be filtered by adding a where clause.
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
+>>>malloy
 query: flights -> {
   aggregate:
     ca_flights is flight_count { where: origin.state = 'CA' }
     ny_flights is count() { where: origin.state = 'NY' }
     avg_km_from_ca is avg(distance / 0.621371) { where: origin.state = 'CA' }
 }
-```
+>>>markdown
 
 ### Filtering Complex Measure
 
@@ -66,8 +69,7 @@ Even complex measures can be filtered.  A common use case is to create a filtere
 measure and then create that as a percent of total.
 
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
+>>>malloy
 // add a couple of measures to the `flights` source
 source: my_flights is flights {
   measure: delayed_flights is flight_count { where: dep_delay > 30 }
@@ -83,7 +85,7 @@ query: my_flights -> {
     ny_delayed_flights is delayed_flights { where: origin.state = 'NY' }
     ny_percent_delayed is percent_delayed { where: origin.state = 'NY' }
 }
-```
+>>>markdown
 
 ### Filtering Nested Queries
 
@@ -91,10 +93,9 @@ Even complex measures can be filtered.  A common use case is to create a filtere
 measure and then create that as a percent of total.
 
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size":"large"}
+>>>malloy
 // add a couple of measures to the `flights` source
-source: my_flights is flights {
+source: my_flights2 is flights {
   measure: delayed_flights is flight_count { where: dep_delay > 30 }
   query: delay_stats is {
     aggregate:
@@ -104,12 +105,12 @@ source: my_flights is flights {
   }
 }
 
-query: my_flights -> {
+query: my_flights2 -> {
   nest:
     ca_stats is delay_stats { where: origin.state = 'CA' }
     ny_stats is delay_stats { where: origin.state = 'NY' }
 }
-```
+>>>markdown
 
 ## Common Patterns in Filters
 

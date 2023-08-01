@@ -1,3 +1,4 @@
+>>>markdown
 # Models
 
 Malloy recognizes modeling as a key aspect of data analytics and provides tools that allow for modularity and reusability of definitions. Whereas in SQL, queries generally define all metrics inline, requiring useful snippets to be saved and managed separately, in Malloy,
@@ -19,9 +20,9 @@ There are four kinds of statements that can appear in a Malloy model:
 
 Import statements allow you to import sources from another <code>.malloy</code> file. 
 
-```malloy
+>>>malloy
 import "flights.malloy"
-```
+>>>markdown
 
 See the [Imports](imports.md) section for more information.
 
@@ -29,13 +30,12 @@ See the [Imports](imports.md) section for more information.
 
 A query statement defines a query as a named entity within a model, allowing it to be reused as the basis for other queries.
 
-```malloy
---! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-query: flights_by_carrier is duckdb.table('data/flights.parquet') -> {
+>>>malloy
+query: flights_by_carrier is duckdb.table('../data/flights.parquet') -> {
   group_by: carrier
   aggregate: flight_count is count()
 }
-```
+>>>markdown
 
 See the [Queries](query.md) section for more information on queries.
 
@@ -45,9 +45,8 @@ In Malloy, a source is the basic unit of reusability for calculations, join rela
 
 A source statement defines a source as a reusable part of the model.
 
-```malloy
---! {"isModel": true, "modelPath": "/inline/e2.malloy"}
-source: flights is duckdb.table('data/flights.parquet') extend {
+>>>malloy
+source: flights2 is duckdb.table('../data/flights.parquet') extend {
   dimension: distance_km is distance / 1.609344
 
   measure: flight_count is count()
@@ -57,7 +56,7 @@ source: flights is duckdb.table('data/flights.parquet') extend {
     aggregate: flight_count
   }
 }
-```
+>>>markdown
 
 See the [Sources](source.md) section for more information on sources.
 
@@ -67,13 +66,13 @@ Run statements allow you to write queries in a model without naming them, or to 
 
 Any query can be run by including it in a run statement.
 
-```malloy
+>>>malloy
 --! {"isRunnable": true, "showAs":"html",  "source": "/inline/e2.malloy"}
-run: flights -> { 
+run: flights2 -> { 
   group_by: origin
   aggregate: destination_count is count(distinct destination) 
 }
-```
+>>>markdown
 
 See the [Queries](query.md) section for more information on queries.
 
@@ -81,24 +80,23 @@ See the [Queries](query.md) section for more information on queries.
 
 Comments in Malloy can be written with `--` (as in SQL) or `//`. A comment continues until the end of the line.
 
-```malloy
+>>>malloy
 // This is a comment
 -- This is also a comment
-```
+>>>markdown
 
 ## Tags
 
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). One use case for tagging is to attach rendering information to a query:
 
-```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
+>>>malloy
 # json
-run: flights -> {
+run: flights2 -> {
   group_by: carrier
   aggregate: flight_count
   limit: 2
 }
-```
+>>>markdown
 
 For more information about the rendering tags used in the Malloy rendering library, see the [Visualizations](../visualizations/overview.md) section.
 

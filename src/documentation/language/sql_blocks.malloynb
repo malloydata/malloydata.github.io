@@ -1,3 +1,4 @@
+>>>markdown
 # SQL Blocks
 
 Sometimes it is useful to add SQL statements into a Malloy file. You can do so by using the `sql:` keyword.
@@ -8,56 +9,53 @@ An SQL statement has two properties.
    _(if not specified the default connection will be used)_
 
 
-```malloy
---! {"isRunnable": true, "showAs":"html", "size": "large", "sqlBlockName": "my_sql_query" }
+>>>malloy
 sql: my_sql_query is {
   select: """
     SELECT
       first_name,
       last_name,
       gender
-    FROM 'data/users.parquet'
+    FROM '../data/users.parquet'
     LIMIT 10
   """
   connection: "duckdb"
 }
-```
+>>>markdown
 
 ## Sources from SQL Blocks
 
 Sources can be created from a SQL block, e.g.
 
-```malloy
---! {"isRunnable": true, "showAs":"html", "size": "large" }
-sql: my_sql_query is {
+>>>malloy
+sql: my_sql_query2 is {
   select: """
     SELECT
       first_name,
       last_name,
       gender
-    FROM 'data/users.parquet'
+    FROM '../data/users.parquet'
     LIMIT 10
   """
   connection: "duckdb"
 }
 
-source: limited_users is from_sql(my_sql_query) {
+source: limited_users is from_sql(my_sql_query2) {
   measure: user_count is count()
 }
 
 query: limited_users -> {
   aggregate: user_count
 }
-```
+>>>markdown
 
 
 ## Embedding Malloy queries in an SQL block ( Turducken )
 
 Malloy queries can be embedded in SQL blocks as well. When `%{` and `}` appear inside the `"""` string of a `select:` statement, the Malloy query between the brackets is compiled and replaced with the <code>SELECT</code> statement generated from the query.
 
-```malloy
---! {"isRunnable": true, "showAs":"sql", "size": "large", "sqlBlockName": "malloy_in_sql_query" }
-source: users is duckdb.table('data/users.parquet')
+>>>malloy
+source: users is duckdb.table('../data/users.parquet')
 
 sql: malloy_in_sql_query is {
   connection: "duckdb"
@@ -72,6 +70,6 @@ sql: malloy_in_sql_query is {
 -- END MALLOY QUERY
 """
 }
-```
+>>>markdown
 
 > _We have referred to this feature the ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinte nesting, but it is amusing..._

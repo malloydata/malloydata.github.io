@@ -1,3 +1,4 @@
+>>>markdown
 # Change Log
 _Breaking changes indicated with *_
 
@@ -37,6 +38,10 @@ Previously in order to reference an existing query (e.g. to use as the source fo
 
 An optional leading arrow can now be placed in query definitions inside of sources:
 
+>>>malloy
+##(docs) hidden
+import "flights.malloy"
+>>>markdown
 ```malloy
 source: my_source is duckdb.table('some_table') extend {
   query: my_query is -> {
@@ -44,6 +49,7 @@ source: my_source is duckdb.table('some_table') extend {
   }
 }
 ```
+>>>markdown
 
 ### Deprecation of The Filter Shortcut
 
@@ -63,6 +69,7 @@ query: my_query is some_source -> {
   group_by: value
 }
 ```
+>>>markdown
 
 This will replace `declare:` and `join_*:` in queries, and they will be deprecated in 4.0.
 
@@ -86,6 +93,7 @@ Function arguments are now typechecked for a set of "built-in" functions. All un
 
 For functions which are not "built-in", or to call the native SQL version of a function, there is special syntax:
 
+>>>markdown
 ```malloy
 // Exclamation point indicates to not typecheck arguments and directly call the named SQL function
 // Return type is by default the same as the first argument
@@ -93,18 +101,18 @@ dimension: cuberoot_value is cbrt!(value)
 // A return type may be specified after the exclamation point
 dimension: timestamp_value is timestamp_seconds!timestamp(value)
 ```
+>>>markdown
 
 ### Calculations (analytic functions / window functions)
 
 There is a new keyword `calculate:` which can appear in a query, for use with [analytic functions](./functions.md#analytic-functions).
 
-```malloy
---! {"isRunnable": true, "showAs":"html", "size": "large", "source": "flights.malloy" }
-query: flights -> {
+>>>malloy
+run: flights -> { 
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
 }
-```
+>>>markdown
 
 ### *New functions are in the global namespace
 
@@ -116,23 +124,23 @@ New functions are in the global namespace, which means that top level objects (S
 
 In the transition from filters being with an array like syntax ...
 
-```
+>>>markdown
 sourceName :[ fieldName: value1|value2 ]
-```
+>>>markdown
 
 The use of `:` as the apply operator became a readability problem ...
 
-```
+>>>markdown
 sourceName { where: fieldName: value1|value2 }
-```
+>>>markdown
 
 As of this release, use of the `:` as an apply operator will generate a warning,
 and in a near future release it will be a compiler error. The correct
 syntax for apply is now the `?` operator. As in
 
-```
+>>>markdown
 sourceName { where: fieldName ? value1|value2 }
-```
+>>>markdown
 
 ## 0.0.9
 
@@ -141,8 +149,9 @@ sourceName { where: fieldName ? value1|value2 }
 Prior to version 0.0.9, lists of things were contained inside `[ ]`. Going forward, the brackets have been removed. Our hope is that this will be one less piece of punctuation to track, and will make it easier to change from a single item in a list to multiple without adding in brackets.
 
 For example, this syntax:
+>>>markdown
 ```malloy
-query: duckdb.table('data/airports.parquet') -> {
+query: duckdb.table('../data/airports.parquet') -> {
   top: 10
   group_by: [
     faa_region
@@ -160,8 +169,10 @@ query: duckdb.table('data/airports.parquet') -> {
   ]
 }
 ```
+>>>markdown
 
 Is now written:
+>>>markdown
 ```malloy
 query: duckdb.table('data/airports.parquet') -> {
   top: 10
@@ -178,3 +189,4 @@ query: duckdb.table('data/airports.parquet') -> {
     fac_type = 'AIRPORT'
 }
 ```
+>>>markdown

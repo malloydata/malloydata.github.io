@@ -1,3 +1,4 @@
+>>>markdown
 # Data Types In Malloy
 
 Because Malloy writes SQL expressions, when queries are actually executed, all data will be in types understood by the SQL engine which is running the query.
