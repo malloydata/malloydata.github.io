@@ -3,7 +3,7 @@
 
 When Malloy runs a query, it returns two things.  The *results* of the query and *metadata* about the results.  The metadata are the schema for the results, including type information.  Malloy also provides a mechanism to tag things in the source code and return tags with this meta data. 
 
-In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Tags that start on a new line attach the tag the thing on the following line. For more details about how tagging works, see the [Tags](../language/tags.md) section.
+In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Tags that start on a new line attach the tag the thing on the following line. For more details about how tagging works, see the [Tags](../language/tags.malloynb) section.
 
 Malloy's rendering library interprets these tags to change how results are rendered. 
 
@@ -35,7 +35,7 @@ run: duckdb.table('../data/flights.parquet') ->  {
 }
 >>>markdown
 
-Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart. See the docs on the [Bar Chart tag](./bar_charts.md) for more information.
+Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart. See the docs on the [Bar Chart tag](./bar_charts.malloynb) for more information.
 
 >>>malloy
 #(docs) size=large limit=5000
@@ -63,4 +63,4 @@ Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-li
 
 
 ## Additional Charting with Vega Lite
-The `vega` renderer allows much more customization of rendering than the default visualization options provided in the Extension, using the [Vega-Lite](https://vega.github.io/vega-lite/) library. For examples of using these in Malloy, check out the `flights_custom_vis` model and styles files in the FAA [Sample Models](../samples.md) download.
+The `vega` renderer allows much more customization of rendering than the default visualization options provided in the Extension, using the [Vega-Lite](https://vega.github.io/vega-lite/) library. For examples of using these in Malloy, check out the `flights_custom_vis` model and styles files in the FAA [Sample Models](../samples.malloynb) download.
