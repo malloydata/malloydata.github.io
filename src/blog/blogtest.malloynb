@@ -11,3 +11,8 @@ run: duckdb.table('../documentation/data/flights.parquet') -> {
 import "../blog/foo.malloy"
 
 run: foo -> { project: * }
+>>>malloy
+##(docs) hidden
+source: bar is foo
+>>>malloy
+run: bar -> { project: * }

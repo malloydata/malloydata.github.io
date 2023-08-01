@@ -85,8 +85,9 @@ class Renderer {
       if (this.isNotebook) {
         showCode = removeDocsTags(code);
         try {
-          const { rendered, newModel } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
+          const { rendered, newModel, isHidden } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
           result = rendered;
+          hidden = isHidden;
           this.modelDef = newModel;
           const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
           prefix = `<a href="${githubDevURL}" target="_blank">Open in Web Editor</a>`;
@@ -139,7 +140,7 @@ class Renderer {
       segment.paragraphs.push({ type: "code", text: highlightedCode });
     }
 
-    return `${prefix}${hidden ? "" : highlightedCode}${result ?? ""}`;
+    return `${hidden ? "" : prefix + highlightedCode}${result ?? ""}`;
   }
 
   protected async blockquote(content: Markdown[]) {
@@ -408,7 +409,7 @@ class Renderer {
       if (this.mode !== "markdown" && !isCodeCell) {
         this.mode = "markdown";
         this.cellNumber += 1;
-      } else if (this.mode !== "malloy" && isCodeCell) {
+      } else if (isCodeCell) {
         this.mode = "malloy";
         this.cellNumber += 1;
       }
