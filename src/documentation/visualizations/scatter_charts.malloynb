@@ -1,34 +1,40 @@
 >>>markdown
 # Scatter Charts
 
-Scatter charts compare two numeric values. The data styles for the subsequent examples is:
+Scatter charts compare two numeric values. 
 
-## Run as a nested subtable
+Model for this example
 
 >>>malloy
-import "../models/flights.malloy"  
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  join_one: aircraft is duckdb.table('../data/aircraft.parquet') extend {
+    join_one: aircraft_models is duckdb.table('../data/aircraft_models.parquet')
+      on aircraft_model_code = aircraft_models.aircraft_model_code 
+  } on tail_num = aircraft.tail_num
+}
+>>>markdown
 >>>malloy
-#(docs) size=large
+#(docs) size=large limit=50000
 # scatter_chart
 run: flights -> {
-  where: origin_code = 'ORD'
+  where: origin = 'ORD'
   group_by: seats is aircraft.aircraft_models.seats
   group_by: distance is distance
-  aggregate: route_count is count(distinct concat(origin_code, destination_code))
+  aggregate: route_count is count(distinct concat(origin, destination))
 }
 >>>markdown
 
 ## Run as a trellis
 
 >>>malloy
---! {"isRunnable": true, "size": "medium", "source": "flights.malloy", "pageSize":10}
+#(docs) size=large limit=5000
 run: flights -> {
-  group_by: origin_code
+  group_by: origin
   # scatter_chart
   nest: seats_by_distance_scatter_chart is -> {
     group_by: seats is aircraft.aircraft_models.seats
     group_by: distance is distance
-    aggregate: route_count is count(distinct concat(origin_code, destination_code))
+    aggregate: route_count is count(distinct concat(origin, destination))
   }
 }
 >>>markdown
