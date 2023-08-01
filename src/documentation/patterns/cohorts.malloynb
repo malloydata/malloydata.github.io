@@ -3,12 +3,6 @@
 It is often useful to see how groups of people behave over time.  The most simple example is in retail.  Of the people that first signed up for accouunts how many made an order and how many ordered in subsequent months.
 
 We'll use the following model
-
-```malloy
-// this malloy should be syntax highlighted but not run
-source: foo is bar
-```
-
 >>>malloy
 source: order_items is duckdb.table('../data/order_items.parquet') + {
   join_one: users is duckdb.table('../data/users.parquet') on user_id=users.id

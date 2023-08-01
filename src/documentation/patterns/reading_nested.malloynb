@@ -1,3 +1,4 @@
+>>>markdown
 # Working with Nested Data
 
 Data often comes in a nested structure, where information is organized hierarchically. BigQuery and DuckDB have built-in support for reading tables with nested data and extracting information from these nested structures.
@@ -16,9 +17,8 @@ To perform aggregate calculations in Malloy, you can simply specify the complete
 
 Here is a very simple Malloy model describing some interesting calculations on Google Analytics data:
 
-```malloy
---! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: ga_sessions is table('duckdb:data/ga_sample.parquet') extend {
+>>>malloy
+source: ga_sessions is duckdb.table('../data/ga_sample.parquet') extend {
   measure:
     user_count is count(distinct fullVisitorId)
     # percent
@@ -32,12 +32,12 @@ source: ga_sessions is table('duckdb:data/ga_sample.parquet') extend {
     hits_count is hits.count()
     sold_count is hits.count() { where: hits.product.productQuantity > 0 }
 }
-```
+>>>markdown
 
 ## Show Data by Traffic Source
 
-```malloy
---! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+>>>malloy
+#(docs) size=large limit=5000
 run: ga_sessions -> {
   where: trafficSource.`source` != '(direct)'
   group_by: trafficSource.`source`
@@ -49,12 +49,12 @@ run: ga_sessions -> {
     session_count
   limit: 10
 }
-```
+>>>markdown
 
 ## Show Data By Browser
 
-```malloy
---! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+>>>malloy
+#(docs) size=large limit=5000
 run: ga_sessions -> {
   group_by: device.browser
   aggregate:
@@ -65,12 +65,12 @@ run: ga_sessions -> {
     total_page_views
     sold_count
 }
-```
+>>>markdown
 
 ## With Nested Results
 
-```malloy
---! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+>>>malloy
+#(docs) size=large limit=5000
 run: ga_sessions -> {
   group_by: device.browser
   aggregate:
@@ -92,4 +92,4 @@ run: ga_sessions -> {
     limit: 10
   }
 }
-```
+>>>markdown

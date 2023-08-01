@@ -1,11 +1,11 @@
+>>>markdown
 ## Producing a table with an 'Other' bucket
 Often you want to limit the number of group-by values in a table, and bucket everything else into an 'other' category.  
 
 In the `top_states_by_eleveation` query below, we have a query with two stages. The first stage calculates the top states and nests the data to be aggregated. The second pipeline stage produces the actual aggregation.
 
-```malloy
---! {"isModel": true, "modelPath": "/inline/e1.malloy"}
-source: airports is table('duckdb:data/airports.parquet') extend {
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: 
     airport_count is count()
     avg_elevation is elevation.avg()
@@ -26,17 +26,17 @@ source: airports is table('duckdb:data/airports.parquet') extend {
       airport_count is data.count()
   }
 }
-```
+>>>markdown
 
 ## Basic Query
-```malloy
---! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+>>>malloy
+#(docs) size=large limit=5000
 run: airports -> top_states_by_elevation
-```
+>>>markdown
 
 ## Nested Query
-```malloy
---! {"isRunnable": true,  "size": "large", "source": "/inline/e1.malloy", "pageSize":5000}
+>>>malloy
+#(docs) size=large limit=5000
 run: airports -> {
   group_by: `Facility Type` is fac_type
   aggregate: 
@@ -44,4 +44,4 @@ run: airports -> {
     avg_elevation
   nest: top_states_by_elevation
 }
-```
+>>>markdown
