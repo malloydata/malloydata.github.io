@@ -305,7 +305,7 @@ export async function runNotebookCode(
   documentPath: string,
   options: RunOptions,
   modelDef: ModelDef,
-): Promise<{ rendered: string, newModel: ModelDef }> {
+): Promise<{ rendered: string, newModel: ModelDef; isHidden: boolean }> {
   const fakeURL = new URL("file://" + path.join(DOCS_ROOT_PATH, documentPath));
   const urlReader = new DocsURLReader(documentPath, new Map([[fakeURL.toString(), code]]));
   const connection = CONNECTIONS.getConnection(documentPath);
@@ -318,6 +318,13 @@ export async function runNotebookCode(
     ._loadModelFromModelDef(modelDef)
     .extendModel(fakeURL);
   const model = await newModel.getModel();
+  const modelTags = new Tags({ 
+    notes: model
+      .getTags()
+      .getTagList()
+      .filter(t => t.startsWith("##(docs) "))
+      .map(t => t.replace(/^##\(docs\) /, "## "))
+  }).getMalloyTags().properties;
   const newModelDef = model._modelDef;
   let hasQuery = false;
   try {
@@ -325,6 +332,7 @@ export async function runNotebookCode(
     model.preparedQuery;
     hasQuery = true;
   } catch {}
+  options.isHidden = "hidden" in modelTags;
 
   if (hasQuery) {
     const runnable = newModel.loadFinalQuery();
@@ -336,7 +344,6 @@ export async function runNotebookCode(
         .filter(t => t.startsWith("#(docs) "))
         .map(t => t.replace(/^#\(docs\) /, "# "))
     }).getMalloyTags().properties;
-    options.isHidden = "hidden" in tags;
     options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
     options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
     const queryResult = await runnable.run({
@@ -359,12 +366,14 @@ export async function runNotebookCode(
     return {
       rendered,
       newModel: newModelDef,
+      isHidden: options.isHidden
     }
   }
   else {
     return {
       rendered: "",
       newModel: newModelDef,
+      isHidden: options.isHidden
     };
   }
 }
