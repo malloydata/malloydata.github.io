@@ -1,19 +1,19 @@
+>>>markdown
 # Lists
 Tables with one or two elements can be rendered as lists.  Lists improve information density.
 
 The examples below use the following models
 
-```malloy
---! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
-source: airports is duckdb.table('data/airports.parquet') extend {
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
 }
-```
+>>>markdown
 
 ## Normal Table
 
-```malloy
---! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
+>>>malloy
+#(docs) size=medium limit=5000
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -22,13 +22,13 @@ run: airports -> {
     aggregate: airport_count 
   }
 }
-```
+>>>markdown
 
 ##  # list
 With a `list`, just the first element in the table is shown.
 
-```malloy
---! {"isRunnable": true, "size":"small",  "source": "/inline/airports_mini.malloy"}
+>>>malloy
+#(docs) size=small limit=5000
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -38,14 +38,14 @@ run: airports -> {
     aggregate: airport_count
   }
 }
-```
+>>>markdown
 
 
 ##  # list_detail
 With `list_detail` the element and value are shown.
 
-```malloy
---! {"isRunnable": true, "size":"small",  "source": "/inline/airports_mini.malloy"}
+>>>malloy
+#(docs) size=small limit=5000
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -55,4 +55,4 @@ run: airports -> {
     aggregate: airport_count
   }
 }
-```
+>>>markdown

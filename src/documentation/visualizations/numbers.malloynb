@@ -1,41 +1,42 @@
+>>>markdown
 # Rendering Numbers
 
 Malloy's render provides a variety of ways to render numeric values.  Tagging a number will change how the number is displayed in the result set but the underlying value doesn't change.
 
 The following examples that follow use the Malloy semantic data model below.
 
-```malloy
---! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: airports is duckdb.table('data/airports.parquet') extend {
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
-source: flights is duckdb.table('data/flights.parquet') extend {
+source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: orig is airports on origin = orig.code
   join_one: dest is airports on destination = dest.code
 
   measure: flight_count is count()
 }
 
-```
+>>>markdown
 
 ## # percent
 Carriers as percentage of flights
 
-```malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "small", "pageSize": 100000 }
+>>>malloy
+#(docs) size=small limit=5000
 run: flights -> {
   group_by: carrier
   # percent
   aggregate: percent_of_flights is flight_count / all(flight_count)
 }
-```
+>>>markdown
 
 ## # value_format
 
 Malloy uses LookML's (Excel) string definitions for formatting numbers.
 
+>>>markdown
 ```malloy
 # format="0"             # Integer (123)
 # format="*00#"          # Integer zero-padded to 3 places (001)
@@ -64,9 +65,10 @@ Malloy uses LookML's (Excel) string definitions for formatting numbers.
 # format="0%"            # Convert to percent with 0 decimals (.01 becomes 1%)
 # format="0.00%"         # Convert to percent with 2 decimals (.01 becomes 1.00%)
 ```
+>>>markdown
 
-```malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "small", "pageSize": 100000 }
+>>>malloy
+#(docs) size=small limit=5000
 run: flights -> {
   // tag a single element
   aggregate:
@@ -79,14 +81,14 @@ run: flights -> {
     dollars is flight_count
     neg_dollars is 0 - flight_count
 }
-```
+>>>markdown
 
 ## Durations
 
 The `# duration` renderer interprets a value as a number of seconds and renders it as a human-adjusted duration. Other units can be specified like `# duration="minutes"`, with possible units of `"nanoseconds"`, `"microseconds"`, `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, and `"days"`.
 
-```malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "small", "pageSize": 100000 }
+>>>malloy
+#(docs) size=small limit=5000
 run: flights -> {
   group_by: dep_date is dep_time.day
   # duration="minutes"
@@ -97,4 +99,4 @@ run: flights -> {
     flight_count    
   limit: 20
 }
-```
+>>>markdown

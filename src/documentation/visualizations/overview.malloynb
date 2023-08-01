@@ -1,3 +1,4 @@
+>>>markdown
  # Rendering Results
 
 When Malloy runs a query, it returns two things.  The *results* of the query and *metadata* about the results.  The metadata are the schema for the results, including type information.  Malloy also provides a mechanism to tag things in the source code and return tags with this meta data. 
@@ -9,41 +10,41 @@ Malloy's rendering library interprets these tags to change how results are rende
 ## Tagging individual elements
 In the query below, the measure **percent_of_total** is tagged as a percentage. Any time *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
 
-```malloy
---! {"isRunnable": true,  "size": "small", "pageSize":5000}
-source: flights is duckdb.table('data/flights.parquet') extend {
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
   measure:
     flight_count is count()
     # percent
     percent_of_flights is flight_count / all(flight_count)
 }
-
+>>>malloy
+#(docs) size=small limit=5000
 run: flights -> {
   group_by: carrier
   aggregate: 
     flight_count 
     percent_of_flights
 }
-```
+>>>markdown
 
-```malloy
---! {"isRunnable": true,  "size": "small", "pageSize":5000}
-run: duckdb.table('data/flights.parquet') ->  {
+>>>malloy
+#(docs) size=small limit=5000
+run: duckdb.table('../data/flights.parquet') ->  {
   group_by: carrier
   aggregate: flight_count is count()
 }
-```
+>>>markdown
 
 Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart. See the docs on the [Bar Chart tag](./bar_charts.md) for more information.
 
-```malloy
---! {"isRunnable": true,  "size": "large", "pageSize":5000}
+>>>malloy
+#(docs) size=large limit=5000
 # bar_chart
-run: duckdb.table('data/flights.parquet') ->  {
+run: duckdb.table('../data/flights.parquet') ->  {
   group_by: carrier
   aggregate: flight_count is count()
 }
-```
+>>>markdown
 
 Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-lite/) for charting, allowing visualization of results. Malloy's rendering library is a separate layer from Malloy's data access layer.:
 
