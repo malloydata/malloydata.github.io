@@ -7,3 +7,7 @@ run: duckdb.table('../documentation/data/flights.parquet') -> {
   group_by: carrier
   aggregate: flight_count is count()
 }
+>>>malloy
+import "foo.malloy"
+
+run: foo -> { project: * }

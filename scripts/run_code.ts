@@ -125,8 +125,9 @@ class DocsURLReader implements URLReader {
     if (inMemoryURL !== undefined) {
       return inMemoryURL;
     }
-    const contents = await fetchFile(url.toString());
-    addDependency(url.toString().replace(/^file:\/\//, ""), this.documentPath);
+    const thePath = url.toString().replace(/^file:\/\//, "");
+    const contents = await fetchFile(path.join(DOCS_ROOT_PATH, this.documentPath, "..", thePath));
+    addDependency(thePath, this.documentPath);
     this.dataStyles = {
       ...this.dataStyles,
       ...(await dataStylesForFile(url.toString(), contents)),
