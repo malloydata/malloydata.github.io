@@ -55,6 +55,8 @@ class Renderer {
     )[];
   }[] = [];
   private readonly isNotebook: boolean;
+  private cellNumber = 0;
+  private mode: "markdown" | "malloy" | undefined = undefined;
   private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}};
 
   constructor(path: string) {
@@ -78,6 +80,7 @@ class Renderer {
     let hidden = false;
     let result = "";
     let highlightedCode: string;
+    let prefix = "";
     if (lang === "malloy-x") {
       if (this.isNotebook) {
         showCode = removeDocsTags(code);
@@ -85,6 +88,9 @@ class Renderer {
           const { rendered, newModel } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
           result = rendered;
           this.modelDef = newModel;
+          const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
+          prefix = `<a href="${githubDevURL}" target="_blank">Open in Web Editor</a>`;
+
         } catch (error) {
           log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
           result = `<div class="error">Error: ${error.toString()}</div>`;
@@ -133,7 +139,7 @@ class Renderer {
       segment.paragraphs.push({ type: "code", text: highlightedCode });
     }
 
-    return `${hidden ? "" : highlightedCode}${result ?? ""}`;
+    return `${prefix}${hidden ? "" : highlightedCode}${result ?? ""}`;
   }
 
   protected async blockquote(content: Markdown[]) {
@@ -188,13 +194,22 @@ class Renderer {
     this.hashes.push(escapedText);
     // TODO handle ambiguous hashes?
 
-    return `
+    const heading = `
       <h${level}>
         <a id="${escapedText}" class="header-link anchor" href="#${escapedText}">
           ${text}
         </a>
       </h${level}>
     `;
+    if (level === 1) {
+      return `<div class="title-row">
+        ${heading}
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C1">Edit this Page</a>
+        </div>
+      `
+    } else {
+      return heading;
+    }
   }
 
   protected async hr() {
@@ -388,6 +403,16 @@ class Renderer {
   }
 
   async render(ast: Markdown): Promise<string> {
+    if (ast.type !== "root") {
+      const isCodeCell = ast.type === "code" && ast.lang === "malloy-x";
+      if (this.mode !== "markdown" && !isCodeCell) {
+        this.mode = "markdown";
+        this.cellNumber += 1;
+      } else if (this.mode !== "malloy" && isCodeCell) {
+        this.mode = "malloy";
+        this.cellNumber += 1;
+      }
+    }
     switch (ast.type) {
       case "root":
         return this.root(ast.children);

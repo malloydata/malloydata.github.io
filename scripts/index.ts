@@ -122,9 +122,11 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       page: {
         ...frontmatter,
         url: shortOutPath,
+        source: shortPath,
         title: "Malloy Documentation",
         content: renderedDocument,
         footer: footers[shortPath],
+        isNotebook: isMalloyNB(shortPath)
       }
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
@@ -275,14 +277,18 @@ function validateLinks(
     const linkWithoutHash = rootedLink.replace(/#.*$/, '');
     const hashMatch = rootedLink.match(/#.*$/);
     const hash = hashMatch ? hashMatch[0] : undefined;
-    const linkHasExtension = linkWithoutHash.endsWith(".html") || linkWithoutHash.endsWith(".md");
-    const linkWithExtension = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".md");
-    if (!docsRootedPaths.includes(linkWithExtension)) {
-      const mdVersion = linkWithExtension.replace(/\.html$/, ".md");
-      const existsInMd = docsRootedPaths.includes(mdVersion);
+    const linkHasExtension = linkWithoutHash.endsWith(".html") || linkWithoutHash.endsWith(".md") || linkWithoutHash.endsWith(".malloynb");
+    const linkGuessMD = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".md");
+    const linkGuessNB = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".malloynb");
+    const linkWithoutExtension = linkWithoutHash.replace(/\.html$/, "").replace(/\.md$/, "").replace(/\.malloynb$/, "");
+    const existsMD = docsRootedPaths.includes(linkGuessMD);
+    const existsNB = docsRootedPaths.includes(linkGuessNB);
+    const exists = existsMD || existsNB;
+    const linkWithExtension = existsNB ? linkWithoutExtension + ".malloynb" : linkWithoutExtension + ".md";
+    if (!exists) {
       linkErrors.push({ 
         file: file.substring(DOCS_ROOT_PATH.length), 
-        error: `Link '${originalLink}' is invalid${existsInMd ? style === "html" ? ' (remove .html extension)' : '(use .md instead)' : ''}.`,
+        error: `Link '${originalLink}' is invalid.`,
         position,
       });
     } else if (linkHasExtension && style === 'html') {
@@ -291,10 +297,10 @@ function validateLinks(
         error: `HTML Link '${originalLink}' should not end with file extension.`,
         position
       });
-    } else if (style === 'md' && !linkWithoutHash.endsWith(".md")) {
+    } else if (style === 'md' && !(linkWithoutHash.endsWith(".malloynb") || linkWithoutHash.endsWith(".md"))) {
       linkErrors.push({ 
         file: file.substring(DOCS_ROOT_PATH.length), 
-        error: `Markdown Link '${originalLink}' should end with .md`,
+        error: `Markdown Link '${originalLink}' should end with .malloynb`,
         position
       });
     } else if (hash && hashes) {

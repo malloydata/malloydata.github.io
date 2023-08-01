@@ -8,6 +8,6 @@ run: duckdb.table('../documentation/data/flights.parquet') -> {
   aggregate: flight_count is count()
 }
 >>>malloy
-import "foo.malloy"
+import "../blog/foo.malloy"
 
 run: foo -> { project: * }

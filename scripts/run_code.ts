@@ -126,7 +126,7 @@ class DocsURLReader implements URLReader {
       return inMemoryURL;
     }
     const thePath = url.toString().replace(/^file:\/\//, "");
-    const contents = await fetchFile(path.join(DOCS_ROOT_PATH, this.documentPath, "..", thePath));
+    const contents = await fetchFile(thePath);
     addDependency(thePath, this.documentPath);
     this.dataStyles = {
       ...this.dataStyles,
@@ -306,7 +306,7 @@ export async function runNotebookCode(
   options: RunOptions,
   modelDef: ModelDef,
 ): Promise<{ rendered: string, newModel: ModelDef }> {
-  const fakeURL = new URL("file://./internal.malloy");
+  const fakeURL = new URL("file://" + path.join(DOCS_ROOT_PATH, documentPath));
   const urlReader = new DocsURLReader(documentPath, new Map([[fakeURL.toString(), code]]));
   const connection = CONNECTIONS.getConnection(documentPath);
   const runtime = new Runtime(urlReader, connection);
@@ -318,7 +318,6 @@ export async function runNotebookCode(
     ._loadModelFromModelDef(modelDef)
     .extendModel(fakeURL);
   const model = await newModel.getModel();
-  const tags = model.getTags().getMalloyTags().properties;
   const newModelDef = model._modelDef;
   let hasQuery = false;
   try {
