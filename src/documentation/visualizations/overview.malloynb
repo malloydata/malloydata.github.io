@@ -50,16 +50,16 @@ Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-li
 
 ## Rendering tags
 
-* [Number](numbers.md) - number formatting, percentages, duration, and bytes
-* [Pivoted Tables](pivots.md)
-* [Transposed Tables](transpose.md)
-* [Dashboards](dashboards.md) 
-* [Lists](lists.md)
-* [Bar Charts](bar_charts.md) - various forms of column charts 
-* [Line Charts](charts_line_chart.md) 
-* [Scatter Charts](scatter_charts.md)
-* [Shape Maps](shape_maps.md)
-* [Segment Maps](segment_maps.md)
+* [Number](numbers.malloynb) - number formatting, percentages, duration, and bytes
+* [Pivoted Tables](pivots.malloynb)
+* [Transposed Tables](transpose.malloynb)
+* [Dashboards](dashboards.malloynb) 
+* [Lists](lists.malloynb)
+* [Bar Charts](bar_charts.malloynb) - various forms of column charts 
+* [Line Charts](charts_line_chart.malloynb) 
+* [Scatter Charts](scatter_charts.malloynb)
+* [Shape Maps](shape_maps.malloynb)
+* [Segment Maps](segment_maps.malloynb)
 
 
 ## Additional Charting with Vega Lite

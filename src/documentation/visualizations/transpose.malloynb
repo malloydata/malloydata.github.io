@@ -3,8 +3,7 @@
 For comparison, it is often interesting to turn a table on it's side.  The `# transpose` tag on a query does just that.
 
 >>>malloy
---! {"isModel": true, "modelPath": "/inline/airports_mini.malloy"}
-source: airports is duckdb.table('data/airports.parquet') extend {
+source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
 }
 >>>markdown
@@ -12,7 +11,7 @@ source: airports is duckdb.table('data/airports.parquet') extend {
 ## Normal Table
 
 >>>malloy
---! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
+#(docs) size=large
 run: airports -> {
   group_by: fac_type
   aggregate: 
@@ -29,7 +28,7 @@ run: airports -> {
 Great for comparison
 
 >>>malloy
---! {"isRunnable": true, "size":"medium",  "source": "/inline/airports_mini.malloy"}
+#(docs) size=large
 # transpose
 run: airports -> {
   group_by: fac_type

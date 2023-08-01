@@ -4,13 +4,12 @@
 The plugin currently supports US maps. Segment maps take as input 4 columns: start latitude , start longitude, end latitude, and  end longitude of the segment.  The model and data styles for the subsequent examples are:
 
 >>>malloy
---! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: airports is duckdb.table('data/airports.parquet') extend {
+source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: name is concat(code, ' - ', full_name)
   measure: airport_count is count()
 }
 
-source: flights is duckdb.table('data/flights.parquet') extend {
+source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: orig is airports on origin = orig.code
   join_one: dest is airports on destination = dest.code
 
@@ -33,7 +32,7 @@ source: flights is duckdb.table('data/flights.parquet') extend {
 Departing from Chicago
 
 >>>malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "pageSize": 100000 }
+#(docs) limit=10000 size=large
 run: flights -> routes_map refine { where: dep_time = @2003-02 and origin = 'ORD' }
 >>>markdown
 
@@ -41,7 +40,7 @@ run: flights -> routes_map refine { where: dep_time = @2003-02 and origin = 'ORD
 By calling the configured map as a nested query, a trellis is formed.
 
 >>>malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium"}
+#(docs) size=lage
 run: flights -> {
   where: dep_time = @2003-02 and origin = 'ORD'
   group_by: carrier
@@ -53,7 +52,7 @@ run: flights -> {
 ## Run as a trellis, repeated with different filters
 
 >>>malloy
---! {"isRunnable": true, "source": "/inline/e.malloy", "size": "medium", "pageSize": 5 }
+#(docs) size=large
 run: flights -> {
   group_by: carrier
   aggregate: flight_count

@@ -5,8 +5,7 @@
 The plugin currently supports US maps and state names. The model and data styles for the subsequent examples are:
 
 >>>malloy
---! {"isModel": true, "modelPath": "/inline/e.malloy"}
-source: airports is duckdb.table('data/airports.parquet') {
+source: airports is duckdb.table('../data/airports.parquet') {
   primary_key: code
   measure: airport_count is count()
   query: by_state is {
@@ -24,7 +23,7 @@ source: airports is duckdb.table('data/airports.parquet') {
 We can explicitly return a result as a shape map.
 
 >>>malloy
---! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy"}
+#(docs) size=large
 # shape_map
 run: airports -> by_state
 >>>markdown
@@ -34,7 +33,7 @@ run: airports -> by_state
 In the query below the tag is in the semantic model.
 
 >>>malloy
---! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy"}
+#(docs) size=large
 run: airports -> by_state_shaped {where: fac_type='SEAPLANE BASE'}
 >>>markdown
 
@@ -44,7 +43,7 @@ By calling the configured map as a nested subtable, a trellis is formed.
 
 
 >>>malloy
---! {"isRunnable": true, "size": "medium", "source": "/inline/e.malloy"}
+#(docs) size=large
 run: airports -> {
   group_by: faa_region
   aggregate: airport_count
@@ -56,8 +55,8 @@ run: airports -> {
 ## Run as a trellis, repeated with different filters
 
 >>>malloy
---! {"isRunnable": true, "size": "large", "source": "/inline/e.malloy" }
-query: airports -> {
+#(docs) size=large
+run: airports -> {
   group_by: faa_region
   aggregate: airport_count
   nest:

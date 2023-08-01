@@ -6,7 +6,9 @@ Scatter charts compare two numeric values. The data styles for the subsequent ex
 ## Run as a nested subtable
 
 >>>malloy
---! {"isRunnable": true, "size": "medium", "source": "flights.malloy", "pageSize":5000}
+import "../models/flights.malloy"  
+>>>malloy
+#(docs) size=large
 # scatter_chart
 run: flights -> {
   where: origin_code = 'ORD'
