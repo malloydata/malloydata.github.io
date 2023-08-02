@@ -7,7 +7,7 @@ These functions are defined in Malloy in order to provide basic typechecking of 
 
 For quick function lookup, see the [alphebetized table of all available functions](#all-functions).
 
-Note: the behavior of functions changed in v0.0.39. For more information, see [a description of that change](./new_functions.md).
+Note: the behavior of functions changed in v0.0.39. For more information, see [a description of that change](./new_functions.malloynb).
 
 >>>malloy
 ##(docs) hidden
@@ -1304,7 +1304,7 @@ run: empty { dimension: value is 1 } -> {
 
 ## Aggregate Functions
 
-Malloy has several "native" aggregate functions, `sum`, `avg`, `max`, `min`, and `count`, as well as "non-native" aggregate functions, which currently only includes `stddev`. All of these support [aggregate locality](../language/aggregates.md#aggregate-locality) and [symmetric aggregate](https://help.looker.com/hc/en-us/articles/360023722974-A-Simple-Explanation-of-Symmetric-Aggregates-or-Why-On-Earth-Does-My-SQL-Look-Like-That-) handling.
+Malloy has several "native" aggregate functions, `sum`, `avg`, `max`, `min`, and `count`, as well as "non-native" aggregate functions, which currently only includes `stddev`. All of these support [aggregate locality](../language/aggregates.malloynb#aggregate-locality) and [symmetric aggregate](https://help.looker.com/hc/en-us/articles/360023722974-A-Simple-Explanation-of-Symmetric-Aggregates-or-Why-On-Earth-Does-My-SQL-Look-Like-That-) handling.
 
 Note: Aggregate locality is currently not supported in BigQuery for `stddev`.
 
@@ -1342,7 +1342,7 @@ query: flights -> {
 
 ## Ungrouped Aggregate Functions
 
-Malloy has two [ungrouped aggregate functions](./ungrouped-aggregates.md), `all()`, and `exclude()`, which allow you to control which dimensional values are included in the grouping while calculating a particular aggregate expression. 
+Malloy has two [ungrouped aggregate functions](./ungrouped-aggregates.malloynb), `all()`, and `exclude()`, which allow you to control which dimensional values are included in the grouping while calculating a particular aggregate expression. 
 
 <table class="transpose">
   <tr>
@@ -1367,7 +1367,7 @@ query: flights -> {
 }
 >>>markdown
 
-For more detailed information, see the [Calculations](./calculations.md) section.
+For more detailed information, see the [Calculations](./calculations.malloynb) section.
 
 <!-- Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field. -->
 

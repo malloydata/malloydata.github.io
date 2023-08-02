@@ -5,7 +5,7 @@ Joins in Malloy differ from SQL joins.  When two sources are joined,
 Malloy retains the graph nature and hierarchy of the the data relationships. This is unlike
 SQL, which flattens everything into a single table space.
 
-[Aggregate calculations](aggregates.md) navigate this graph to deduce
+[Aggregate calculations](aggregates.malloynb) navigate this graph to deduce
 the locality of computation, so they are always computed correctly regardless of join pattern, avoiding the fan and chasm traps.
 
 In Malloy, syntaxes for join are:
@@ -178,7 +178,7 @@ run: flights4 -> {
 }
 >>>markdown
 
-For more examples and how to reason about aggregation across joins, review the [Aggregates](aggregates.md) section.
+For more examples and how to reason about aggregation across joins, review the [Aggregates](aggregates.malloynb) section.
 
 ## Inner Joins
 

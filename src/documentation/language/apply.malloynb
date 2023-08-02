@@ -15,6 +15,6 @@ range match | `x ? 1 to 10` | `x >= 1 and x < 10`
 equality | `x ? 47` | `x = 47`
 match | `x ? r'ab'` | `x ~ r'ab'` _(this only works when applying a regular expression to a string)_
 
-In addition it is very common to use [Time Ranges](time-ranges.md)
+In addition it is very common to use [Time Ranges](time-ranges.malloynb)
 with the apply operator, which operate similar to the numeric range
 example above.

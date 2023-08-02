@@ -1,7 +1,7 @@
 >>>markdown
 # Aggregates
 
-Malloy supports the standard aggregate functions `count`, `sum`, `avg`, `min`, and `max`. When these are used in a field's definition, they make that field a [measure](fields.md#measures).
+Malloy supports the standard aggregate functions `count`, `sum`, `avg`, `min`, and `max`. When these are used in a field's definition, they make that field a [measure](fields.malloynb#measures).
 
 ## Basic Syntax
 
@@ -126,7 +126,7 @@ run: airports -> {
 }
 >>>markdown
 
-Read more about Ungrouped Aggregates [here](ungrouped-aggregates.md).
+Read more about Ungrouped Aggregates [here](ungrouped-aggregates.malloynb).
 
 ## Aggregate Locality
 

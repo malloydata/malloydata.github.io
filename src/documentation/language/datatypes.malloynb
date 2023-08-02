@@ -51,7 +51,7 @@ This is true for all the comparison operators (`>`, `=`, etc.) as well as functi
 
 A timestamp represents an instant in time.
 
-Malloy's approach to timezone related computations relating to timestamp data is explained in [Timezones](timezones.md)
+Malloy's approach to timezone related computations relating to timestamp data is explained in [Timezones](timezones.malloynb)
 
 ### Timestamp literals
 
@@ -115,14 +115,14 @@ In the future, the literal regular expressions will likely
 be simply slash-enclosed, e.g <code>/.*/</code>.
 
 Values of type `string` may be compared against regular
-expressions using either the [apply operator](apply.md),`name: r'c.*'` or the like operator, `name ~ r'c.*'`.
+expressions using either the [apply operator](apply.malloynb),`name: r'c.*'` or the like operator, `name ~ r'c.*'`.
 
 ### Ranges
 
 There are three types of ranges today: `string` ranges, `date` ranges, and `timestamp` ranges. The most basic ranges
 are of the form `start to end` and represent the inclusive range between `start` and `end`, e.g. `10 to 20` or `@2004-01 to @2005-05`.
 
-Ranges may be used in conjunction with the [apply operator](apply.md) to test whether a value falls within a given range.
+Ranges may be used in conjunction with the [apply operator](apply.malloynb) to test whether a value falls within a given range.
 
 In the future, other ranges may be allowed, such as `string` ranges.
 
@@ -150,7 +150,7 @@ inclusion respectively.
 
 For example, `'CA' | r'N.*'` represents the condition of being equal to 'CA' or starting with 'N', and `10 to 20 | 20 to 30` represents the condition of being _either_ between 10 and 20 _or_ 20 and 30.
 
-Alternations and partials may be used in conjunction with the [apply operator](apply.md) to test whether a value meets the given condition.
+Alternations and partials may be used in conjunction with the [apply operator](apply.malloynb) to test whether a value meets the given condition.
 
 ## Nullability
 

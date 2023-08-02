@@ -28,7 +28,7 @@ In BigQuery, the string passed to the `.table()` connection method can be a two-
 
 ### DuckDB
 
-In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.md).
+In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.malloynb).
 
 ### Postgres
 
@@ -36,4 +36,4 @@ In Postgres, the string passed to the `.table()` connection method can be a two-
 
 ## SQL Connection Method
 
-The `.sql()` connection method is used to define a source or query based on a SQL query. See the [SQL Sources](./sql_sources.md) section for more information.
+The `.sql()` connection method is used to define a source or query based on a SQL query. See the [SQL Sources](./sql_sources.malloynb) section for more information.

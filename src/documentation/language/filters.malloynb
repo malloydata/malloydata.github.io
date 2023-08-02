@@ -13,7 +13,7 @@ Regardless of the placement of a filter, the syntax looks the same.
 ```
 >>>markdown
 
-Each filter can be any expression of type `boolean`, whether that's a boolean field `is_commercial_flight`, a comparison `distance > 1000`, or any of the other kinds of boolean expressions that Malloy supports. For examples see [the table below](#examples-of-filter-expressions), or for detailed information on the kinds of expressions Malloy supports, see the [Expressions](expressions.md) section.
+Each filter can be any expression of type `boolean`, whether that's a boolean field `is_commercial_flight`, a comparison `distance > 1000`, or any of the other kinds of boolean expressions that Malloy supports. For examples see [the table below](#examples-of-filter-expressions), or for detailed information on the kinds of expressions Malloy supports, see the [Expressions](expressions.malloynb) section.
 
 Logically, the comma-separated list of filters are `and`ed together, though in reality different conditions are checked in different places in the generated SQL, depending on what types of computation occurs in the expression.
 
@@ -114,7 +114,7 @@ query: my_flights2 -> {
 
 ## Common Patterns in Filters
 
-This section describes some of the more common patterns used in filter expressions. For a more detailed description of the possible kinds of expressions, see the [Expressions](expressions.md) section.
+This section describes some of the more common patterns used in filter expressions. For a more detailed description of the possible kinds of expressions, see the [Expressions](expressions.malloynb) section.
 
 ### Comparisons
 
@@ -172,7 +172,7 @@ Example| Meaning
 
 ### Alternation
 
-Checking equality against multiple possible values is extremely common, and can be achieved succinctly using the [apply operator](expressions.md#application) and [alternation](expressions.md#alternation).
+Checking equality against multiple possible values is extremely common, and can be achieved succinctly using the [apply operator](expressions.malloynb#application) and [alternation](expressions.malloynb#alternation).
 
 Example| Meaning
  --- | ---

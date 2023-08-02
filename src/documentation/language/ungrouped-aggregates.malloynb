@@ -39,7 +39,7 @@ run: airports -> {
 }
 >>>markdown
 
-Dimensions named in `all()` must be included in a `group_by` in the current query (in other words, they must be [output fields](./eval_space.md#outputs)).
+Dimensions named in `all()` must be included in a `group_by` in the current query (in other words, they must be [output fields](./eval_space.malloynb#outputs)).
 
 ### exclude
 
@@ -64,4 +64,4 @@ run: airports -> {
 
 The main difference is that in a nested query, it is legal to name a grouping dimension from an outer query which contains the inner query.
 
-As with `all()`, `ungroup_dimension`s must be [output fields](./eval_space.md#outputs).
+As with `all()`, `ungroup_dimension`s must be [output fields](./eval_space.malloynb#outputs).

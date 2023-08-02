@@ -10,7 +10,7 @@ There are two forms of range expressions
 
 A timestamp can be compared to a range. If the time stamp is within
 the range it will be `=`. Before the range it will be `<` and after
-the range it will be `>`. If you [apply](apply.md) a range, (for example, `eventDate: @2003 to @2004`) that will also check if the value is within the range.
+the range it will be `>`. If you [apply](apply.malloynb) a range, (for example, `eventDate: @2003 to @2004`) that will also check if the value is within the range.
 
 ## Range shortcuts
 
@@ -38,7 +38,7 @@ at the moment of truncation and the duration is the timeframe unit
 used to specify the truncation, so for example `eventDate.year`
 would be a range covering the entire year which contains `eventDate`
 
-This is extremely useful with the [Apply operator](apply.md), `?`. To see if two events happen in the same calendar year, for example, the boolean expression in Malloy could be `oneEvent ? otherEvent.year`
+This is extremely useful with the [Apply operator](apply.malloynb), `?`. To see if two events happen in the same calendar year, for example, the boolean expression in Malloy could be `oneEvent ? otherEvent.year`
 
 ## Interval Measurement
 

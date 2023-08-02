@@ -9,7 +9,7 @@ Often when querying data the amount of data returned to look at is much smaller 
 ## Implicit Ordering
 
 ### Rule 1: Newest first
-If a query stage has a [dimensional](fields.md#dimensions) column that represents a point in time, it is usually the most
+If a query stage has a [dimensional](fields.malloynb#dimensions) column that represents a point in time, it is usually the most
 important concept in the query.  Because the most recent data is usually the most relevant, Malloy sorts the newest data first.
 
 >>>malloy
@@ -23,7 +23,7 @@ run: flights -> {
 >>>markdown
 
 ### Rule 2: Largest first
-If there is a [measure](fields.md#measures) involved, Malloy sorts larger values first.
+If there is a [measure](fields.malloynb#measures) involved, Malloy sorts larger values first.
 
 In the following example, Rule 1 doesn't apply, so the default behavior is to sort by first aggregate, `flight_count` with the largest values first.
 

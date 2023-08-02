@@ -1,9 +1,9 @@
 >>>markdown
 # SQL Sources
 
-_SQL sources, introduced in Malloy version 0.56, replace the previous method of including SQL queries in a Malloy model, [SQL blocks](./sql_blocks.md)._
+_SQL sources, introduced in Malloy version 0.56, replace the previous method of including SQL queries in a Malloy model, [SQL blocks](./sql_blocks.malloynb)._
 
-Sometimes it can be useful to base Malloy models off of SQL queries. You can do so by using the `.sql()` [connection method](./connections.md#connection-methods).
+Sometimes it can be useful to base Malloy models off of SQL queries. You can do so by using the `.sql()` [connection method](./connections.malloynb#connection-methods).
 
 >>>malloy
 source: my_sql_source is duckdb.sql("""

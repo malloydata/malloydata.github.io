@@ -15,7 +15,7 @@ run: flights -> {
 
 ## Query Sources
 
-Every query begins with a source, which can be thought of as a table with an associated collection of calculations and join relationships. The most common kind of source is a table source, e.g. `duckdb.table('flights.csv')`; see the [Sources](./source.md) section for more information on creating and extending sources.
+Every query begins with a source, which can be thought of as a table with an associated collection of calculations and join relationships. The most common kind of source is a table source, e.g. `duckdb.table('flights.csv')`; see the [Sources](./source.malloynb) section for more information on creating and extending sources.
 
 Generally, ad-hoc queries will use one of these kinds of sources directly:
 
@@ -126,7 +126,7 @@ run: flights -> {
 
 Note that the operations in a stage are for the most part not order-sensitive like SQL; they can be arranged in any order.
 
-A reference to a [source-level query](./fields.md#source-level-queries) (which defines its own pipeline) can be the first stage in a pipeline.
+A reference to a [source-level query](./fields.malloynb#source-level-queries) (which defines its own pipeline) can be the first stage in a pipeline.
 
 >>>malloy
 run: flights -> by_carrier
@@ -172,7 +172,7 @@ query: flights -> {
 
 When referencing existing fields in a `project` clause, wildcard expressions `*`, `**`, and `some_join.*` may be used.
 
-See the [Fields](fields.md) section for more information
+See the [Fields](fields.malloynb) section for more information
 about the different kinds of fields and how they can be
 defined.
 
@@ -197,11 +197,11 @@ query: flights -> {
 }
 >>>markdown
 
-Filters may be applied to a [query's source](filters.md#filtering-in-a-query-stage), an [entire source](source.md#filtering-sources), or to a [measure](expressions.md#filtered-expressions).
+Filters may be applied to a [query's source](filters.malloynb#filtering-in-a-query-stage), an [entire source](source.malloynb#filtering-sources), or to a [measure](expressions.malloynb#filtered-expressions).
 
 <!-- TODO: improve link for filtering a measure. -->
 
-See the [Filters](filters.md) section for more information.
+See the [Filters](filters.malloynb) section for more information.
 
 ## Refinement
 
@@ -235,7 +235,7 @@ run: flights4 -> top_destinations refine {
 
 The query is now calculating `flight_count` grouped by both `destination` and `origin`.
 
-Query refinement can be thought of as similar to extending a class in object-oriented programming. The new query inherits the properties of the original query, and adds new properties to it. (That said, it should not be confused with the similar concept of [source extension](./source.md#source-extensions).) This makes query logic much more reusable, since query fragments can be easily saved and modified. 
+Query refinement can be thought of as similar to extending a class in object-oriented programming. The new query inherits the properties of the original query, and adds new properties to it. (That said, it should not be confused with the similar concept of [source extension](./source.malloynb#source-extensions).) This makes query logic much more reusable, since query fragments can be easily saved and modified. 
 
 ## Ordering and Limiting
 
@@ -250,7 +250,7 @@ run: flights -> {
 }
 >>>markdown
 
-For detailed information on ordering and limiting, see the [Ordering and Limiting](order_by.md) section.
+For detailed information on ordering and limiting, see the [Ordering and Limiting](order_by.malloynb) section.
 
 ## Post-Aggregation Filtering
 
@@ -267,7 +267,7 @@ run: flights -> {
 
 ## Calculations (Window Functions)
 
-Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.md) section for details.
+Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.malloynb) section for details.
 
 >>>malloy
 

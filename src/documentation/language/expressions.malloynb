@@ -12,7 +12,7 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Boolean operators](#boolean-operators)<br/>Logically combine booleans | `height > 10 and height < 100`<br/>`is_cancelled or is_delayed`</br>`not is_commercial_flight` |
 | [Functions](#functions) | `floor(10.35)`<br/>`concat(first_name, ' ', last_name)`<br/>`cbrt!(x)`<br/>`timestamp_seconds!timestamp(val)` |
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
-| [Aggregation Control / Subtotals](ungrouped-aggregates.md) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
+| [Aggregation Control / Subtotals](ungrouped-aggregates.malloynb) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
 | [Filtered expressions](#filtered-expressions) | `avg(age) { where: state = 'CA' }`<br/>`flight_count { where: origin.county != null }` |
 | [Type cast](#type-cast) | `total_distance::string`<br/>`some_date::timestamp` |
 | [Safe type cast](#safe-type-cast) | `birth_year::number`<br/>`start_time_string::timestamp` |
@@ -98,11 +98,11 @@ Malloy includes the basic binary boolean operators `and` and `or`, as well as th
 <!-- * `concat(first_name, ' ', last_name)` -->
 <!-- * `sqrt(x)` -->
 
-Many functions available in SQL are available unchanged in Malloy. Malloy provides some compatibility transformations for known functions. Unknown functions may be called like `cbrt!(x)` or `timestamp_seconds!timestap(value)` to specify a return type. For detailed information, as well as a full list of all available functions, see the [Functions](./functions.md) section.
+Many functions available in SQL are available unchanged in Malloy. Malloy provides some compatibility transformations for known functions. Unknown functions may be called like `cbrt!(x)` or `timestamp_seconds!timestap(value)` to specify a return type. For detailed information, as well as a full list of all available functions, see the [Functions](./functions.malloynb) section.
 
 ## Aggregation
 
-Aggregations may included in an expression to create [measures](fields.md#measures), e.g. `count()`, `sum(distance)`, or `aircraft_models.seats.avg()`. For detailed information, see the [Aggregates](aggregates.md) section.
+Aggregations may included in an expression to create [measures](fields.malloynb#measures), e.g. `count()`, `sum(distance)`, or `aircraft_models.seats.avg()`. For detailed information, see the [Aggregates](aggregates.malloynb) section.
 
 <!-- TODO more info on symmetric aggregates -->
 
@@ -110,7 +110,7 @@ Aggregations may included in an expression to create [measures](fields.md#measur
 <!-- * `avg(age) : [state: 'CA']` -->
 <!-- * `flight_count : [origin.county != null]` -->
 
-Aggregate expressions may be filtered, using the [usual filter syntax](filters.md).
+Aggregate expressions may be filtered, using the [usual filter syntax](filters.malloynb).
 
 >>>malloy
 run: flights -> {
@@ -218,11 +218,11 @@ Malloy has built in constructs to simplify many time-related operations, which a
 
 A time value can be compared to a range. If you [apply](#application) a time to a range, (for example, `event_time ? @2003 to @2004`) that will check if the value is within the range. You can also use `=` to see if a time is with a range, or `<` to test for before the range it will be `<`, or `>` for after the range.
 
-See [Time Ranges](time-ranges.md) for more details.
+See [Time Ranges](time-ranges.malloynb) for more details.
 
 ### Time Truncation
 
-To truncate a time value to a given timeframe, use the `.` operator followed by the timeframe, e.g. `event_time.quarter` or `now.year`. See [Timestamp Truncation](timestamp-operations.md#truncation) for details.
+To truncate a time value to a given timeframe, use the `.` operator followed by the timeframe, e.g. `event_time.quarter` or `now.year`. See [Timestamp Truncation](timestamp-operations.malloynb#truncation) for details.
 
 A truncation made this way can also function as a range. The range begins
 at the moment of truncation and the duration is the timeframe unit
@@ -233,20 +233,20 @@ This is extremely useful with the [apply operator](#application), `?`. To see if
 
 ### Time Extraction
 
-Another very common grouping for time related data is by particular components, and this extraction of a single component as an integer. In Malloy this gesture looks like `hour(event_time)` or `minute(event_time)`. See [Timestamp extraction](timestamp-operations.md#extraction) for more details.
+Another very common grouping for time related data is by particular components, and this extraction of a single component as an integer. In Malloy this gesture looks like `hour(event_time)` or `minute(event_time)`. See [Timestamp extraction](timestamp-operations.malloynb#extraction) for more details.
 
 ### Interval extraction
 
 To measure the difference between two times, pass a range expression to
 one of the extraction functions.
 
-For more details see [Interval Measurement](time-ranges.md#interval-measurement)
+For more details see [Interval Measurement](time-ranges.malloynb#interval-measurement)
 
 ### Time Literals
 
 Time literals are specified in Malloy with the `@` character. A literal
 specified this way has an implied duration which means a literal
-can act like a range. See [Timestamp literals](datatypes.md#timestamp-literals) and [Date literals](datatypes.md#date-literals) for more details.
+can act like a range. See [Timestamp literals](datatypes.malloynb#timestamp-literals) and [Date literals](datatypes.malloynb#date-literals) for more details.
 
 In addition the `@` based literal syntax, Malloy also has one built in time constant.
 

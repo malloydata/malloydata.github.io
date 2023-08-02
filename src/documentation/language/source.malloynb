@@ -152,7 +152,7 @@ run: limited_users -> {
 
 Like with `duckdb.table('data/users.parquet')`, Malloy fetches the schema from the database to make columns of the resulting table accessible in computations.
 
-_Note: this replaces an older [SQL Block syntax](./sql_blocks.md) using `sql: { ... }`._
+_Note: this replaces an older [SQL Block syntax](./sql_blocks.malloynb) using `sql: { ... }`._
 
 ## Source Extensions
 
@@ -269,7 +269,7 @@ query: flights9 -> {
 }
 >>>markdown
 
-See the [Joins](join.md) section for more information on working with joins.
+See the [Joins](join.malloynb) section for more information on working with joins.
 
 ### Renaming Fields
 

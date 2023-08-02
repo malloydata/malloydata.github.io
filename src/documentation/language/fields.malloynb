@@ -26,12 +26,12 @@ query: users -> {
 >>>markdown
 
 The right hand side of this kind of definition can be any
-field expression. See the [Expressions](expressions.md)
+field expression. See the [Expressions](expressions.malloynb)
 section for more information.
 
 Queries (see [below](#source-level-queries)) can also be defined as
 part of a source or query stage. When a query is defined in a query stage, it is known as a "nested query" or an "aggregating
-subquery." See the [Nesting](nesting.md) section for a
+subquery." See the [Nesting](nesting.malloynb) section for a
 detailed discussion of nested queries.
 
 >>>malloy
@@ -137,4 +137,4 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 
 <!-- TODO this does not seem to work in a query stage, but it does work in an source or model -->
 
-See the [Nesting](nesting.md) section for more details about nested queries.
+See the [Nesting](nesting.malloynb) section for more details about nested queries.

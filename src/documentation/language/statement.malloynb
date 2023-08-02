@@ -24,7 +24,7 @@ Import statements allow you to import sources from another <code>.malloy</code> 
 import "flights.malloy"
 >>>markdown
 
-See the [Imports](imports.md) section for more information.
+See the [Imports](imports.malloynb) section for more information.
 
 ### Query Statements
 
@@ -37,7 +37,7 @@ query: flights_by_carrier is duckdb.table('../data/flights.parquet') -> {
 }
 >>>markdown
 
-See the [Queries](query.md) section for more information on queries.
+See the [Queries](query.malloynb) section for more information on queries.
 
 ### Source Statements
 
@@ -58,7 +58,7 @@ source: flights2 is duckdb.table('../data/flights.parquet') extend {
 }
 >>>markdown
 
-See the [Sources](source.md) section for more information on sources.
+See the [Sources](source.malloynb) section for more information on sources.
 
 ### Run Statements
 
@@ -74,7 +74,7 @@ run: flights2 -> {
 }
 >>>markdown
 
-See the [Queries](query.md) section for more information on queries.
+See the [Queries](query.malloynb) section for more information on queries.
 
 ## Comments
 
@@ -98,6 +98,6 @@ run: flights2 -> {
 }
 >>>markdown
 
-For more information about the rendering tags used in the Malloy rendering library, see the [Visualizations](../visualizations/overview.md) section.
+For more information about the rendering tags used in the Malloy rendering library, see the [Visualizations](../visualizations/overview.malloynb) section.
 
-For more information about tag semantics, see the [Tags](./tags.md) section.
+For more information about tag semantics, see the [Tags](./tags.malloynb) section.
