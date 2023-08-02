@@ -87,7 +87,7 @@ class Renderer {
         result = rendered;
         hidden = isHidden;
         this.modelDef = newModel;
-        const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
+        const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C${this.cellNumber}`;
         prefix = `<a href="${githubDevURL}" target="_blank"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>`;
       } catch (error) {
         log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
@@ -177,7 +177,7 @@ class Renderer {
     if (level === 1) {
       return `<div class="title-row">
         ${heading}
-        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C1">Open in VSCode <img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C1">VSCode <img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>
         </div>
       `
     } else {
