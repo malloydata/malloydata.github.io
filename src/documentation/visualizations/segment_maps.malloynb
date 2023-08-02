@@ -25,7 +25,6 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
     aggregate: flight_count
   }
 }
-
 >>>markdown
 
 ## Run as a simple query
@@ -61,5 +60,4 @@ run: flights -> {
     sfo_segment_map is routes_map refine { where: origin = 'SFO' }
     jfk_segment_map is routes_map refine { where: origin = 'JFK' }
 }
-
 >>>markdown
