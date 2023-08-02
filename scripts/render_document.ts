@@ -34,6 +34,7 @@ import { DEFAULT_CONTEXT } from "./context.js";
 import { hashForHeading, isMalloyNB } from "./utils.js";
 import {MalloySQLParser, MalloySQLStatementType} from '@malloydata/malloy-sql';
 import { DocumentPosition, DocumentRange, ModelDef } from "@malloydata/malloy";
+import { DocsError } from "./errors.js";
 
 /*
  * A Renderer is capable of converting a parsed `Markdown` document into HTML,
@@ -43,7 +44,7 @@ class Renderer {
   // The path where the document being rendered exists.
   private readonly path: string;
   private models: Map<string, string>;
-  private _errors: { snippet: string; error: string; position: Position }[] = [];
+  private _errors: DocsError[] = [];
   private readonly titleStack: { level: number; title: string }[] = [];
   public readonly links: { link: string; style: "md" | "html", position: Position }[] = [];
   public readonly hashes: string[] = [];
@@ -91,11 +92,10 @@ class Renderer {
           this.modelDef = newModel;
           const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
           prefix = `<a href="${githubDevURL}" target="_blank">Open in Web Editor</a>`;
-
         } catch (error) {
           log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
           result = `<div class="error">Error: ${error.toString()}</div>`;
-          this._errors.push({ snippet: code, error: error.message, position });
+          this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
         }
       } 
       highlightedCode = await highlight(showCode, "malloy");
@@ -125,7 +125,7 @@ class Renderer {
         } catch (error) {
           log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
           result = `<div class="error">Error: ${error.toString()}</div>`;
-          this._errors.push({ snippet: code, error: error.message, position });
+          this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
         }
       }
 
@@ -138,6 +138,14 @@ class Renderer {
     const segment = this.searchSegments[this.searchSegments.length - 1];
     if (segment) {
       segment.paragraphs.push({ type: "code", text: highlightedCode });
+    }
+
+    if (showCode.startsWith('\n') || showCode.endsWith("\n\n")) {
+      this._errors.push({ 
+        position, 
+        message: `Code snippets should not have leading or trailing newlines`, 
+        path: this.path 
+      });
     }
 
     return `${hidden ? "" : prefix + highlightedCode}${result ?? ""}`;
@@ -353,7 +361,7 @@ class Renderer {
       return text;
     }
     this.links.push({ link: href, style: "md", position });
-    href = href.replace(/\.md/, "");
+    href = href.replace(/\.md$/, "").replace(/\.malloynb$/, "");
     let out = href.startsWith("/")
       ? `<a href="${DEFAULT_CONTEXT.site.baseurl}${href}"`
       : `<a href="${href}"`;
@@ -557,7 +565,7 @@ export async function renderDoc(
   path: string
 ): Promise<{
   renderedDocument: string;
-  errors: { snippet: string; error: string; position: Position }[];
+  errors: DocsError[];
   links: {link: string, style: "md" | "html", position: Position}[];
   searchSegments: {
     titles: string[];
