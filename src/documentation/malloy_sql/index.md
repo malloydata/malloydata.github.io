@@ -59,6 +59,8 @@ SELECT name_count from %{ mysource -> names }%;
 SELECT airport_count from %{ mysource -> airports }%;
 ```
 
+It is also possible to define connections in SQL using `--connection:{my_connection}`. This is useful when writing `.malloynb` files, as notebooks cannot obtain data from delimiter lines.
+
 MalloySQL can contain multi (`/*...*/`) and single-line (`//` or `--`) comments.
 
 Running a specific SQL statement in a Malloy file (by, for example, clicking the "Run" codelens in the VSCode extension) will execute all preceeding Malloy statements, but only the selected SQL statement.
