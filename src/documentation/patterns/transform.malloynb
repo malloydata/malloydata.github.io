@@ -10,7 +10,7 @@ This mechanism can be used to create governed datasets for use in other tooling:
 File: `airports.malloysql`:
 ```malloysql
   >>>malloy
-  source: airports is duckdb.table('data/airports.parquet') extend {
+source: airports is duckdb.table('data/airports.parquet') extend {
     measure: airport_count is count()
 
     query: major_airports is -> {

@@ -1647,7 +1647,6 @@ Both `preceding` and `following` must be _literals_.
 
 Note: `avg_moving(value, 3)` means that the average is computed over 4 rows (the current row and 3 preceding).
 >>>malloy
-
 query: flights -> {
   group_by: carrier
   aggregate: flight_count

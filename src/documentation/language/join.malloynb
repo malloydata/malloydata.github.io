@@ -77,7 +77,6 @@ source: order_items is duckdb.table('../data/order_items.parquet') extend {
 If no alias is specified using `is`, the name of the join will be the name of the source being joined.
 
 >>>malloy
-
 source: carriers is duckdb.table('../data/carriers.parquet') extend {
   primary_key: code
 }
@@ -115,7 +114,6 @@ source: flights3 is duckdb.table('../data/flights.parquet') extend {
 When a source is joined in, its fields become nested within the parent source. Fields from joined sources can be referenced using `.`:
 
 >>>malloy
-
 query: flights3 -> {
   group_by: carriers.nickname
   aggregate: flight_count is count()
