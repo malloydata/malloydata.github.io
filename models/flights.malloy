@@ -2,23 +2,23 @@
 
 import "airports.malloy"
 
-source: carriers is duckdb.table('data/carriers.parquet') extend {
+source: carriers is duckdb.table('../src/documentation/data/carriers.parquet') extend {
   primary_key: code
   measure: carrier_count is count()
 }
 
-source: aircraft_models is duckdb.table('data/aircraft_models.parquet') extend {
+source: aircraft_models is duckdb.table('../src/documentation/data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
   measure: aircraft_model_count is count()
 }
 
-source: aircraft is duckdb.table('data/aircraft.parquet') extend {
+source: aircraft is duckdb.table('../src/documentation/data/aircraft.parquet') extend {
   primary_key: tail_num
   measure: aircraft_count is count()
   join_one: aircraft_models with aircraft_model_code
 }
 
-source: aircraft_facts is duckdb.table('data/flights.parquet') -> {
+source: aircraft_facts is duckdb.table('../src/documentation/data/flights.parquet') -> {
   group_by: tail_num
   aggregate:
     lifetime_flights is count()
@@ -28,7 +28,7 @@ source: aircraft_facts is duckdb.table('data/flights.parquet') -> {
   dimension: lifetime_flights_bucketed is floor(lifetime_flights / 1000) * 1000
 }
 
-source: flights is duckdb.table('data/flights.parquet') extend {
+source: flights is duckdb.table('../src/documentation/data/flights.parquet') extend {
   primary_key: id2
   rename: origin_code is origin
   rename: destination_code is destination
@@ -143,7 +143,7 @@ source: flights is duckdb.table('data/flights.parquet') extend {
 
   query: plane_usage is -> {
     order_by: 1 desc
-    where: aircraft.aircraft_count > 1
+    having: aircraft.aircraft_count > 1
     group_by: aircraft_facts.lifetime_flights_bucketed
     aggregate: aircraft.aircraft_count, flight_count
     nest: by_manufacturer, by_carrier
@@ -161,7 +161,7 @@ source: flights is duckdb.table('data/flights.parquet') extend {
     }
     nest: hubs is -> {
       limit: 10
-      where: destination.airport_count > 1
+      having: destination.airport_count > 1
       group_by: hub is origin.name
       aggregate: destination_count is destination.airport_count
     }

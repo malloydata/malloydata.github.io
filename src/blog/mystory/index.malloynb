@@ -1,0 +1,9 @@
+>>>markdown
+# This is a Blog Page
+
+
+>>>malloy
+run: duckdb.table('../../documentation/data/flights.parquet') -> {
+  group_by: carrier
+  aggregate: flight_count is count()
+}

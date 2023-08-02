@@ -2,7 +2,7 @@
 
 Documentation is a static site built using entirely custom generation.
 
-Source for documentation lives in the `/src` directory. Any `.md`
+Source for documentation lives in the `/src` directory. Any `.malloynb`
 files will be included in compiled documentation, `table_of_contents.json`
 specifies the sidebar, and any other files will be copied as static files,
 with some handlebars replacement.
@@ -37,22 +37,22 @@ This will build the docs, watch for file changes in any of the docs, static file
 
 Jekyll hot-reloading is enabled, so pages should automatically refresh when changes are made. When initial compilation is complete, a browser should open to the home page.
 
-Code blocks in the documentation may begin with a command string to indicate
-whether the code should be run, and how the query should be compiled or the results
-formatted. This command string is JSON-formatted and must appear on the first
-line in a comment with an `!`, like: `--! { "isRunnable": true }`. For example,
+Malloy sections in the documentation notebooks may contain tags to indicate how queries should be run and rendered, e.g.
 
 ````
 ```malloy
---! {"isRunnable": true, "source": "flights.malloy", "size": "large"}
+#(docs) size=large limit=100
 flights -> sessionize
 ```
 ````
 
-Currently, options include `isRunnable` (which must be `true` for the snippet
-to run), `project` (which refers to a directory in `/models`), `model` (
-which refers to a file (not including the `.malloy` extension inside that
-directory), and `size` (which adjusts the maximum scroll size of the results).
+Options:
+* `#(docs) size=small`: change the height of the query results view; options are `small` (default), `medium`, and `large`
+* `#(docs) limit=100`: set the limit for top-level number of rows to fetch; default is `5`; useful for top-level charts
+* `#(docs) html`: show the results as HTML (default)
+* `#(docs) json`: show the results as JSON
+* `#(docs) sql`: show the results as SQL
+* `##(docs) hidden`: do not show this code block (useful for imports and modeling)
 
 ### Style
 

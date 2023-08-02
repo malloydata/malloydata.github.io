@@ -44,7 +44,8 @@ export type Markdown =
   | Blockquote
   | Image
   | Delete
-  | ThematicBreak;
+  | ThematicBreak
+  | Yaml;
 
 export interface Position {
   start: { line: number, column: number, offset: number },
@@ -58,6 +59,11 @@ export interface Node {
 export interface Root extends Node {
   type: "root";
   children: Markdown[];
+}
+
+export interface Yaml extends Node {
+  type: "yaml";
+  value: string;
 }
 
 export interface Break extends Node {

@@ -1,0 +1,36 @@
+>>>markdown
+# Dashboards
+
+The `dashboard` style can be invoked on something that will render as a table `# dashboard` tag. When a query is rendered as a dashboard, dimensions aligned at the top, and agregates and nested queries float within the dashboard.
+
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  measure: airport_count is count()
+
+  query: by_state_and_county is -> {
+    limit: 10
+    group_by: state
+    aggregate: airport_count
+    nest: by_fac_type is -> {
+      group_by: fac_type
+      aggregate: airport_count
+    }
+  }
+}
+>>>markdown
+
+Queries in Malloy are often very complex and multifaceted, which makes them difficult to read in one nested table:
+
+>>>malloy
+#(docs) size=medium limit=5000
+run: airports -> by_state_and_county
+>>>markdown
+
+In such cases, the `# dashboard` renderer is useful for making the results easier to read:
+
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: airports -> by_state_and_county
+>>>markdown
+

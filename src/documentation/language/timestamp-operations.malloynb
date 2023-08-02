@@ -1,0 +1,37 @@
+>>>markdown
+# Timestamp Operations
+
+## Truncation
+
+For truncation to a time unit (timeframe), use the period (`.`) operator followed by the desired timeframe.
+
+ truncation | expr = @2021-08-06 00:36:15
+ ---- | ----
+`expr.minute` | 2021-08-06 00:36
+`expr.hour`   | 2021-08-06 00:00
+`expr.day`    | 2021-08-06 00:00
+`expr.week`   | 2021-08-01 00:00 _(the week containing the 10th)_
+`expr.month`  | 2021-08-01 00:00
+`expr.quarter` | 2021-06-01 00:00
+`expr.year`   | 2021-01-01 00:00
+
+* See [Timezones](timezones.malloynb) for information on how truncation interacts with timezones.
+
+## Extraction
+
+To extract an integer from a component of a timestamp, malloy uses the time unit (timeframe) in the form of a funtion call.
+
+The "Result" column uses a value of `@2021-08-06 00:55:05` for `expr`.
+
+expression | meaning | result
+---- | ---- | ----
+`day_of_year(expr)` | day of year, 1-365 | 218
+`day(expr)` | day of month 1-31 | 5
+`day_of_week(expr)` | day of week 1-7 | 6 _(Note: 1 represents Sunday)_
+`week(expr)` | week in year, 1-53 | 31
+`quarter(expr)` | quarter in year 1-4 | 3
+`hour(expr)` | hour of day 0-23 | 0
+`minute(expr)` | minute of hour 0-59 | 55
+`second(expr)` | second of minute 0-59 | 5
+
+* See [Timezones](timezones.malloynb) for information on how extraction interacts with timezones.

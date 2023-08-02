@@ -35,6 +35,9 @@ import {
   SQLBlockMaterializer,
   FixedConnectionMap,
   Connection,
+  Result,
+  ModelDef,
+  Tags,
 } from "@malloydata/malloy";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
@@ -48,6 +51,7 @@ import { highlight } from "./highlighter.js";
 const __dirname = path.resolve("./scripts/index.ts");
 
 const MODELS_PATH = path.join(__dirname, "../../models");
+const DOCS_ROOT_PATH = path.join(__dirname, "../../src");
 
 export const DEPENDENCIES = new Map<string, string[]>();
 
@@ -121,8 +125,9 @@ class DocsURLReader implements URLReader {
     if (inMemoryURL !== undefined) {
       return inMemoryURL;
     }
-    const contents = await fetchFile(url.toString());
-    addDependency(url.toString().replace(/^file:\/\//, ""), this.documentPath);
+    const thePath = url.toString().replace(/^file:\/\//, "");
+    const contents = await fetchFile(thePath);
+    addDependency(thePath, this.documentPath);
     this.dataStyles = {
       ...this.dataStyles,
       ...(await dataStylesForFile(url.toString(), contents)),
@@ -136,9 +141,25 @@ class DocsURLReader implements URLReader {
   }
 }
 
-const DUCKDB_CONNECTION = new DuckDBConnection("duckdb", undefined, MODELS_PATH, {
-  rowLimit: 5,
-});
+class ConnectionManager {
+  private readonly connections = new Map<string, DuckDBConnection>();
+
+  getConnection(documentPath: string) {
+    const directory = path.dirname(documentPath);
+    const fullDirectory = path.join(DOCS_ROOT_PATH, directory);
+    const existing = this.connections.get(fullDirectory);
+    if (existing) {
+      return existing;
+    }
+    const connection = new DuckDBConnection("duckdb", undefined, fullDirectory, {
+      rowLimit: 5,
+    });
+    this.connections.set(fullDirectory, connection);
+    return connection;
+  }
+}
+
+const CONNECTIONS = new ConnectionManager();
 
 function resolveSourcePath(sourcePath: string) {
   return `file://${path.resolve(path.join(MODELS_PATH, sourcePath))}`;
@@ -167,7 +188,8 @@ export async function runCode(
     documentPath,
     mapKeys(inlineModels, resolveSourcePath)
   );
-  const runtime = new Runtime(urlReader, DUCKDB_CONNECTION);
+  const connection = CONNECTIONS.getConnection(documentPath);
+  const runtime = new Runtime(urlReader, connection);
 
   // Here, we assume that docs queries that reference a model only care about
   // things _exported_ from that model. In other words, a query with
@@ -224,6 +246,14 @@ export async function runCode(
     ...urlReader.getHackyAccumulatedDataStyles(),
   };
 
+  return renderResult(queryResult, dataStyles, options);
+}
+
+async function renderResult(
+  queryResult: Result,
+  dataStyles: DataStyles,
+  options: RunOptions,
+): Promise<string> {
   const showAs = options.showAs || "html";
 
   const jsonResult = await highlight(
@@ -267,4 +297,84 @@ export async function runCode(
       </div>
     </div>
   </div>`;
+}
+
+export async function runNotebookCode(
+  code: string,
+  showCode: string,
+  documentPath: string,
+  options: RunOptions,
+  modelDef: ModelDef,
+): Promise<{ rendered: string, newModel: ModelDef; isHidden: boolean }> {
+  const fakeURL = new URL("file://" + path.join(DOCS_ROOT_PATH, documentPath));
+  const urlReader = new DocsURLReader(documentPath, new Map([[fakeURL.toString(), code]]));
+  const connection = CONNECTIONS.getConnection(documentPath);
+  const runtime = new Runtime(urlReader, connection);
+
+  const querySummary = `"${showCode.split("\n").join(" ").substring(0, 50)}..."`;
+  log(`  >> Running (notebook) query ${querySummary}`);
+  const runStartTime = performance.now();
+  const newModel = runtime
+    ._loadModelFromModelDef(modelDef)
+    .extendModel(fakeURL);
+  const model = await newModel.getModel();
+  const modelTags = new Tags({ 
+    notes: model
+      .getTags()
+      .getTagList()
+      .filter(t => t.startsWith("##(docs) "))
+      .map(t => t.replace(/^##\(docs\) /, "## "))
+  }).getMalloyTags().properties;
+  const newModelDef = model._modelDef;
+  let hasQuery = false;
+  try {
+    // TODO this is ugly, and there should be a way to ask "how many queries are there?"
+    model.preparedQuery;
+    hasQuery = true;
+  } catch {}
+  options.isHidden = "hidden" in modelTags;
+
+  if (hasQuery) {
+    const runnable = newModel.loadFinalQuery();
+    const query = await runnable.getPreparedQuery();
+    const tags = new Tags({ 
+      notes: query
+        .getTags()
+        .getTagList()
+        .filter(t => t.startsWith("#(docs) "))
+        .map(t => t.replace(/^#\(docs\) /, "# "))
+    }).getMalloyTags().properties;
+    options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
+    options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
+    options.showAs = "html" in tags ? "html" : "sql" in tags ? 'sql' : 'json' in tags ? 'json' : 'html';
+    const queryResult = await runnable.run({
+      rowLimit: options.pageSize || 5,
+    });
+  
+    log(
+      `  >> Finished running query ${querySummary} in ${timeString(
+        runStartTime,
+        performance.now()
+      )}`
+    );
+  
+    const dataStyles = {
+      ...options.dataStyles,
+      ...urlReader.getHackyAccumulatedDataStyles(),
+    };
+  
+    const rendered = await renderResult(queryResult, dataStyles, options);
+    return {
+      rendered,
+      newModel: newModelDef,
+      isHidden: options.isHidden
+    }
+  }
+  else {
+    return {
+      rendered: "",
+      newModel: newModelDef,
+      isHidden: options.isHidden
+    };
+  }
 }

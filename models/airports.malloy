@@ -1,6 +1,6 @@
 -- --! styles airports.styles.json
 
-source: airports is duckdb.table('data/airports.parquet') extend {
+source: airports is duckdb.table('../src/documentation/data/airports.parquet') extend {
   primary_key: code
 
   measure: airport_count is count()

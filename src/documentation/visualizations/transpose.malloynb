@@ -1,0 +1,42 @@
+>>>markdown
+# Transposed Tables
+For comparison, it is often interesting to turn a table on it's side.  The `# transpose` tag on a query does just that.
+
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  measure: airport_count is count()
+}
+>>>markdown
+
+## Normal Table
+
+>>>malloy
+#(docs) size=large
+run: airports -> {
+  group_by: fac_type
+  aggregate: 
+    airport_count
+    californa_count is airport_count { where: state = 'CA' }
+    ny_count is airport_count { where: state = 'CA' }
+    major_count is airport_count { where: major = 'Y' }
+    average_elevation is elevation.avg()
+}
+>>>markdown
+
+## Transposed Table
+
+Great for comparison
+
+>>>malloy
+#(docs) size=large
+# transpose
+run: airports -> {
+  group_by: fac_type
+  aggregate: 
+    airport_count
+    californa_count is airport_count { where: state = 'CA' }
+    ny_count is airport_count { where: state = 'CA' }
+    major_count is airport_count { where: major = 'Y' }
+    average_elevation is elevation.avg()
+}
+>>>markdown

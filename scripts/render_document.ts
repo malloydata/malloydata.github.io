@@ -25,13 +25,16 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import { Markdown, Position } from "./markdown_types.js";
-import { runCode } from "./run_code.js";
+import { Markdown, Position, Root } from "./markdown_types.js";
+import { runCode, runNotebookCode } from "./run_code.js";
 import { log } from "./log.js";
 import { highlight } from "./highlighter.js";
 import yaml from "yaml";
 import { DEFAULT_CONTEXT } from "./context.js";
-import { hashForHeading } from "./utils.js";
+import { hashForHeading, isMalloyNB } from "./utils.js";
+import {MalloySQLParser, MalloySQLStatementType} from '@malloydata/malloy-sql';
+import { DocumentPosition, DocumentRange, ModelDef } from "@malloydata/malloy";
+import { DocsError } from "./errors.js";
 
 /*
  * A Renderer is capable of converting a parsed `Markdown` document into HTML,
@@ -41,7 +44,7 @@ class Renderer {
   // The path where the document being rendered exists.
   private readonly path: string;
   private models: Map<string, string>;
-  private _errors: { snippet: string; error: string; position: Position }[] = [];
+  private _errors: DocsError[] = [];
   private readonly titleStack: { level: number; title: string }[] = [];
   public readonly links: { link: string; style: "md" | "html", position: Position }[] = [];
   public readonly hashes: string[] = [];
@@ -52,6 +55,9 @@ class Renderer {
       | { type: "code"; text: string }
     )[];
   }[] = [];
+  private cellNumber = 0;
+  private mode: "markdown" | "malloy" | undefined = undefined;
+  private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}};
 
   constructor(path: string) {
     this.path = path;
@@ -68,45 +74,28 @@ class Renderer {
     _escaped: boolean,
     position: Position,
   ) {
-    const lang = (infostring || "txt").trim();
+    let lang = (infostring || "txt").trim();
     let showCode = code;
     let hidden = false;
-
     let result = "";
-    let highlightedCode;
-    if (lang === "malloy") {
-      if (code.startsWith("--!")) {
-        try {
-          const options = JSON.parse(
-            code.split("\n")[0].substring("--! ".length).trim()
-          );
-          showCode = showCode.split("\n").slice(1).join("\n");
-          if (options.isHidden) {
-            hidden = true;
-          }
-          if (options.isRunnable) {
-            result = await runCode(showCode, this.path, options, this.models);
-          } else if (options.isModel) {
-            let modelCode = showCode;
-            if (options.source) {
-              const prefix = this.models.get(options.source);
-              if (prefix === undefined) {
-                throw new Error(`can't find source ${options.source}`);
-              }
-              modelCode = prefix + "\n" + showCode;
-            }
-            this.setModel(options.modelPath, modelCode);
-          }
-        } catch (error) {
-          log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
-          result = `<div class="error">Error: ${error.toString()}</div>`;
-          this._errors.push({ snippet: code, error: error.message, position });
-        }
+    let highlightedCode: string;
+    let prefix = "";
+    if (lang === "malloy-x") {
+      showCode = removeDocsTags(code);
+      try {
+        const { rendered, newModel, isHidden } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
+        result = rendered;
+        hidden = isHidden;
+        this.modelDef = newModel;
+        const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C${this.cellNumber}`;
+        prefix = `<a href="${githubDevURL}" target="_blank"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>`;
+      } catch (error) {
+        log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
+        result = `<div class="error">Error: ${error.toString()}</div>`;
+        this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
       }
-
-      highlightedCode = await highlight(showCode, lang);
+      highlightedCode = await highlight(showCode, "malloy");
     } else {
-      showCode = showCode.replace(/\n$/, "") + "\n";
       highlightedCode = await highlight(showCode, lang);
     }
 
@@ -115,7 +104,15 @@ class Renderer {
       segment.paragraphs.push({ type: "code", text: highlightedCode });
     }
 
-    return `${hidden ? "" : highlightedCode}${result}`;
+    if (showCode.startsWith('\n') || showCode.endsWith("\n\n")) {
+      this._errors.push({ 
+        position, 
+        message: `Code snippets should not have leading or trailing newlines`, 
+        path: this.path 
+      });
+    }
+
+    return `<div class="code-wrapper">${hidden ? "" : prefix + highlightedCode}${result ?? ""}</div>`;
   }
 
   protected async blockquote(content: Markdown[]) {
@@ -170,13 +167,22 @@ class Renderer {
     this.hashes.push(escapedText);
     // TODO handle ambiguous hashes?
 
-    return `
+    const heading = `
       <h${level}>
         <a id="${escapedText}" class="header-link anchor" href="#${escapedText}">
           ${text}
         </a>
       </h${level}>
     `;
+    if (level === 1) {
+      return `<div class="title-row">
+        ${heading}
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C1">VSCode <img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      `
+    } else {
+      return heading;
+    }
   }
 
   protected async hr() {
@@ -319,7 +325,7 @@ class Renderer {
       return text;
     }
     this.links.push({ link: href, style: "md", position });
-    href = href.replace(/\.md/, "");
+    href = href.replace(/\.malloynb$/, "");
     let out = href.startsWith("/")
       ? `<a href="${DEFAULT_CONTEXT.site.baseurl}${href}"`
       : `<a href="${href}"`;
@@ -352,9 +358,17 @@ class Renderer {
   }
 
   protected async children(children: Markdown[]) {
-    return (
-      await Promise.all(children.map((child) => this.render(child)))
-    ).join("");
+    // Must be executed in order, because notebook-style queries have side effects
+    let result = "";
+    for (const child of children) {
+      result += await this.render(child);
+    }
+    return result;
+
+
+    // return (
+    //   await Promise.all(children.map((child) => this.render(child)))
+    // ).join("");
   }
 
   private async root(children: Markdown[]) {
@@ -362,6 +376,16 @@ class Renderer {
   }
 
   async render(ast: Markdown): Promise<string> {
+    if (ast.type !== "root") {
+      const isCodeCell = ast.type === "code" && ast.lang === "malloy-x";
+      if (this.mode !== "markdown" && !isCodeCell) {
+        this.mode = "markdown";
+        this.cellNumber += 1;
+      } else if (isCodeCell) {
+        this.mode = "malloy";
+        this.cellNumber += 1;
+      }
+    }
     switch (ast.type) {
       case "root":
         return this.root(ast.children);
@@ -407,12 +431,73 @@ class Renderer {
   }
 }
 
+function parseMarkdown(text: string): Root {
+  const ast = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkFrontmatter, ['yaml'])
+    .parse(text);
+  return ast as unknown as Root;
+}
+
+function convertPosition(text: string, documentPosition: DocumentPosition): { line: number, column: number, offset: number} {
+  const lines = text.split("\n");
+  return {
+    line: documentPosition.line,
+    column: documentPosition.character,
+    offset: documentPosition.character + lines.slice(documentPosition.line).join("\n").length,
+  };
+}
+
+function convertRange(text: string, documentRange: DocumentRange): Position {
+  return {
+    start: convertPosition(text, documentRange.start),
+    end: convertPosition(text, documentRange.end)
+  };
+} 
+
+function parseMalloyNB(text: string, path: string): Root {
+  const parse = MalloySQLParser.parse(text, path);
+  const children: Markdown[] = parse.statements.flatMap(stmt => {
+    const position = convertRange(text, stmt.range);
+    if (stmt.type === MalloySQLStatementType.MALLOY) {
+      return [{
+        type: 'code',
+        lang: 'malloy-x',
+        value: stmt.text,
+        meta: undefined,
+        position, 
+      }];
+    } else if (stmt.type === MalloySQLStatementType.SQL) {
+      return [{
+        type: 'code',
+        lang: 'sql',
+        value: stmt.text,
+        meta: undefined,
+        position,
+      }];
+    } else {
+      // TODO map positions...
+      const markdown = parseMarkdown(stmt.text);
+      return markdown.children;
+    }
+  });
+  return { 
+    type: "root", 
+    children, 
+    position: { 
+      start: { line: 0, column: 0, offset: 0 }, 
+      end: { line: 0, column: 0, offset: 0 }
+    }
+  };
+}
+
 export async function renderDoc(
   text: string,
   path: string
 ): Promise<{
   renderedDocument: string;
-  errors: { snippet: string; error: string; position: Position }[];
+  errors: DocsError[];
   links: {link: string, style: "md" | "html", position: Position}[];
   searchSegments: {
     titles: string[];
@@ -424,14 +509,10 @@ export async function renderDoc(
   hashes: string[],
   frontmatter: any,
 }> {
-  const ast = unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkFrontmatter, ['yaml'])
-    .parse(text);
+  const ast = parseMalloyNB(text, path);
   const renderer = new Renderer(path);
   let frontmatter: unknown = {};
-  if (ast.children[0].type === 'yaml') {
+  if (ast.children[0]?.type === 'yaml') {
     const frontmatterRaw = ast.children[0].value;
     frontmatter = yaml.parse(frontmatterRaw);
     ast.children = ast.children.slice(1);
@@ -445,4 +526,8 @@ export async function renderDoc(
     hashes: renderer.hashes,
     links: renderer.links
   };
+}
+
+function removeDocsTags(code: string) {
+  return code.split("\n").filter(l => !l.match(/^#\(docs\) /)).join("\n");
 }

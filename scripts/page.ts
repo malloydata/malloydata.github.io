@@ -24,6 +24,7 @@
 import path from "path";
 import { DEFAULT_CONTEXT } from "./context.js";
 import Handlebars from "handlebars";
+import { convertDocPathToHTML } from "./utils.js";
 
 export interface Section {
   title: string;
@@ -60,8 +61,8 @@ function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
       items: section.items.map((item) => {
         if (isSectionItem(item)) {
           const fullLink = path.join("/documentation", item.link);
-          const compareLink = fullLink.replace(/\.md$/, ".html");
-          const htmlLinkRaw = fullLink.replace(/\.md$/, "");
+          const compareLink = convertDocPathToHTML(fullLink);
+          const htmlLinkRaw = fullLink.replace(/\.malloynb$/, "");
           const htmlLink = htmlLinkRaw === "/documentation/index" ? "/documentation" : htmlLinkRaw;
           return { title: item.title, link: item.link, htmlLink, compareLink };
         } else {
@@ -148,7 +149,7 @@ export function renderFooter(
   rootPath: string,
   docPath: string
 ): string {
-  const makeFullLink = (l: string) => path.join('/documentation', l.replace(/\.md$/, ".html"));
+  const makeFullLink = (l: string) => path.join('/documentation', convertDocPathToHTML(l));
   const items = extractItems(sections);
   const thisIndex = items.findIndex(
     (item) => makeFullLink(item.link) === docPath

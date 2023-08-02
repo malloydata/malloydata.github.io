@@ -1,0 +1,63 @@
+>>>markdown
+# Segment Maps
+
+The plugin currently supports US maps. Segment maps take as input 4 columns: start latitude , start longitude, end latitude, and  end longitude of the segment.  The model and data styles for the subsequent examples are:
+
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  dimension: name is concat(code, ' - ', full_name)
+  measure: airport_count is count()
+}
+
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  join_one: orig is airports on origin = orig.code
+  join_one: dest is airports on destination = dest.code
+
+  measure: flight_count is count()
+
+  # segment_map
+  query: routes_map is -> {
+    group_by:
+      orig.latitude
+      orig.longitude
+      latitude2 is dest.latitude
+      longitude2 is dest.longitude
+    aggregate: flight_count
+  }
+}
+>>>markdown
+
+## Run as a simple query
+Departing from Chicago
+
+>>>malloy
+#(docs) limit=10000 size=large
+run: flights -> routes_map refine { where: dep_time = @2003-02 and origin = 'ORD' }
+>>>markdown
+
+## Run as a trellis
+By calling the configured map as a nested query, a trellis is formed.
+
+>>>malloy
+#(docs) size=lage
+run: flights -> {
+  where: dep_time = @2003-02 and origin = 'ORD'
+  group_by: carrier
+  aggregate: flight_count
+  nest: routes_map
+}
+>>>markdown
+
+## Run as a trellis, repeated with different filters
+
+>>>malloy
+#(docs) size=large
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  nest:
+    ord_segment_map is routes_map refine { where: origin = 'ORD' }
+    sfo_segment_map is routes_map refine { where: origin = 'SFO' }
+    jfk_segment_map is routes_map refine { where: origin = 'JFK' }
+}
+>>>markdown

@@ -1,0 +1,67 @@
+>>>markdown
+# Malloy time range expressions
+
+## Range expressions
+
+There are two forms of range expressions
+
+* _expr_ `to` _expr_ ( `@2001 to @2003`)
+* _expr_ `for` `N` _units_ ( `now for 15 minutes` )
+
+A timestamp can be compared to a range. If the time stamp is within
+the range it will be `=`. Before the range it will be `<` and after
+the range it will be `>`. If you [apply](apply.malloynb) a range, (for example, `eventDate: @2003 to @2004`) that will also check if the value is within the range.
+
+## Range shortcuts
+
+Because grouping and filtering by specific time ranges is such a common operation for a data transformation task, Malloy has a number of expressive short cuts. The full power of the underlying SQL engine is also available for any type of truncation or extraction not supported by these shortcuts.
+
+Malloy supports two time-related types, `timestamp` and `date`.
+Both of these can be used with these techniques, though the exact
+truncations or extractions available will vary depending on the
+data type (e.g. it would make no sense to attempt to truncate a `date` object by `minute`).
+
+### Literals as ranges
+
+Any time literal with resolution larger than seconds will function as a range, for duration of the units in which the literal is expressed. This works with year, quarter, month, week, day, hour and minute resolution literals.
+
+ expression | true if
+ ---- | ----
+`expr ? @2021` | `expr >= @2021-01-01 and expr < @2022-01-01`
+`expr ? @2021-01` | `expr >= @2021-01-01 and expr < @2021-02-01`
+`expr ? @2021-01-02` | `expr >= @2021-01-02 and expr < @2021-01-03`
+
+### Truncations as ranges
+
+A truncation can also function as a range. The range begins
+at the moment of truncation and the duration is the timeframe unit
+used to specify the truncation, so for example `eventDate.year`
+would be a range covering the entire year which contains `eventDate`
+
+This is extremely useful with the [Apply operator](apply.malloynb), `?`. To see if two events happen in the same calendar year, for example, the boolean expression in Malloy could be `oneEvent ? otherEvent.year`
+
+## Interval Measurement
+
+To measure the difference between two times, pass a range expression to
+one of the extraction functions, which work time timestmap or date based data.
+
+expression | meaning
+---- | ----
+`seconds(t1 to t2)` | Number of seconds from t1 until t2
+`minutes(t1 to t2)` | ... minutes ...
+`hours(t1 to t2)` | ... hours ...
+`days(t1 to t2)` | ... days ...
+
+The extractions compute the difference in seconds of the endpoints,
+and use fixed ratios to convert to larger units than seconds.
+
+If you are using date based data, you can also measure intervals in larger units.
+
+expression | meaning
+---- | ----
+`weeks(t1 to t2)` | ... weeks ...
+`months(t1 to t2)` | ... months ...
+`quarters(t1 to t2)` | ... quarters ...
+`years(t1 to t2)` | ... years ...
+
+These will return a negative number if t1 is later than t2.
