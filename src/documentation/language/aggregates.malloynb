@@ -18,7 +18,6 @@ The `count` aggregate function may be used to count the number of records appear
 import "flights.malloy"
 import "ecommerce.malloy"
 import "airports.malloy"
-
 >>>malloy
 --! {"isRunnable": true, "source": "flights.malloy"}
 run: flights -> {

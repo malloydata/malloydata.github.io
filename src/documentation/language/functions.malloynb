@@ -1389,7 +1389,7 @@ query: flights -> {
   // ERROR: Parameter 1 ('value') of lag must be literal, constant, or output, but received input
   calculate: prev_carrier is lag(carrier)
 }
-``` -->
+```
 
 <table class="transpose">
   <tr>
