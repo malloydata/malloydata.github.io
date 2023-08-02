@@ -30,6 +30,7 @@ if (BASEURL === undefined) {
 
 export const DEFAULT_CONTEXT = {
   site: {
-    baseurl: BASEURL
+    baseurl: BASEURL,
+    ga_site_id: 'G-0M10W7C20Y',
   },
 }
