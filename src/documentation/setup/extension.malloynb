@@ -1,3 +1,4 @@
+>>>markdown
 # The Malloy Extension
 
 The [Malloy Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) is an authoring enironments for Malloy models. It contains helpful features like schema browsing, query running, language auto-complete, help & documentation, and rudimentary visualizations.
