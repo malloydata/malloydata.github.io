@@ -5,15 +5,15 @@
       "items": [
         {
           "title": "What Is Malloy",
-          "link": "/index.md"
+          "link": "/index.malloynb"
         },
         {
           "title": "Key Features",
-          "link": "/about/features.md"
+          "link": "/about/features.malloynb"
         },
         {
           "title": "The Tao of Malloy",
-          "link": "/about/tao.md"
+          "link": "/about/tao.malloynb"
         }
       ]
     },
@@ -22,11 +22,11 @@
       "items": [
         {
           "title": "Installing the Malloy Extension",
-          "link": "/setup/extension.md"
+          "link": "/setup/extension.malloynb"
         },
         {
           "title": "Connecting a Database",
-          "link": "/setup/connection_instructions.md"
+          "link": "/setup/connection_instructions.malloynb"
         }
       ]
     },
@@ -35,78 +35,78 @@
       "items": [
         {
           "title": "Quickstart",
-          "link": "/user_guides/basic.md"
+          "link": "/user_guides/basic.malloynb"
         },
         {
           "title": "Malloy By Example",
-          "link": "/user_guides/malloy_by_example.md"
+          "link": "/user_guides/malloy_by_example.malloynb"
         },
         {
           "title": "SQL to Malloy",
-          "link": "/language/sql_to_malloy.md"
+          "link": "/language/sql_to_malloy.malloynb"
         },
         {
           "title": "Common Patterns",
           "items": [
             {
               "title": "Comparing Timeframes",
-              "link": "/patterns/yoy.md"
+              "link": "/patterns/yoy.malloynb"
             },
             {
               "title": "Foreign Sums and Averages",
-              "link": "/patterns/foreign_sums.md"
+              "link": "/patterns/foreign_sums.malloynb"
             },
             {
               "title": "Reading Nested Data",
-              "link": "/patterns/reading_nested.md"
+              "link": "/patterns/reading_nested.malloynb"
             },
             {
               "title": "Percent of Total",
-              "link": "/patterns/percent_of_total.md"
+              "link": "/patterns/percent_of_total.malloynb"
             },
             {
               "title": "Cohort Analysis",
-              "link": "/patterns/cohorts.md"
+              "link": "/patterns/cohorts.malloynb"
             },
             {
               "title": "Nested Subtotals",
-              "link": "/patterns/nested_subtotals.md"
+              "link": "/patterns/nested_subtotals.malloynb"
             },
             {
               "title": "Deduplicating Rows with SQL",
-              "link": "/patterns/dedup_sql.md"
+              "link": "/patterns/dedup_sql.malloynb"
             },
             {
               "title": "Group By with an 'other' bucket",
-              "link": "/patterns/other.md"
+              "link": "/patterns/other.malloynb"
             },
             {
               "title": "Auto-binning Histograms",
-              "link": "/patterns/autobin.md"
+              "link": "/patterns/autobin.malloynb"
             },
             {
               "title": "Moving Average",
-              "link": "/patterns/moving_avg.md"
+              "link": "/patterns/moving_avg.malloynb"
             },
             {
               "title": "Daily Active Users",
-              "link": "/patterns/dau.md"
+              "link": "/patterns/dau.malloynb"
             },
             {
               "title": "Transform Data",
-              "link": "/patterns/transform.md"
+              "link": "/patterns/transform.malloynb"
             },
             {
               "title": "Data from JSON APIs",
-              "link": "/patterns/apijson.md"
+              "link": "/patterns/apijson.malloynb"
             },
             {
               "title": "Sessionize - Map/Reduce",
-              "link": "/patterns/sessionize.md"
+              "link": "/patterns/sessionize.malloynb"
             },
             {
               "title": "Dimensional Indexes",
-              "link": "/patterns/dim_index.md"
+              "link": "/patterns/dim_index.malloynb"
             }
           ]
         }
@@ -117,75 +117,75 @@
       "items": [
         {
           "title": "Models",
-          "link": "/language/statement.md"
+          "link": "/language/statement.malloynb"
         },
         {
           "title": "Sources",
-          "link": "/language/source.md"
+          "link": "/language/source.malloynb"
         },
         {
           "title": "Queries",
-          "link": "/language/query.md"
+          "link": "/language/query.malloynb"
         },
         {
           "title": "Data Types",
-          "link": "/language/datatypes.md"
+          "link": "/language/datatypes.malloynb"
         },
         {
           "title": "Fields",
-          "link": "/language/fields.md"
+          "link": "/language/fields.malloynb"
         },
         {
           "title": "Aggregates",
-          "link": "/language/aggregates.md"
+          "link": "/language/aggregates.malloynb"
         },
         {
           "title": "Filters",
-          "link": "/language/filters.md"
+          "link": "/language/filters.malloynb"
         },
         {
           "title": "Ordering and Limiting",
-          "link": "/language/order_by.md"
+          "link": "/language/order_by.malloynb"
         },
         {
           "title": "Joins",
-          "link": "/language/join.md"
+          "link": "/language/join.malloynb"
         },
         {
           "title": "Nested Queries",
-          "link": "/language/nesting.md"
+          "link": "/language/nesting.malloynb"
         },
         {
           "title": "Expressions",
-          "link": "/language/expressions.md"
+          "link": "/language/expressions.malloynb"
         },
         {
           "title": "Functions",
-          "link": "/language/functions.md"
+          "link": "/language/functions.malloynb"
         },
         {
           "title": "SQL Sources",
-          "link": "/language/sql_sources.md"
+          "link": "/language/sql_sources.malloynb"
         },
         {
           "title": "Imports",
-          "link": "/language/imports.md"
+          "link": "/language/imports.malloynb"
         },
         {
           "title": "Calculations",
-          "link": "/language/calculations.md"
+          "link": "/language/calculations.malloynb"
         },
         {
           "title": "Connections",
-          "link": "/language/connections.md"
+          "link": "/language/connections.malloynb"
         },
         {
           "title": "Tags",
-          "link": "/language/tags.md"
+          "link": "/language/tags.malloynb"
         },
         {
           "title": "Change Log",
-          "link": "/language/changelog.md"
+          "link": "/language/changelog.malloynb"
         }
       ]
     },
@@ -194,47 +194,47 @@
       "items": [
         {
           "title": "Overview",
-          "link": "/visualizations/overview.md"
+          "link": "/visualizations/overview.malloynb"
         },
         {
           "title": "Numbers",
-          "link": "/visualizations/numbers.md"
+          "link": "/visualizations/numbers.malloynb"
         },
         {
           "title": "Pivoted Tables",
-          "link": "/visualizations/pivots.md"
+          "link": "/visualizations/pivots.malloynb"
         },
         {
           "title": "Table Transpose",
-          "link": "/visualizations/transpose.md"
+          "link": "/visualizations/transpose.malloynb"
         },
         {
           "title": "Dashboards",
-          "link": "/visualizations/dashboards.md"
+          "link": "/visualizations/dashboards.malloynb"
         },
         {
           "title": "Lists",
-          "link": "/visualizations/lists.md"
+          "link": "/visualizations/lists.malloynb"
         },
         {
           "title": "Bar Charts",
-          "link": "/visualizations/bar_charts.md"
+          "link": "/visualizations/bar_charts.malloynb"
         },
         {
           "title": "Line Charts",
-          "link": "/visualizations/charts_line_chart.md"
+          "link": "/visualizations/charts_line_chart.malloynb"
         },
         {
           "title": "Scatter Charts",
-          "link": "/visualizations/scatter_charts.md"
+          "link": "/visualizations/scatter_charts.malloynb"
         },
         {
           "title": "Shape Maps",
-          "link": "/visualizations/shape_maps.md"
+          "link": "/visualizations/shape_maps.malloynb"
         },
         {
           "title": "Segment Maps",
-          "link": "/visualizations/segment_maps.md"
+          "link": "/visualizations/segment_maps.malloynb"
         }
       ]
     },
@@ -243,7 +243,7 @@
       "items": [
         {
           "title": "Using MalloySQL",
-          "link": "/malloy_sql/index.md"
+          "link": "/malloy_sql/index.malloynb"
         }
       ]
     }

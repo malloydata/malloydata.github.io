@@ -179,7 +179,7 @@ for (const result of results) {
       linkElement.innerHTML = title;
       linkElement.href =
         result.segment.path
-          .replace(".md", ".html") + (index > 0 ? "#" + anchor : "");
+          .replace(".malloynb", ".html") + (index > 0 ? "#" + anchor : "");
       highlight(linkElement, query);
       headingElement.appendChild(linkElement);
       if (index != result.segment.titles.length - 1) {

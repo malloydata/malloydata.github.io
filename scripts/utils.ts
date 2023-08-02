@@ -24,20 +24,12 @@
 import fs from "fs";
 import path from "path";
 
-export function isMarkdown(file: string): boolean {
-  return file.endsWith(".md");
-}
-
 export function isMalloyNB(file: string): boolean {
   return file.endsWith(".malloysql") || file.endsWith(".malloynb");
 }
 
-export function isMarkdownOrMalloyNB(file: string): boolean {
-  return isMarkdown(file) || isMalloyNB(file);
-}
-
 export function convertDocPathToHTML(file: string): string {
-  return file.replace(/\.md$/, ".html").replace(/\.malloysql$/, ".html").replace(/\.malloynb$/, ".html");
+  return file.replace(/\.malloynb$/, ".html");
 }
 
 export function timeString(start: number, end: number): string {

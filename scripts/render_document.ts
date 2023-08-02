@@ -55,7 +55,6 @@ class Renderer {
       | { type: "code"; text: string }
     )[];
   }[] = [];
-  private readonly isNotebook: boolean;
   private cellNumber = 0;
   private mode: "markdown" | "malloy" | undefined = undefined;
   private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}};
@@ -63,7 +62,6 @@ class Renderer {
   constructor(path: string) {
     this.path = path;
     this.models = new Map();
-    this.isNotebook = isMalloyNB(path);
   }
 
   private setModel(modelPath: string, source: string) {
@@ -83,55 +81,21 @@ class Renderer {
     let highlightedCode: string;
     let prefix = "";
     if (lang === "malloy-x") {
-      if (this.isNotebook) {
-        showCode = removeDocsTags(code);
-        try {
-          const { rendered, newModel, isHidden } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
-          result = rendered;
-          hidden = isHidden;
-          this.modelDef = newModel;
-          const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
-          prefix = `<a href="${githubDevURL}" target="_blank"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/edit.svg" alt="document"/></a>`;
-        } catch (error) {
-          log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
-          result = `<div class="error">Error: ${error.toString()}</div>`;
-          this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
-        }
-      } 
-      highlightedCode = await highlight(showCode, "malloy");
-    } else if (lang === "malloy") {
-      if (code.startsWith("--!")) {
-        try {
-          const options = JSON.parse(
-            code.split("\n")[0].substring("--! ".length).trim()
-          );
-          showCode = showCode.split("\n").slice(1).join("\n");
-          if (options.isHidden) {
-            hidden = true;
-          }
-          if (options.isRunnable) {
-            result = await runCode(showCode, this.path, options, this.models);
-          } else if (options.isModel) {
-            let modelCode = showCode;
-            if (options.source) {
-              const prefix = this.models.get(options.source);
-              if (prefix === undefined) {
-                throw new Error(`can't find source ${options.source}`);
-              }
-              modelCode = prefix + "\n" + showCode;
-            }
-            this.setModel(options.modelPath, modelCode);
-          }
-        } catch (error) {
-          log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
-          result = `<div class="error">Error: ${error.toString()}</div>`;
-          this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
-        }
+      showCode = removeDocsTags(code);
+      try {
+        const { rendered, newModel, isHidden } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
+        result = rendered;
+        hidden = isHidden;
+        this.modelDef = newModel;
+        const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
+        prefix = `<a href="${githubDevURL}" target="_blank"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/edit.svg" alt="document"/></a>`;
+      } catch (error) {
+        log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
+        result = `<div class="error">Error: ${error.toString()}</div>`;
+        this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
       }
-
-      highlightedCode = await highlight(showCode, lang);
+      highlightedCode = await highlight(showCode, "malloy");
     } else {
-      showCode = showCode.replace(/\n$/, "") + "\n";
       highlightedCode = await highlight(showCode, lang);
     }
 
@@ -361,7 +325,7 @@ class Renderer {
       return text;
     }
     this.links.push({ link: href, style: "md", position });
-    href = href.replace(/\.md$/, "").replace(/\.malloynb$/, "");
+    href = href.replace(/\.malloynb$/, "");
     let out = href.startsWith("/")
       ? `<a href="${DEFAULT_CONTEXT.site.baseurl}${href}"`
       : `<a href="${href}"`;
@@ -494,21 +458,6 @@ function convertRange(text: string, documentRange: DocumentRange): Position {
 
 function parseMalloyNB(text: string, path: string): Root {
   const parse = MalloySQLParser.parse(text, path);
-  // if (parse.errors) {
-  //   // TODO map these errors better...
-  //   const errors = parse.errors.map(e => ({snippet: "", error: e.message, position: {
-  //     start: { line: 0, column: 0, offset: 0 },
-  //     end: { line: 0, column: 0, offset: 0 },
-  //   }}));
-  //   return { result: { 
-  //     type: "root", 
-  //     children: [], 
-  //     position: { 
-  //       start: { line: 0, column: 0, offset: 0 }, 
-  //       end: { line: 0, column: 0, offset: 0 }
-  //     }
-  //   }, errors };
-  // }
   const children: Markdown[] = parse.statements.flatMap(stmt => {
     const position = convertRange(text, stmt.range);
     if (stmt.type === MalloySQLStatementType.MALLOY) {
@@ -543,23 +492,6 @@ function parseMalloyNB(text: string, path: string): Root {
   };
 }
 
-function parse(text: string, path: string): Root {
-  if (isMalloyNB(path)) {
-    return parseMalloyNB(text, path);
-  } else {
-    // TODO remove this
-    return { 
-      type: "root", 
-      children: [], 
-      position: { 
-        start: { line: 0, column: 0, offset: 0 }, 
-        end: { line: 0, column: 0, offset: 0 }
-      }
-    };
-    return parseMarkdown(text);
-  }
-}
-
 export async function renderDoc(
   text: string,
   path: string
@@ -577,7 +509,7 @@ export async function renderDoc(
   hashes: string[],
   frontmatter: any,
 }> {
-  const ast = parse(text, path);
+  const ast = parseMalloyNB(text, path);
   const renderer = new Renderer(path);
   let frontmatter: unknown = {};
   if (ast.children[0]?.type === 'yaml') {

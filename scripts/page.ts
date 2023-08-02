@@ -62,7 +62,7 @@ function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
         if (isSectionItem(item)) {
           const fullLink = path.join("/documentation", item.link);
           const compareLink = convertDocPathToHTML(fullLink);
-          const htmlLinkRaw = fullLink.replace(/\.md$/, "");
+          const htmlLinkRaw = fullLink.replace(/\.malloynb$/, "");
           const htmlLink = htmlLinkRaw === "/documentation/index" ? "/documentation" : htmlLinkRaw;
           return { title: item.title, link: item.link, htmlLink, compareLink };
         } else {

@@ -28,10 +28,7 @@ import { renderDoc } from "./render_document.js";
 import { renderFooter, renderSidebar, Section } from "./page.js";
 import {
   convertDocPathToHTML,
-  hashForHeading,
   isMalloyNB,
-  isMarkdown,
-  isMarkdownOrMalloyNB,
   readDirRecursive,
   timeString,
   watchDebounced,
@@ -126,8 +123,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         source: shortPath,
         title: "Malloy Documentation",
         content: renderedDocument,
-        footer: footers[shortPath],
-        isNotebook: isMalloyNB(shortPath)
+        footer: footers[shortPath]
       }
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
@@ -167,7 +163,7 @@ function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, stri
     log(`File _includes/toc.html written.`);
 
     const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-    const allDocs = allFiles.filter(isMarkdownOrMalloyNB);
+    const allDocs = allFiles.filter(isMalloyNB);
 
     const footers = {};
     for (const file of allDocs) {
@@ -281,14 +277,12 @@ function validateLinks(
     const linkWithoutHash = rootedLink.replace(/#.*$/, '');
     const hashMatch = rootedLink.match(/#.*$/);
     const hash = hashMatch ? hashMatch[0] : undefined;
-    const linkHasExtension = linkWithoutHash.endsWith(".html") || linkWithoutHash.endsWith(".md") || linkWithoutHash.endsWith(".malloynb");
-    const linkGuessMD = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".md");
+    const linkHasExtension = linkWithoutHash.endsWith(".html") || linkWithoutHash.endsWith(".malloynb");
     const linkGuessNB = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".malloynb");
-    const linkWithoutExtension = linkWithoutHash.replace(/\.html$/, "").replace(/\.md$/, "").replace(/\.malloynb$/, "");
-    const existsMD = docsRootedPaths.includes(linkGuessMD);
+    const linkWithoutExtension = linkWithoutHash.replace(/\.html$/, "").replace(/\.malloynb$/, "");
     const existsNB = docsRootedPaths.includes(linkGuessNB);
-    const exists = existsMD || existsNB;
-    const linkWithExtension = existsNB ? linkWithoutExtension + ".malloynb" : linkWithoutExtension + ".md";
+    const exists = existsNB;
+    const linkWithExtension = linkWithoutExtension + ".malloynb";
     if (!exists) {
       linkErrors.push({ 
         path: file.substring(DOCS_ROOT_PATH.length), 
@@ -301,7 +295,7 @@ function validateLinks(
         message: `HTML Link '${originalLink}' should not end with file extension.`,
         position
       });
-    } else if (style === 'md' && !(linkWithoutHash.endsWith(".malloynb") || linkWithoutHash.endsWith(".md"))) {
+    } else if (style === 'md' && !linkWithoutHash.endsWith(".malloynb")) {
       linkErrors.push({ 
         path: file.substring(DOCS_ROOT_PATH.length), 
         message: `Markdown Link '${originalLink}' should end with .malloynb`,
@@ -344,8 +338,8 @@ function logError(error: DocsError) {
 
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMarkdownOrMalloyNB);
-  const staticFiles = allFiles.filter((file) => !isMarkdownOrMalloyNB(file));
+  const allDocs = allFiles.filter(isMalloyNB);
+  const staticFiles = allFiles.filter((file) => !isMalloyNB(file));
   let { toc, footers } = rebuildSidebarAndFooters();
   for (const file of staticFiles) {
     handleStaticFile(file);
@@ -374,7 +368,7 @@ function logError(error: DocsError) {
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
-      if (isMarkdownOrMalloyNB(file)) {
+      if (isMalloyNB(file)) {
         log(`Documentation file ${file} ${type}d. Recompiling...`);
         compileDoc(fullPath, footers);
       } else {
