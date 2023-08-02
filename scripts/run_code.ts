@@ -346,6 +346,7 @@ export async function runNotebookCode(
     }).getMalloyTags().properties;
     options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
     options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
+    options.showAs = "html" in tags ? "html" : "sql" in tags ? 'sql' : 'json' in tags ? 'json' : 'html';
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
     });

@@ -19,7 +19,6 @@ import "flights.malloy"
 import "ecommerce.malloy"
 import "airports.malloy"
 >>>malloy
---! {"isRunnable": true, "source": "flights.malloy"}
 run: flights -> {
   aggregate: flight_count is count()
 }
@@ -34,7 +33,6 @@ count(distinct expr)
 Distinct counts may be used to count the number of distinct values of a particular field within a source.
 
 >>>malloy
---! {"isRunnable": true, "source": "ecommerce.malloy"}
 run: order_items -> {
   aggregate: order_count is count(distinct order_id)
 }
@@ -151,7 +149,6 @@ LEFT JOIN aircraft_models
 ```
 
 >>>malloy
---! {"isRunnable": true, "source": "flights.malloy"}
 run: aircraft -> {
   aggregate: average_seats is avg(aircraft_models.seats)
 }

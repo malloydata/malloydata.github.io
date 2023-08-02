@@ -67,7 +67,7 @@ Run statements allow you to write queries in a model without naming them, or to 
 Any query can be run by including it in a run statement.
 
 >>>malloy
---! {"isRunnable": true, "showAs":"html",  "source": "/inline/e2.malloy"}
+#(docs) html
 run: flights2 -> { 
   group_by: origin
   aggregate: destination_count is count(distinct destination) 

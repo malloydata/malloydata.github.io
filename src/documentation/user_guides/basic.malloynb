@@ -308,7 +308,7 @@ When a query is nested inside another query, each output row of the outer query 
 Queries can be nested infinitely, allowing for rich, complex output structures. A query may always include another nested query, regardless of depth.
 
 >>>malloy
---! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large"}
+#(docs) html
 run: airports -> {
   group_by: state
   aggregate: airport_count
@@ -389,7 +389,7 @@ run: duckdb.table('../data/flights.parquet') -> {
 Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](../language/timestamp-operations.malloynb#extraction).
 
 >>>malloy
---! {"isRunnable": true, "showAs":"html", "pageSize": 7, "size": "large"}
+#(docs) html limit=7 size=large
 run: duckdb.table('../data/flights.parquet') -> {
   order_by: 1
   group_by: day_of_week is day(dep_time)
@@ -448,7 +448,7 @@ Next, we'll use the output of that query as the input to another, where we deter
 percentage of airports compared to the whole state, taking advantage of the nested structure of the data to to so.
 
 >>>malloy
---! {"isRunnable": true, "showAs":"html", "source": "airports.malloy", "size": "large", "dataStyles": { "percent_in_county": { "renderer": "percent" }}}
+#(docs) html 
 run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
@@ -463,6 +463,7 @@ run: airports -> {
     by_county.county
     airports_in_county is by_county.airport_count
     airports_in_state is airport_count
+    # percent
     percent_in_county is by_county.airport_count / airport_count
 }
 >>>markdown

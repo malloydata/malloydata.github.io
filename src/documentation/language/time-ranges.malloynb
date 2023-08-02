@@ -27,9 +27,9 @@ Any time literal with resolution larger than seconds will function as a range, f
 
  expression | true if
  ---- | ----
-`expr ? @2021` | expr >= @2021-01-01 and expr < @2022-01-01
-`expr ? @2021-01` | expr >= @2021-01-01 and expr < @2021-02-01
-`expr ? @2021-01-02` | expr >= @2021-01-02 and expr < @2021-01-03
+`expr ? @2021` | `expr >= @2021-01-01 and expr < @2022-01-01`
+`expr ? @2021-01` | `expr >= @2021-01-01 and expr < @2021-02-01`
+`expr ? @2021-01-02` | `expr >= @2021-01-02 and expr < @2021-01-03`
 
 ### Truncations as ranges
 

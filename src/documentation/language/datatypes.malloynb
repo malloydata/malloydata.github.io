@@ -57,7 +57,7 @@ Malloy's approach to timezone related computations relating to timestamp data is
 
 Timestamp literals are specified in Malloy with the `@` character. Seconds, and subsecond resolution maybe be specified and an optional locale may also be added.
 
-* `@2001-02-03 04:05:06.001 [America/Mexico_City]`
+* `@2001-02-03 04:05:06.001[America/Mexico_City]`
 * `@2001-02-03 04:05:06.001`
 * `@2001-02-03 04:05:06`
 * `@2001-02-03 04:05`
