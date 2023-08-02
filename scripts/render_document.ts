@@ -91,7 +91,7 @@ class Renderer {
           hidden = isHidden;
           this.modelDef = newModel;
           const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C${this.cellNumber}`;
-          prefix = `<a href="${githubDevURL}" target="_blank">Open in Web Editor</a>`;
+          prefix = `<a href="${githubDevURL}" target="_blank"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/edit.svg" alt="document"/></a>`;
         } catch (error) {
           log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
           result = `<div class="error">Error: ${error.toString()}</div>`;
@@ -148,7 +148,7 @@ class Renderer {
       });
     }
 
-    return `${hidden ? "" : prefix + highlightedCode}${result ?? ""}`;
+    return `<div class="code-wrapper">${hidden ? "" : prefix + highlightedCode}${result ?? ""}</div>`;
   }
 
   protected async blockquote(content: Markdown[]) {
@@ -213,7 +213,7 @@ class Renderer {
     if (level === 1) {
       return `<div class="title-row">
         ${heading}
-        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C1">Edit this Page</a>
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/ff672970d351709b27036fefc2a1b3fccf3cb4b4/src${this.path}#C1">Edit <img src="${DEFAULT_CONTEXT.site.baseurl}/img/edit.svg" alt="document"/></a>
         </div>
       `
     } else {

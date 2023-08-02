@@ -380,6 +380,7 @@ function logError(error: DocsError) {
       } else {
         if (fs.existsSync(fullPath)) {
           handleStaticFile(fullPath);
+          log(`Static file ${file} updated.`);
         } else {
           fs.unlinkSync(path.join(OUT_PATH, file));
           log(`Static file ${file} deleted. Removed.`);

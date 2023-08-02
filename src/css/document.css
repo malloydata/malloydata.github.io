@@ -738,8 +738,45 @@ table.transpose tr td:last-child { border-bottom: none; }
 div.title-row {
   display: flex;
   justify-content: space-between;
+  margin-block-end: 0.67em;
+  align-items: center;
 }
 
-a.title-row.edit-link {
-  padding-top: 8px;
+div.title-row h1 {
+  margin-block-end: 0;
+}
+
+div.title-row a.edit-link {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  height: 19px;
+}
+
+div.title-row a.edit-link img {
+  width: 22px;
+  height: 22px;
+}
+
+div.code-wrapper {
+  position: relative;
+}
+
+div.code-wrapper a {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+div.code-wrapper a img {
+  width: 22px;
+  height: 22px;
+
+  background-color: #fbfbfbcd;
+  border: 1px solid #efefef;
+  border-radius: 3px;
+}
+
+div.code-wrapper a img:hover {
+  background-color: #ffffffcd;
 }
