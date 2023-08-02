@@ -17,7 +17,6 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 
   measure: flight_count is count()
 }
-
 >>>markdown
 
 ## # percent
