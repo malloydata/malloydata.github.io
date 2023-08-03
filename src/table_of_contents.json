@@ -73,11 +73,7 @@
               "link": "/patterns/nested_subtotals.malloynb"
             },
             {
-              "title": "Deduplicating Rows with SQL",
-              "link": "/patterns/dedup_sql.malloynb"
-            },
-            {
-              "title": "Group By with an 'other' bucket",
+              "title": "Bucketing with 'Other'",
               "link": "/patterns/other.malloynb"
             },
             {
@@ -87,10 +83,6 @@
             {
               "title": "Moving Average",
               "link": "/patterns/moving_avg.malloynb"
-            },
-            {
-              "title": "Daily Active Users",
-              "link": "/patterns/dau.malloynb"
             },
             {
               "title": "Transform Data",

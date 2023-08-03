@@ -8,9 +8,9 @@ In the example below, we create a simple semantic model for the table `airports`
 This mechanism can be used to create governed datasets for use in other tooling: the transformation code for these tables can be governed with source control, and the queries take advantage of Malloy's reusibility.
 
 File: `airports.malloysql`:
-```malloysql
+  ```malloysql
   >>>malloy
-source: airports is duckdb.table('data/airports.parquet') extend {
+  source: airports is duckdb.table('data/airports.parquet') extend {
     measure: airport_count is count()
 
     query: major_airports is -> {
