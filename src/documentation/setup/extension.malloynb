@@ -45,7 +45,7 @@ You should see the directory called 'Malloy Samples'.
 
 4. **Verify that BigQuery connects correctly:**
 
-In the IDE Editor open `malloy-samples/bigquery/faa/airports.malloy` and scroll down click the 'Run' code lens above one of the queries.  You should see query results.
+In the IDE Editor open <code>malloy-samples/bigquery/faa/airports.malloy</code> and scroll down click the 'Run' code lens above one of the queries.  You should see query results.
 
 <img class="small-img"src="./setup_ide_run.png">
 
@@ -58,7 +58,7 @@ If you need to modify the Google CLoud Project ID, open the settings by clicking
 
 _**NOTE:** github.dev uses the Web version of VS Code, so it is only possible to interact with local data. If you have data stored in CSVs, JSON files, or Parquet files in your repository, you can query that data in the Malloy Extension directly from your browser_
 
-If you are logged into Github, any repository on Github can be opened into a web-only VS Code instance with all the files in the repository loaded into your browser memory. Simply press `.` on the main repo page, or change the url from `https://github.com/{repo-name}` to `https://github.dev/{repo-name}`.
+If you are logged into Github, any repository on Github can be opened into a web-only VS Code instance with all the files in the repository loaded into your browser memory. Simply press <code>.</code> on the main repo page, or change the url from <code>https://github.com/{repo-name}</code> to <code>https://github.dev/{repo-name}</code>.
 
 Once you have opened the repository on github.dev, install the Malloy extension by clicking the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install".
 

@@ -3,7 +3,7 @@
 
 > *Tao is the natural order of the universe whose character one's human intuition must discern in order to realize the potential for individual wisdom. This intuitive knowing of "life" cannot be grasped as a concept; it is known through actual living experience of one's everyday being.* — [Wikipedia "Tao"](https://en.wikipedia.org/wiki/Tao)
 
-### Malloy …
+## Malloy …
 
 ### … feels familiar to someone coming from SQL
 Our primary users will all be familiar with SQL. We should make their life no harder than it needs to be. That said, Malloy is actually describing a different type of operation than SQL does, and so in some places we are deliberately different from SQL because we want people to be unfamiliar, to learn how Malloy works.

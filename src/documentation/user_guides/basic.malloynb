@@ -25,7 +25,7 @@ Let's break down each part of this query.
 - `run:` is the opening statement that indicates we're starting to write a query
 - `duckdb.table('../data/airports.parquet')` defines the source for the query. The `table()` method creates a source from a table or view in the database.
   - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
-- The `->` operator begins the query. All queries take the form `a_source -> { ... }`, with the query logic specified inside of the curly braces.
+- The `->` operator begins the query. Queries take the form `<<source>> -> { ... }`, with the query logic specified inside of the curly braces.
 - `project:` is equivalent to <code>SELECT</code> in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
 - `limit: 10` limits the result set of the query to the first 10 items.
 

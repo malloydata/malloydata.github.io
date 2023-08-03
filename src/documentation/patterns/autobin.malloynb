@@ -20,7 +20,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   }
 }
 >>>markdown
-## Over all elevation distribution
+## Overall elevation distribution
 
 The query can be used to show the overall distribution of the data.
 
@@ -37,7 +37,7 @@ Notice that when we look at Florida, the bin-width is different.
 run: airports extend { where: state = 'FL' } -> by_elevation
 >>>markdown
 
-## Elevation within states.
+## Elevation within states
 This binning even adapts when the queries are nested.
 
 Notice that all the binning is local to the individual states.  For example the bottom bin in Colorado starts at an elevation of 3000ish feet.
