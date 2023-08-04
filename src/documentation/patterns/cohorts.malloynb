@@ -16,7 +16,6 @@ source: order_items is duckdb.table('../data/order_items.parquet') extend {
 ## Example
 
 In the example below, we look at the first 6 months of 2022.  In this example we are looking in terms of numbers of users.
-
 >>>malloy
 #(docs) limit=5000 size=medium
 run: order_items -> {
@@ -30,7 +29,7 @@ run: order_items -> {
     `Users that Ordered Count` is user_count
 
   // Pivot the cohorts
-  # pivot pivot_
+  # pivot
   nest: cohorts is {
     group_by: `User Signup Cohort` is users.created_at.month
     aggregate: 
@@ -44,7 +43,6 @@ run: order_items -> {
 >>>markdown
 
 ## Cohorts as a percentage of Sales.
-
 >>>malloy
 #(docs) limit=5000 size=medium
 run: order_items -> {
