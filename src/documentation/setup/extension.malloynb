@@ -15,7 +15,7 @@ _**NOTE:**  Because there are two versions of VS Code - VS Code Desktop and [VS 
 
 2. **Add the Malloy Extension**: Open VS Code and click the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install"
 
-3. **Download and unzip the [Sample Models](https://malloydata.github.io/malloy/aux/generated/samples.zip)**
+3. **Download the [Sample Models](https://github.com/malloydata/malloy-samples) from Github**
 
 4. **Open the samples folder in VS Code:** In VS Code, go to File > **Open Folder**... select samples/duckdb > Open. DuckDB is built into the extension so you're ready to run these.
 
