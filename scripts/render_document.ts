@@ -325,7 +325,7 @@ class Renderer {
       return text;
     }
     this.links.push({ link: href, style: "md", position });
-    href = href.replace(/\.malloynb$/, "");
+    href = href.replace(/\.malloynb$/, "").replace(/\.malloynb#/, "#");
     let out = href.startsWith("/")
       ? `<a href="${DEFAULT_CONTEXT.site.baseurl}${href}"`
       : `<a href="${href}"`;
