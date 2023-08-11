@@ -1,5 +1,5 @@
 >>>markdown
-# Apply (:) Operator
+# Apply (?) Operator
 
 The apply operator takes one expression and applies it to another.
 The primary us of apply is to "apply" a value to a partial comparison,
