@@ -299,6 +299,9 @@ async function renderResult(
   </div>`;
 }
 
+const DOCS_M_TAG_PREFIX = /##\(docs\)\s/;
+const DOCS_Q_TAG_PREFIX = /#\(docs\)\s/;
+
 export async function runNotebookCode(
   code: string,
   showCode: string,
@@ -318,13 +321,8 @@ export async function runNotebookCode(
     ._loadModelFromModelDef(modelDef)
     .extendModel(fakeURL);
   const model = await newModel.getModel();
-  const modelTags = new Tags({ 
-    notes: model
-      .getTags()
-      .getTagList()
-      .filter(t => t.startsWith("##(docs) "))
-      .map(t => t.replace(/^##\(docs\) /, "## "))
-  }).getMalloyTags().properties;
+  const modelTagParse = model.tagParse({ prefix: DOCS_M_TAG_PREFIX });
+  const modelTags = modelTagParse.tag;
   const newModelDef = model._modelDef;
   let hasQuery = false;
   try {
@@ -332,21 +330,15 @@ export async function runNotebookCode(
     model.preparedQuery;
     hasQuery = true;
   } catch {}
-  options.isHidden = "hidden" in modelTags;
+  options.isHidden = modelTags.has('hidden');
 
   if (hasQuery) {
     const runnable = newModel.loadFinalQuery();
     const query = await runnable.getPreparedQuery();
-    const tags = new Tags({ 
-      notes: query
-        .getTags()
-        .getTagList()
-        .filter(t => t.startsWith("#(docs) "))
-        .map(t => t.replace(/^#\(docs\) /, "# "))
-    }).getMalloyTags().properties;
-    options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
-    options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
-    options.showAs = "html" in tags ? "html" : "sql" in tags ? 'sql' : 'json' in tags ? 'json' : 'html';
+    const tags = query.tagParse({ prefix: DOCS_Q_TAG_PREFIX }).tag;
+    options.pageSize = tags.has("limit") && !Number.isNaN(tags.numeric("limit")) ? tags.numeric("limit") : undefined;
+    options.size = tags.has("size") && tags.text("size") ? tags.text("size") : undefined;
+    options.showAs = tags.has("html") ? "html" : tags.has("sql") ? 'sql' : tags.has("json") ? 'json' : 'html';
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
     });
