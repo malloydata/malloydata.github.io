@@ -8,7 +8,7 @@ Data Model.  Malloy queries (equivalent of SQL's <code>SELECT</code>) run agains
 produce SQL.
 
 ### Filtering Data
-The first step in working with data, often is isolating the data you are interested in.
+The first step in working with data is often isolating the data you are interested in.
 Malloy introduces [simplified filtering](../language/filters.malloynb) for all types and allows these filters to be
 applied.  [Time calculations](../language/expressions.malloynb#time-expressions) are powerful and understandable.
 
@@ -23,11 +23,10 @@ mapping values, bucketing results and data cleanup.
 
 ### Maintains Relationships
 SQL's <code>SELECT</code> statement flattens the namespace into a wide table. Malloy retains the graph relationship
-of data lets you access and correctly perform computations and any place in the graph.
+of data which lets you access and correctly perform computations and any place in the graph.
 
 ### Reusable Queries
-Queries can be introduced into a Malloy model and accessed by name.  One benefit is that the
-queries are always accurate.  Think of a Malloy model as a data function library.
+Queries can be introduced into a Malloy model and accessed by name.  Think of a Malloy model as a data function library.
 Queries can also be used to create [nested subtables](../language/nesting.malloynb) in other queries.
 
 ### Aggregating Subqueries
@@ -38,6 +37,6 @@ Named queries of a given shape can easily be nested, visualized and reused.
  Malloy can pipeline operations.  The output of one query can be the input for next.
 
 ### Metadata, Visualization and Drilling
-Compiling a Malloy query returns metadata about the structure of the results. When combined with the query results, Malloy's rendering library can give a very
-rich user experience, rendering dashboards, visualizations.  Through this metadata
-the visualization library can rewrite queries to drill through to data detail.
+Compiling a Malloy query returns metadata about the structure of the results. When combined with the query results, Malloy's rendering library
+automatically renders very rich dashboards and visualations so that you can iteratively
+explore and drill down into the data details.
