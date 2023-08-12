@@ -5,25 +5,31 @@ When Malloy runs a query, it returns two things.  The *results* of the query and
 
 In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Tags that start on a new line attach the tag the thing on the following line. For more details about how tagging works, see the [Tags](../language/tags.malloynb) section.
 
-Malloy's rendering library interprets these tags to change how results are rendered. 
+Malloy's rendering library interprets these tags to change how results are rendered.
 
 ## Tagging individual elements
-In the query below, the measure **percent_of_total** is tagged as a percentage. Any time *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
+In the query below, the measure **ratio_of_total** is tagged as a percentage,
+telling Malloy's rendering library to display the ratio (a value between 0-1)
+as a percentage (a value between 0% - 100%).
+
+> Note: You can also tag the `ratio_of_flighs` measure in the source, but this
+> might be confusing in this case since the name and value would be a ratio but
+> it would display a percent.
 
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   measure:
     flight_count is count()
-    # percent
-    percent_of_flights is flight_count / all(flight_count)
+    ratio_of_flights is flight_count / all(flight_count)
 }
 >>>malloy
 #(docs) size=small limit=5000
 run: flights -> {
   group_by: carrier
-  aggregate: 
-    flight_count 
-    percent_of_flights
+  aggregate:
+    flight_count
+    # percent
+    perc_of_flights is ratio_of_flights,
 }
 >>>markdown
 
