@@ -37,7 +37,6 @@ import {
   Connection,
   Result,
   ModelDef,
-  Tags,
 } from "@malloydata/malloy";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
@@ -336,8 +335,8 @@ export async function runNotebookCode(
     const runnable = newModel.loadFinalQuery();
     const query = await runnable.getPreparedQuery();
     const tags = query.tagParse({ prefix: DOCS_Q_TAG_PREFIX }).tag;
-    options.pageSize = tags.has("limit") && !Number.isNaN(tags.numeric("limit")) ? tags.numeric("limit") : undefined;
-    options.size = tags.has("size") && tags.text("size") ? tags.text("size") : undefined;
+    options.pageSize = tags.numeric("limit");
+    options.size = tags.text("size");
     options.showAs = tags.has("html") ? "html" : tags.has("sql") ? 'sql' : tags.has("json") ? 'json' : 'html';
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
