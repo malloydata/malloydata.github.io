@@ -37,7 +37,7 @@ import {
   Connection,
   Result,
   ModelDef,
-  Tags,
+  Tag,
 } from "@malloydata/malloy";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
@@ -318,13 +318,7 @@ export async function runNotebookCode(
     ._loadModelFromModelDef(modelDef)
     .extendModel(fakeURL);
   const model = await newModel.getModel();
-  const modelTags = new Tags({ 
-    notes: model
-      .getTags()
-      .getTagList()
-      .filter(t => t.startsWith("##(docs) "))
-      .map(t => t.replace(/^##\(docs\) /, "## "))
-  }).getMalloyTags().properties;
+  const modelTags = model.tagParse({ prefix: /^##\(docs\)/}).tag;
   const newModelDef = model._modelDef;
   let hasQuery = false;
   try {
@@ -332,21 +326,15 @@ export async function runNotebookCode(
     model.preparedQuery;
     hasQuery = true;
   } catch {}
-  options.isHidden = "hidden" in modelTags;
+  options.isHidden = modelTags.has('hidden');
 
   if (hasQuery) {
     const runnable = newModel.loadFinalQuery();
     const query = await runnable.getPreparedQuery();
-    const tags = new Tags({ 
-      notes: query
-        .getTags()
-        .getTagList()
-        .filter(t => t.startsWith("#(docs) "))
-        .map(t => t.replace(/^#\(docs\) /, "# "))
-    }).getMalloyTags().properties;
-    options.pageSize = "limit" in tags && typeof tags.limit === "string" ? parseInt(tags.limit) : undefined;
-    options.size = "size" in tags && typeof tags.size === "string" ? tags.size : undefined;
-    options.showAs = "html" in tags ? "html" : "sql" in tags ? 'sql' : 'json' in tags ? 'json' : 'html';
+    const queryTags = query.tagParse({ prefix: /^##\(docs\)/}).tag;
+    options.pageSize = queryTags.numeric('limit');
+    options.size = queryTags.text('size');
+    options.showAs = queryTags.has('html') ? 'html' : queryTags.has('sql') ? 'sql' : queryTags.has('json') ? 'json' : 'html';
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
     });
