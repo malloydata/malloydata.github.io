@@ -1,3 +1,4 @@
+>>>markdown
 # Using Google's Project IDX with Malloy
 Google recently announced [Poject IDX](https://developers.googleblog.com/2023/08/introducing-project-idx-experiment-to-improve-full-stack-multiplatform-app-development.html) and Cloud based AI powered coding development enviornment.  It turns out that this environment makes a pretty fabulous development environment for working with [Malloy](https://www.malloydata.dev).  
 
