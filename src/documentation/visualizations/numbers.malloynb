@@ -61,7 +61,6 @@ Malloy uses LookML's (Excel) string definitions for formatting numbers.
 # number="0%"            # Convert to percent with 0 decimals (.01 becomes 1%)
 # format="0.00%"         # Convert to percent with 2 decimals (.01 becomes 1.00%)
 ```
->>>markdown
 >>>malloy
 #(docs) size=small limit=5000
 run: flights -> {
