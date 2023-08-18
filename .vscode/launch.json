@@ -1,0 +1,13 @@
+{
+    "configurations": [
+      {
+        "name": "Build and Watch",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceRoot}",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": ["run", "build-watch"]
+      }
+    ]
+  }
+  
