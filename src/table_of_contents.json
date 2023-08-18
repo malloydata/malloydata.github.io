@@ -235,7 +235,16 @@
       "items": [
         {
           "title": "Using MalloySQL",
-          "link": "/malloy_sql/index.malloynb"
+          "link": "/malloy_sql/index.md"
+        }
+      ]
+    },
+    {
+      "title": "Malloy CLI",
+      "items": [
+        {
+          "title": "The Malloy CLI",
+          "link": "/malloy_cli/index.malloynb"
         }
       ]
     }

@@ -1,0 +1,25 @@
+>>>markdown
+# About the Malloy CLI
+
+The [Malloy CLI](https://github.com/malloydata/malloy-cli) is a command-line interface for running `.malloysql` and `.malloy` files. It can be used to automate transformations, build simple pipelines, or even integrate compiled Malloy SQL into other applications.
+
+## Installation
+
+You can download the latest release of the Malloy-CLI from (here)[https://github.com/malloydata/malloy-cli/releases].
+
+If you have npm/npx installed, you can also run the CLI by either installing it (`npm install -g malloy-cli`) or using npx to run it `npx malloy-cli {your command here}`
+
+### Mac users
+
+Please note that the CLI is currently not notarized (this is a work in progress). Running the CLI binary downloaded from our download link requires opening Privacy and Security MacOS settings and explicitly allowing it.
+
+## Setup
+
+The CLI requires database credentials to function. Credentials can be added with `malloy-cli connections create-{database}`, where `{database}` is one of "bigquery", "postgres", or "duckdb". Like the VSCode Extension, the CLI auto-creates a connection named "bigquery" and "duckdb", which will already work if you are utilizing those default connections in the VSCode Extension. If you want to create a new named connection, options can be found by passing `--help` to any of the `create-{database}` commands, for example: `malloy-cli connections create-bigquery --help`
+
+## Usage
+
+The main commands of the CLI are `run` and `compile` - `run` executes queries and returns results, whereas compile returns SQL for a query or many queries. 
+
+The CLI has detailed usage information for each command. You can get general help with `malloy-cli --help`, and command-specific help and options with `malloy-cli {command} --help`
+
