@@ -5,7 +5,7 @@ The [Malloy CLI](https://github.com/malloydata/malloy-cli) is a command-line int
 
 ## Installation
 
-You can download the latest release of the Malloy-CLI from (here)[https://github.com/malloydata/malloy-cli/releases].
+You can download the latest release of the Malloy-CLI from [here](https://github.com/malloydata/malloy-cli/releases).
 
 If you have npm/npx installed, you can also run the CLI by either installing it (`npm install -g malloy-cli`) or using npx to run it `npx malloy-cli {your command here}`
 
