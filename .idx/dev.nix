@@ -8,6 +8,9 @@
     pkgs.nodejs_18
     pkgs.google-cloud-sdk
     pkgs.duckdb
+    pkgs.cacert 
+    pkgs.openssh 
+    pkgs.fakeroot
   ];
 
   # search for the extension on https://open-vsx.org/ and use "publisher.id"
@@ -15,14 +18,16 @@
     "malloydata.malloy-vscode"
   ];
 
-    idx.previews = {
+  idx.previews = {
     enable = true;
     previews = [
       {
         command = [
-          "npm"
-          "run"
-          "serve"
+          "npx"
+          "http-server"
+          "docs"
+          "-p"
+          "$PORT"
         ];
         manager = "web";
         id = "web";
