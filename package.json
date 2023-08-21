@@ -14,8 +14,8 @@
   },
   "scripts": {
     "clean": "rm -rf docs",
-    "build": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --baseurl 'http://localhost:4000'",
-    "build-watch": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --watch --baseurl 'http://localhost:4000'",
+    "build": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --baseurl ''",
+    "build-watch": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --watch --baseurl ''",
     "start-server": "http-server docs -p 4000",
     "build-prod": "ts-node --project tsconfig.docs.json --esm ./scripts/index.ts --baseurl ''",
     "serve": "concurrently --kill-others 'npm run build-watch' 'npm run start-server'",
