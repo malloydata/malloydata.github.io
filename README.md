@@ -11,7 +11,7 @@ Custom preprocessing is done in `/scripts/index.ts`.
 
 ### Installation
 
-Jekyll and Ruby are no longer required! Just install `npm` and then install dependencies:
+Install `npm` and then install dependencies:
 
 ```
 npm install
@@ -35,7 +35,7 @@ npm run serve
 
 This will build the docs, watch for file changes in any of the docs, static files, or sample models, and serve the result at [http://127.0.0.1:4000](http://127.0.0.1:4000).
 
-Jekyll hot-reloading is enabled, so pages should automatically refresh when changes are made. When initial compilation is complete, a browser should open to the home page.
+Pages should automatically refresh when changes are made. When initial compilation is complete, a browser should open to the home page.
 
 Malloy sections in the documentation notebooks may contain tags to indicate how queries should be run and rendered, e.g.
 
@@ -71,3 +71,4 @@ To deploy the docs, use the following steps:
 1. Merge any docs changes into `main`
 2. A CloudBuild trigger will automatically publish the changes once they are built,
    which can take around 2-4 minutes.
+
