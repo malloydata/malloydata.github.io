@@ -15,7 +15,15 @@ Please note that the CLI is currently not notarized (this is a work in progress)
 
 ## Setup
 
-The CLI requires database credentials to function. Credentials can be added with `malloy-cli connections create-{database}`, where `{database}` is one of "bigquery", "postgres", or "duckdb". Like the VSCode Extension, the CLI auto-creates a connection named "bigquery" and "duckdb", which will already work if you are utilizing those default connections in the VSCode Extension. If you want to create a new named connection, options can be found by passing `--help` to any of the `create-{database}` commands, for example: `malloy-cli connections create-bigquery --help`
+The CLI requires database credentials to function. Credentials can be added with `malloy-cli connections create-{database}`, where `{database}` is one of "bigquery", "postgres", or "duckdb". If you want to create a new named connection, options can be found by passing `--help` to any of the `create-{database}` commands, for example: `malloy-cli connections create-bigquery --help`
+
+#### Setting up BigQuery if you use gCloud
+
+[`gCloud`](https://cloud.google.com/cli) is a command-line tool to work with Google Cloud. Among other things, it can store authentication information for BigQuery. If you already use gCloud to query BigQuery, setting up a connection is as simple as `malloy connections create-bigquery <name>` - no additional authentication information is required. Note that there are other options that you might want to set, such as billing limits - to see possible options, use `malloy connections create-bigquery --help`.
+
+#### Default connections
+
+By default, two connections are created if you don't already have a name that overrides them - "bigquery" and "duckdb". If `.malloy`` or `.malloySQL`` files reference these connections, they are created automatically. DuckDB uses a built-in instance of DuckDB, and BigQuery attempts to connect to BigQuery using any existing authentication already stored on your computer (like if you have gcloud installed).
 
 ## Usage
 
