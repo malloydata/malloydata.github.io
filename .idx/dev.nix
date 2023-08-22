@@ -16,6 +16,7 @@
   # search for the extension on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
     "malloydata.malloy-vscode"
+    "ms-vscode.js-debug"
   ];
 
     idx.previews = {
