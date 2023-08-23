@@ -1,0 +1,12 @@
+>>>markdown
+# Announcing the Malloy Command Line Interface
+
+Today we’re excited to announce the launch of the Malloy Command Line Interface (CLI). One of the primary jobs of SQL is transforming datasets. The most basic way to do this is by issuing SQL queries on a command line. The Malloy CLI serves this function, but offers simplicity and reusability in calculations that SQL lacks. With Malloy, metric calculations can be saved as part of a data model and reused in queries that calculate roll-ups at varying levels of granularity or slice across different dimensions. This reduces duplicate code, making data pipelines much easier to read, understand, and maintain.
+
+Let’s take a look at a simple example. The [Google Analytics 4 (GA4) schema](https://support.google.com/analytics/answer/7029846) is notoriously difficult to query. The schema contains 23 columns, 11 of which are “record” types with nested data. Three of those record columns contain further nested types. Some of these nested types contain columns named “key” and “value”, so the schema can’t be inferred without actually querying the data:
+
+<img src="ga4_schema.png" class="small-img">
+
+This data needs to be transformed before it is usable by normal people. The Malloy model we define below does all this toilsome work; for example, transforming the `timestamp` data from microseconds to an actual timestamp data type, or wrangling session IDs from the unhelpfully named `event_params` column:
+
+Isn’t the same thing achievable with SQL views? We could certainly write the same transformation logic to unpack `event_params` with SQL, but things get more interesting when we start aggregating the data. Suppose we want to compute the conversion rate as the count of users who made a purchase divided by all users. In the model above, the logic for this metric is encapsulated into a named measure called “conversion_rate”. The business wants to see conversion rates sliced by different dimensions: date, month, and platform. In SQL, to generate each of these slices, the aggregation logic for conversion_rate would need to be duplicated for each view:
