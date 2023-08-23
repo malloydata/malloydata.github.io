@@ -1,6 +1,6 @@
 >>>markdown
 # Malloy and Python
-Malloy runs as a Python modules and is available in both Python applications and Jupyter Notebooks.  Before getting started, make sure you have a [Connection to the database](../setup/connecting_enviornment.malloynb) you are interested in using.
+Malloy runs as a Python modules and is available in both Python applications and [Jupyter Notebooks](jupyter.malloynb).  Before getting started, make sure you have a [Connection to the database](../setup/connecting_enviornment.malloynb) you are interested in using.
 
 
 ## How do I get it?
