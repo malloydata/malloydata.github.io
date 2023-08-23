@@ -95,4 +95,3 @@ Here is a more realistic example, using a Malloy model to wrangle raw data and c
       }
   }%  to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
   ```
-  
