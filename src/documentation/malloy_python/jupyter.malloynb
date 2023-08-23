@@ -1,0 +1,38 @@
+>>>markdown
+# Malloy in Jupyter Notebooks
+
+First make sure you envornment is [connected to a database](../setup/connecting_environment.malloynb) and that [Malloy is `pip` Installed](index.malloynb).  Malloy can run an *any* Jupyter Notebook (Colab, VSCode, Notebook, etc).
+
+## Malloy Magics..
+
+Here is now it works...
+
+<img src="jupyter.png">
+
+## Step:1 Load the Magics
+Make a cell with 
+
+```
+%reload_ext malloy
+```
+
+## Step:2 Load a Malloy model
+In Jupyter, Malloy models are named  in the case below, we name the model `duck`.  The model is super simple.  You can also `import` Malloy models so you can test your model seperately.
+
+```
+%%malloy_model duck
+
+source: test is duckdb.sql("""SELECT 1 as one""") extend {
+  measure: row_count is count()
+}
+```
+
+## Step: 3 Run a query
+
+```
+%%malloy_query duck
+
+run: test -> {
+  aggregate: row_count
+}
+```

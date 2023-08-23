@@ -1,0 +1,151 @@
+>>>markdown
+# Malloy and Python
+Malloy runs as a Python modules and is available in both Python applications and Jupyter Notebooks.  Before getting started, make sure you have a [Connection to the database](../setup/connecting_enviornment.malloynb) you are interested in using.
+
+
+## How do I get it?
+
+Binary installers for the latest released version are available at the Python Package Index (PyPI). (Currently only available through the test respository)
+
+```sh
+python3 -m pip install malloy
+```
+
+## Syntax Examples
+
+Run named query from malloy file:
+
+```python
+import asyncio
+
+import malloy
+from malloy.data.duckdb import DuckDbConnection
+
+async def main():
+    home_dir = "/path/to/samples/duckdb/imdb"
+    with malloy.Runtime() as runtime:
+        runtime.add_connection(DuckDbConnection(home_dir=home_dir))
+
+        data = await runtime.load_file(home_dir + "/5_movie_complex.malloy").run(
+            named_query="horror_combo")
+            
+        dataframe = data.df()
+        print(dataframe)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
+```
+
+Get SQL from inline query using malloy file as source:
+
+```python
+import asyncio
+
+import malloy
+from malloy.data.duckdb import DuckDbConnection
+
+
+async def main():
+    home_dir = "/path/to/samples/duckdb/faa"
+    with malloy.Runtime() as runtime:
+        runtime.add_connection(DuckDbConnection(home_dir=home_dir))
+
+        [sql, connection] = await runtime.load_file(home_dir +"/flights.malloy").get_sql(
+                query="""
+                  query: flights -> {
+                    where: carrier ? 'WN' | 'DL', dep_time ? @2002-03-03
+                    group_by:
+                      flight_date is dep_time.day
+                      carrier
+                    aggregate:
+                      daily_flight_count is flight_count
+                      aircraft.aircraft_count
+                    nest: per_plane_data is {
+                      top: 20
+                      group_by: tail_num
+                      aggregate: plane_flight_count is flight_count
+                      nest: flight_legs is {
+                        order_by: 2
+                        group_by:
+                          tail_num
+                          dep_minute is dep_time.minute
+                          origin_code
+                          dest_code is destination_code
+                          dep_delay
+                          arr_delay
+                      }
+                    }
+                }
+            """)
+
+        print(sql)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+```
+
+Write inline malloy model source and run query:
+
+```python
+import asyncio
+
+import malloy
+from malloy.data.duckdb import DuckDbConnection
+
+
+async def main():
+    home_dir = "/path/to/samples/duckdb/auto_recalls"
+    with malloy.Runtime() as runtime:
+        runtime.add_connection(DuckDbConnection(home_dir=home_dir))
+
+        data = await runtime.load_source("""
+        source: auto_recalls is table('duckdb:auto_recalls.csv') {
+          declare:
+            recall_count is count()
+            percent_of_recalls is recall_count/all(recall_count)*100
+        }
+        """).run(query="""
+        query: auto_recalls -> {
+          group_by: Manufacturer
+          aggregate:
+            recall_count
+            percent_of_recalls
+        }
+        """)
+
+        dataframe = data.df()
+        print(dataframe)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+```
+
+## Development
+
+### Initial setup
+
+```sh
+git submodule init
+git submodule update
+python3 -m pip install -r requirements.dev.txt
+scripts/gen-services.sh
+```
+
+### Regenerate Protobuf files
+
+```sh
+scripts/gen-protos.sh
+```
+
+### Tests
+
+```sh
+python3 -m pytest
+```

@@ -1,0 +1,34 @@
+>>>markdown
+# Connecting to a databases with Malloy tooling
+Currently, BigQuery, PostgreSQL, and DuckDB are supported.  Malloy runs in lots of places including CodeOSS (VSCode) as an extension, Python, NPM Libraries and the Malloy-CLI (Command line).  Setting up connection configuration in the environment will work in all these places.  By default, Malloy has three connections `bigquery`, `duckdb` and `postgres`.
+
+## BigQuery - connection `bigquery`
+
+To access BigQuery with the Malloy Extension, you will need to have a [Google Cloud Account](https://cloud.google.com/), access to BigQuery, and the [gcloud CLI](https://cloud.google.com/sdk/gcloud) installed. Once the gcloud CLI is installed, open a terminal and type the following:
+
+```bash
+gcloud auth login --update-adc
+gcloud config set project {my_project_id} --installation
+```
+
+_Replace <code>{my_project_id}</code> with the **ID** of the BigQuery project you want to use & bill to. If you're not sure what this ID is, open Cloud Console, and click on the dropdown at the top (just to the right of the "Google Cloud Platform" text) to view projects you have access to. If you don't already have a project, [create one](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+
+Test the connection by running `bq ls` and see if you see the datasets you expect.
+
+## DuckDB - connection `duckdb`
+DuckDB is built into the Malloy library.  Not configuration is needed.  DuckDB can opperate against Parquet, CSV and JSON files.  DuckDB's internal database is currently not supported (because of concurrency issues).
+
+## Postres - connection `duckdb`
+
+Set environment variables below to the appropriate values and test that the `psql`` command works.
+
+```
+PGDATABASE=postgres
+PGHOST=localhost
+PGPORT=5432
+PGUSER=postgres
+PGPASSWORD=something
+
+```
+
+>>>markdown

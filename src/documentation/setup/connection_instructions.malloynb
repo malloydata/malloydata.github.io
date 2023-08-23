@@ -1,4 +1,5 @@
 >>>markdown
+>>>markdown
 # Connecting a Database in the VSCode Extension
 Currently, BigQuery, PostgreSQL, and DuckDB are supported.  These instructions assume you have already installed the [Malloy Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) in VSCode.
 
