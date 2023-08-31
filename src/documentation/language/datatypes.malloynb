@@ -126,6 +126,25 @@ Ranges may be used in conjunction with the [apply operator](apply.malloynb) to t
 
 In the future, other ranges may be allowed, such as `string` ranges.
 
+### Duration
+
+Durations can be added to timestamps and dates.
+
+* `@2001-02-03 04:05 + 5 minutes`
+* `@2001-02-03 04:05 + myHours hours`
+* `@2021-01-01 + 5 weeks`
+* `@0000-01-01 + myYear years + (daysIntoMyYear - 1) days`
+
+A few notes:
+
+1. Durations can be added or subtracted.
+
+2. The legal units for durations are: microseconds, milliseconds,
+   seconds, minutes, hours, days, weeks, years.
+
+3. SQL durations, if the database has them, are not imported and cannot be used
+   as Malloy durations.
+
 ### Alternations and Partials
 
 _Partials_ represent a "part of" a comparison.
