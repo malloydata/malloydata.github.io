@@ -238,6 +238,15 @@
           "link": "/malloy_sql/index.malloynb"
         }
       ]
+    },
+    {
+      "title": "Malloy CLI",
+      "items": [
+        {
+          "title": "The Malloy CLI",
+          "link": "/malloy_cli/index.malloynb"
+        }
+      ]
     }
   ]
 }

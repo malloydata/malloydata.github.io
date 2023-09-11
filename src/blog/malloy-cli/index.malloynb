@@ -1,0 +1,113 @@
+>>>markdown
+# Announcing the Malloy Command Line Interface
+
+Today we’re excited to announce the launch of the Malloy Command Line Interface (CLI). One of the primary jobs of SQL is transforming datasets. The most basic way to do this is by issuing SQL queries on a command line. The Malloy CLI serves this function, but offers simplicity and reusability in calculations that SQL lacks. With Malloy, metric calculations can be saved as part of a data model and reused in queries that calculate roll-ups at varying levels of granularity or slice across different dimensions. This reduces duplicate code, making data pipelines much easier to read, understand, and maintain.
+
+Let’s take a look at a simple example. The [Google Analytics 4 (GA4) schema](https://support.google.com/analytics/answer/7029846) is notoriously difficult to query. The schema contains 23 columns, 11 of which are “record” types with nested data. Three of those record columns contain further nested types. Some of these nested types contain columns named “key” and “value”, so the schema can’t be inferred without actually querying the data:
+
+<img src="ga4_schema.png" class="small-img">
+
+This data needs to be transformed before it is usable by normal people. The Malloy model we define below does all this toilsome work; for example, transforming the `timestamp` data from microseconds to an actual timestamp data type, or wrangling session IDs from the unhelpfully named `event_params` column:
+
+  ```malloy
+  source: events is table('bigquery:bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*') {
+
+  rename:
+    event_timestamp_raw is event_timestamp
+
+  dimension:
+    event_timestamp is timestamp_micros!timestamp(event_timestamp_raw)
+    new_user is pick 1 when event_name ? 'first_visit' | 'first_open' else 0
+    event_value is (event_params.value.int_value ?? event_params.value.float_value ?? event_params.value.double_value)
+
+  measure:
+    is_new_user is max(new_user)
+    user_count is count(distinct user_pseudo_id)
+    session_count is count(distinct event_params.value.int_value) { where: event_params.key = 'ga_session_id' }
+    # percent
+    conversion_rate is count(distinct user_pseudo_id) { where: event_name = 'purchase' } / count(distinct user_pseudo_id)
+
+  query: nested_index is {
+    index: event_params.*, user_properties.*, items.*
+  }
+  }
+  ```
+>>>markdown
+Isn’t the same thing achievable with SQL views? We could certainly write the same transformation logic to unpack `event_params` with SQL, but things get more interesting when we start aggregating the data. Suppose we want to compute the conversion rate as the count of users who made a purchase divided by all users. In the model above, the logic for this metric is encapsulated into a named measure called `conversion_rate`. The business wants to see conversion rates sliced by different dimensions: date, month, and platform. In SQL, to generate each of these slices, the aggregation logic for `conversion_rate` would need to be duplicated for each view:
+
+  ```sql
+  CREATE OR REPLACE VIEW conversion_by_day_overall AS 
+  SELECT
+    date(event_timestamp) as event_date
+    , count(distinct case when event_name = 'purchase' then user_pseudo_id) / count(distinct pseudo_user_id) as conversion_rate
+  FROM events
+  GROUP BY 1;
+
+  CREATE OR REPLACE VIEW conversion_by_day_and_platform AS 
+  SELECT
+    date(event_timestamp) as event_date
+    , platform
+    , count(distinct case when event_name = 'purchase' then user_pseudo_id) / count(distinct pseudo_user_id) as conversion_rate
+  FROM events
+  GROUP BY 1,2;
+
+  CREATE OR REPLACE VIEW conversion_by_month_overall AS 
+  SELECT
+    date(event_timestamp) as event_month
+    , count(distinct case when event_name = 'purchase' then user_pseudo_id) / count(distinct pseudo_user_id) as conversion_rate
+  FROM events
+  GROUP BY 1;
+
+  CREATE OR REPLACE VIEW conversion_by_month_and_platform AS 
+  SELECT
+    date(event_timestamp) as event_month
+    , platform
+    , count(distinct case when event_name = 'purchase' then user_pseudo_id) / count(distinct pseudo_user_id) as conversion_rate
+  FROM events
+  GROUP BY 1;
+  ```
+
+With Malloy, we can simply reference the named measure with each query. There’s a single place to define the measure, and that measure can be used to calculate roll-ups across any arbitrary set of dimensions. We can embed these queries inside of SQL DDL statements in a script:
+
+  ```malloy
+  -- create_views.malloysql
+  create or replace view ga4.conversion_by_day_overall as %{
+    events -> {
+      group_by: event_timestamp.day
+      aggregate: conversion_rate
+    }
+  }%
+  ;
+
+  create or replace view ga4.conversion_by_day_platform as %{
+    events -> {
+      group_by: event_timestamp.day, platform
+      aggregate: conversion_rate
+    }
+  }%
+  ;
+
+  create or replace view ga4.conversion_by_month_overall as %{
+    events -> {
+      group_by: event_timestamp.day, platform
+      aggregate: conversion_rate
+    }
+  }%
+  ;
+
+  create or replace view ga4.conversion_by_month_platform as %{
+    events -> {
+      group_by: event_timestamp.month, platform
+      aggregate: conversion_rate
+    }
+  }%
+  ;
+  ```
+
+Now we use the Malloy CLI to execute this script and create the views inside of our database:
+
+<img src="malloy_cli_run.png">
+
+The Malloy code is much more concise, readable, and maintainable. If the definition of `conversion_rate` changes, it only needs to be updated in a single place: the events model. Contrast this with the SQL equivalent. The code is verbose, and any change to the underlying business logic requires an update to every single `CREATE VIEW`` statement.
+
+The Malloy CLI is relatively simple in its functionality today, but it still unlocks the power of Malloy for many users. We’ll be looking to build more advanced functionality into this tool to make it even more useful. Getting started is easy – head over to [Github Releases](https://github.com/malloydata/malloy-cli/releases) to grab the latest binary for your platform, and check out our [documentation](https://malloydata.github.io/documentation/malloy_cli/index) for detailed usage information. If you have any feedback or feature requests, don’t hesitate to join our community [Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw) and drop us a note.

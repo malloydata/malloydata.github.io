@@ -4,7 +4,6 @@ Malloy's rederer has flexible and powerful way of pivoting data.
 
 ## Nesting first
 Malloy's ability to nest queries allows you to compute two levels of queries simultaneously.  The query below first groups airports by *state* and then groups by the type of facility (*fac_type*).  For each state we see count of all the facilities.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: state
@@ -19,7 +18,6 @@ run: duckdb.table('../data/airports.parquet') -> {
 ## Just add '# pivot'
 
 We can take this exact same query above (and same output) and have it simply rendered as a pivot table by adding a '# pivot' tag on the nested query.
-
 >>>malloy
 #(docs) size=medium
 run: duckdb.table('../data/airports.parquet') -> {
@@ -35,7 +33,6 @@ run: duckdb.table('../data/airports.parquet') -> {
 
 ##  Pivots are really powerful
 The model below is used in all the following examples.
-
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: carriers is duckdb.table('../data/carriers.parquet') on carrier = carriers.code
@@ -53,7 +50,6 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 A classic data pivot is data is dimensionalized by two attributes the data can be rendered with one dimension along the x-axis and one dimension on the y-axis with the aggregate computations making up the center of the table. The cross section of the data allows for easy comparison. In Malloy, pivots columns are nested queries.
 
 Carriers by FAA Region
-
 >>>malloy
 #(docs) size=medium
 run: flights -> {
@@ -69,7 +65,6 @@ run: flights -> {
 ## The Pivot Filtered
 
 You can control which dimension are shown in the pivot with a filter (and their order)
-
 >>>malloy
 #(docs) size=medium
 run: flights -> {
@@ -87,7 +82,6 @@ run: flights -> {
 ## The Pivot with multiple aggreagtes
 
 Pivots can have multiple aggregates. In this case we show `flight_count` and `total_distance` for each of the states.
-
 >>>malloy
 #(docs) size=medium
 run: flights -> {
@@ -107,7 +101,6 @@ run: flights -> {
 ## Aggregates outside the pivot (and row ordering)
 
 Malloy allows you to intermix unpivoted data along with pivoted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
-
 >>>malloy
 #(docs) size=medium
 run: flights -> {
@@ -128,7 +121,6 @@ run: flights -> {
 ## Multiple pivots in the same table
 
 Malloy allows you to intermix unpivoted data along with pivoted data through nesting.  Since pivots are nests, any aggregate outside the nest is just shown normally.
-
 >>>malloy
 #(docs) size=medium
 run: flights -> {
@@ -155,7 +147,6 @@ run: flights -> {
 Malloy sorts by the first aggregate column in finds, generally.  The `# hidden` tag allows you to not show a column in a result.  By adding a measure filtered by the column we are interested in, we can sort the entire table on a column in the pivot.
 
 Rows sorted by 'CA' flights
-
 >>>malloy
 #(docs) size=medium
 run: flights -> {
@@ -173,14 +164,13 @@ run: flights -> {
 >>>markdown
 
 # Multistage queries in a pivot
-Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivoted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'pivot_dimensions="..."' property on the pivot tag.
-
+Malloy Renderer uses the metadata from the query to decide which columns to pivot (dimensions are pivoted, aggreates are not). In multistage queries this information is incorrect.  You can manually specify this information with a 'dimensions' parameter on the pivot tag.
 >>>malloy
 #(docs) size=medium
 run: flights -> {
   group_by: carriers.nickname
   aggregate: total_flights is flight_count
-  # pivot pivot_dimensions="dep_year"
+  # pivot { dimensions=["dep_year"] }
   nest: by_year is -> {
     group_by: dep_year is dep_time.year
     aggregate: flight_count
