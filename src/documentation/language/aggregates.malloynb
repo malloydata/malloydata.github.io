@@ -14,7 +14,7 @@ join_name.count()
 
 The `count` aggregate function may be used to count the number of records appearing in a source.
 >>>malloy
-#(docs) hidden
+##(docs) hidden
 import "flights.malloy"
 import "ecommerce.malloy"
 import "airports.malloy"
@@ -31,7 +31,6 @@ count(distinct expr)
 ```
 
 Distinct counts may be used to count the number of distinct values of a particular field within a source.
-
 >>>malloy
 run: order_items -> {
   aggregate: order_count is count(distinct order_id)
@@ -39,7 +38,6 @@ run: order_items -> {
 >>>markdown
 
 ### sum
-
 >>>markdown
 ```malloy
 sum(expr)
@@ -49,7 +47,6 @@ join_name.expr.sum()
 >>>markdown
 
 The `sum` function may be used to compute the sum of all records of a particular field.
-
 >>>malloy
 run: flights -> {
   aggregate: total_distance is sum(distance)
@@ -65,7 +62,6 @@ join_name.expr.avg()
 ```
 
 The `avg` function may be used to compute the average of all records of a particular field.
-
 >>>malloy
 run: aircraft -> {
   aggregate: average_seats is avg(aircraft_models.seats)
@@ -82,7 +78,6 @@ join_name.expr.min()
 >>>markdown
 
 The `min` function may be used to compute the minimum of all records of a particular field.
-
 >>>malloy
 run: order_items -> {
   aggregate: cheapest_price is min(sale_price)
@@ -90,7 +85,6 @@ run: order_items -> {
 >>>markdown
 
 ### max
-
 >>>markdown
 ```malloy
 max(expr)
@@ -100,7 +94,6 @@ join_name.expr.max()
 >>>markdown
 
 The `max` function may be used to compute the maximum of all records of a particular field.
-
 >>>malloy
 run: flights -> {
   aggregate: longest_distance is max(distance)
@@ -110,7 +103,6 @@ run: flights -> {
 ## Ungrouped Aggregates
 
 In a query which is grouped by multiple dimensions, it is often useful to be able to perform an aggregate calculation on sub-groups to determine subtotals. The `all()` and `exclude()` functions in Malloy allow control over grouping and ungrouping, making this simple:
-
 >>>malloy
 run: airports -> {
   group_by: state, faa_region
@@ -147,7 +139,6 @@ FROM aircraft
 LEFT JOIN aircraft_models
   ON aircraft.aircraft_model_code = aircraft_models.aircraft_model_code
 ```
-
 >>>malloy
 run: aircraft -> {
   aggregate: average_seats is avg(aircraft_models.seats)
@@ -162,7 +153,6 @@ To do this, you might decide to start with the `aircraft_models` table instead.
 SELECT AVG(seats)
 FROM aircraft_models
 ```
-
 >>>malloy
 run: aircraft_models -> {
   aggregate: average_seats is avg(seats)
@@ -177,7 +167,6 @@ Unfortunately, SQL doesn't have any native constructs to compute this value, and
 
 Malloy introduces the concept of _aggregate locality_, meaning that aggregates can be computed with respect to different points in the data graph. In the following query, `average_seats` is computed with respect to `aircraft_models`,
 yielding the the average number of seats on aircraft models of aircraft listed in the `aircraft` table.
-
 >>>malloy
 run: aircraft -> {
   aggregate: average_seats is aircraft_models.avg(aircraft_models.seats)
@@ -189,7 +178,6 @@ For convenience, `aircraft_models.avg(aircraft_models.seats)` can be written as 
 ### Examples
 
 The following queries show six ways of calculating the average number of seats.
-
 >>>malloy
 run: flights -> {
   aggregate:
@@ -198,7 +186,6 @@ run: flights -> {
     avg_aircraft_models_seats is avg(aircraft.aircraft_models.seats)
 }
 >>>markdown
-
 >>>malloy
 run: aircraft -> {
   aggregate:
@@ -206,7 +193,6 @@ run: aircraft -> {
     avg_models_seats is avg(aircraft_models.seats)
 }
 >>>markdown
-
 >>>malloy
 run: aircraft_models -> {
   aggregate: avg_seats is avg(seats)
@@ -233,7 +219,6 @@ The `min` and `max` aggregates do not support aggregate locality because the min
 ### Aggregates on Fields
 
 Aggregating "on a field," e.g. `aircraft_models.seats.avg()` is exactly equivalent to aggregating that field with respect to its direct parent source, e.g. `aircraft_models.avg(aircraft_models.seats)`. This syntax is supported for the aggregate functions which benefit from aggregate locality and require a field, `avg` and `sum`.
-
 >>>malloy
 run: aircraft -> {
   aggregate:
