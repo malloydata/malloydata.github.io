@@ -1,0 +1,61 @@
+>>>markdown
+# Malloy 4.0
+
+Malloy 4.0 is our first "released" version of the langauge. We are calling it 4.0 because this is the fourth major rennovation of the syntax of the language. It could also be thought of as "1.0" because this is where we take the adjective "experimental" off of the language. At this point we have experimented enough. Malloy is now the best language for descrbing data and computations for data stored in an SQL server.
+
+## The 4.0 Release Events
+
+Some of the changes in 4.0 mean that code before 4.0 will no longer function. At this moment we are turning on warnings, and if your code uses any of these features, you will get a warning in your editor window when you open a file which contains that code.
+
+The Malloy language in the Release version of the VS Code plugin
+will accept the 4.0 syntax, and the pre 4.0 syntax. Warnings
+will direct you to code fragments which need to be changed.
+
+Shortly after that a Pre-Releae version of the VS Code extension
+will appear where these warnings are errors and all Malloy
+code must be written in the 4.0 syntax.
+
+Shortly after that the Pre-Release extension will become the Release extension.
+
+Before 4.0, it was considered acceptable to make breaking changes
+to the language, as we learned more about the correct shape and
+structure of Malloy. Beginning with 4.0, it is our intention to
+keep code compatibility for all changes to the language. Beginning
+with 4.0 it is our intention to keep the language stable enough
+that code will not be impacted by new language constructs.
+
+
+## What changed for 4.0
+
+Many of these changes have been in place for a while as we prepared for 4.0, but they are all part of the 4.0 project.
+
+* a `source:` is now called a `SOURCEWORD:`
+* new SOURCEWORD are created with `extend {}`
+* existing queries are modified with `+ {}`
+* extensions of a SOURCEWORD inside of a query operation are now
+  contained inside an `extend: { }` section within the query operation.
+* `result:` replaces `query:` with a name at the top level
+* `view:` inside a layer replace `query:` inside of a source
+* `run:` replaces `query:` with no name
+* The `sql:` statement has been deleted
+  * `connectionName.sql("SELECT STATEMENT")` is the new syntax
+* The source expression `table(connecitonName:tablePath')` is replaced
+  * by `connectionName.table("tablePath")`
+* The `project:` statement is now called `select:`
+* `from()` to add layer-extensions to a result has been removed
+  * A result can still be extended into a layer, `from()` is no 
+    longer needed to express this gesture.
+* There are three kinds of string literals, `'`, `"`, and `"""`.
+  These can be used interchangably anywhere a literal is legal.
+* When nesting Malloy code inside a multi-line literal, the syntax 
+  is  `%{ malloyCode}` and not `%{ malloyCode }%`
+  (the trailing percent sign is no longer part of the syntax)
+* Casting to a specific database type is now legal using a quoted type name
+* Safe cast operator `:::`
+* Added `SOURCEWORD.` to allow precision when doing unrooted aggregation
+* Annotation of objects
+* `??` (the nullish coalescing operation)
+* selective `import` of objects from other files
+* `calculate:` added to provide additional aggregation control
+  (often done with window functions in SQL)
+>>>markdown
