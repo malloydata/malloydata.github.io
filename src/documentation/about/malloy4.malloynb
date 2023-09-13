@@ -29,21 +29,27 @@ that code will not be impacted by new language constructs.
 
 Many of these changes have been in place for a while as we prepared for 4.0, but they are all part of the 4.0 project.
 
+\> note: will probably mark, or split this into sections
+\> to make clear which changes are "incompatible" changes
+
+\> note: will probably also have a longer section with examples
+\> for each change. Right now just trying to get the list right.
+
 * a `source:` is now called a `SOURCEWORD:`
 * new SOURCEWORD are created with `extend {}`
 * existing queries are modified with `+ {}`
 * extensions of a SOURCEWORD inside of a query operation are now
   contained inside an `extend: { }` section within the query operation.
 * `result:` replaces `query:` with a name at the top level
-* `view:` inside a layer replace `query:` inside of a source
+* `view:` inside a SOURCEWORD replace `query:` inside of a source
 * `run:` replaces `query:` with no name
 * The `sql:` statement has been deleted
   * `connectionName.sql("SELECT STATEMENT")` is the new syntax
 * The source expression `table(connecitonName:tablePath')` is replaced
   * by `connectionName.table("tablePath")`
 * The `project:` statement is now called `select:`
-* `from()` to add layer-extensions to a result has been removed
-  * A result can still be extended into a layer, `from()` is no 
+* `from()` to add SOURCEWORD-extensions to a result has been removed
+  * A result can still be extended into a SOURCEWORD, `from()` is no 
     longer needed to express this gesture.
 * There are three kinds of string literals, `'`, `"`, and `"""`.
   These can be used interchangably anywhere a literal is legal.
