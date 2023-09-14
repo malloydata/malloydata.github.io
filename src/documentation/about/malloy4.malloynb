@@ -44,15 +44,15 @@ assist in the transition, once the rollout begins.
 * `run:` replaces `query:` with no name
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources ) The `sql:` statement is replaced by SQL sources
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/source#sources-from-tables-or-views) The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`
-* The `project:` statement is now called `select:`
+* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#projection) The `project:` statement is now called `select:`
 * `from()` to create a source from a query is no longer needed
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`
 * [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#sum) Added `source.sum()` to clarify the meaning of sum without a path
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` intead of `-> queryName`
-* `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/aggregates#count)`COUNT(*)` is now just `count()`
+* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
+* [&#x1F4D6;](https://malloydata.github.io/documentation/language/aggregates#count) `COUNT(*)` is now just `count()`
 
 ### New features
 
@@ -70,5 +70,4 @@ https://malloydata.github.io/documentation/language/calculations* Casting to a s
 * selective `import` of objects from other files
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/calculations) `calculate:` added to provide additional aggregation control
   (often done with window functions in SQL)
->>>markdown
 >>>markdown
