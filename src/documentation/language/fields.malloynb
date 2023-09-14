@@ -7,7 +7,7 @@ tables in a database, constant values to be used in later analysis, computed met
 
 ## Defining Fields
 
-Fields defined in sources are reusable. A field is a `dimension`, `measure` or `query`.  When these are used in a query, these fields are invoked with `project`, `group_by`, `aggregate` or `nest`.   The definitions are the same  whether part of a source or a query stage. In either case, they are defined using the `is` keyword.
+Fields defined in sources are reusable. A field is a `dimension`, `measure` or `query`.  When these are used in a query, these fields are invoked with `select:`, `group_by:`, `aggregate:` or `nest:`.   The definitions are the same  whether part of a source or a query stage. In either case, they are defined using the `is` keyword.
 
 **In a source**
 >>>malloy

@@ -24,7 +24,6 @@ ORDER BY code
 ```
 >>>markdown
 Equivalent in Malloy
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   select: code, full_name, state, faa_region, fac_type, elevation
@@ -47,7 +46,6 @@ ORDER BY 2 desc
 >>>markdown
 
 Equivalent in Malloy
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: fac_type
@@ -66,7 +64,6 @@ Malloy separates a query from the source of the data. A source can be thought of
 
 * A `measure:` is a declared aggregate calculation (think function that operates across the table) which can be used in `aggregate:` elements in a query stage
 * A `dimension:` is a declared scalar calculation which that can be used in `group_by:` or `select:` elements of a query stage
-
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: elevation_in_meters is elevation * 0.3048
@@ -82,7 +79,6 @@ Queries can be run against `source:` objects and can utilize the modeled fields 
 
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports -> {
   limit: 10
@@ -97,7 +93,6 @@ run: airports -> {
 ## Dimensional calculations are no different from columns
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports -> {
   group_by: state_and_county // <-- declared in source
@@ -112,7 +107,6 @@ run: airports -> {
 A source can also contain a set of useful queries relating to that source.
 
 *using the above declared `airports` source*
-
 
 >>>malloy
 source: airports2 is duckdb.table('../data/airports.parquet') extend {
@@ -132,7 +126,6 @@ Note that the source is implied, so the source name is not needed to define the 
 The simplest form of a query in Malloy is the name of a source, the query operator `->`, and the name of one of its contained queries.
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports2 -> by_state
 >>>markdown
@@ -144,7 +137,6 @@ run: airports2 -> by_state
 You can filter a source by adding a filter expression using the `where:` keyword and then use this extended version of `airports` to run the `by_state` query.  ([Filter Documentation](../language/filters.malloynb))
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports2 extend {
   where: fac_type = 'SEAPLANE BASE'   // <- run the query with an added filter
@@ -157,7 +149,6 @@ run: airports2 extend {
 The input to an aggregate computation can be filtered.
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports -> {
   group_by: state
@@ -169,7 +160,6 @@ run: airports -> {
 ## Composing with Queries
 
 For the next section assume the following source declaration.
-
 >>>malloy
 source: airports3 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
@@ -195,7 +185,6 @@ In the case below, the top level query groups by state and nested query groups b
 This mechanism is really useful for understanding data and creating complex data structures. ([Nesting Documentation](../language/nesting.malloynb))
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports3 -> {
   group_by: state
@@ -211,7 +200,6 @@ run: airports3 -> {
 Queries can contain multiple nested queries.
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports3 -> {
   group_by: faa_region
@@ -224,7 +212,6 @@ run: airports3 -> {
 Queries can be nested to any level of depth.
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports3 -> {
   group_by: faa_region
@@ -247,7 +234,6 @@ run: airports3 -> {
 The refinement gesture `{}` extends an existing object, creating a new version with added properties
 
 For example we can add a limit and an order by to `by_state`
-
 >>>malloy
 run: airports2 -> by_state refine {
   order_by: state desc    // <-- add order by to query
@@ -256,7 +242,6 @@ run: airports2 -> by_state refine {
 >>>markdown
 
 is the same as
-
 >>>malloy
 run: airports -> {
   group_by: state
@@ -267,7 +252,6 @@ run: airports -> {
 >>>markdown
 
 ### You can add a measure or dimension
-
 >>>malloy
 run: airports3 -> by_facility_type refine {
   aggregate: avg_elevation
@@ -275,7 +259,6 @@ run: airports3 -> by_facility_type refine {
 >>>markdown
 
 ### You can nest another query
-
 >>>malloy
 run: airports3 -> top_5_states refine {
   nest: by_facility_type
@@ -285,7 +268,6 @@ run: airports3 -> top_5_states refine {
 ## Composing with Queries
 
 Changing the inner and outer query in the example above reveals very different information.
-
 >>>malloy
 run: airports3 -> by_facility_type refine {
   nest: top_5_states
@@ -299,7 +281,6 @@ First let's model some simple tables... ([Join Documentation](../language/join.m
 
 ### Carrier table
 *simple source declaration used in example below*
-
 >>>malloy
 source: carriers is duckdb.table('../data/carriers.parquet') extend {
   measure: carrier_count is count()
@@ -328,7 +309,6 @@ run: flights -> {
 
 Join carriers to flights.  Each flight has one carrier so we use `join_one:`.
 ([Join Documentation](../language/join.malloynb))
-
 >>>malloy
 source: carriers2 is duckdb.table('../data/carriers.parquet') extend {
   measure: carrier_count is count()
@@ -347,7 +327,6 @@ source: flights2 is duckdb.table('../data/flights.parquet') extend {
 ###  Query the joined tables
 
 *using the above declared `flights` source*
-
 >>>malloy
 run: flights2 -> {
   group_by: carriers2.nickname
@@ -364,7 +343,6 @@ run: flights2 -> {
 
 
 *using the above declared `flights` source*
-
 >>>malloy
 run: flights2 -> {
   limit: 10
@@ -390,7 +368,6 @@ In the example below, we use a `with:` join for `carriers` and then model the mo
 
 Many `flights` have the same
 `airport` as their origin so we use `join_many:`.
-
 
 >>>malloy
 source: carriers4 is duckdb.table('../data/carriers.parquet') extend {
@@ -427,7 +404,6 @@ This query is very difficult to express in SQL. Malloy's understanding of source
 ([Aggregate Documentation](../language/aggregates.malloynb))
 
 *using the above declared `airports` source*
-
 >>>malloy
 run: airports4 ->  {
   group_by: state
@@ -445,7 +421,6 @@ run: airports4 ->  {
 The output of a query can be used as the source for the next query.
 
 *Assume the following query as a starting point.*
-
 >>>malloy
 source: airports5 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
@@ -466,7 +441,6 @@ run: airports5 -> {
 ## Un-nesting in a pipeline flattens the table
 
 Queries can be chained together (pipelined), the output of one becoming the input of the next one, by simply adding another `->` operator and a new query definition.
-
 >>>malloy
 source: airports6 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
@@ -494,7 +468,6 @@ run: airports6 -> {
 ## Pipelines can be named as queries in sources
 
 Pipelines can do pretty complex things.  They can be built into source objects.
-
 >>>malloy
 source: airports7 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
@@ -523,7 +496,6 @@ run: airports7 -> county_rollup
 ## Extending Sources
 
 As with a query, a source can be extended with the `extend { ... }` gesture to create a new version of the source with additional properties.
-
 >>>markdown
 ```malloy
 source: <<new name>> is <<old name>> extend {
@@ -540,7 +512,6 @@ Sometimes it is helpful to pre-process data before modeling it out with a source
 ### Model-Level Queries
 
 Here, we define a model-level query `q_airport_facts` based on the <code>flights.parquet</code> table.
-
 >>>malloy
 query: q_airport_facts is duckdb.table('../data/flights.parquet') -> {
   group_by:
@@ -554,7 +525,6 @@ query: q_airport_facts is duckdb.table('../data/flights.parquet') -> {
 
 run: q_airport_facts
 >>>markdown
-
 >>>malloy
 query: q_airport_facts2 is duckdb.table('../data/flights.parquet') -> {
   group_by:
@@ -570,7 +540,6 @@ query: q_airport_facts2 is duckdb.table('../data/flights.parquet') -> {
 ### Source based on a query
 
 Next, we can define a source based on `q_airport_facts` to add reusable fields and source-level queries.
-
 >>>malloy
 source: airport_facts is q_airport_facts extend {
   measure: flight_count is num_flights.sum()
@@ -594,11 +563,9 @@ source: airport_facts is q_airport_facts extend {
 >>>markdown
 
 ### Querying the Summary source
-
 >>>malloy
 run: airport_facts -> flights_by_year
 >>>markdown
-
 >>>malloy
 run: airport_facts -> flights_by_origin
 >>>markdown

@@ -452,6 +452,10 @@
           "name": "keyword.control.project"
         },
         {
+          "match": "(?i)\\select\\b",
+          "name": "keyword.control.select"
+        },
+        {
           "match": "(?i)\\bquery\\b",
           "name": "keyword.control.query"
         },
