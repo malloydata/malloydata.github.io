@@ -1,16 +1,20 @@
 >>>markdown
 # Malloy 4.0
 
-Malloy 4.0 is our first "released" version of the langauge. We are calling it 4.0 because this is the fourth major rennovation of the syntax of the language. It could also be thought of as "1.0" because this is where we take the adjective "experimental" off of the language. At this point we have experimented enough. We believe Malloy is now the best language for descrbing data and computations for data stored in an SQL server.
+We are very excited to announce version 4.0 of the Malloy language.
+
+Malloy 4.0 is our first "released" version of the langauge. There was never an official "3.0", we
+are calling it 4.0 because this is the fourth major rennovation of the syntax of the language. It
+could also be thought of as "1.0" because this is where we take the adjective "experimental" off of
+the language. At this point we have experimented enough. We believe Malloy is now the best language
+for descrbing data and computations for data stored in an SQL server.
 
 ## The 4.0 Release Timeline
 
-Before 4.0, it was considered acceptable to make breaking changes
-to the language, as we learned more about the correct shape and
-structure of Malloy. Beginning with 4.0, it is our intention to
-keep code compatibility for all changes to the language. Beginning
-with 4.0 it is our intention to keep the language stable enough
-that code will not be impacted by new language constructs.
+Before 4.0, when Malloy was in the experimental phase, it was considered acceptable to make breaking
+changes to the language, as we learned more about the better ways to express data computation.
+Beginning with 4.0, it is our intention to keep code compatibility for existing code, even as we
+continue to add capabilties to the language.
 
 The rollout of 4.0 will happen in a way which should make it realtively
 easy for users to upgrade their code.
@@ -19,17 +23,15 @@ easy for users to upgrade their code.
   * If you are using a language construct which will not work in 4.0, the IDE will show you a warning.
   * The [Documentation](https://malloydata.github.io/documentation) describes the 4.0 syntax.
 * **TBD-Date-1:** The Release version of the extension will begin to warn
-* **TBD-Date-2:** The Pre-Release version of the extension give errors, not warnings, on pre 4.0 code.
-* **TBD-Date-3:** The Release version of the extension give errors, not warnings, on pre 4.0 code.
-
-
+* **TBD-Date-2:** The Pre-Release version of the extension give errors, not warnings, on pre-4.0 code.
+* **TBD-Date-3:** The Release version of the extension give errors, not warnings, on pre-4.0 code.
 
 ## What changed for 4.0
 
 ### Incompatible Changes
 
-These changes will require users to edit existing code, and once the rollout begins,
-the IDE will flag old code with warnings to assist in the transition.
+These changes will require users to edit existing code. The IDE will flag old code with warnings to
+assist in the transition, once the rollout begins.
 
 * New sources are created with `extend {}`
 * Existing queries are refined with `+ {}`
@@ -46,19 +48,18 @@ the IDE will flag old code with warnings to assist in the transition.
 * `from()` to create a source from a query is no longer needed
 * When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`
-  (the trailing percent sign is no longer part of the syntax)
-* Added `source.sum()` to clarify the meaning of aggregates without a path
-* The filter shortcut `{? }` has been remnoved
+* Added `source.sum()` to clarify the meaning of sum without a path
+* The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` intead of `-> queryName`
 * `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
 * `COUNT(*)` is now just `count()`
 
 ### New features
 
-These are all new featues which working, which were not possible to use before 4.0.
-Most of these are already released even though they are part of the 4.0 transition.
-Code which uses these will continue to work. They are listen here just to provide
-a complete list of "What Is Malloy 4.0"
+These featues are all active now.  Most are not "new" in that they have already appeared in the
+Release version of the extension, even though they were part of the 4.0 project.  Code which uses
+these will continue to work. They are listed here to provide a complete list of "What Is Malloy
+4.0"
 
 * There are three kinds of string literals, `'`, `"`, and `"""`.
   These can be used interchangably anywhere a literal is legal.
