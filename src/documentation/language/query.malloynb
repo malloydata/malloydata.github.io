@@ -2,7 +2,6 @@
 # Queries
 
 The basic syntax for a query in Malloy consists of a source and a "pipeline" of one or more _stages_ separated by `->`. The shape of the data defined in the original source is transformed by each stage.
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
@@ -18,7 +17,6 @@ run: flights -> {
 Every query begins with a source, which can be thought of as a table with an associated collection of calculations and join relationships. The most common kind of source is a table source, e.g. `duckdb.table('flights.csv')`; see the [Sources](./source.malloynb) section for more information on creating and extending sources.
 
 Generally, ad-hoc queries will use one of these kinds of sources directly:
-
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> { 
   aggregate: total_flight_count is count() 
@@ -26,7 +24,6 @@ run: duckdb.table('../data/flights.parquet') -> {
 >>>markdown
 
 However, as analysis becomes more involved, it is often useful to define reusable computations in a named source, then use that named source as the basis for queries.
-
 >>>malloy
 source: flights2 is duckdb.table('../data/flights.parquet') extend { 
   measure: 
@@ -41,7 +38,6 @@ run: flights2 -> {
 >>>markdown
 
 It is also sometimes useful to define a query and then later use that query as the source for another query:
-
 >>>malloy
 query: flights_by_carrier is duckdb.table('../data/flights.parquet') -> {
   group_by: carrier
@@ -49,7 +45,7 @@ query: flights_by_carrier is duckdb.table('../data/flights.parquet') -> {
 }
 
 run: flights_by_carrier -> { 
-  project: carrier
+  select: carrier
   limit: 2 
 }
 >>>markdown
@@ -70,7 +66,6 @@ run: flights3 -> by_carrier
 >>>markdown
 
 Here, `by_carrier` is a query defined nested inside another query stage, and its source is also implicit:
-
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
   group_by: dep_year is dep_time.year
@@ -86,8 +81,8 @@ run: duckdb.table('../data/flights.parquet') -> {
 ## Pipelines
 
 Each stage of a pipeline performs a transformation on the source or a previous stage. A stage can be one of two kinds:
-* **reduction**: reduce the grain of the data being transformed using `group_by` and/or `aggregate`
-* **projection**: select fields without reducing using `project`
+* **reduction**: reduce the grain of the data being transformed using `group_by:` and/or `aggregate:`
+* **projection**: select fields without reducing using `select:`
 
 ### Reduction 
 The following is an example of a **reduction**:
@@ -114,7 +109,7 @@ run: flights -> {
 The following is an example of a **projection**:
 >>>malloy
 run: flights -> {
-  project: *
+  select: *
   limit: 20
 }
 >>>markdown
@@ -122,7 +117,6 @@ run: flights -> {
 Note that the operations in a stage are for the most part not order-sensitive like SQL; they can be arranged in any order.
 
 A reference to a [source-level query](./fields.malloynb#source-level-queries) (which defines its own pipeline) can be the first stage in a pipeline.
-
 >>>malloy
 run: flights -> by_carrier
 >>>markdown
@@ -132,7 +126,7 @@ run: flights -> by_carrier
 This example shows a pipeline with 3 stages, the multiple stages chained using `->`. Each stage generates a CTE in the SQL (click "SQL" on the right to see what this looks like.)
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
-  project: *
+  select: *
   where: dep_time > @2003
 } -> {    
   -- extend: allows you to define fields for use within the query
@@ -143,7 +137,7 @@ run: duckdb.table('../data/flights.parquet') -> {
     aggregate: flight_count
   }
 } -> {
-  project:
+  select:
     main_query.carrier
     main_query.flight_count
     # percent
@@ -156,7 +150,6 @@ run: duckdb.table('../data/flights.parquet') -> {
 In a query stage, fields (dimensions, measures, or
 queries) may be specified either by referencing an existing
 name or defining them inline.
-
 >>>malloy
 query: flights -> {
   group_by: carrier
@@ -164,7 +157,7 @@ query: flights -> {
 }
 >>>markdown
 
-When referencing existing fields in a `project` clause, wildcard expressions `*`, `**`, and `some_join.*` may be used.
+When referencing existing fields in a `select:` clause, wildcard expressions like `*`, or `some_join.*` may be used.
 
 See the [Fields](fields.malloynb) section for more information
 about the different kinds of fields and how they can be
@@ -199,8 +192,7 @@ See the [Filters](filters.malloynb) section for more information.
 
 ## Refinement
 
-A query can be "refined", which means adding clauses such as `project:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
-
+A query can be "refined", which means adding clauses such as `select:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
 >>>malloy
 source: flights4 is duckdb.table('../data/flights.parquet') extend {
   query: top_destinations is {
@@ -211,13 +203,11 @@ source: flights4 is duckdb.table('../data/flights.parquet') extend {
 >>>markdown
 
 Running the query gives us flight count by destination:
-
 >>>malloy
 run: flights4 -> top_destinations
 >>>markdown
 
 Now let's refine it by adding `refine { group_by: origin }`. This adds a `group_by` clause to the original query
-
 >>>malloy
 run: flights4 -> top_destinations refine {
   group_by: origin
@@ -232,7 +222,6 @@ Query refinement can be thought of as similar to extending a class in object-ori
 
 Query stages may also include ordering and limiting
 specifications.
-
 >>>malloy
 run: flights -> {
   limit: 4
@@ -246,7 +235,6 @@ For detailed information on ordering and limiting, see the [Ordering and Limitin
 ## Post-Aggregation Filtering
 
 Query stages may filter groupings based on aggregate values using the `having:` clause, which corresponds to SQL's <code>HAVING</code> clause.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -258,7 +246,6 @@ run: flights -> {
 ## Calculations (Window Functions)
 
 Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.malloynb) section for details.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
