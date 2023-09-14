@@ -182,7 +182,7 @@ source: flights is duckdb.table('../src/documentation/data/flights.parquet') ext
   query: detail is -> {
     limit: 30
     order_by: dep_time
-    project:
+    select:
       id2, dep_time, tail_num, carrier, origin_code,
       destination_code, distance, aircraft.aircraft_model_code
   }

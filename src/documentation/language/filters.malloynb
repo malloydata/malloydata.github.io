@@ -46,7 +46,7 @@ query: flights -> {
   aggregate: flight_count
 } -> {
   where: carrier ? 'UA' | 'AA'
-  project: carrier, flight_count
+  select: carrier, flight_count
 }
 >>>markdown
 

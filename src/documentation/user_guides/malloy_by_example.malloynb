@@ -12,7 +12,7 @@ Click tab to to see the  HTML, JSON or SQL result:  <img src="https://user-image
 
 ## SQL SELECT vs Malloy's `run:`
 
-The statement to run a query in Malloy is `run:`. There are two types of queries in Malloy, reductions which have `group_by:` or `aggregate:` statements, and projections which have `project:` statements and do not group or aggregate results.
+The statement to run a query in Malloy is `run:`. There are two types of queries in Malloy, reductions which have `group_by:` or `aggregate:` statements, and projections which have `select:` statements and do not group or aggregate results.
 
 ### Projection: SELECT with no GROUP BY
 
@@ -27,7 +27,7 @@ Equivalent in Malloy
 
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project: code, full_name, state, faa_region, fac_type, elevation
+  select: code, full_name, state, faa_region, fac_type, elevation
   order_by: code
 }
 >>>markdown
@@ -65,7 +65,7 @@ Malloy separates a query from the source of the data. A source can be thought of
 
 
 * A `measure:` is a declared aggregate calculation (think function that operates across the table) which can be used in `aggregate:` elements in a query stage
-* A `dimension:` is a declared scalar calculation which that can be used in `group_by:` or `project:` elements of a query stage
+* A `dimension:` is a declared scalar calculation which that can be used in `group_by:` or `select:` elements of a query stage
 
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
@@ -306,7 +306,7 @@ source: carriers is duckdb.table('../data/carriers.parquet') extend {
 }
 
 run: carriers -> {
-  project: *
+  select: *
 }
 >>>markdown
 
@@ -319,7 +319,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 }
 
 run: flights -> {
-  project: id2, tail_num, dep_time, carrier, origin, destination, distance, dep_delay
+  select: id2, tail_num, dep_time, carrier, origin, destination, distance, dep_delay
   limit: 10
 }
 >>>markdown
@@ -482,7 +482,7 @@ run: airports6 -> {
     aggregate: airport_count
   }
 } -> {
-  project:
+  select:
     state
     top_3_county.county
     airports_in_state is airport_count
@@ -508,7 +508,7 @@ source: airports7 is duckdb.table('../data/airports.parquet') extend {
       aggregate: airport_count
     }
   } -> {
-    project:
+    select:
       state
       top_3_county.county
       airports_in_state is airport_count

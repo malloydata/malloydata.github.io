@@ -13,7 +13,7 @@ The following query is equivalent to <code>SELECT id, code, city FROM airports L
 
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project:
+  select:
     id
     code
     city
@@ -26,7 +26,7 @@ Let's break down each part of this query.
 - `duckdb.table('../data/airports.parquet')` defines the source for the query. The `table()` method creates a source from a table or view in the database.
   - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
 - The `->` operator begins the query. Queries take the form `<<source>> -> { ... }`, with the query logic specified inside of the curly braces.
-- `project:` is equivalent to <code>SELECT</code> in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
+- `select:` is equivalent to <code>SELECT</code> in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
 - `limit: 10` limits the result set of the query to the first 10 items.
 
 ## Query Operators
@@ -54,7 +54,7 @@ In Malloy, "project" is a verb, not a noun. As in "to project something", rather
 
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project: code, full_name, city, county
+  select: code, full_name, city, county
   where: county = 'SANTA CRUZ'
   limit: 10
 }
@@ -66,7 +66,7 @@ For the most part, operations can be placed in any order within a query. A `wher
 run: duckdb.table('../data/airports.parquet') -> {
   limit: 10
   where: county = 'SANTA CRUZ'
-  project: code, full_name, city, county
+  select: code, full_name, city, county
 }
 >>>markdown
 
@@ -90,7 +90,7 @@ Named objects, like columns from a table or fields defined in a source, can be i
 
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project:
+  select:
     full_name
     elevation
 }
@@ -459,7 +459,7 @@ run: airports -> {
   }
 } -> {
   limit: 10; order_by: 4 desc
-  project:
+  select:
     by_county.county
     airports_in_county is by_county.airport_count
     airports_in_state is airport_count

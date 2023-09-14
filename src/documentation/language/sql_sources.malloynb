@@ -73,7 +73,7 @@ source: malloy_in_sql_query is duckdb.sql("""
   WHERE n_with_this_name > 10
 """)
 
-run: malloy_in_sql_query -> { project: * }
+run: malloy_in_sql_query -> { select: * }
 >>>markdown
 
 \> _We have referred to this feature the ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinite nesting, but it is amusing_

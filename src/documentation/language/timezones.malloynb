@@ -21,7 +21,7 @@ Timestamp literals without a timezone are assumed to be in the active timezone
 
 ```malloy
 query: showMe is emptySource -> {
-  project: showMeVal is
+  select: showMeVal is
     hours(
       @2021-01-01 00:00
       to
@@ -35,7 +35,7 @@ Without a timezone specification, `showMeVal` will be 0. Change it to
 ```malloy
 query: showMe is emptySource -> {
   timezone: 'America/Mexico_City'
-  project: showMeVal is
+  select: showMeVal is
     hours(
       @2021-01-01 00:00
       to
@@ -52,14 +52,14 @@ With a timezone active, extraction and truncation happen at the moment of that t
 
 ```malloy
 query: showMe is emptySouce -> {
-  project: year(@2021-01-01 00:00 [UTC])
+  select: year(@2021-01-01 00:00 [UTC])
 }
 ```
 will return 2021 but
 ```malloy
 query: showMe is emptySouce -> {
   timezone: 'America/Mexico_City'
-  project: year(@2021-01-01 00:00 [UTC])
+  select: year(@2021-01-01 00:00 [UTC])
 }
 ```
 

@@ -178,7 +178,7 @@ run: flights -> {
     order_by: dep_year
   } -> {
     where: dep_year > @2003
-    project:
+    select:
       dep_year
       flight_count
       # percent

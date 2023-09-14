@@ -15,7 +15,7 @@ File <code>airports.malloysql</code>:
 
     query: major_airports is -> {
       where: major = 'Y'
-      project: *
+      select: *
     }
 
     query: by_state is -> {

@@ -20,7 +20,7 @@ Tags look similar to comments, but they begin with the `#` (hash, octothorpe, nu
 
 // Attached to the next query
 # tag_2
-query: myQuery is someSource -> { project: * }
+query: myQuery is someSource -> { select: * }
 
 // Applied to both "a" and "b"
 # tag_3

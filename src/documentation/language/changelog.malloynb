@@ -32,7 +32,7 @@ See the [Query Refinement](./query.malloynb#refinement) and [Source Extension](.
 
 ### Deprecation of Leading Arrows for Query References
 
-Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { project: * }`. Now the leading arrow is no longer required, and will be deprecated in 4.0.
+Previously in order to reference an existing query (e.g. to use as the source for another query), it was necessary to include a leading arrow: `run: -> some_query -> { select: * }`. Now the leading arrow is no longer required, and will be deprecated in 4.0.
 
 ### Addition of Leading Arrow for Queries Defined in Sources
 

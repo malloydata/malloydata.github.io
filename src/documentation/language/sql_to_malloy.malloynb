@@ -49,7 +49,7 @@ LIMIT <limit>
 | SQL | Malloy | Description / Docs |
 |---|---|---|
 | <pre><code>userName AS user_name</code></pre>  | <pre> `user_name is userName  `</pre> | **AS**: Names come before definitions in Malloy. |
-| <pre><code>SELECT id FROM order_items</code></pre>   | <pre> `run: order_items -> { project: id }`</pre> | **SELECT / FROM**: [Malloy by Example](../user_guides/malloy_by_example.malloynb) |
+| <pre><code>SELECT id FROM order_items</code></pre>   | <pre> `run: order_items -> { select: id }`</pre> | **SELECT / FROM**: [Malloy by Example](../user_guides/malloy_by_example.malloynb) |
 | <pre><code>LEFT JOIN users</code><code> ON users.id = order_items.user_id </pre></code> | <pre> `join_one: users on users.id = order_items.user_id`</pre> | **JOIN**: [Documentation](../language/join.malloynb) covers more join types and complex relationships. [Example](../language/sql_to_malloy.malloynb#more-complex-example) |
 | <pre><code>SELECT </code> <code>  status</code> <code>  , COUNT(*) AS items_count</code> <code>FROM order_items </code> <code>GROUP BY 1</code> </code></pre>  | <pre> `run: order_items -> {` `  group_by: status` `  aggregate: items_count is count()` `}`</pre> | **GROUP BY**: Any field included in Malloy’s group_by selection will be included in both the generated <code>SELECT</code> and <code>GROUP BY</code>. |
 | <pre><code>WHERE status = 'Complete'</code></pre>  | <pre> `where: status = 'Complete'`</pre> | **WHERE** |

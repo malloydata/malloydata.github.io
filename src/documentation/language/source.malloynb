@@ -77,7 +77,7 @@ And here, we use the query `flights_by_carrier` as a source:
 
 >>>malloy
 run: flights_by_carrier -> {
-  project: 
+  select: 
     carrier
     lifetime_flights_bucketed is round(lifetime_flights, -4)
     lifetime_flights
@@ -94,7 +94,7 @@ source: carrier_facts is flights_by_carrier extend {
 }
 
 run: carrier_facts -> {
-  project: 
+  select: 
     carrier
     lifetime_flights_bucketed
     lifetime_flights
@@ -115,7 +115,7 @@ source: carrier_facts2 is duckdb.table('../data/flights.parquet') -> {
 
 >>>malloy
 run: carrier_facts2 -> {
-  project: carrier, lifetime_flights_bucketed, lifetime_flights
+  select: carrier, lifetime_flights_bucketed, lifetime_flights
   limit: 3
 }
 >>>markdown
