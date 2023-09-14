@@ -46,6 +46,7 @@ characters through the `\X` syntax.
 * `\f` - Formfeed
 * `\n` - Newline
 * `\r` - Return
+* `\t` - Tab
 * `\'` - Single quote
 * `\"` - Double quote
 

@@ -48,11 +48,11 @@ assist in the transition, once the rollout begins.
 * `from()` to create a source from a query is no longer needed
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`
-* Added `source.sum()` to clarify the meaning of sum without a path
+* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#sum) Added `source.sum()` to clarify the meaning of sum without a path
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` intead of `-> queryName`
 * `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
-* `COUNT(*)` is now just `count()`
+* [&#x1F4D6;](https://malloydata.github.io/documentation/language/aggregates#count)`COUNT(*)` is now just `count()`
 
 ### New features
 
@@ -61,7 +61,7 @@ Release version of the extension, even though they were part of the 4.0 project.
 these will continue to work. They are listed here to provide a complete list of "What Is Malloy
 4.0"
 
-* There are three kinds of string literals, `'`, `"`, and `"""`.
+* [&#x1F4D6;?](../language/datatypes.malloynb)There are three kinds of string literals, `'`, `"`, and `"""`.
   These can be used interchangably anywhere a literal is legal.
 * Casting to a specific database type is now legal using a quoted type name
 * Safe cast operator `:::`
@@ -70,4 +70,5 @@ these will continue to work. They are listed here to provide a complete list of 
 * selective `import` of objects from other files
 * `calculate:` added to provide additional aggregation control
   (often done with window functions in SQL)
+>>>markdown
 >>>markdown
