@@ -25,10 +25,29 @@ Malloy has a fairly basic syntax for numeric literals
 
 ## String
 
-Malloy uses single quotes to wrap strings and uses the "backslash" (reverse virgule) to quote a single character within the string
+Strings in Malloy are wrapped in either single quotes (`'`), double quotes (`"`) or what we call the triple quote (`"""`).
 
-* `'My name is Michael'`
-* `'My name isn\'t Mike'`
+A triple quote string can extend over more than one line, as in
+
+```
+  dimension: myPoem is """
+    I wrote some new code in Malloy
+    and experienced boundless joy.
+    It worked right away,
+    so I just have to say
+    "This language is more than a toy."
+  """
+```
+
+Single and double quoted strings must be written on one line. They can contain a number of special
+characters through the `\X` syntax.
+
+* `\b` - Backspace
+* `\f` - Formfeed
+* `\n` - Newline
+* `\r` - Return
+* `\'` - Single quote
+* `\"` - Double quote
 
 ## Boolean
 
