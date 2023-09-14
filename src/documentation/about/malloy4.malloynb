@@ -26,7 +26,7 @@ easy for users to upgrade their code.
 * **TBD-Date-2:** The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
 * **TBD-Date-3:** The Release version of the extension will give errors, not warnings, on pre-4.0 code.
 
-## What changed for 4.0
+## 4.0 Differences
 
 ### Incompatible Changes
 
@@ -37,7 +37,7 @@ assist in the transition, once the rollout begins.
 \> <br/>_&#x1F4D6;? means a doc is incomplete or incorrect at this moment._
 
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/source#source-extensions) New sources are created with `extend {}` 
-* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#refinement) Existing queries are refined with `+ {}`
+* [&#x1F4D6;?](../language/query.malloynb) Existing queries are refined with `+ {}`
 * [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#implicit-sources) `view:` inside a source replaces `query:` inside of a source
 * Extensions of a source inside of a query operation are inside the query, in an `extend: { }`.
 * The `declare:` statement has been removed

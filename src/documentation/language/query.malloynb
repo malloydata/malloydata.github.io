@@ -207,9 +207,9 @@ Running the query gives us flight count by destination:
 run: flights4 -> top_destinations
 >>>markdown
 
-Now let's refine it by adding `refine { group_by: origin }`. This adds a `group_by` clause to the original query
+Now let's refine it by adding `+ { group_by: origin }`. This adds a `group_by` clause to the original query
 >>>malloy
-run: flights4 -> top_destinations refine {
+run: flights4 -> top_destinations + {
   group_by: origin
 }
 >>>markdown
