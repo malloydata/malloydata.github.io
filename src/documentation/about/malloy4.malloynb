@@ -7,7 +7,7 @@ Malloy 4.0 is our first "released" version of the langauge. There was never an o
 are calling it 4.0 because this is the fourth major rennovation of the syntax of the language. It
 could also be thought of as "1.0" because this is where we take the adjective "experimental" off of
 the language. At this point we have experimented enough. We believe Malloy is now the best language
-for descrbing data and computations for data stored in an SQL server.
+for working with data stored in an SQL server.
 
 ## The 4.0 Release Timeline
 
