@@ -33,20 +33,20 @@ easy for users to upgrade their code.
 These changes will require users to edit existing code. The IDE will flag old code with warnings to
 assist in the transition, once the rollout begins.
 
-* New sources are created with `extend {}`
-* Existing queries are refined with `+ {}`
-* `view:` inside a source replaces `query:` inside of a source
-* Extensions of a source inside of a query operation are 
-  inside the query, in an `extend: { }`.
+\> _Links to documentation are marked with [&#x1F4D6;](https://malloydata.github.io/documentation/)_
+\> <br/>_&#x1F4D6;? means a doc is incomplete or incorrect at this moment._
+
+* [&#x1F4D6;](https://malloydata.github.io/documentation/language/source#source-extensions) New sources are created with `extend {}` 
+* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#refinement) Existing queries are refined with `+ {}`
+* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#implicit-sources) `view:` inside a source replaces `query:` inside of a source
+* Extensions of a source inside of a query operation are inside the query, in an `extend: { }`.
 * The `declare:` statement has been removed
 * `run:` replaces `query:` with no name
-* The `sql:` statement has been deleted
-  * `connectionName.sql("SELECT STATEMENT")` is the new syntax
-* The source expression `table('connectionName:tablePath')` is replaced
-  * by `connectionName.table('tablePath')`
+* [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources ) The `sql:` statement is replaced by SQL sources
+* [&#x1F4D6;](https://malloydata.github.io/documentation/language/source#sources-from-tables-or-views) The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`
 * The `project:` statement is now called `select:`
 * `from()` to create a source from a query is no longer needed
-* When nesting Malloy code inside a multi-line literal, the syntax 
+* [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`
 * Added `source.sum()` to clarify the meaning of sum without a path
 * The filter shortcut `{? }` has been removed
