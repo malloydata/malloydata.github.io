@@ -12,7 +12,7 @@ for working with data stored in an SQL server.
 ## The 4.0 Release Timeline
 
 Before 4.0, when Malloy was in the experimental phase, it was considered acceptable to make breaking
-changes to the language, as we learned more about the better ways to express data computation.
+changes to the language, as we learned more about better ways to express data computation.
 Beginning with 4.0, it is our intention to keep code compatibility for existing code, even as we
 continue to add capabilties to the language.
 
