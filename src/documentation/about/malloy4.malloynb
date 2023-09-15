@@ -3,8 +3,8 @@
 
 We are very excited to announce version 4.0 of the Malloy language.
 
-Malloy 4.0 is our first "released" version of the langauge. There was never an official "3.0", we
-are calling it 4.0 because this is the fourth major rennovation of the syntax of the language. It
+Malloy 4.0 is our first "released" version of the language. There was never an official "3.0", we
+are calling it 4.0 because this is the fourth major renovation of the syntax of the language. It
 could also be thought of as "1.0" because this is where we take the adjective "experimental" off of
 the language. At this point we have experimented enough. We believe Malloy is now the best language
 for working with data stored in an SQL server.
@@ -14,9 +14,9 @@ for working with data stored in an SQL server.
 Before 4.0, when Malloy was in the experimental phase, it was considered acceptable to make breaking
 changes to the language, as we learned more about better ways to express data computation.
 Beginning with 4.0, it is our intention to keep code compatibility for existing code, even as we
-continue to add capabilties to the language.
+continue to add capabilities to the language.
 
-The rollout of 4.0 will happen in a way which should make it realtively
+The rollout of 4.0 will happen in a way which should make it relatively
 easy for users to upgrade their code.
 
 * **Today:** Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension
@@ -50,19 +50,19 @@ assist in the transition, once the rollout begins.
   is  `%{ malloyCode }` and not `%{ malloyCode }%`
 * [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#sum) Added `source.sum()` to clarify the meaning of sum without a path
 * The filter shortcut `{? }` has been removed
-* The expression to run an existing query is now `queryName` intead of `-> queryName`
+* The expression to run an existing query is now `queryName` instead of `-> queryName`
 * [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/aggregates#count) `COUNT(*)` is now just `count()`
 
 ### New features
 
-These featues are all active now.  Most are not "new" in that they have already appeared in the
+These features are all active now.  Most are not "new" in that they have already appeared in the
 Release version of the extension, even though they were part of the 4.0 project.  Code which uses
 these will continue to work. They are listed here to provide a complete list of "What Is Malloy
 4.0"
 
 * [&#x1F4D6;?](../language/datatypes.malloynb)There are three kinds of string literals, `'`, `"`, and `"""`.
-  These can be used interchangably anywhere a literal is legal.
+  These can be used interchangeably anywhere a literal is legal.
 https://malloydata.github.io/documentation/language/calculations* Casting to a specific database type is now legal using a quoted type name
 * [&#x1F4D6;](https://malloydata.github.io/documentation/language/expressions#safe-type-cast) Safe cast operator `:::`
 * Annotation of objects
