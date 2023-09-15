@@ -1,5 +1,5 @@
 {
-  "files": ["./malloy.tmGrammar.json"],
+  "files": ["./node_modules/@malloydata/syntax-highlight/grammars/malloy/malloy.tmGrammar.json"],
   "include": ["docs/**/*"],
   "exclude": ["**/node_modules"],
   "compilerOptions": {

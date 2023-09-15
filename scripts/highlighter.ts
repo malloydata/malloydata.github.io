@@ -25,7 +25,7 @@ import * as shiki from "shiki";
 import * as fs from "fs";
 
 const malloyTMGrammar = JSON.parse(fs.readFileSync(
-  "./malloy.tmGrammar.json",
+  "./node_modules/@malloydata/syntax-highlight/grammars/malloy/malloy.tmGrammar.json",
   "utf-8"
 ));
 
@@ -55,7 +55,7 @@ const malloyDocsTMGrammar = {
 };
 
 const malloySQLTMGrammar = JSON.parse(fs.readFileSync(
-  "./malloy-sql.tmGrammar.json",
+  "./node_modules/@malloydata/syntax-highlight/grammars/malloy-sql/malloy-sql.tmGrammar.json",
   "utf-8"
 ));
 
