@@ -3,21 +3,19 @@
 
 We are very excited to announce version 4.0 of the Malloy language.
 
-Malloy 4.0 is our first "released" version of the language. There was never an official "3.0", we
-are calling it 4.0 because this is the fourth major renovation of the syntax of the language. It
-could also be thought of as "1.0" because this is where we take the adjective "experimental" off of
-the language. At this point we have experimented enough. We believe Malloy is now the best language
-for working with data stored in an SQL server.
+There was never an official "3.0", we are calling this release 4.0 because this is the fourth major
+renovation of the language. It could also be thought of as "1.0" because this is when we stop using
+"experimental" to describe the language. At this point we have experimented enough.  We believe
+Malloy is now the best language for working with data stored in an SQL server.
 
 ## The 4.0 Release Timeline
 
 Before 4.0, when Malloy was in the experimental phase, it was considered acceptable to make breaking
-changes to the language, as we learned more about better ways to express data computation.
-Beginning with 4.0, it is our intention to keep code compatibility for existing code, even as we
-continue to add capabilities to the language.
+changes to the language as we discovered better ways to express data computations.  Beginning with
+4.0, it is our intention to keep code compatibility for existing code, even as we continue to add
+capabilities to the language.
 
-The rollout of 4.0 will happen in a way which should make it relatively
-easy for users to upgrade their code.
+The rollout of 4.0 will happen in a way which should make it relatively easy for users to upgrade their code.
 
 * **Today:** Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension
   * If you are using a language construct which will not work in 4.0, the IDE will show you a warning.
@@ -30,8 +28,8 @@ easy for users to upgrade their code.
 
 ### Incompatible Changes
 
-These changes will require users to edit existing code. The IDE will flag old code with warnings to
-assist in the transition, once the rollout begins.
+These changes will require users to edit existing code. The IDE will issue warnings to flag code which
+needs to change, once the rollout begins.
 
 \> _Links to documentation are marked with [&#x1F4D6;](https://malloydata.github.io/documentation/)_
 \> <br/>_&#x1F4D6;? means a doc is incomplete or incorrect at this moment._
