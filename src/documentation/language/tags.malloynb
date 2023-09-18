@@ -5,6 +5,16 @@ Annotations are text strings collected with objects as a file is compiled. Annot
 
 The primary use of annotations in Malloy is for tags, which are simply a subset of the annotations strings which will be interpreted in simple programming language for setting key/value properties.
 
+Annotations are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode), making them extensible for many use cases. In VSCode, tags are interpreted in two ways:
+
+* As rendering instructions: `# bar_chart`
+* As documentation comments: `#" This query calculates ...`
+
+Other formats of tags are ignored:
+* `#bar_chart` without a space after the `#`
+* `#! custom="application" values="here"`
+
+
 # Tags
 
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
@@ -40,37 +50,3 @@ An annotation which is being interpreted as a tag is parsed with this simple lan
    and a list of sub properties with values.
 * `tName=value {...}` Assign a new value to `tName` but do not eras the sub properties like `tName=value` would
 * `tName=...{ p1=v1 p2=v2 p3 }` Assign new properties to tName, but keep the existing value
->>>malloy
->>>malloy
->>>markdown
-```malloy
-// Compiler flag
-##! enable_cool_malloy_feature
-
-// Attached to the document/model
-## tag_1
-
-// Attached to the next query
-# tag_2
-query: myQuery is someSource -> { select: * }
-
-// Applied to both "a" and "b"
-# tag_3
-dimension:
-  // Applied to "a"
-  # tag_4
-  a is 'a'
-  // Applied to "b"
-  # tag_5
-  b is 'b'
-```
->>>markdown
-
-Tags are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode), making them extensible for many use cases. In VSCode, tags are interpreted in two ways:
-* As rendering instructions: `# bar_chart`
-* As documentation comments: `#" This query calculates ...`
-
-Other formats of tags are ignored:
-* `#bar_chart` without a space after the `#`
-* `#! custom="application" values="here"`
-
