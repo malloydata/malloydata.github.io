@@ -61,7 +61,7 @@ these will continue to work. They are listed here to provide a complete list of 
   These can be used interchangeably anywhere a literal is legal.
 calculations* Casting to a specific database type is now legal using a quoted type name
 * [Safe cast operator `:::`](expressions.malloynb#safe-type-cast) 
-* Annotation of objects
+* [Annotations and Tags](tags.md)
 * [`??` (the nullish coalescing operation)](expressions.malloynb#null-operations)
 * [Selective `import` of objects from other files](imports.malloynb#selective-imports)
 * [`calculate:` added to provide additional aggregation control](calculations) (often done with window functions in SQL)

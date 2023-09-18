@@ -1,4 +1,10 @@
 >>>markdown
+# Annotation
+
+Annotations are text strings collected with objects as a file is compiled. Annotations are intended to be a generally useful method for connecting meta-data about a model with the source code for a model.
+
+The primary use of annotations in Malloy is for tags, which are simply a subset of the annotations strings which will be interpreted in simple programming language for setting key/value properties.
+
 # Tags
 
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
@@ -10,6 +16,32 @@ Tags look similar to comments, but they begin with the `#` (hash, octothorpe, nu
 * All other tags are attached the the object defined after the tag
 * Statements which define multiple objects, distribute their tags to each object defined in the statement.
 
+## Tag Property Language
+
+An annotation which is being interpreted as a tag is parsed with this simple language.
+
+* `tName`
+  * Sets the property `tName` to exist, but with no value
+  * ( for example `# hidden` could mean to set a property called `hidden` on an object )
+* `tName=tVal`
+  * Sets the property tName to exist, and have the value `tVal`
+  * ( for example `# color=red` set set the color property to te string `red`)
+  * You can also use quotes to assign values as as `# name="John J. Johnson"`
+  * `"` and `'` can be used to quote strings
+  * To assign a property name which needs quoting, use `` `my long property name`=red ``
+* `-tName` unset the property tName
+  * ( `-hidden` to remove the `hidden` property from and object)
+* `tName { p1=v1 p2=v2 }` `tName` is a collection of sub properties
+  * An example might look like `barchart { bgColor=white fgColor=red }`
+
+### Advanced Property Syntax
+
+* `tName=value { p1=v1 p2=v2 }` It is possible for a property have both a top level value
+   and a list of sub properties with values.
+* `tName=value {...}` Assign a new value to `tName` but do not eras the sub properties like `tName=value` would
+* `tName=...{ p1=v1 p2=v2 p3 }` Assign new properties to tName, but keep the existing value
+>>>malloy
+>>>malloy
 >>>markdown
 ```malloy
 // Compiler flag
