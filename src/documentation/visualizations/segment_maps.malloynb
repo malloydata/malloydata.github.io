@@ -32,7 +32,7 @@ Departing from Chicago
 
 >>>malloy
 #(docs) limit=10000 size=large
-run: flights -> routes_map refine { where: dep_time = @2003-02 and origin = 'ORD' }
+run: flights -> routes_map + { where: dep_time = @2003-02 and origin = 'ORD' }
 >>>markdown
 
 ## Run as a trellis
@@ -56,8 +56,8 @@ run: flights -> {
   group_by: carrier
   aggregate: flight_count
   nest:
-    ord_segment_map is routes_map refine { where: origin = 'ORD' }
-    sfo_segment_map is routes_map refine { where: origin = 'SFO' }
-    jfk_segment_map is routes_map refine { where: origin = 'JFK' }
+    ord_segment_map is routes_map + { where: origin = 'ORD' }
+    sfo_segment_map is routes_map + { where: origin = 'SFO' }
+    jfk_segment_map is routes_map + { where: origin = 'JFK' }
 }
 >>>markdown

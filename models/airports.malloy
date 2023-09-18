@@ -41,7 +41,7 @@ source: airports is duckdb.table('../src/documentation/data/airports.parquet') e
     group_by: name is concat(state, '-', full_name)
   }
 
-  query: airports_by_region_dashboard is by_region refine {
+  query: airports_by_region_dashboard is by_region + {
     where: faa_region != null
     nest:
       # shape_map

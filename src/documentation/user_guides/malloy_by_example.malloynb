@@ -107,7 +107,6 @@ run: airports -> {
 A source can also contain a set of useful queries relating to that source.
 
 *using the above declared `airports` source*
-
 >>>malloy
 source: airports2 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
@@ -231,11 +230,11 @@ run: airports3 -> {
 
 ## Refining a Source-Level Query
 
-The refinement gesture `{}` extends an existing object, creating a new version with added properties
+The query refinement gesture `+ {}` extends an existing object, creating a new version with added properties
 
 For example we can add a limit and an order by to `by_state`
 >>>malloy
-run: airports2 -> by_state refine {
+run: airports2 -> by_state + {
   order_by: state desc    // <-- add order by to query
   limit: 2
 }
@@ -253,14 +252,14 @@ run: airports -> {
 
 ### You can add a measure or dimension
 >>>malloy
-run: airports3 -> by_facility_type refine {
+run: airports3 -> by_facility_type + {
   aggregate: avg_elevation
 }
 >>>markdown
 
 ### You can nest another query
 >>>malloy
-run: airports3 -> top_5_states refine {
+run: airports3 -> top_5_states + {
   nest: by_facility_type
 }
 >>>markdown
@@ -269,7 +268,7 @@ run: airports3 -> top_5_states refine {
 
 Changing the inner and outer query in the example above reveals very different information.
 >>>malloy
-run: airports3 -> by_facility_type refine {
+run: airports3 -> by_facility_type + {
   nest: top_5_states
 }
 >>>markdown
@@ -368,7 +367,6 @@ In the example below, we use a `with:` join for `carriers` and then model the mo
 
 Many `flights` have the same
 `airport` as their origin so we use `join_many:`.
-
 >>>malloy
 source: carriers4 is duckdb.table('../data/carriers.parquet') extend {
   primary_key: code
@@ -525,7 +523,7 @@ query: q_airport_facts is duckdb.table('../data/flights.parquet') -> {
 
 run: q_airport_facts
 >>>markdown
->>>malloy
+\>>>malloy
 query: q_airport_facts2 is duckdb.table('../data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
@@ -566,7 +564,7 @@ source: airport_facts is q_airport_facts extend {
 >>>malloy
 run: airport_facts -> flights_by_year
 >>>markdown
->>>malloy
+\>>>malloy
 run: airport_facts -> flights_by_origin
 >>>markdown
 

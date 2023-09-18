@@ -24,7 +24,7 @@ See the [SQL Sources](./sql_sources.malloynb) section for more details.
 
 ### Source Extensions and Query Refinements
 
-Previously, there was one gesture used for source extensions and query refinements, `source_or_query { extensions_or_refinements }`. Now there is new sepearate syntax for each: `some_source extend { source_extensions }` and `some_query refine { source_refinements }`. The old syntax still works for the time being, but will be deprecated in 4.0.
+Previously, there was one gesture used for source extensions and query refinements, `source_or_query { extensions_or_refinements }`. Now there is new sepearate syntax for each: `some_source extend { source_extensions }` and `some_query + { source_refinements }`. The old syntax still works for the time being, but will be deprecated in 4.0.
 
 This makes `from` no longer required, and it will be deprecated with the old extension/refinement syntax.
 
@@ -55,7 +55,7 @@ source: my_source is duckdb.table('some_table') extend {
 
 Previously you could use a shortcut syntax for filtering sources, queries, or measures, `{? condition }`. This will be deprecated in version 4.0.
 
-Instead of the shortcut, use `source_name extend { where: condition }`, `query_name refine { where: condition }`, or `measure_name { where: condition }`.
+Instead of the shortcut, use `source_name extend { where: condition }`, `query_name + { where: condition }`, or `measure_name { where: condition }`.
 
 ### New Syntax for Source Extensions Defined in Queries
 
