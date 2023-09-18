@@ -19,7 +19,7 @@ The rollout of 4.0 will happen in a way which should make it relatively easy for
 
 * **Today:** Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension
   * If you are using a language construct which will not work in 4.0, the IDE will show you a warning.
-  * The [Documentation](https://malloydata.github.io/documentation) describes the 4.0 syntax.
+  * The [Documentation](..) describes the 4.0 syntax.
 * **TBD-Date-1:** The Release version of the extension will begin to warn on pre-4.0 compatibility problems.
 * **TBD-Date-2:** The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
 * **TBD-Date-3:** The Release version of the extension will give errors, not warnings, on pre-4.0 code.
@@ -34,23 +34,24 @@ needs to change, once the rollout begins.
 \> _Links to documentation are marked with [&#x1F4D6;](https://malloydata.github.io/documentation/)_
 \> <br/>_&#x1F4D6;? means a doc is incomplete or incorrect at this moment._
 
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/source#source-extensions) New sources are created with `extend {}` 
-* [&#x1F4D6;?](../language/query.malloynb) Existing queries are refined with `+ {}`
-* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#implicit-sources) `view:` inside a source replaces `query:` inside of a source
-* Extensions of a source inside of a query operation are inside the query, in an `extend: { }`.
-* The `declare:` statement has been removed
+* [New sources are only created with `extend {}`](source#source-extensions)
+* [Existing queries are only refined with `+ {}`](query#refinement) 
+* [&#x1F4D6;?](query#implicit-sources) `view:` inside a source replaces `query:` inside of a source
+* Extensions of a source inside of a query operation must be contained in an `extend: { }`.
+  * The `declare:` statement has been removed, use `dimension:` or `measure:`
+  * `join_:` statements in a query must be in the `extend: {}` block
 * `run:` replaces `query:` with no name
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources ) The `sql:` statement is replaced by SQL sources
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/source#sources-from-tables-or-views) The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`
-* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/query#projection) The `project:` statement is now called `select:`
+* [&#x1F4D6;](sql_sources ) The `sql:` statement is replaced by SQL sources
+* [&#x1F4D6;](source#sources-from-tables-or-views) The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`
+* [&#x1F4D6;](query#projection) The `project:` statement is now called `select:`
 * `from()` to create a source from a query is no longer needed
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) When nesting Malloy code inside a multi-line literal, the syntax 
+* [&#x1F4D6;](sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`
-* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#sum) Added `source.sum()` to clarify the meaning of sum without a path
+* [&#x1F4D6;?](aggregates#sum) Added `source.sum()` to clarify the meaning of sum without a path
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
-* [&#x1F4D6;?](https://malloydata.github.io/documentation/language/aggregates#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/aggregates#count) `COUNT(*)` is now just `count()`
+* [&#x1F4D6;?](aggregates#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
+* [&#x1F4D6;](aggregates#count) `COUNT(*)` is now just `count()`
 
 ### New features
 
@@ -61,11 +62,11 @@ these will continue to work. They are listed here to provide a complete list of 
 
 * [&#x1F4D6;?](../language/datatypes.malloynb)There are three kinds of string literals, `'`, `"`, and `"""`.
   These can be used interchangeably anywhere a literal is legal.
-https://malloydata.github.io/documentation/language/calculations* Casting to a specific database type is now legal using a quoted type name
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/expressions#safe-type-cast) Safe cast operator `:::`
+calculations* Casting to a specific database type is now legal using a quoted type name
+* [&#x1F4D6;](expressions#safe-type-cast) Safe cast operator `:::`
 * Annotation of objects
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/expressions#null-operations) `??` (the nullish coalescing operation)
+* [&#x1F4D6;](expressions#null-operations) `??` (the nullish coalescing operation)
 * selective `import` of objects from other files
-* [&#x1F4D6;](https://malloydata.github.io/documentation/language/calculations) `calculate:` added to provide additional aggregation control
+* [&#x1F4D6;](calculations) `calculate:` added to provide additional aggregation control
   (often done with window functions in SQL)
 >>>markdown
