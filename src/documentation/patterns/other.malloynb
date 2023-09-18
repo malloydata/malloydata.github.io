@@ -11,7 +11,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
     airport_count is count()
     avg_elevation is elevation.avg()
 
-  query: top_states_by_elevation is -> {
+  query: top_states_by_elevation is  {
     group_by: state
     aggregate: avg_elevation
     calculate: row_num is row_number()

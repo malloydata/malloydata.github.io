@@ -57,7 +57,7 @@ There are two cases where a query's source is implicit: when it is defined withi
 Here, `by_carrier` is defined within `flights`, so its source is implicit:  
 >>>malloy
 source: flights3 is duckdb.table('../data/flights.parquet') extend {
-  query: by_carrier is -> {
+  query: by_carrier is  {
     group_by: carrier
     aggregate: flight_count is count()
   }
@@ -120,7 +120,6 @@ A reference to a [source-level query](./fields.malloynb#source-level-queries) (w
 >>>malloy
 run: flights -> by_carrier
 >>>markdown
-
 ### Multi-Stage Pipelines
 
 This example shows a pipeline with 3 stages, the multiple stages chained using `->`. Each stage generates a CTE in the SQL (click "SQL" on the right to see what this looks like.)

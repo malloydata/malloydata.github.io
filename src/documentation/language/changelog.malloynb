@@ -44,7 +44,7 @@ import "flights.malloy"
 >>>markdown
 ```malloy
 source: my_source is duckdb.table('some_table') extend {
-  query: my_query is -> {
+  query: my_query is  {
     ...
   }
 }
