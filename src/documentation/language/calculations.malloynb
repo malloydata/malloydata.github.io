@@ -14,7 +14,7 @@ For more details, see a [full list of available analytic functions](./functions.
 import "flights.malloy"
 >>>malloy
 #(docs) size=large
-query: flights -> {
+run: flights -> {
   where: carrier = 'WN'
   group_by: dep_year is dep_time.year
   aggregate: flight_count
@@ -28,7 +28,7 @@ query: flights -> {
 Because calculations operate logically on the output of the grouping/projecting/aggregating operations, field references behave somewhat differently inside a `calculate:` block. In particular, field references refer by default to output names from those operations.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: lower_carrier is lower(carrier)
   calculate: prev_carrier is lag(lower_carrier)
 }
@@ -44,7 +44,7 @@ Some window functions in SQL, such as [lag](https://cloud.google.com/bigquery/do
 
 >>>malloy
 #(docs) html size=large
-query: flights -> {
+run: flights -> {
   where: carrier = 'WN'
   group_by: dep_year is dep_time.year
   aggregate: flight_count

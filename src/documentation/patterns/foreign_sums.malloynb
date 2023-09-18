@@ -23,7 +23,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: aircraft with tail_num
 }
 
-query: flights -> {
+run: flights -> {
   where: dep_time = @2003-01
   group_by: carrier
   aggregate:

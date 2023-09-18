@@ -18,7 +18,7 @@ source: users is duckdb.table('../data/users.parquet') extend {
 
 **In a query stage**
 >>>malloy
-query: users -> {
+run: users -> {
   group_by: age_in_dog_years is age * 7
 }
 >>>markdown
@@ -35,7 +35,7 @@ detailed discussion of nested queries.
 ##(docs) hidden
 import "flights.malloy"
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   nest: by_month is {
     group_by: departure_month is dep_time.month

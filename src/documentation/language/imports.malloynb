@@ -8,7 +8,7 @@ For example, if you wanted to create a file <code>samples/flights_by_carrier.mal
 >>>malloy
 import "flights.malloy"
 
-query: flights -> { limit: 5; group_by: carrier; aggregate: flight_count }
+run: flights -> { limit: 5; group_by: carrier; aggregate: flight_count }
 >>>markdown
 
 ## Import Locations

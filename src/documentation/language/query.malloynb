@@ -150,7 +150,7 @@ In a query stage, fields (dimensions, measures, or
 queries) may be specified either by referencing an existing
 name or defining them inline.
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count is count()
 }
@@ -176,7 +176,7 @@ query: flights extend { where: distance > 1000 } -> {
 
 or in the query stage.
 >>>malloy
-query: flights -> {
+run: flights -> {
   where: distance > 1000
   group_by: distance
   aggregate: flight_count

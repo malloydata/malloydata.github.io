@@ -248,7 +248,7 @@ source: flights9 is duckdb.table('../data/flights.parquet') extend {
   measure: flight_count is count()
 }
 
-query: flights9 -> {
+run: flights9 -> {
   group_by: carriers.nickname
   aggregate: flight_count
   limit: 3

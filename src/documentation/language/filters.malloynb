@@ -41,7 +41,7 @@ query: flights { where: distance > 1000 } -> { aggregate: flight_count }
 A filter can also be applied to an individual query stage.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
 } -> {
@@ -55,7 +55,7 @@ query: flights -> {
 Any measure can be filtered by adding a where clause.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   aggregate:
     ca_flights is flight_count { where: origin.state = 'CA' }
     ny_flights is count() { where: origin.state = 'NY' }
@@ -76,7 +76,7 @@ source: my_flights is flights {
   measure: percent_delayed is delayed_flights / flight_count
 }
 
-query: my_flights -> {
+run: my_flights -> {
   aggregate:
     ca_flights is flight_count { where: origin.state = 'CA' }
     ca_delayed_flights is delayed_flights { where: origin.state = 'CA' }
@@ -105,7 +105,7 @@ source: my_flights2 is flights {
   }
 }
 
-query: my_flights2 -> {
+run: my_flights2 -> {
   nest:
     ca_stats is delay_stats { where: origin.state = 'CA' }
     ny_stats is delay_stats { where: origin.state = 'NY' }

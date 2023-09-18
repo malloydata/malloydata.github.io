@@ -50,7 +50,7 @@ dimension:
 ##(docs) hidden
 import "flights.malloy"
 >>>malloy
-query: flights -> { 
+run: flights -> { 
   where: origin.county != null
   group_by: origin.state
   nest: by_county is -> {

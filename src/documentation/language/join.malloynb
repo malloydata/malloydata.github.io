@@ -9,7 +9,6 @@ SQL, which flattens everything into a single table space.
 the locality of computation, so they are always computed correctly regardless of join pattern, avoiding the fan and chasm traps.
 
 In Malloy, syntaxes for join are:
-
 >>>markdown
 ```malloy
 join_one: <<source name>> [is <<source>>] on <<boolean expression>>
@@ -50,7 +49,6 @@ The easiest, most error-proof way to perform a join is using the following synta
 `join_one: <<source>> with <<foreign key>>`
 
 To join based on a foreign key through the `primary_key` of a joined source, use `with` to specify an expression, which could be as simple as a field name in the source. This expression is matched against the declared `primary_key` of the joined source. Sources without a `primary_key` cannot use `with` joins.
-
 >>>malloy
 source: users is duckdb.table('../data/users.parquet') extend {
   primary_key: id
@@ -62,7 +60,6 @@ source: order_items is duckdb.table('../data/order_items.parquet') extend {
 >>>markdown
 
 This is simply a shortcut, when joining based on the primary key of a joined source. It is exactly equivalent to the `on` join written like this.
-
 >>>markdown
 ```malloy
 source: order_items is duckdb.table('../data/order_items.parquet') extend {
@@ -75,7 +72,6 @@ source: order_items is duckdb.table('../data/order_items.parquet') extend {
 ## Naming Joined Sources
 
 If no alias is specified using `is`, the name of the join will be the name of the source being joined.
-
 >>>malloy
 source: carriers is duckdb.table('../data/carriers.parquet') extend {
   primary_key: code
@@ -87,7 +83,6 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 >>>markdown
 
 To give the joined source a different name within the context source, use `is` to alias it.
-
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   primary_key: code
@@ -101,7 +96,6 @@ source: flights2 is duckdb.table('../data/flights.parquet') extend {
 ## In-line Joins
 
 Sources do not need to be modeled before they are used in a join, though the join must be named using `is`.
-
 >>>malloy
 source: flights3 is duckdb.table('../data/flights.parquet') extend {
   join_one: carriers is 
@@ -112,18 +106,16 @@ source: flights3 is duckdb.table('../data/flights.parquet') extend {
 ## Using Fields from Joined Sources
 
 When a source is joined in, its fields become nested within the parent source. Fields from joined sources can be referenced using `.`:
-
 >>>malloy
-query: flights3 -> {
+run: flights3 -> {
   group_by: carriers.nickname
   aggregate: flight_count is count()
 }
 >>>markdown
 
 Measures and queries defined in joined sources may be used in addition to dimensions.
-
 >>>malloy
-query: flights3 -> {
+run: flights3 -> {
   group_by: destination
   aggregate: carrier_count is carriers.count()
 }
@@ -135,13 +127,11 @@ This example demonstrates the definition of several different joins in a model a
 Entire subtrees of data can be joined.  In the example below, `aircraft` joins `aircraft_models`.  `flights`
 joins aircraft (which already has a join to aircraft manufacturer). The tree nature of the join relationship
 retained.
-
 >>>markdown
 ```malloy
 group_by: aircraft.aircraft_models.manufacturer
 ```
 >>>markdown
-
 >>>malloy
 source: aircraft_models is duckdb.table('../data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
@@ -181,7 +171,6 @@ For more examples and how to reason about aggregation across joins, review the [
 ## Inner Joins
 
 Inner join are essentially left joins with an additional condition that the parent table has matches in the joined table. The example below functions logically as an <code>INNER JOIN</code>, returning only users that have at least one row in the orders table, and only orders that have an associated user.
-
 >>>malloy
 source: users4 is duckdb.table('../data/users.parquet') extend {
   join_many: orders is duckdb.table('../data/order_items.parquet') on id = orders.user_id
