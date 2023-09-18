@@ -191,7 +191,7 @@ source: airports2 is duckdb.table('../data/airports.parquet') extend {
     airport_count is count()
     average_elevation is avg(elevation)
 
-  query: average_elevation_by_control_tower is  {
+  query: r is {
     group_by: has_control_tower
     aggregate: average_elevation
   }

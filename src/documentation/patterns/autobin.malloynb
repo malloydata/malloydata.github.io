@@ -6,7 +6,7 @@ By examining the range of values over a dataset, we can compute the appropriate 
 source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
   # bar_chart
-  query: by_elevation is  {
+  query: n is {
     aggregate: bin_size is (max(elevation) - min(elevation)) / 30
     nest: data is -> {
       group_by: elevation
