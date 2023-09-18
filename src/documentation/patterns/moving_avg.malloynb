@@ -58,7 +58,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
   dimension: dep_month is dep_time.month
 
   # line_chart
-  query: non_averaged is  {
+  query: non_averaged is {
     group_by: dep_month
     aggregate: 
       flight_count
@@ -66,7 +66,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
   }
 
   # line_chart
-  query: moving_averaged is  {
+  query: moving_averaged is {
     group_by: dep_month
     calculate: moving_avg_flight_count is avg_moving(flight_count, 3)
     order_by: dep_month

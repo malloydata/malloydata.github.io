@@ -111,7 +111,7 @@ A source can also contain a set of useful queries relating to that source.
 source: airports2 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
 
-  query: by_state is  {        // <-- can be called by name
+  query: by_state is {        // <-- can be called by name
     group_by: state
     aggregate: airport_count
   }
@@ -164,13 +164,13 @@ source: airports3 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
   measure: avg_elevation is elevation.avg()
 
-  query: top_5_states is  {
+  query: top_5_states is {
     group_by: state
     aggregate: airport_count
     limit: 5
   }
 
-  query: by_facility_type is  {
+  query: by_facility_type is {
     group_by: fac_type
     aggregate: airport_count
   }
@@ -389,7 +389,7 @@ source: airports4 is duckdb.table('../data/airports.parquet') extend {
   dimension: elevation_in_meters is elevation * 0.3048
   measure: avg_elevation_in_meters is elevation_in_meters.avg()
 
-  query: by_state is  {
+  query: by_state is {
     group_by: state
     aggregate: airport_count
   }
@@ -469,7 +469,7 @@ Pipelines can do pretty complex things.  They can be built into source objects.
 >>>malloy
 source: airports7 is duckdb.table('../data/airports.parquet') extend {
   measure: airport_count is count()
-  query: county_rollup is  {
+  query: county_rollup is {
     where: fac_type = 'HELIPORT'
     group_by: state
     aggregate: airport_count
@@ -541,7 +541,7 @@ source: airport_facts is q_airport_facts extend {
   measure: flight_count is num_flights.sum()
   measure: total_distance is distance.sum()
 
-  query: flights_by_year is  {
+  query: flights_by_year is {
     group_by: flight_year
     aggregate:
       flight_count
@@ -549,7 +549,7 @@ source: airport_facts is q_airport_facts extend {
       origin_count is count(distinct origin)
   }
 
-  query: flights_by_origin is  {
+  query: flights_by_origin is {
     group_by: origin
     aggregate:
       flight_count

@@ -57,7 +57,7 @@ There are two cases where a query's source is implicit: when it is defined withi
 Here, `by_carrier` is defined within `flights`, so its source is implicit:  
 >>>malloy
 source: flights3 is duckdb.table('../data/flights.parquet') extend {
-  query: by_carrier is  {
+  query: by_carrier is {
     group_by: carrier
     aggregate: flight_count is count()
   }
