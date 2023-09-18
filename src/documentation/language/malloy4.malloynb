@@ -38,7 +38,7 @@ needs to change, once the rollout begins.
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
 * `run:` replaces `query:` with no name
-* [The `sql:` statement is replaced by SQL sources](sql_sources )
+* [The `sql:` statement is replaced by SQL sources](sql_sources.malloynb)
 * [The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`](source.malloynb#sources-from-tables-or-views) 
 * [The `project:` statement is now called `select:`](query.malloynb#projection)
 * `from()` to create a source from a query is no longer needed
@@ -64,4 +64,4 @@ calculations* Casting to a specific database type is now legal using a quoted ty
 * [Annotations and Tags](tags.malloynb)
 * [`??` (the nullish coalescing operation)](expressions.malloynb#null-operations)
 * [Selective `import` of objects from other files](imports.malloynb#selective-imports)
-* [`calculate:` added to provide additional aggregation control](calculations) (often done with window functions in SQL)
+* [`calculate:` added to provide additional aggregation control](calculations.malloynb) (often done with window functions in SQL)
