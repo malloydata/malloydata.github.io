@@ -63,5 +63,5 @@ calculations* Casting to a specific database type is now legal using a quoted ty
 * [Safe cast operator `:::`](expressions.malloynb#safe-type-cast) 
 * Annotation of objects
 * [`??` (the nullish coalescing operation)](expressions.malloynb#null-operations)
-* _DOCNEEDED_ Selective `import` of objects from other files
+* [Selective `import` of objects from other files](imports.malloynb#selective-imports)
 * [`calculate:` added to provide additional aggregation control](calculations) (often done with window functions in SQL)
