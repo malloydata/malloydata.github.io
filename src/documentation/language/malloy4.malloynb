@@ -36,22 +36,22 @@ needs to change, once the rollout begins.
 
 * [New sources are only created with `extend {}`](source#source-extensions)
 * [Existing queries are only refined with `+ {}`](query#refinement) 
-* [&#x1F4D6;?](query#implicit-sources) `view:` inside a source replaces `query:` inside of a source
-* Extensions of a source inside of a query operation must be contained in an `extend: { }`.
+*  [_DOCNEEDED_](query#implicit-sources) `view:` inside a source replaces `query:` inside of a source
+* _DOCNEEDED_ Extensions of a source inside of a query operation must be contained in an `extend: { }`.
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
 * `run:` replaces `query:` with no name
-* [&#x1F4D6;](sql_sources ) The `sql:` statement is replaced by SQL sources
-* [&#x1F4D6;](source#sources-from-tables-or-views) The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`
-* [&#x1F4D6;](query#projection) The `project:` statement is now called `select:`
+* [The `sql:` statement is replaced by SQL sources](sql_sources )
+* [The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`](source#sources-from-tables-or-views) 
+* [The `project:` statement is now called `select:`](query#projection)
 * `from()` to create a source from a query is no longer needed
-* [&#x1F4D6;](sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) When nesting Malloy code inside a multi-line literal, the syntax 
-  is  `%{ malloyCode }` and not `%{ malloyCode }%`
-* [&#x1F4D6;?](aggregates#sum) Added `source.sum()` to clarify the meaning of sum without a path
+* [When nesting Malloy code inside a multi-line literal, the syntax 
+  is  `%{ malloyCode }` and not `%{ malloyCode }%`](sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) 
+* [_DOCNEEDED_ Added `source.sum()` to clarify the meaning of sum without a path](aggregates#sum) 
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
-* [&#x1F4D6;?](aggregates#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
-* [&#x1F4D6;](aggregates#count) `COUNT(*)` is now just `count()`
+* [_DECISION NEEDED_](aggregates#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
+* [`COUNT(*)` is now just `count()`](aggregates#count) 
 
 ### New features
 
@@ -60,13 +60,11 @@ Release version of the extension, even though they were part of the 4.0 project.
 these will continue to work. They are listed here to provide a complete list of "What Is Malloy
 4.0"
 
-* [&#x1F4D6;?](../language/datatypes.malloynb)There are three kinds of string literals, `'`, `"`, and `"""`.
+* [There are three kinds of string literals, `'`, `"`, and `"""`.](datatypes#string)
   These can be used interchangeably anywhere a literal is legal.
 calculations* Casting to a specific database type is now legal using a quoted type name
-* [&#x1F4D6;](expressions#safe-type-cast) Safe cast operator `:::`
+* [Safe cast operator `:::`](expressions#safe-type-cast) 
 * Annotation of objects
-* [&#x1F4D6;](expressions#null-operations) `??` (the nullish coalescing operation)
-* selective `import` of objects from other files
-* [&#x1F4D6;](calculations) `calculate:` added to provide additional aggregation control
-  (often done with window functions in SQL)
->>>markdown
+* [`??` (the nullish coalescing operation)](expressions#null-operations)
+* _DOCNEEDED_ Selective `import` of objects from other files
+* [`calculate:` added to provide additional aggregation control](calculations) (often done with window functions in SQL)
