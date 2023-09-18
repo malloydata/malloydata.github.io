@@ -145,7 +145,7 @@ source: airports_with_named_query is duckdb.table('../data/airports.parquet') ex
   measure: average_elevation is avg(elevation)
 
   // This is a "source-level" query:
-  query: e is {
+  query: top_county_and_state is  {
     group_by: county_and_state
     aggregate: airport_count
     limit:10
