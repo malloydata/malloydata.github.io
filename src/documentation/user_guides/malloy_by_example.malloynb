@@ -230,7 +230,7 @@ run: airports3 -> {
 
 ## Refining a Source-Level Query
 
-The query refinement gesture `+ {}` extends an existing object, creating a new version with added properties
+The gesture `+ {}` allows you to base a new query on an existing query while adding new refinements to the query terms.
 
 For example we can add a limit and an order by to `by_state`
 >>>malloy
@@ -522,8 +522,6 @@ query: q_airport_facts is duckdb.table('../data/flights.parquet') -> {
 }
 
 run: q_airport_facts
->>>markdown
-\>>>malloy
 query: q_airport_facts2 is duckdb.table('../data/flights.parquet') -> {
   group_by:
     flight_year is dep_time.year
@@ -562,9 +560,6 @@ source: airport_facts is q_airport_facts extend {
 
 ### Querying the Summary source
 >>>malloy
-run: airport_facts -> flights_by_year
->>>markdown
-\>>>malloy
 run: airport_facts -> flights_by_origin
 >>>markdown
 
