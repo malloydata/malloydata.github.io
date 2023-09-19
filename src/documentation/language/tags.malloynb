@@ -19,33 +19,30 @@ An object annotation which happens before a definition list is distributed to ea
       # only min_x will have this annotation
       min_x is min(x)
 
+The design of annotations is that the characters immediately following the `#` in an annotation will be available to applications to be able to add different types of annotations. Malloy itself uses the following annotation prefixes
+
+* `#-space` and `##-space` (e.g. `# hello` and `## hello`) The Malloy VSCode extension parses these as tags and uses these tags to render results
+* `##!` The malloy compiler uses these annotations as tags specifying compiler options
+*  `#"`  and `##"` Reserved for future documentation annotations
+* `#(docs)` and `##(docs)` Used by the malloy documentation site
+
 # Tags
 
 The primary use of annotations in Malloy is for tags, which are simply a subset of the annotations strings which will be interpreted in simple programming language for setting key/value properties.
 
-Annotations are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode), making them extensible for many use cases. In VSCode, tags are interpreted in two ways:
-
-* As rendering instructions: `# bar_chart`
-* As documentation comments: `#" This query calculates ...`
-
-Other formats of tags are ignored:
-* `#bar_chart` without a space after the `#`
-* `#! custom="application" values="here"`
-
-
-
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
 
-Tags look similar to comments, but they begin with the `#` (hash, octothorpe, number sign). The text contained in tags is collected and distributed to the objects defined after each tag, with the following rules:
+Annotations which do not start with `#-space` or `##-space` are not parsed as tags by the renderer, though an application may decide to parse annotations with some other leading characters as as tags.
 
-* Tags with `##!` are parsed by the compiler and interpreted as compiler flags
-* Tags with `##` are collected and attached to the document
-* All other tags are attached the the object defined after the tag
-* Statements which define multiple objects, distribute their tags to each object defined in the statement.
+None of these are render tags, even though they use the tag property language.
+
+* `#bar_chart` without a space after the `#`, this is not a render tag
+* `##! disableWarnings` tags are parsed by the compiler and interpreted as compiler flags
+* `#(myApp) custom="application" values="here"` something like this could be used by an app to write custom tags
 
 ## Tag Property Language
 
-An annotation which is being interpreted as a tag is parsed with this simple language.
+A quick overview of the syntax of properties and values in the Malloy Tag Language used by the renderer.
 
 * `tName`
   * Sets the property `tName` to exist, but with no value
