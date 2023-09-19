@@ -47,8 +47,11 @@ needs to change, once the rollout begins.
 * [_DOCNEEDED_ Added `source.sum()` to clarify the meaning of sum without a path](aggregates.malloynb#sum) 
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
-* [_DECISION NEEDED_](aggregates.malloynb#count-distinct-) `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`
+* [ `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`](aggregates.malloynb#count-expr-)
 * [`COUNT(*)` is now just `count()`](aggregates.malloynb#count) 
+* [Malloy has a function library](functions.malloynb) for doing common data manipulation operations
+  * Access to the database's internal functions directly must be through the [raw sql function syntax](functions.malloynb#raw-sql-functions)
+
 
 ### New features
 

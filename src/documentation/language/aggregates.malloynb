@@ -24,16 +24,16 @@ run: flights -> {
 }
 >>>markdown
 
-### count (distinct)
+### count(expr)
 
 ```malloy
-count(distinct expr)
+count(expr)
 ```
 
-Distinct counts may be used to count the number of distinct values of a particular field within a source.
+Distinct counts may be used to count the number of distinct values of a particular expression within a source.
 >>>malloy
 run: order_items -> {
-  aggregate: order_count is count(distinct order_id)
+  aggregate: order_count is count(order_id)
 }
 >>>markdown
 
@@ -186,14 +186,14 @@ run: flights -> {
     avg_aircraft_models_seats is avg(aircraft.aircraft_models.seats)
 }
 >>>markdown
->>>malloy
+\>>>malloy
 run: aircraft -> {
   aggregate:
     models_avg_seats is aircraft_models.seats.avg()
     avg_models_seats is avg(aircraft_models.seats)
 }
 >>>markdown
->>>malloy
+\>>>malloy
 run: aircraft_models -> {
   aggregate: avg_seats is avg(seats)
 }
