@@ -72,4 +72,4 @@ An annotation which is being interpreted as a tag is parsed with this simple lan
 * `tName { p1=v1 p2=v2 p3 }` Add properties to existing properties of tName, preserve value
 * `tName=...{ p1=v1 p2=v2 p3 }` Assign new properties to tName, but keep the existing value
 * `tName.p1=value` Assign a value to one specific property of tName, value of tName and other properties are preserved.
-* `tName.p1=value { pp1=v1 pp2=v2 }` The value of a sup property can also have properties
+* `tName.p1=value { pp1=v1 pp2=v2 }` The value of a property can also have properties
