@@ -34,7 +34,7 @@ needs to change, once the rollout begins.
 * [New sources are only created with `extend {}`](source.malloynb#source-extensions)
 * [Existing queries are only refined with `+ {}`](query.malloynb#refinement) 
 *  [_DOCNEEDED_](query.malloynb#implicit-sources) `view:` inside a source replaces `query:` inside of a source
-* _DOCNEEDED_ Extensions of a source inside of a query operation must be contained in an `extend: { }`.
+* [Extensions of a source inside of a query operation must be contained in an `extend: { }`.](query.malloynb#source-extensions)
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
 * `run:` replaces `query:` with no name

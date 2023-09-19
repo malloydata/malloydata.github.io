@@ -252,3 +252,30 @@ run: flights -> {
   calculate: flight_count_rank is rank()
 }
 >>>markdown
+## Source Extensions
+
+Normally, when running a query, if additional source extensions are needed, they can be `extend`-ed into the source in the query expression, as in
+
+    run: someSource extend { NEW_EXTENSIONS_HERE } -> { QUERY_BEING_WRITTEN }
+
+In the case where the source for the query is implicit, some source extensions can be written in the query itself. These extensions are places inside
+and `extend: {}` block in the query and are treated as extensions to the input source for the query.
+
+### Legal Source Extensions Inside extend:
+
+* `dimension:`
+* `measure:`
+* `calculate:`
+* `join_one:`, `join_many:`, `join_cross:`
+>>>malloy
+import "airports.malloy"
+run: flights -> {
+    extend: {
+        join_one: origin_airport is airports on origin_airport.code = origin_code
+        dimension: origin_state is origin_airport.state
+    }
+
+    group_by: origin_state
+    aggregate: flight_count
+    limit: 5
+}
