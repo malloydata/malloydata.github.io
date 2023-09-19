@@ -252,7 +252,7 @@ run: flights -> {
   calculate: flight_count_rank is rank()
 }
 >>>markdown
-d# Source Extensions
+## Source Extensions
 
 Normally, when running a query, if additional source extensions are needed, they can be `extend`-ed into the source in the query expression, as in
 
