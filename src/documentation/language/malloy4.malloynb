@@ -29,8 +29,8 @@ The rollout of 4.0 will happen in a way which should make it relatively easy for
 ### Incompatible Changes
 
 These changes will require users to edit existing code. The IDE will issue warnings to flag code which
-needs to change, once the rollout begins. There is an [M4 Warnings FAQ](m4warnings.malloynb) with details
-for each warning, to help with understanding the warnings.
+needs to change, once the rollout begins. For examples showing both the old and new syntaxes, refer to
+the [4.0 Warnings FAQ](m4warnings.malloynb) document.
 
 * [New sources are only created with `extend {}`](source.malloynb#source-extensions)
 * [Existing queries are only refined with `+ {}`](query.malloynb#refinement) 
