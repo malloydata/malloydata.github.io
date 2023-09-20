@@ -19,7 +19,7 @@ The rollout of 4.0 will happen in a way which should make it relatively easy for
 
 * **Today:** Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension
   * If you are using a language construct which will not work in 4.0, the IDE will show you a warning.
-  * The [Documentation](https://malloydata.github.io) describes the 4.0 syntax.
+  * The [Documentation](../index.malloynb) describes the 4.0 syntax.
 * **TBD-Date-1:** The Release version of the extension will begin to warn on pre-4.0 compatibility problems.
 * **TBD-Date-2:** The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
 * **TBD-Date-3:** The Release version of the extension will give errors, not warnings, on pre-4.0 code.
