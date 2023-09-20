@@ -29,7 +29,8 @@ The rollout of 4.0 will happen in a way which should make it relatively easy for
 ### Incompatible Changes
 
 These changes will require users to edit existing code. The IDE will issue warnings to flag code which
-needs to change, once the rollout begins.
+needs to change, once the rollout begins. There is an [M4 Warnings FAQ](m4warnings.malloynb) with details
+for each warning, to help with understanding the warnings.
 
 * [New sources are only created with `extend {}`](source.malloynb#source-extensions)
 * [Existing queries are only refined with `+ {}`](query.malloynb#refinement) 
@@ -44,7 +45,7 @@ needs to change, once the rollout begins.
 * `from()` to create a source from a query is no longer needed
 * [When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`](sql_sources.malloynb#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) 
-* [_DOCNEEDED_ Added `source.sum()` to clarify the meaning of sum without a path](aggregates.malloynb#sum) 
+* [Explicit `source.`` required to clarify aggregate locality for sum() and avg()`](aggregates.malloynb#required-explicit-aggregate-locality)
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
 * [ `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`](aggregates.malloynb#count-expr-)
