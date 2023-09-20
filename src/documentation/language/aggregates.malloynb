@@ -9,6 +9,7 @@ Malloy supports the standard aggregate functions `count`, `sum`, `avg`, `min`, a
 
 ```malloy
 count()
+source.count()
 join_name.count()
 ```
 
@@ -27,7 +28,9 @@ run: flights -> {
 ### count(expr)
 
 ```malloy
-count(expr)
+count(<<expression>>)
+source.count(<<expression>>)
+join_name.field.count()
 ```
 
 Distinct counts may be used to count the number of distinct values of a particular expression within a source.
@@ -40,9 +43,10 @@ run: order_items -> {
 ### sum
 >>>markdown
 ```malloy
-sum(expr)
-join_name.sum(expr)
-join_name.expr.sum()
+sum(<<expression>>)
+source.sum(<<expression>>)
+join_name.sum(<<expression>>)
+join_name.field.sum()
 ```
 >>>markdown
 
@@ -56,9 +60,10 @@ run: flights -> {
 ### avg
 
 ```malloy
-avg(expr)
-join_name.avg(expr)
-join_name.expr.avg()
+avg(<<expression>>)
+source.avg(<<expression>>)
+join_name.avg(<<expression>>)
+join_name.field.avg()
 ```
 
 The `avg` function may be used to compute the average of all records of a particular field.
@@ -71,9 +76,9 @@ run: aircraft -> {
 ### min
 
 ```malloy
-min(expr)
-join_name.min(expr)
-join_name.expr.min()
+min(<<expression>>)
+source.min(<<expression>>)
+join_name.field.min()
 ```
 >>>markdown
 
@@ -87,9 +92,9 @@ run: order_items -> {
 ### max
 >>>markdown
 ```malloy
-max(expr)
-join_name.max(expr)
-join_name.expr.max()
+max(<<expression>>)
+source.max(<<expression>>)
+join_name.field.max()
 ```
 >>>markdown
 
@@ -99,23 +104,6 @@ run: flights -> {
   aggregate: longest_distance is max(distance)
 }
 >>>markdown
-
-## Ungrouped Aggregates
-
-In a query which is grouped by multiple dimensions, it is often useful to be able to perform an aggregate calculation on sub-groups to determine subtotals. The `all()` and `exclude()` functions in Malloy allow control over grouping and ungrouping, making this simple:
->>>malloy
-run: airports -> {
-  group_by: state, faa_region
-  aggregate:
-    count_airports is count()
-    overall_airports is all(count())
-    percent_of_total is count() / all(count())*100.0
-    airports_in_region is all(count(), faa_region)
-    percent_in_region is count() / all(count(), faa_region)*100.0
-}
->>>markdown
-
-Read more about Ungrouped Aggregates [here](ungrouped-aggregates.malloynb).
 
 ## Aggregate Locality
 
@@ -173,7 +161,34 @@ run: aircraft -> {
 }
 >>>markdown
 
+Using a bare aggregate function, e.g. `avg(<<expression>>)`, will aggregate with respect to the current source (in the above example, that would be `aircraft`). The syntax `source.avg(expr)` makes that aggregate locality explicit. When an aggregate computation crosses a join relationship, explicit aggregate locality is required. See [below](#required-explicit-aggregate-locality) for more details.
+
 For convenience, `aircraft_models.avg(aircraft_models.seats)` can be written as `aircraft_models.seats.avg()`.
+
+### Aggregates that Support Locality
+
+The aggregate functions that support locality are `count` (non-distinct), `sum`, and `avg`.
+
+The `min` and `max` aggregates do not support aggregate locality because the minimum and maximum values are the same regardless of where they are computed. Local aggregation removes duplicate values (those corresponding to the same row in the aggregate source location), and minimum and maximum values do not change if values are repeated more than once.
+
+### Required Explicit Aggregate Locality
+
+Specifying aggregate locality is required when the aggregate computation crosses a join relationship accesses nested data. For symmetric aggregate functions `min`, `max`, and `count`, this never occurs, and so it is always allowed to use the regular `min(<<expression>>)` syntax.
+For asymmetric aggregates `avg` and `sum`, any time the aggregate expression (or dimension) uses a join or nested field, using the syntax `sum(<<expression>>)` will result in a warning suggesting the use of `source.sum(<<expression>>)` instead.
+
+>>>malloy
+run: aircraft -> {
+  aggregate:
+    // Symmetric aggregate functions can use implicit locality
+    okay_1 is min(aircraft_models.seats) 
+    // Asymmetric aggregate functions must use explicit locality
+    warning is avg(aircraft_models.seats)
+    // Using `source` for explicity locality to produce a weighted average
+    okay_2 is source.avg(aircraft_models.seats)
+    // Using `aircraft_models` for explicit locality
+    okay_3 is aircraft_models.avg(aircraft_models.seats)
+}
+>>>markdown
 
 ### Examples
 
@@ -183,17 +198,19 @@ run: flights -> {
   aggregate:
     aircraft_models_avg_seats is aircraft.aircraft_models.seats.avg()
     aircraft_avg_models_seats is aircraft.avg(aircraft.aircraft_models.seats)
-    avg_aircraft_models_seats is avg(aircraft.aircraft_models.seats)
+    avg_aircraft_models_seats is source.avg(aircraft.aircraft_models.seats)
 }
 >>>markdown
-\>>>malloy
+
+>>>malloy
 run: aircraft -> {
   aggregate:
     models_avg_seats is aircraft_models.seats.avg()
-    avg_models_seats is avg(aircraft_models.seats)
+    avg_models_seats is source.avg(aircraft_models.seats)
 }
 >>>markdown
-\>>>malloy
+
+>>>malloy
 run: aircraft_models -> {
   aggregate: avg_seats is avg(seats)
 }
@@ -204,25 +221,55 @@ This table summarizes the meaning of each of these calculations.
 | Field Definition and Source | Is the average number of seats... |
 |-------------|---------|
 | `avg(seats)` in `aircraft_models`  | ...of all aircraft models. |
-| `avg(aircraft_models.seats)` in `aircraft` | ...on aircraft. |
+| `source.avg(aircraft_models.seats)` in `aircraft` | ...on aircraft. |
 | `aircraft_models.seats.avg()` in `aircraft` | ...of the aircraft models of aircraft. |
-| `avg(aircraft.aircraft_models.seats)` in `flights` | ...on flights. |
+| `source.avg(aircraft.aircraft_models.seats)` in `flights` | ...on flights. |
 | `aircraft.avg(aircraft.aircraft_models.seats)` in `flights` | ...on aircraft that fly. |
 | `aircraft.aircraft_models.seats.avg()` in `flights` | ...of the aircraft models of aircraft that fly.|
 
-### Aggregates that Support Locality
+### Illegal Asymmetric Aggregate Computations
 
-The aggregate functions that support locality are `count`, `sum`, and `avg`.
+There are a few circumstances when an asymmetric aggregate computation is illegal, based on the join usage of that computation:
+* When the aggregate crosses a `join_many` relationship forward
+* When the aggregate crosses a `join_cross` relationship forward or backward
+* When the aggregate crosses a repeated nested relationship forward
 
-The `min` and `max` aggregates do not support aggregate locality because the minimum and maximum values are the same regardless of where they are computed. Local aggregation removes duplicate values (those corresponding to the same row in the aggregate source location), and minimum and maximum values do not change if values are repeated more than once.
+"Forward" verses "backward" refers to the difference between `<<join name>>.sum(<<field in source>>)` (forward) and `source.sum(<<join name>>.<<field in join>>)` (backward).
+
+These cases don't carry meaning and are impossible to compute. Malloy will yield an error like "Cannot compute `sum` across `join_many` relationship `join_name`; use `join_name.field.sum()`".
 
 ### Aggregates on Fields
 
 Aggregating "on a field," e.g. `aircraft_models.seats.avg()` is exactly equivalent to aggregating that field with respect to its direct parent source, e.g. `aircraft_models.avg(aircraft_models.seats)`. This syntax is supported for the aggregate functions which benefit from aggregate locality and require a field, `avg` and `sum`.
+
+One case to make note of is when the field is a dimension which uses exactly one join pattern, in which case it is equivalent to aggregating with respect to that join pattern:
+
 >>>malloy
-run: aircraft -> {
+run: aircraft extend {
+  dimension: aircraft_model_seats is aircraft_models.seats
+} -> {
   aggregate:
     avg_on_source is aircraft_models.avg(aircraft_models.seats)
     avg_on_field is aircraft_models.seats.avg()
+    avg_on_dimension is aircraft_model_seats.avg()
 }
 >>>markdown
+
+## Ungrouped Aggregates
+
+In a query which is grouped by multiple dimensions, it is often useful to be able to perform an aggregate calculation on sub-groups to determine subtotals. The `all()` and `exclude()` functions in Malloy allow control over grouping and ungrouping, making this simple:
+>>>malloy
+run: airports -> {
+  group_by: state, faa_region
+  aggregate:
+    count_airports is count()
+    overall_airports is all(count())
+    # percent
+    percent_of_total is count() / all(count())
+    airports_in_region is all(count(), faa_region)
+    # percent
+    percent_in_region is count() / all(count(), faa_region)
+}
+>>>markdown
+
+Read more about Ungrouped Aggregates [here](ungrouped-aggregates.malloynb).
