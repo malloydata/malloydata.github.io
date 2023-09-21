@@ -857,14 +857,14 @@ div.code-wrapper a img:hover {
 
 @media only screen and (min-width: 1200px) {
   .document-outer.blog .document {
-    width: 60%;
+    width: calc(60% - 32px);
     margin-left: 20%;
   }
 }
 
 @media only screen and (min-width: 1768px) {
   .document-outer.blog .document {
-    width: 50%;
+    width: calc(50% - 32px);
     margin-left: 25%;
   }
 }
