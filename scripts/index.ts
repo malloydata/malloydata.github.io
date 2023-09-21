@@ -49,6 +49,7 @@ const DOCS_ROOT_PATH = path.join(__dirname, "../src");
 const OUT_PATH = path.join(__dirname, "../docs/");
 const JS_OUT_PATH = path.join(__dirname, "../docs/js/generated");
 const CONTENTS_PATH = path.join(DOCS_ROOT_PATH, "table_of_contents.json");
+const BLOG_LIST_PATH = path.join(DOCS_ROOT_PATH, "blog_posts.json");
 const MODELS_PATH = path.join(__dirname, "../models");
 const LAYOUTS_PATH = path.join(__dirname, "../layouts");
 const INCLUDES_PATH = path.join(__dirname, "../includes");
@@ -73,6 +74,9 @@ Handlebars.registerHelper('ifeq', function(arg1, arg2, options) {
 });
 
 const WATCH_ENABLED = process.argv.includes("--watch");
+
+const prefixArg = process.argv.indexOf("--only");
+const PATH_PREFIX = prefixArg !== -1 ? process.argv[prefixArg + 1] : undefined;
 
 async function compileDoc(file: string, footers: Record<string, string>): Promise<{
   errors: DocsError[];
@@ -113,7 +117,10 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       templatedMarkdown,
       shortPath
     );
-    const layoutName = frontmatter.layout ?? "documentation.html";
+    const isBlog = shortPath.startsWith('/blog/');
+    const layoutName = frontmatter.layout ?? isBlog ? "blog.html" : "documentation.html";
+    const nextBlog = nextPost(shortPath);
+    const prevBlog = previoustPost(shortPath);
     // TODO validate that layout exists and log an error if not.
     const compiledPage = LAYOUTS[layoutName]({
       ...DEFAULT_CONTEXT,
@@ -123,7 +130,9 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         source: shortPath,
         title: "Malloy Documentation",
         content: renderedDocument,
-        footer: footers[shortPath]
+        footer: isBlog ? undefined : footers[shortPath],
+        nextPost: nextBlog,
+        previousPost: prevBlog
       }
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
@@ -151,6 +160,58 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     log("Error compiling:", 'error')
     log(e)
   }
+}
+
+interface BlogPostInfoRaw {
+  title: string;
+  path: string;
+  author: string;
+  published: string;
+}
+
+interface BlogPostInfo {
+  title: string;
+  path: string;
+  author: string;
+  published: Date;
+}
+
+let BLOG_POSTS: BlogPostInfo[] = [];
+
+function buildBlogIndex() {
+  const blogPostsRaw = JSON.parse(fs.readFileSync(BLOG_LIST_PATH, "utf8")) as BlogPostInfoRaw[];
+  BLOG_POSTS = blogPostsRaw.map(post => ({ ...post, published: new Date(post.published) }));
+
+  BLOG_POSTS.sort((a, b) => b.published.getTime() - a.published.getTime());
+
+  const list = BLOG_POSTS.map(post => {
+    return `<a class="blog-post-link" href="${DEFAULT_CONTEXT.site.baseurl}/blog${post.path}">
+      <h1>${post.title}</h1>
+      <span>${post.published.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })} by ${post.author}</span>
+    </a>`
+  }).join("\n");
+  const content = `<div class="document">${list}</div>`;
+
+  const template = LAYOUTS["blog.html"];
+  const compiledFile = template({
+    ...DEFAULT_CONTEXT,
+    page: {
+      content,
+      isBlogIndex: true,
+    }
+  });
+
+  fs.mkdirSync(OUT_PATH, { recursive: true });
+  fs.writeFileSync(path.join(OUT_PATH, "blog", "index.html"), compiledFile);
+  log("wrote /blog/index.html", 'info');
+}
+
+function matchesPrefix(file: string) {
+  return !PATH_PREFIX || file.substring(DOCS_ROOT_PATH.length).startsWith(PATH_PREFIX);
 }
 
 function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, string> } {
@@ -336,11 +397,26 @@ function logError(error: DocsError) {
   log(`Error in file ${error.path}:${error.position.start.line}:${error.position.start.column}: ${error.message}`, 'error');
 }
 
+function nextPost(blogShortPath: string) {
+  const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
+  if (current !== -1 && current + 1 < BLOG_POSTS.length) {
+    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current + 1].path}`;
+  } 
+}
+
+function previoustPost(blogShortPath: string) {
+  const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
+  if (current !== -1 && current - 1 >= 0) {
+    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
+  } 
+}
+
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMalloyNB);
+  const allDocs = allFiles.filter(isMalloyNB).filter(matchesPrefix);;
   const staticFiles = allFiles.filter((file) => !isMalloyNB(file));
-  let { toc, footers } = rebuildSidebarAndFooters();
+  let { footers } = rebuildSidebarAndFooters();
+  buildBlogIndex();
   for (const file of staticFiles) {
     handleStaticFile(file);
   }
@@ -387,6 +463,10 @@ function logError(error: DocsError) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
         compileDoc(fullPath, footers);
       }
+    });
+    watchDebounced(BLOG_LIST_PATH, (type) => {
+      log(`Blog list ${type}d. Recompiling...`);
+      buildBlogIndex();
     });
     watchDebounced(CONTENTS_PATH, (type) => {
       log(`Table of contents ${type}d. Recompiling...`);
