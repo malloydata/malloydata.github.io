@@ -1,7 +1,13 @@
 {
-  "files": ["./malloy.tmGrammar.json"],
-  "include": ["docs/**/*"],
-  "exclude": ["**/node_modules"],
+  "files": [
+    "./node_modules/@malloydata/syntax-highlight/grammars/malloy/malloy.tmGrammar.json"
+  ],
+  "include": [
+    "docs/**/*"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
