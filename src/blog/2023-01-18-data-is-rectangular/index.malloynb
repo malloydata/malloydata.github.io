@@ -176,7 +176,7 @@ query: table('duckdb:orders.csv') + {
 
 Notice that total_revenue is calculated as `items.price.sum()`. There are still two source rectangles, orders (the main variables) and items (the nested data). [Using a path](https://malloydata.github.io/documentation/language/aggregates.html#aggregate-locality) tells Malloy to calculate the `sum` in the items sub-table.
 
-The SQL code Malloy writes for this query is non-trivial but actually much more efficient than the multi rectangle queries in that the data is read only once. See Apendix: [SQL Safe Aggregation](#sql-safe-aggregation).
+The SQL code Malloy writes for this query is non-trivial but actually much more efficient than the multi rectangle queries in that the data is read only once. See Apendix: [SQL Safe Aggregation](#safe-aggregation).
 
 # Dimensional Freedom
 Once the network has been defined, you are free to produce results from anywhere in the join network. We can change our query to `group_by: user_id` instead of `order_date`, for example and get an entirely different result. In SQL we would have had to rewrite underlying queries or persist intermediate results.
@@ -294,7 +294,7 @@ query: table('duckdb:orders_items.parquet') -> {
 ```
 <img src="nesting.webp"/>
 
-From a SQL perspective, there is a lot going on here. We’re unnesting the parquet file, making sure we compute aggregates correctly. We’re also running several queries simultaneously inline to produce the nested result. The SQL for this is non-trivial but very efficient. It still only makes one read pass through the data. See [SQL Nested/Nested](#sql-query-for-nestednested) below.
+From a SQL perspective, there is a lot going on here. We’re unnesting the parquet file, making sure we compute aggregates correctly. We’re also running several queries simultaneously inline to produce the nested result. The SQL for this is non-trivial but very efficient. It still only makes one read pass through the data. See [SQL Nested/Nested](#sql-query-for-nested-nested) below.
 
 ## Malloy lets you escape the Rectangular nature of most data tools
 The freedom to think about the data in the network in which it already exists without having to constantly translate through rectangles offers new ways to look at problems. The rectangle of a unit of re-usability causes a proliferation of tables and complexity. Malloy’s solution to this problem offers aggregate calculation unbound by dimensions. With Malloy, your data world becomes more simple and comprehensible. We think this is quite a big deal.
