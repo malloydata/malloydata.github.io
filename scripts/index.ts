@@ -204,6 +204,7 @@ function buildBlogIndex() {
     ...DEFAULT_CONTEXT,
     page: {
       content,
+      title: "Malloy Blog",
       isBlogIndex: true,
     }
   });
