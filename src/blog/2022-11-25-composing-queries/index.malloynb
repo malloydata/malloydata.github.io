@@ -1,0 +1,127 @@
+>>>markdown
+# Composing with Queries
+Malloy's semantic modeling and querying enables an exciting new way to explore data.
+
+*November 25, 2022 by lloyd tabb and Michael Toy*
+<br/><br/><br/>
+
+Experienced data explorers know how to move through complex datasets. They operate vehicles which are well designed to move efficiently through data landscapes. [Malloy](http://www.malloydata.dev/) allows people who know how to drive, to suddenly find themselves flying.
+
+While data is recorded or streamed in a two dimensional universe of columns and rows, it is comprehended in a hyper-dimensional network of contexts and vistas which [Malloy](http://www.malloydata.dev/) is designed to discover and explore.
+
+As someone who already understands how to gain insight from data, you need to map your knowledge about navigating through data to the vocabulary of [Malloy](http://www.malloydata.dev/). Like a plane moving down a runway before it takes off, that movement is a precursor to the [Malloy](http://www.malloydata.dev/) moment when you escape the limitations of two dimensions and begin seeing data in an entirely new way.
+
+Welcome to flight school, let’s get familiar with the controls. Please click the "Try it" links as we go along.
+
+## Motion begins with a query
+
+Data tools build queries. You start with a table, pick a column to group the data, then compute a measure/metric about that grouping of the data, possibly sorting the result or limiting the number of rows returned.
+
+A query is a useful entity. Adding or changing a filter on a query lets you move through data in different directions. The results of a query can be visualized to better understand what you are seeing at any point.
+
+A collection of these query results on a surface makes a dashboard, and by connecting all the queries on a dashboard to a common filter you can move move through data and see how the landscape changes as you steer.
+
+## Semantic Data Models
+A *Semantic Data Model* makes this process easier. With a semantic data model, you define data relationships (like joins of tables), dimensions and measures. In your data tool, these elements become available without having to redefine them. For example, if you create a measure for *revenue*. You can use revenue as a measure in any query you build.
+
+Malloy extends the semantic model by adding a modeled query as an entity in the model, opening up new dimensions where knowledge is gained and shared.
+
+## Get in the cockpit, exploring the IMDb
+We are going to use the IMDb (Internet Movie Database) as an example. The entities are `movies`, `principals`, `people`, `crew`, `ratings` and `genres`. Malloy lets us create a semantic data model in just a few lines of code. The important thing here is the dimensions and measures we declare will be the building blocks for our queries. The dimensions we most care about are `title`, `character`, `person`, `job`, `votes` and `genre`. The things we want to measure are `title_count`, `person_count`, `total_votes`.
+
+It turns out `total_votes` is our best proxy for an interesting movie. It shows the public’s interest in a particular film but not necessarily the quality.
+
+You can run any of the examples below by using our WASM based data explorer just click "[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++group_by%3A+genre%0A++aggregate%3A+title_count%0A++nest%3A+%0A++++top_titles%0A++++by_year%0A++++top_people%0A%7D&styles=%7B%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%7D&run=true)"
+
+## The Semantic Model
+The extract below shows our definitions for the measure and dimensions we are going to use in this example. The complete, [75 line model can be found on github](https://github.com/lloydtabb/imdb_fiddle/blob/release/imdb-simple.malloy).
+
+<img src="semantic-model.jpg"/>
+
+## Building Queries
+
+Building queries in Malloy Composer will feel familiar. The components are all there: dimensions, measures, filters and sorts. Queries can be built into the semantic model or built as you explore. You can also load a pre-built query from the model, the example below shows how to do both.
+
+```malloy
+query: top_people is {
+  group_by: 
+    person, person_id
+  aggregate:
+    total_votes
+    title_count
+  limit: 10
+}
+```
+
+<img src="first-query.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A%7D&run=true)
+
+## Filtering Data
+
+Malloy Composer can index all the dimensional values in the data set so you don’t have to think about how to create filters. Who played [Batman](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+character+%3D+%27Batman%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true), [Dracula](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+character+%3D+%27Dracula%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true), or [Lois Lane](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+character+%3D+%27Lois+Lane%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true)? Who are the [top directors in comedy](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A%0A++++job+%3D+%27director%27%2C%0A++++genre+%3D+%27Comedy%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true)? Who was involved in [The Shining](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A%0A++++job+%3D+%27director%27%2C%0A++++genre+%3D+%27Comedy%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true)? (just click any of those links). To add a filter, just start typing in the search box, and select the dimension with the most interesting value. Adding filters can teach you a bunch about a dataset.
+
+<img src="filtering-data.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true)
+
+## Take Off - Composing with Queries
+
+Here is where things get really interesting. We’ve seen building queries and naming them. Malloy allows you to use queries as building blocks in other queries, not just dimensions and measures. The magic here is nest. A query that is nested essentially uses the row that it is on as filters. Let’s start with our people query and then look at the genre and jobs for each person.
+
+<img src="composing-queries.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+%0A++++by_job%0A++++by_genre%0A++limit%3A+10%0A%7D&run=true)
+
+## Drilling into detail
+
+Once you see data this way, you will begin to notice interesting things, as you might as you fly over a city, and wonder what that is down below you. It turns out that finding these points of interest, isolating them with filters and then looking at the isolated data by some other query is one of the main tools in working with data.
+
+Malloy Composer makes this very easy. Next to each row of data is a button with a `...`. Clicking the button sets are the relevant filters for the row, allowing you to load another query.
+
+It sounds more complex than it is. In the example below we notice that Leonardo DiCaprio has done 6 Biographies. Clicking the `...` sets the filters for every dimension on the row. We can then load the `top_titles` query and hit run.
+
+<img src="drilling.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+%0A++++by_job%0A++++by_genre%0A++limit%3A+10%0A%7D&run=true)
+
+## Getting Deep with Nesting
+Nest can be as deep as you would like. Let’s look at the IMdB again, the directors top 3 genres and the top 4 movies in each genre.
+
+<img src="nesting.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+job+%3D+%27director%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+by_genre+is+%7B%0A++++group_by%3A+genre%0A++++aggregate%3A+%0A++++++title_count%0A++++++total_votes%0A++++++percent_of_titles%0A++++nest%3A+top_titles+is+%7B%0A++++++group_by%3A+%0A++++++++title%0A++++++++startYear%0A++++++++votes%0A++++++limit%3A+4%0A++++++order_by%3A+3+desc%0A++++%7D%0A++++limit%3A+3%0A++%7D%0A++limit%3A+10%0A%7D&run=true)
+
+## Nesting 'flat' is a dashboard
+Nesting a more than one of query in the top query creates a dashboard. Any filter applied to this query will apply to all the queries. This operates like a traditional dashboard. Malloy’s single query approach to dashboarding is actually more efficient. Malloy reads the data from storage only once. We can look at an overall dashboard, movies with a <code>Batman</code> character and movies with <code>Lois Lane</code> character.
+
+While a Malloy nested query is like a dashboard, giving a view of a slice of information, with control over the slicing, it is also more than that. It leverages the queries you write to create a whole new custom vehicle for exploring the data in any dimension you can imagine.
+
+<img src="dashboard.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++nest%3A+%0A++++top_titles%0A++++top_people%0A++++by_job%0A++++by_genre%0A++limit%3A+10%0A%7D&run=true)
+
+## Style: Simplified Chart Rendering
+
+In Composer, you can set the rendering style for a particular result and it will change how it is displayed. Complex results can be rendered as a *table* or *dashboard*, simple query results can be rendered as various chart types.
+
+<img src="charts.gif">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+%0A++++++++title_count%0A++++++++total_votes%0A++++++limit%3A+4%0A++++%7D%0A++++by_year%0A%7D&styles=%7B%22by_job%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%2C%22top_titles%22%3A%7B%22renderer%22%3A%22list%22%7D%2C%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%2C%22by_genre%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%7D)
+
+## Curation: Show what is important
+
+The data model above is a simplified version. We’ve created a more complete model. Malloy Composer allows you to curate a landing page for a dataset that has the most interesting and useful queries.
+
+<img src="curation.gif">
+
+Create a landing page for a dataset things that are interesting or commonly sought after can be found easily.
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=about&model=movies2&source=movies2)
+
+## More datasets, more features!
+This is just a taste of what Malloy and Malloy Composer can do. Explore more datasets to learn more.
+
+<img src="datasets.png">
+
+[Try it!](https://malloydata.github.io/malloy-samples/wasm/)

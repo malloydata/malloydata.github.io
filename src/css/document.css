@@ -93,6 +93,12 @@ div.header img {
   width: 50px;
 }
 
+div.header img.logo {
+  margin-top: 6px;
+  margin-right: 6px;
+  width: 35px;
+}
+
 body {
   display: flex;
   overflow: hidden;
@@ -254,7 +260,7 @@ h6 {
 }
 
 h1 {
-  font-weight: 400;
+  font-weight: 500;
   margin-top: 0;
   font-size: 28px;
 }
@@ -746,14 +752,15 @@ div.title-row h1 {
   margin-block-end: 0;
 }
 
-div.title-row a.edit-link {
+a.edit-link {
   display: flex;
   gap: 2px;
   align-items: center;
   height: 19px;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
-div.title-row a.edit-link img {
+a.edit-link img {
   width: 22px;
   height: 22px;
 }
@@ -781,17 +788,177 @@ div.code-wrapper a img:hover {
   background-color: #ffffffcd;
 }
 
-div.document div.warning {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-  background-color: #ECECEC;
-  border: 1px solid #cfcfcf;
-  color: black;
-  border-radius: 5px;
-  overflow-y: visible;
-  padding: 10px;
+.document-outer.blog {
+  background-color: white;
+}
+
+.document-outer.blog .document {
+  border: none;
+}
+
+.blog-post-link {
+  margin-bottom: 40px;
+  color: #707277;
+  display: block;
+  margin-top: 40px;
+}
+
+.blog-post-link h1 {
+  color: #202124;
+  margin-bottom: 2px;
+}
+
+.blog-post-link .subtitle {
+  color: #202124;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.blog-post-link:hover .subtitle {
+  color: #4285f4;
+}
+
+.blog-post-link:hover {
+  color: #4285f4;
+}
+
+.blog-post-link:hover h1 {
+  color: #4285f4;
+}
+
+.blog h2 {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.document-outer.blog .document > img:not(.no-shadow),
+.document-outer.blog .document > p > img:not(.no-shadow) {
+  border-radius: 6px;
+  box-shadow: 1px 1px 11px 0px #8080802c;
+  margin-bottom: 5px;
+  max-width: 100%;
+  width: unset;
+}
+
+.document-outer.blog .document > p > img {
+  margin-top: 10px;
+}
+
+.document-outer.blog .blog-footer,
+.document-outer.blog .blog-header {
+  font-family: "Google Sans";
+}
+
+.document-outer.blog .blog-footer {
+  border-top: 1px solid #2655c9;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media only screen and (min-width: 1200px) {
+  .document-outer.blog .blog-footer,
+  .document-outer.blog .blog-header {
+    width: 60%;
+    margin-left: 20%;
+  }
+}
+
+@media only screen and (min-width: 1768px) {
+  .document-outer.blog .blog-footer,
+  .document-outer.blog .blog-header {
+    width: 50%;
+    margin-left: 25%;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .document-outer.blog .document {
+    width: calc(60% - 32px);
+    margin-left: 20%;
+  }
+}
+
+@media only screen and (min-width: 1768px) {
+  .document-outer.blog .document {
+    width: calc(50% - 32px);
+    margin-left: 25%;
+  }
+}
+
+.blog .document p {
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.blog .document code {   
   font-size: 14px;
-  overflow-x: auto;
   line-height: 18px;
-  margin-block-end: 0.67em;
-  margin-block-start: 1.67em;
+  background-color: transparent !important;
+  border: none;
+  padding: 2px;
+}
+
+.blog-header.linear-navigation .item {
+  margin-left: 5px;
+}
+
+.blog a:not(.edit-link):not(.blog-post-link):not(.header-link) {
+  color: unset;
+  text-decoration: underline;
+}
+
+.blog-footer.linear-navigation .item:first-child {
+  margin-left: 5px;
+}
+
+.blog-footer.linear-navigation .item:last-child {
+  margin-right: 5px;
+}
+
+.blog-header.linear-navigation div.edit-link {
+  padding: 5px 0px;
+  margin: 12px;
+}
+
+.blog .title-row .edit-link {
+  display: none;
+}
+
+div.document h1 code,
+div.document h2 code,
+div.document h3 code,
+div.document h4 code,
+div.document h5 code,
+div.document h6 code {
+  background-color: transparent !important;
+  border: none;
+  padding: 2px;
+}
+
+div.document h1 code,
+.blog div.document h1 code {
+  font-size: 26px;
+}
+
+div.document h2 code,
+.blog div.document h2 code {
+  font-size: 18px;
+}
+
+div.document h3 code,
+.blog div.document h3 code {
+  font-size: 14px;
+}
+
+div.document h4 code,
+div.document h5 code,
+div.document h6 code,
+.blog div.document h4 code,
+.blog div.document h5 code,
+.blog div.document h6 code {
+  font-size: 12px;
+}
+
+.blog .document h2 code {
+  font-size: 18px;
 }

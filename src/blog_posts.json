@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Introducing the Malloy Command Line Interface",
+    "path":"/2023-08-25-malloy-cli",
+    "subtitle": "Lightweight, powerful, concise data transformation",
+    "author": "lloyd tabb and Carlin Eng",
+    "published": "2023-08-25"
+  },
+  {
+    "title": "Malloy's Near Term Roadmap",
+    "path": "/2023-06-15-malloy-roadmap",
+    "subtitle": "We've been kinda busy...",
+    "author": "lloyd tabb and Carlin Eng",
+    "published": "2023-06-15"
+  },
+  {
+    "title": "Malloy Data Notebooks: A picture is now worth 10,000 words",
+    "subtitle": "Notebooks feel great when working with data",
+    "path": "/2023-03-10-malloy-data-notebooks",
+    "author": "lloyd tabb",
+    "published": "2023-03-10"
+  },
+  {
+    "title": "\"Malloy is Incomplete\" and the Turducken",
+    "subtitle": "Designing a new language is hard",
+    "path": "/2023-01-23-malloy-is-incomplete",
+    "author": "lloyd tabb and Michael Toy",
+    "published": "2023-01-23"
+  },
+  {
+    "title": "Data is Rectangular and other Limiting Misconceptions",
+    "subtitle": "Malloy breaks data's rectangular strangle hold.",
+    "path": "/2023-01-18-data-is-rectangular",
+    "author": "lloyd tabb",
+    "published": "2023-01-18"
+  },
+  {
+    "title": "Dimensional Flexibility, one of the things that makes Malloy Special",
+    "subtitle": "Grouping by some attribute is the core operation of most data analysis",
+    "path": "/2022-12-01-dimensional-flexibility",
+    "author": "lloyd tabb",
+    "published": "2022-12-01"
+  },
+  {
+    "title": "Composing with Queries",
+    "subtitle": "Malloy's semantic modeling and querying enables an exciting new way to explore data.",
+    "path": "/2022-11-25-composing-queries",
+    "author": "lloyd tabb and Michael Toy",
+    "published": "2022-11-25"
+  },
+  {
+    "title": "Exploring Data With Only a Webserver",
+    "subtitle": "Malloy Composer lets you build a web based data exploration experience by adding just 3 files to your data model.",
+    "path": "/2022-11-24-webserver-data",
+    "author": "lloyd tabb",
+    "published": "2022-11-24"
+  }
+]
