@@ -128,7 +128,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         ...frontmatter,
         url: shortOutPath,
         source: shortPath,
-        title: "Malloy Documentation",
+        title: isBlog ? blogTitle(shortPath) : "Malloy Documentation" ,
         content: renderedDocument,
         footer: isBlog ? undefined : footers[shortPath],
         nextPost: nextBlog,
@@ -405,6 +405,11 @@ function nextPost(blogShortPath: string) {
   if (current !== -1 && current - 1 >= 0) {
     return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
   } 
+}
+
+function blogTitle(blogShortPath: string) {
+  const title = BLOG_POSTS.find(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length))?.title;
+  return title ? title : "Malloy Blog";
 }
 
 function previoustPost(blogShortPath: string) {

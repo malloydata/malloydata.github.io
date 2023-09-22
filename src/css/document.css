@@ -93,6 +93,12 @@ div.header img {
   width: 50px;
 }
 
+div.header img.logo {
+  margin-top: 6px;
+  margin-right: 6px;
+  width: 35px;
+}
+
 body {
   display: flex;
   overflow: hidden;
