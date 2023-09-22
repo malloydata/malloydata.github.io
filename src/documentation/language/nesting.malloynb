@@ -4,7 +4,6 @@
 Nested queries, more formally known as "aggregating subqueries" are queries included in other queries. A nested query produces a subtable per row in the query in which it is embedded. In Malloy, queries can be named and referenced in other queries. The technical term "aggregating subquery" is a bit of a mouthful, so we more often refer to it as a "nested query."
 
 When a query is nested inside of another query, it produces an aggregating subquery and the results include a nested subtable.
-
 >>>malloy
 ##(docs) hidden
 import "airports.malloy"
@@ -22,7 +21,6 @@ run: airports -> {
 ## Nesting Nested Queries
 
 Aggregating subqueries can be nested infinitely, meaning that a nested query can contain another nested query.
-
 >>>malloy
 run: airports -> {
   group_by: state
@@ -42,7 +40,6 @@ run: airports -> {
 ## Filtering Nested Queries
 
 Filters can be applied at any level within nested queries.
-
 >>>malloy
 run: airports -> {
   where: state ? 'CA' | 'NY' | 'MN'
@@ -63,3 +60,25 @@ run: airports -> {
   }
 }
 >>>markdown
+## Nesting And Views
+
+A nested query can also be created, or refined from, any of the existing views defined in a source
+>>>malloy
+source: airports_with_views is airports extend {
+    view: by_facility is {
+      group_by: fac_type
+      aggregate: airport_count
+    }
+    view: major_facilities is {
+      where: major = 'Y'
+      group_by: name is concat(code, ' - ', full_name)
+    }
+    view: top_5_counties is {
+        limit: 5
+        group_by: county
+        nest: major_facilities
+        nest: by_facility
+    }
+}
+
+run: airports_with_views -> top_5_counties
