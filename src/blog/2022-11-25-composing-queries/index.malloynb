@@ -2,7 +2,7 @@
 # Composing with Queries
 Malloy's semantic modeling and querying enables an exciting new way to explore data.
 
-*November 25, 2022 by Lloyd Tabb*
+*November 25, 2022 by Lloyd Tabb and Michael Toy*
 <br/><br/><br/>
 
 Experienced data explorers know how to move through complex datasets. They operate vehicles which are well designed to move efficiently through data landscapes. [Malloy](http://www.malloydata.dev/) allows people who know how to drive, to suddenly find themselves flying.

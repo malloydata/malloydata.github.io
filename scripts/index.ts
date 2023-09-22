@@ -208,7 +208,7 @@ function buildBlogIndex() {
     }
   });
 
-  fs.mkdirSync(OUT_PATH, { recursive: true });
+  fs.mkdirSync(path.join(OUT_PATH, "blog"), { recursive: true });
   fs.writeFileSync(path.join(OUT_PATH, "blog", "index.html"), compiledFile);
   log("wrote /blog/index.html", 'info');
 }
