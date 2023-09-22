@@ -2,7 +2,7 @@
 # Data is Rectangular and other Limiting Misconceptions
 Malloy breaks data's rectangular strangle hold.
 
-*January 18, 2023 by Lloyd Tabb*
+*January 18, 2023 by lloyd tabb*
 <br/><br/><br/>
 
 In software we express our ideas through tools.  In data, those tools think in rectangles.  From spreadsheets to the data warehouses, to do any analytical calculation, you must first go through a rectangle.  Forcing data through a rectangle shapes the way we solve problems (for example, dimensional fact tables, OLAP Cubes).
