@@ -1,0 +1,82 @@
+>>>markdown
+# Malloy Data Notebooks: A picture is now worth 10,000 words
+Notebooks feel great when working with data
+
+*March 10, 2023 by lloyd tabb*
+<br/><br/><br/>
+
+We always knew that putting [Malloy](http://www.malloydata.dev/) into a data notebook would be pretty great, but I don’t think we quite realized how great it would be. Notebooks in Malloy showcase the re-usability of a semantic data model and the simplicity of writing complex queries.
+
+## Setting up Malloy - in browser.
+One of the great things about Malloy is that it runs in all the places that VSCode runs. One of those places is Github (github.dev), an entirely browser based experience. Malloy has DuckDB built right in so all you really need is a browser.
+
+To set up Malloy on github.dev, [Go to the setup repository](https://github.dev/lloydtabb/install-malloy/blob/main/README.md) and say yes when it asks if you want to install. You can close this window once Malloy has been installed. You don’t have to do this again.
+
+<img src="add-extension.webp"/>
+
+# Some Notebooks.
+We’ve put together a few notebooks. Pretty amazingly, the Malloy code and data are all stored in repositories on Github. Try these notebooks we’ve built and then try it with your own data.
+
+Open a notebook and then bonk **Run All** at the top of the page.
+
+[Auto Recalls](https://github.dev/lloydtabb/auto_recalls/blob/main/auto_recalls.malloynb) - Recall data from Data.gov.
+
+[Baby Names](https://github.dev/lloydtabb/name_fiddle/blob/main/names.malloynb) - What are the 100 most common baby names, and by decade.
+
+[Plane Tracker](https://github.dev/malloydata/patterns/blob/main/flight_routes.malloynb) - Map/Reduce example. Take flight records and map to individual airplane/days along with maps of where the plane flew.
+
+[Malloy Quickstart](https://github.dev/malloydata/patterns/blob/main/quickstart.malloynb) - we’ve converted the Malloy Quickstart documentation into a Notebook. Run all the examples. Try modifying them.
+
+## How it works
+In a Malloy Notebook a cell is either Markdown or Malloy Code. The Malloy code is spread throughout the notebook. Each cell includes the code from the previous cells so you can define object in one cell and use it in the next. For example, the first cell below describes a data model with some measures and dimensions. The next cell uses these definitions.
+
+
+<img src="notebook.webp"/>
+
+## Use the Schema
+Whenever you are editing a Malloy Code Cell in a notebook, all the definitions available to you are located in the schema panel to the left. This makes programming easier.
+
+<img src="schema.webp"/>
+
+## Code in Style
+Styles can be applied to rendered cells by placing a comment on the last line.
+
+<img src="style.webp"/>
+
+## Make your own Notebook
+Making your own notebook in Github is really easy.
+
+1. Make a new repository in github.
+
+<img src="new-repo.webp"/>
+
+2. Upload a some data (csv, parquet or json) and bonk the **Commit changes** button. 
+
+<img src="upload-data.webp"/>
+
+3. Press the Period Key on your keyboard (magic will happen). You should now be in VSCode!
+<img src="vscode.webp"/>
+
+4. Make sure you have the Malloy extension installed (If you ran any of the above examples, you should have it installed already).
+
+<img src="check-extension.webp"/>
+
+5. From the menu File/New File. Give it a name with an extension of <code>.malloynb</code>
+
+<img src="new_file.webp"/>
+
+6. Build your Notebook
+<img src="build-notebook.webp"/>
+
+7. Run it.
+<img src="run.webp"/>
+
+8. Commit your changes
+
+<img src="commit.webp"/>
+
+[And there it is. Try it.](https://github.dev/lloydtabb/auto_recalls/blob/main/auto_recalls.malloynb)
+
+## More
+Notebooks can work on your local machine and can work with BigQuery and Postgres. We’re just getting started here, so we’d love your feedback. If you make some public notebooks, please share them with us.
+

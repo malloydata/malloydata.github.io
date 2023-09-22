@@ -1,0 +1,31 @@
+>>>markdown
+# Exploring Data With Only a Webserver
+Malloy Composer lets you build a web based data exploration experience by adding just 3 files to your data model.
+
+*November 24, 2022 by lloyd tabb*
+<br/><br/><br/>
+
+
+## [Try it First.](https://lloydtabb.github.io/babynames/#/default)
+
+Believe it or not, the page [below runs](https://lloydtabb.github.io/babynames/#/default?page=about) entirely in your web browser. The SQL database engine (DuckDB) is running in your browser. The Malloy compiler is running in your browser too. The [whole](https://github.com/lloydtabb/babynames) application is built with [200 lines of Malloy code](https://github.com/lloydtabb/babynames/blob/main/names.malloy), a [config file](https://github.com/lloydtabb/babynames/blob/main/composer.json), a [markdown document](https://raw.githubusercontent.com/lloydtabb/babynames/main/names.md) and a [single html file](https://github.com/lloydtabb/babynames/blob/main/index.html). Just look at the [repository on Github](https://github.com/lloydtabb/babynames).
+
+<img src="baby-names.png"/>
+
+[Try it!](https://lloydtabb.github.io/babynames/#/default)
+
+# Want to do this with your own data set?
+
+It’s easy, just follow the three steps below.
+
+## Step 1: Build a Malloy Data Model
+
+Install VSCode and add the [Malloy Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode). Build and test your data model.
+
+## Step 2: Add the index.html, composer.json and names.md
+
+The file <code>index.html</code> shouldn’t need any modification. Edit the <code>composer.json</code> to point at your malloy file and the tables that it uses. Rename and edit the names file to have queries that are interesting to you.
+
+## Step 3: Serve from any webserver
+
+We use [Github Pages](https://pages.github.com/) to serve the above example. Check in all your source code, turn on Github Pages and your whole repository is available from the web. Point a browser at the root and composer should be running.

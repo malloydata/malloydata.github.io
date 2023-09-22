@@ -1,0 +1,93 @@
+>>>markdown
+# Dimensional Flexibility, one of the things that makes Malloy Special
+Grouping by some attribute is the core operation of most data analysis
+
+*December 1, 2022 by lloyd tabb*
+<br/><br/><br/>
+
+*[Malloy](http://www.malloydata.dev/) is an new experimental data language. [Malloy's Composer](https://github.com/malloydata/malloy-composer/blob/main/README.md), shown here, offers allows you to easily explore complex data.*
+
+In data analysis, one operation, dimensionalization, stands above the rest. In SQL, **grouping by** a column and computing **aggregate** statistics (measures/metrics) about the elements that fall into that group is the fundamental motion of nearly all data analysis.
+
+In SQL, unfortunately, dimensionalization isn't always straight forward. The way that you relate data in a query can affect aggregate calculations and make them incorrect at times. The general solution to this is to make dimensional fragments and link them together, but that adds a lot of complexity.
+
+[Malloy](http://www.malloydata.dev/) is interesting in that aggregates operate independently from relations. Because of this innovation, [Malloy](http://www.malloydata.dev/) offers a degree of dimensional flexibility not available anywhere else.
+
+Let's take a tour.
+
+## IMDB, for example
+In the IMDB for example. There are movies (titles), people, genres and ratings. The relations and some basic calcuations are encoded in this 75 line data model on github.
+
+These are live examples, click “Try it!” to run any of the queries.
+
+## How many movies?
+Lets take a look at movies and filter to just three genres, *Drama*, *Comedy* and *Action*. We will also filter to just movies from 2010 until 2020. The first query we run shows there are 2146 movies with an average rating of 6.986.
+
+<img src="avg_rating.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++aggregate%3A+%0A++++title_count%0A++++average_rating%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true)
+
+## Dimensionalize by genre
+By dimensionalizing (grouping by) genre, we can see the number of movies that are in a particular genre. But if we add up the numbers 1358 + 783 + 716 we get 2857. Wait, Why? I thought the number of titles was only 2146? Movies can have multiple genres. Movies can appear in multiple groupings.
+
+<img src="by_genre.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+genre%0A++aggregate%3A+%0A++++title_count%0A++++average_rating%0A++limit%3A+10%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true)
+
+## Top level query is aggregates plus nesting.
+Malloy can compute mulitple levels of dimensionality simultaneously. One way Malloy does this is through nesting queries. Nested queries are expressed exactly the same as top level queries. In the query below, we pick our top level measures as well as building a nested query that is essentially the same shape as the one above.
+
+<img src="agg_nest.png">
+
+[Try it!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++aggregate%3A+%0A++++title_count%0A++++average_rating%0A++nest%3A+by_genre+is+%7B%0A++++group_by%3A+genre%0A++++aggregate%3A+%0A++++++title_count%0A++++++average_rating%0A++%7D%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true)
+
+While the query above is relatively easy to understand, it is quite difficult to express in SQL. Malloy hides this complexity from us. We can see the SQL for any query by bonking the SQL tab. All Malloy queries execute as a single SQL query so the data is only read once.
+
+## `all` function escapes grouping
+Another way to work with dimensionality in Malloy with [ungrouped aggregate functions](https://malloydata.github.io/malloy/documentation/language/ungrouped-aggregates.html). The `all()` function can be used to make calculations independently of dimensional grouping in the current query, but return results in the same table. In the example below, we compute `all_titles` as `all(title_count)` and `all_average_rating` as `all(average_rating)`. Any measure can be used within the all function. Fine grain control over which columns to escape is also available, see the Malloy documentation on [Ungrouped Aggregates](https://malloydata.github.io/malloy/documentation/language/ungrouped-aggregates.html).
+
+<img src="ungroup_agg.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+genre%0A++aggregate%3A+%0A++++title_count%0A++++all_titles+is+all%28title_count%29%0A++++average_rating%0A++++all_average_rating+is+all%28average_rating%29%0A++limit%3A+10%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true)
+
+## Percent of Total
+Percent of total tell us about a groups relationship to it's parent. What percent of movies are Drama?, Comedy?. Using the calculation for `percent_of_titles` is `title_count / all(title_count)` can show us. Malloy composer allow us to style this number as a percentage. Notice that the percentages sum to greater then 100%. Movies can have mulitple genres.
+
+<img src="percent_total.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+genre%0A++aggregate%3A+%0A++++title_count%0A++++percent_of_titles+is+title_count%2Fall%28title_count%29%0A++limit%3A+10%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true)
+
+## Nesting adds dimensionality (and perspective)
+Grouping by year and nesting our `by_genre` query allows us to gain perspective over time. Notice that we are free to include aggregate computations at any level of nesting.
+
+<img src="nesting.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+startYear%0A++aggregate%3A+%0A++++title_count%0A++++percent_of_titles+is+title_count%2Fall%28title_count%29%0A++nest%3A+by_genre+is+%7B%0A++++group_by%3A+genre%0A++++aggregate%3A+%0A++++++title_count%0A++++++percent_of_titles+is+title_count%2Fall%28title_count%29%0A++%7D%0A++limit%3A+10%0A++order_by%3A+startYear+desc%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true)
+
+## Running queries side by side with a shared filter
+A useful pattern is to nest several queries at the top level. This mimics a traditional dashboard in other tools. The difference here is that the data is all executed in a single query.
+
+<img src="shared_filter.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+by_genre+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+title_count%0A++++%7D%0A++++by_year+is+%7B%0A++++++group_by%3A+startYear%0A++++++aggregate%3A+title_count%0A++++++order_by%3A+startYear+desc%0A++++%7D%0A%7D&run=true)
+
+## Styling Results
+We can add styles to any of the nested queries to have them rendered as charts.
+
+<img src="styling.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+by_genre+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+title_count%0A++++%7D%0A++++by_year+is+%7B%0A++++++group_by%3A+startYear%0A++++++aggregate%3A+title_count%0A++++++order_by%3A+startYear+desc%0A++++%7D%0A++limit%3A+10%0A%7D&styles=%7B%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%2C%22by_genre%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%7D&run=true)
+
+## Adding more dimensionality
+Let's look at the top people in the industry by grouping by person.
+
+<img src="dimensionality.png">
+
+[Try It!](https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+person%0A++aggregate%3A+total_votes%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+title_count%0A++++%7D%0A++++by_year+is+%7B%0A++++++group_by%3A+startYear%0A++++++aggregate%3A+title_count%0A++++++order_by%3A+startYear+desc%0A++++%7D%0A++limit%3A+10%0A%7D&styles=%7B%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%2C%22by_genre%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%7D)
+
+## Dimensional Freedom
+Malloy will compute aggregate calculations correctly independently from dimensionalization. This freedom gives you much more flexibility in building tooling to understand your data.
+
+[Try more examples in Malloy Composer](https://malloydata.github.io/malloy-samples/wasm/)
+
+[Learn more about Malloy](https://www.malloydata.dev/)
