@@ -15,14 +15,14 @@ changes to the language as we discovered better ways to express data computation
 4.0, it is our intention to keep code compatibility for existing code, even as we continue to add
 capabilities to the language.
 
-The rollout of 4.0 will happen in a way which should make it relatively easy for users to upgrade their code.
+The rollout of 4.0 will happen in stages, so that users will have time to upgrade their code before it stops working.
 
-* **Today:** Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension
-  * If you are using a language construct which will not work in 4.0, the IDE will show you a warning.
-  * The [Documentation](../../documentation/index.malloynb) describes the 4.0 syntax.
-* **TBD-Date-1:** The Release version of the extension will begin to warn on pre-4.0 compatibility problems.
-* **TBD-Date-2:** The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
-* **TBD-Date-3:** The Release version of the extension will give errors, not warnings, on pre-4.0 code.
+| Date | Malloy Langauge Status |
+| ----------: | :-------------------- |
+| **2003-10-02** | Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension<br/><ul><li>If you are using a language construct which will not work in 4.0, the IDE will show you a warning.</li><li>The [Documentation](../../documentation/index.malloynb) describes the 4.0 syntax.</li></ul>
+| **2023-10-09** | The Release version of the extension will begin to warn on pre-4.0 compatibility problems.
+| **2023-10-23** | The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
+| **2023-10-30** | The Release version of the extension will give errors, not warnings, on pre-4.0 code.
 
 ## 4.0 Differences
 
