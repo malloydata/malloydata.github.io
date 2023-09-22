@@ -19,7 +19,7 @@ The rollout of 4.0 will happen in a way which should make it relatively easy for
 
 * **Today:** Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension
   * If you are using a language construct which will not work in 4.0, the IDE will show you a warning.
-  * The [Documentation](../index.malloynb) describes the 4.0 syntax.
+  * The [Documentation](../../documentation/index.malloynb) describes the 4.0 syntax.
 * **TBD-Date-1:** The Release version of the extension will begin to warn on pre-4.0 compatibility problems.
 * **TBD-Date-2:** The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
 * **TBD-Date-3:** The Release version of the extension will give errors, not warnings, on pre-4.0 code.
@@ -30,28 +30,28 @@ The rollout of 4.0 will happen in a way which should make it relatively easy for
 
 These changes will require users to edit existing code. The IDE will issue warnings to flag code which
 needs to change, once the rollout begins. For examples showing both the old and new syntaxes, refer to
-the [4.0 Warnings FAQ](m4warnings.malloynb) document.
+the [4.0 Warnings FAQ](../../documentation/language/m4warnings.malloynb) document.
 
-* [New sources are only created with `extend {}`](source.malloynb#source-extensions)
-* [Existing queries are only refined with `+ {}`](query.malloynb#refinement) 
-*  [_DOCNEEDED_](query.malloynb#implicit-sources) `view:` inside a source replaces `query:` inside of a source
-* [Extensions of a source inside of a query operation must be contained in an `extend: { }`.](query.malloynb#source-extensions)
+* [New sources are only created with `extend {}`](../../documentation/language/source.malloynb#source-extensions)
+* [Existing queries are only refined with `+ {}`](../../documentation/language/query.malloynb#refinement) 
+*  [_DOCNEEDED_](../../documentation/language/query.malloynb#implicit-sources) `view:` inside a source replaces `query:` inside of a source
+* [Extensions of a source inside of a query operation must be contained in an `extend: { }`.](../../documentation/language/query.malloynb#source-extensions)
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
 * `run:` replaces `query:` with no name
-* [The `sql:` statement is replaced by SQL sources](sql_sources.malloynb)
-* [The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`](source.malloynb#sources-from-tables-or-views) 
-* [The `project:` statement is now called `select:`](query.malloynb#projection)
+* [The `sql:` statement is replaced by SQL sources](../../documentation/language/sql_sources.malloynb)
+* [The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`](../../documentation/language/source.malloynb#sources-from-tables-or-views) 
+* [The `project:` statement is now called `select:`](../../documentation/language/query.malloynb#projection)
 * `from()` to create a source from a query is no longer needed
 * [When nesting Malloy code inside a multi-line literal, the syntax 
-  is  `%{ malloyCode }` and not `%{ malloyCode }%`](sql_sources.malloynb#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) 
-* [Explicit `source.`` required to clarify aggregate locality for sum() and avg()`](aggregates.malloynb#required-explicit-aggregate-locality)
+  is  `%{ malloyCode }` and not `%{ malloyCode }%`](../../documentation/language/sql_sources.malloynb#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) 
+* [Explicit `source.`` required to clarify aggregate locality for sum() and avg()`](../../documentation/language/aggregates.malloynb#required-explicit-aggregate-locality)
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
-* [ `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`](aggregates.malloynb#count-expr-)
-* [`COUNT(*)` is now just `count()`](aggregates.malloynb#count) 
-* [Malloy has a function library](functions.malloynb) for doing common data manipulation operations
-  * Access to the database's internal functions directly must be through the [raw sql function syntax](functions.malloynb#raw-sql-functions)
+* [ `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`](../../documentation/language/aggregates.malloynb#count-expr-)
+* [`COUNT(*)` is now just `count()`](../../documentation/language/aggregates.malloynb#count) 
+* [Malloy has a function library](../../documentation/language/functions.malloynb) for doing common data manipulation operations
+  * Access to the database's internal functions directly must be through the [raw sql function syntax](../../documentation/language/functions.malloynb#raw-sql-functions)
 
 
 ### New features
@@ -61,11 +61,11 @@ Release version of the extension, even though they were part of the 4.0 project.
 these will continue to work. They are listed here to provide a complete list of "What Is Malloy
 4.0"
 
-* [There are three kinds of string literals, `'`, `"`, and `"""`.](datatypes.malloynb#string)
+* [There are three kinds of string literals, `'`, `"`, and `"""`.](../../documentation/language/datatypes.malloynb#string)
   These can be used interchangeably anywhere a literal is legal.
 calculations* Casting to a specific database type is now legal using a quoted type name
-* [Safe cast operator `:::`](expressions.malloynb#safe-type-cast) 
-* [Annotations and Tags](tags.malloynb)
-* [`??` (the nullish coalescing operation)](expressions.malloynb#null-operations)
-* [Selective `import` of objects from other files](imports.malloynb#selective-imports)
-* [`calculate:` added to provide additional aggregation control](calculations.malloynb) (often done with window functions in SQL)
+* [Safe cast operator `:::`](../../documentation/language/expressions.malloynb#safe-type-cast) 
+* [Annotations and Tags](../../documentation/language/tags.malloynb)
+* [`??` (the nullish coalescing operation)](../../documentation/language/expressions.malloynb#null-operations)
+* [Selective `import` of objects from other files](../../documentation/language/imports.malloynb#selective-imports)
+* [`calculate:` added to provide additional aggregation control](../../documentation/language/calculations.malloynb) (often done with window functions in SQL)
