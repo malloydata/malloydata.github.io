@@ -16,7 +16,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
   measure: flight_count is count()
 
   # segment_map
-  query: routes_map is {
+  view: routes_map is {
     group_by:
       orig.latitude
       orig.longitude

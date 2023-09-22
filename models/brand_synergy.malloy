@@ -32,7 +32,7 @@ source: brand_synergy is order_items -> {
 source: order_items_w_brand_synergy is order_items extend {
   join_one: brand_synergy on inventory_items.product_brand = brand_synergy.brand
 
-  query: brand_w_synergy_dashboard is brand_dashboard + {
+  view: brand_w_synergy_dashboard is brand_dashboard + {
     nest: synergistic_brands is -> {
       group_by: brand_synergy.synergies.brand
       aggregate: occurances is brand_synergy.synergies.occurances.sum()

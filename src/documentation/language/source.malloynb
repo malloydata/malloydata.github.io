@@ -102,8 +102,7 @@ source: carrier_facts2 is duckdb.table('../data/flights.parquet') -> {
 } extend {
   dimension: lifetime_flights_bucketed is round(lifetime_flights, -4)
 }
->>>markdown
->>>malloy
+
 run: carrier_facts2 -> {
   select: carrier, lifetime_flights_bucketed, lifetime_flights
   limit: 3
@@ -177,7 +176,7 @@ source: airports2 is duckdb.table('../data/airports.parquet') extend {
     airport_count is count()
     average_elevation is avg(elevation)
 
-  query: average_elevation_by_control_tower is {
+  view: average_elevation_by_control_tower is {
     group_by: has_control_tower
     aggregate: average_elevation
   }

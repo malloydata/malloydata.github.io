@@ -51,7 +51,7 @@ source: flights2 is duckdb.table('../data/flights.parquet') extend {
 
   measure: flight_count is count()
 
-  query: by_carrier is {
+  view: by_carrier is {
     group_by: carrier
     aggregate: flight_count
   }

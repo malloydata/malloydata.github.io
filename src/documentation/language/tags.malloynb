@@ -9,7 +9,7 @@ An annotation starts at the `#` character and continues to the end of the line.
     ## This is a model annotation
 
     # This is an object annotation
-    query: how_many is things -> { aggregate: total_count is count() }
+    view: how_many is things -> { aggregate: total_count is count() }
 
 An object annotation which happens before a definition list is distributed to each member of the list, but each member can also have their own unique annotations
 

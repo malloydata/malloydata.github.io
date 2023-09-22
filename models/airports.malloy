@@ -17,31 +17,31 @@ source: airports is duckdb.table('../src/documentation/data/airports.parquet') e
     pick 'Western Pacific' when 'AWP'
     pick 'Alaska' when 'AAL'
 
-  query: by_region is {
+  view: by_region is {
     group_by: faa_region
     group_by: faa_region_name
     aggregate: airport_count
   }
 
-  query: by_state is {
+  view: by_state is {
     where: state != null
     group_by: state
     aggregate: airport_count
   }
 
-  query: by_facility_type is {
+  view: by_facility_type is {
     group_by: fac_type
     aggregate:
       airport_count
       avg_elevation is elevation.avg()
   }
 
-  query: major_airports is {
+  view: major_airports is {
     where: major = 'Y'
     group_by: name is concat(state, '-', full_name)
   }
 
-  query: airports_by_region_dashboard is by_region + {
+  view: airports_by_region_dashboard is by_region + {
     where: faa_region != null
     nest:
       # shape_map

@@ -64,64 +64,64 @@ source: order_items is duckdb.table('../data/order_items.parquet') {
     total_gross_margin is gross_margin.sum()
     average_gross_margin is gross_margin.avg()
 
-  query: top_categories is {
+  view: top_categories is {
     limit: 5
     group_by: inventory_items.product_category
     aggregate: total_sales
   }
 
-  query: top_brands is {
+  view: top_brands is {
     limit: 5
     group_by: inventory_items.product_brand
     aggregate: total_sales, total_gross_margin, order_item_count
   }
 
-  query: top_products is {
+  view: top_products is {
     limit: 5
     group_by: inventory_items.product_name
     aggregate: total_sales, total_gross_margin, order_item_count
   }
 
-  query: top_customers is {
+  view: top_customers is {
     limit: 5
     group_by: users.full_name
     aggregate: total_sales, order_item_count
   }
 
-  query: recent_purchases is {
+  view: recent_purchases is {
     limit: 5
     group_by: id, order_id, created_at, sale_price, inventory_items.product_name
     order_by: created_at desc
   }
 
-  query: by_year is {
+  view: by_year is {
     group_by: created_year is year(created_at)
     aggregate: total_sales
   }
 
-  query: by_month is {
+  view: by_month is {
     group_by: created_month is created_at.month
     aggregate: total_sales
   }
 
-  query: sales_by_state_2020 is {
+  view: sales_by_state_2020 is {
     where: created_at = @2020
     group_by: users.state
     aggregate: total_sales
   }
 
-  query: sales_by_month_2020 is {
+  view: sales_by_month_2020 is {
     where: created_at = @2020
     group_by: order_month is created_at.month
     aggregate: total_sales
   }
 
-  query: orders_by_status is {
+  view: orders_by_status is {
     group_by: status
     aggregate: order_count
   }
 
-  query: brand_dashboard is {
+  view: brand_dashboard is {
   group_by: inventory_items.product.brand
   aggregate:
     total_sales
@@ -134,7 +134,7 @@ source: order_items is duckdb.table('../data/order_items.parquet') {
   limit: 10
   }
 
-  query: customer_dashboard is {
+  view: customer_dashboard is {
     limit: 5
     group_by: users.full_name, users.city, users.state, users.country
     aggregate:
@@ -148,5 +148,5 @@ source: order_items is duckdb.table('../data/order_items.parquet') {
       recent_purchases
   }
 
-  query: search_index is {index: * }
+  view: search_index is {index: * }
 }

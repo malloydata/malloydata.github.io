@@ -1,7 +1,7 @@
 >>>markdown
 # Queries
 
-The basic syntax for a query in Malloy consists of a source and a "pipeline" of one or more _stages_ separated by `->`. The shape of the data defined in the original source is transformed by each stage.
+The basic syntax for a query in Malloy consists of a source and a "view" of one or more _stages_ separated by `->`. The shape of the data defined in the original source is transformed by each stage.
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
@@ -57,7 +57,7 @@ There are two cases where a query's source is implicit: when it is defined withi
 Here, `by_carrier` is defined within `flights`, so its source is implicit:  
 >>>malloy
 source: flights3 is duckdb.table('../data/flights.parquet') extend {
-  query: by_carrier is {
+  view: by_carrier is {
     group_by: carrier
     aggregate: flight_count is count()
   }
@@ -168,7 +168,7 @@ Filters specified at the top level of query stage apply to the whole stage.
 
 At the source level
 >>>malloy
-query: flights extend { where: distance > 1000 } -> {
+run: flights extend { where: distance > 1000 } -> {
   group_by: distance
   aggregate: flight_count
 }
@@ -191,10 +191,10 @@ See the [Filters](filters.malloynb) section for more information.
 
 ## Refinement
 
-A query can be "refined", which means adding clauses such as `select:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a query:
+A query can be "refined", which means adding clauses such as `select:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a source with a view and use that to create a query
 >>>malloy
 source: flights4 is duckdb.table('../data/flights.parquet') extend {
-  query: top_destinations is {
+  view: top_destinations is {
     group_by: destination
     aggregate: flight_count is count()
   }

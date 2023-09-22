@@ -8,12 +8,12 @@ The plugin currently supports US maps and state names. The model and data styles
 source: airports is duckdb.table('../data/airports.parquet') {
   primary_key: code
   measure: airport_count is count()
-  query: by_state is {
+  view: by_state is {
     group_by: state
     aggregate: airport_count
   }
   # shape_map
-  query: by_state_shaped is by_state
+  view: by_state_shaped is by_state
 }
 >>>markdown
 

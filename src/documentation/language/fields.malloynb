@@ -104,7 +104,7 @@ A query represents a pipelined data transformation including a source and one or
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
-  query: by_carrier is {
+  view: by_carrier is {
     group_by: carrier
     aggregate: flight_count is count()
   }
@@ -119,7 +119,7 @@ A source-level query's pipeline can always begin with another query from the sam
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   ...
-  query: top_carriers is by_carrier {
+  view: top_carriers is by_carrier {
     select: carrier
     limit: 5
   }
