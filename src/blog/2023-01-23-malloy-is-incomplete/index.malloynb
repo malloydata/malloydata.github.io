@@ -1,0 +1,61 @@
+>>>markdown
+# "Malloy is Incomplete" and the Turducken
+*January 23, 2023 by Lloyd Tabb and Michael Toy*
+
+<br/><br/><br/>
+
+Designing a new language is hard. There are two competing forces:
+
+1. Make the language complete enough so that is useful.
+2. You have to live with language mistakes forever, so don't make any.
+
+[Malloy](http://www.malloydata.dev/) aspires to be able to do everything that SQL does. SQL does a lot. We want to design [Malloy](http://www.malloydata.dev/) slowly and carefully to avoid language regrets (yes, I'm looking at you Postgres and Perl). A language regret is a feature added to the language that was conceptually flawed and then corrected (Postgres's <code>UNNEST</code> for example). The 'flawed' feature lives in the language forever, forever confusing users.
+
+We really don't want many regrets, so we are cheating, we invented the Turducken.
+
+## The Turducken
+What the heck is a Turducken? I like to [think of a Turducken as recursive meat](https://en.wikipedia.org/wiki/Turducken). A Turducken is a chicken stuffed in a duck, stuffed in a turkey.
+
+The Malloy feature, *[Turducken](https://malloydata.github.io/documentation/language/sql_blocks.html)*, allows you to base a Malloy data `source:` on `sql:` query which can contain Malloy `query:`s.
+
+Wait, what? Why?
+
+If you need a feature that SQL supports that Malloy doesn't yet, you can use Malloy in SQL. But you can also use SQL in Malloy to get at the unsupported feature. This sounds more complex than it is.
+
+## An Example
+[Carlin Eng](https://twitter.com/carlineng) has been working on converting the TPCDS benchmarks to Malloy. In order to do this he needs to <code>UNION</code> the results of a queries he as written in Malloy, but Malloy does not yet support the union operation.
+
+Carlin writes a SQL query that unions Malloy queries from `web_sales`, `catalog_sales` and `store_sales`. Carl then builds a Malloy data source that is based on this query.
+
+Carlin's SQL Query (see the [complete code](https://github.com/carlineng/malloy-tpcds/blob/acdbef3dc5da6c4e438bc83f26e736a2ac468768/malloy_queries/tpcds.malloy#L282-L291))
+
+```malloy
+sql: all_sales_sql is {
+  select: """
+    SELECT * FROM (%{ web_sales -> projection }%)
+    UNION ALL
+    SELECT * FROM (%{ catalog_sales -> projection }%)
+    UNION ALL
+    SELECT * FROM (%{ store_sales -> projection }%)
+  """
+  connection: "duckdb"
+}
+```
+
+Carlin creates a Malloy source based on his SQL query.
+
+```malloy
+source: all_sales is from_sql(all_sales_sql) {
+  join_one: date_dim with sold_date_sk
+  join_one: customer_demographics with cdemo_sk
+  join_one: customer with customer_sk
+  join_one: item with item_sk
+  join_one: promotion with promo_sk
+  join_one: customer_address with addr_sk
+  ...
+}
+```
+
+Malloy will eventually support <code>UNION</code>. The Turduckeon allows us to be in conversation with users who need <code>UNION</code>, to learn to think about the data as they do, so the Malloy expression of <code>UNION</code> can be both powerful and clear.
+
+As we move closer to Malloy 1.0 there are features that have not yet arrived, like with <code>UNION</code>. We are trying to get there as fast as possible, but not too fast. Thanks for your patience in our completion of the Malloy Language. In the meantime enjoy your Turducken.

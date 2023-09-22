@@ -166,6 +166,7 @@ interface BlogPostInfoRaw {
   title: string;
   path: string;
   author: string;
+  subtitle?: string;
   published: string;
 }
 
@@ -174,6 +175,7 @@ interface BlogPostInfo {
   path: string;
   author: string;
   published: Date;
+  subtitle?: string;
 }
 
 let BLOG_POSTS: BlogPostInfo[] = [];
@@ -187,11 +189,12 @@ function buildBlogIndex() {
   const list = BLOG_POSTS.map(post => {
     return `<a class="blog-post-link" href="${DEFAULT_CONTEXT.site.baseurl}/blog${post.path}">
       <h1>${post.title}</h1>
-      <span>${post.published.toLocaleDateString("en-US", {
+      ${post.subtitle ? `<div class="subtitle">${post.subtitle}</div>` : ''}
+      <div><i>${post.published.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
-      })} by ${post.author}</span>
+      })} by ${post.author}</i></div>
     </a>`
   }).join("\n");
   const content = `<div class="document">${list}</div>`;
@@ -399,15 +402,15 @@ function logError(error: DocsError) {
 
 function nextPost(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
-  if (current !== -1 && current + 1 < BLOG_POSTS.length) {
-    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current + 1].path}`;
+  if (current !== -1 && current - 1 >= 0) {
+    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
   } 
 }
 
 function previoustPost(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
-  if (current !== -1 && current - 1 >= 0) {
-    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
+  if (current !== -1 && current + 1 < BLOG_POSTS.length) {
+    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current + 1].path}`;
   } 
 }
 
