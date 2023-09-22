@@ -266,3 +266,16 @@ source: airports7 is duckdb.table('../data/airports.parquet') extend {
   except: c_ldg_rts, aero_cht, cntl_twr
 }
 >>>markdown
+## Connecting Views
+
+A source can also be extended to contain named transformations (or `view`s) which will be useful in composing queries into the source.
+>>>malloy
+source: flights_with_views is flights extend {
+    view: by_carrier is {
+        group_by: carrier
+        aggregate: number_of_flights is count()
+    }
+}
+
+run: flights_with_views -> by_carrier
+>>>markdown

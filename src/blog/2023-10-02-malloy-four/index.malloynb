@@ -34,7 +34,7 @@ the [4.0 Warnings FAQ](../../documentation/language/m4warnings.malloynb) documen
 
 * [New sources are only created with `extend {}`](../../documentation/language/source.malloynb#source-extensions)
 * [Existing queries are only refined with `+ {}`](../../documentation/language/query.malloynb#refinement) 
-*  [_DOCNEEDED_](../../documentation/language/query.malloynb#implicit-sources) `view:` inside a source replaces `query:` inside of a source
+* [`view:` inside a source replaces `query:` inside of a source](../../documentation/language/source.malloynb#connecting-views) 
 * [Extensions of a source inside of a query operation must be contained in an `extend: { }`.](../../documentation/language/query.malloynb#source-extensions)
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
