@@ -1332,7 +1332,7 @@ stddev(value)
 Returns the standard deviation of values of `value` across all rows.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: dep_delay_avg is avg(dep_delay)
   aggregate: dep_delay_stddev is stddev(dep_delay)
@@ -1361,7 +1361,7 @@ Analytic functions can only appear in a `calculate:` statement:
 
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
 }
@@ -1372,7 +1372,7 @@ For more detailed information, see the [Calculations](./calculations.malloynb) s
 <!-- Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field. -->
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: 
     carrier is 'CA'
     carrier2 is carrier
@@ -1385,7 +1385,7 @@ In the above example, `carrier` in the _output_ refers to the `carrier is 'CA'`,
 Most arguments to analytic functions are _required_ to be output fields or aggregate fields (see specific requirements below). 
 
 ```malloy
-query: flights -> {
+run: flights -> {
   // ERROR: Parameter 1 ('value') of lag must be literal, constant, or output, but received input
   calculate: prev_carrier is lag(carrier)
 }
@@ -1427,7 +1427,7 @@ row_number()
 Returns the row number of the current result row after grouping and aggregating.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   calculate: row is row_number()
 }
@@ -1442,7 +1442,7 @@ rank()
 Returns the rank according to the query ordering, with values having equal ordering value getting equal rank.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count_bucket is round(flight_count, -6)
   order_by: flight_count_bucket desc
@@ -1465,7 +1465,7 @@ Generates an error if `offset` is `null`, negative, or not an integer.
 The value of `offset` must be a _constant_.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   calculate: prev_carrier is lag(carrier)
   calculate: prev_prev_carrier is lag(carrier, 2)
@@ -1488,7 +1488,7 @@ Generates an error if `offset` is `null`, negative, or not an integer.
 The value of `offset` must be a _constant_.
 
 >>>malloy
-query: flights -> { 
+run: flights -> { 
   group_by: carrier
   limit: 5 
 } -> {
@@ -1508,7 +1508,7 @@ first_value(expr)
 Returns the first value of `expr` across all rows (i.e. the value for the first row).
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   calculate: first_carrier is first_value(carrier)
 }
@@ -1523,7 +1523,7 @@ last_value(expr)
 Returns the last value of `expr` across all rows (i.e. the value for the last row).
 
 >>>malloy
-query: flights -> { 
+run: flights -> { 
   group_by: carrier
   limit: 5 
 } -> {
@@ -1541,7 +1541,7 @@ min_cumulative(expr)
 Returns the minimum value of `expr` among rows from the first row to the current row.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   order_by: carrier asc
   aggregate: flight_count
@@ -1558,7 +1558,7 @@ max_cumulative(expr)
 Returns the maximum value of `expr` among rows from the first row to the current row.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   order_by: carrier asc
   aggregate: flight_count
@@ -1575,7 +1575,7 @@ sum_cumulative(expr)
 Returns the cumulative sum of values of `expr` from the first row to the current row.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   order_by: carrier asc
   aggregate: flight_count
@@ -1592,7 +1592,7 @@ min_window(expr)
 Returns the minimum of all values of `expr` across all rows.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
   calculate: min_flight_count is min_window(flight_count)
@@ -1608,7 +1608,7 @@ max_window(expr)
 Returns the maximum of all values of `expr` across all rows.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
   calculate: max_flight_count is max_window(flight_count)
@@ -1624,7 +1624,7 @@ sum_window(expr)
 Returns the sum of all values of `expr` across all rows.
 
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
   calculate: total_flight_count1 is sum_window(flight_count)
@@ -1647,7 +1647,7 @@ Both `preceding` and `following` must be _literals_.
 
 Note: `avg_moving(value, 3)` means that the average is computed over 4 rows (the current row and 3 preceding).
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
   nest: carrier_analysis is {

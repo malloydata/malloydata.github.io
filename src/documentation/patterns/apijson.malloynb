@@ -16,7 +16,7 @@ This query builds a line chart showing exchange rate values over time. With a si
 run: exchange_rates -> {
   group_by: data.country_currency_desc
   # line_chart
-  nest: by_date is -> {
+  nest: by_date is  {
     group_by: 
       data.record_date
       rate is data.exchange_rate::number

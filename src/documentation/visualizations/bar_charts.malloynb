@@ -81,13 +81,13 @@ run: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count 
   # bar_chart
-  nest: top_destinations is -> {
+  nest: top_destinations is  {
     group_by: destination
     aggregate: flight_count
     limit: 10
   }
   # bar_chart
-  nest: by_hour_of_day is -> {
+  nest: by_hour_of_day is  {
     group_by: hour_of_day is hour(dep_time)
     aggregate: flight_count
   }

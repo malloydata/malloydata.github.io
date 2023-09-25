@@ -10,10 +10,9 @@ If you'd like to run Malloy locally on your laptop instead, follow the setup ins
 ## A Simple Select Statement
 
 The following query is equivalent to <code>SELECT id, code, city FROM airports LIMIT 10</code> in SQL:
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project:
+  select:
     id
     code
     city
@@ -26,18 +25,17 @@ Let's break down each part of this query.
 - `duckdb.table('../data/airports.parquet')` defines the source for the query. The `table()` method creates a source from a table or view in the database.
   - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
 - The `->` operator begins the query. Queries take the form `<<source>> -> { ... }`, with the query logic specified inside of the curly braces.
-- `project:` is equivalent to <code>SELECT</code> in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
+- `select:` is equivalent to <code>SELECT</code> in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table.
 - `limit: 10` limits the result set of the query to the first 10 items.
 
 ## Query Operators
 
-In SQL, the <code>SELECT</code> command does two very different things.  A <code>SELECT</code> with a <code>GROUP BY</code> aggregates data according to the <code>GROUP BY</code> clause and produces aggregate calculation against every calculation not in the <code>GROUP BY</code>.  In Malloy, the query operator for this is `group_by`. Calculations involving data in the group are made using `aggregate`.
+In SQL, the <code>SELECT</code> command does two very different things.  A <code>SELECT</code> with a <code>GROUP BY</code> aggregates data according to the <code>GROUP BY</code> clause and produces aggregate calculation against every calculation not in the <code>GROUP BY</code>.  In Malloy, the query operator for this is `group_by:`. Calculations involving data in the group are made using `aggregate:`.
 
-The second type of <code>SELECT</code> in SQL does not perform any aggregation;  All rows in the input table, unless filtered in some way, show up in the output table. In Malloy, this command is called `project`.
+The second type of <code>SELECT</code> in SQL does not perform any aggregation;  All rows in the input table, unless filtered in some way, show up in the output table. In Malloy, this command is `select:`.
 
 ### Aggregate
 In the query below, the data will be grouped by `state` and `county`, and will produce an aggregate calculation for `airport_count` and `average_elevation`.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   group_by:
@@ -49,24 +47,22 @@ run: duckdb.table('../data/airports.parquet') -> {
 }
 >>>markdown
 
-### Project
-In Malloy, "project" is a verb, not a noun. As in "to project something", rather than "this is a project". A `project` statement produces a list of fields. For every row in the input table, there is a row in the output table. This is similar to a simple <code>SELECT</code> statement in SQL with no aggregations.
-
+### Select
+A `select:` statement produces a list of fields. For every row in the input table, there is a row in the output table. This is similar to a simple <code>SELECT</code> statement in SQL with no aggregations.
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project: code, full_name, city, county
+  select: code, full_name, city, county
   where: county = 'SANTA CRUZ'
   limit: 10
 }
 >>>markdown
 
 For the most part, operations can be placed in any order within a query. A `where` can come before or after a `project`, and `limit` can be placed anywhere as well. The above query could also be written:
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   limit: 10
   where: county = 'SANTA CRUZ'
-  project: code, full_name, city, county
+  select: code, full_name, city, county
 }
 >>>markdown
 
@@ -75,7 +71,6 @@ run: duckdb.table('../data/airports.parquet') -> {
 In Malloy, all output fields have names. This means that any time a query
 includes a field with a calculated value, like a scalar or aggregate function,
 it must be named _(unlike SQL, which allows un-named expressions)_.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   aggregate: max_elevation is max(elevation)
@@ -87,10 +82,9 @@ Having the output column name written first makes it easier for someone reading
 the code to visualize the resulting query structure.
 
 Named objects, like columns from a table or fields defined in a source, can be included in field lists without an `is`:
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
-  project:
+  select:
     full_name
     elevation
 }
@@ -99,7 +93,6 @@ run: duckdb.table('../data/airports.parquet') -> {
 ## Expressions
 
 Many SQL expressions will work unchanged in Malloy, and many functions available in Standard SQL are usable in Malloy as well. This makes expressions fairly straightforward to understand, given a knowledge of SQL.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: county_and_state is concat(county, ', ', state)
@@ -118,7 +111,6 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
 
 In the example below, we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
-
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
@@ -126,7 +118,6 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: average_elevation is avg(elevation)
 }
 >>>markdown
-
 >>>malloy
 run: airports -> { 
   group_by: county_and_state
@@ -135,7 +126,6 @@ run: airports -> {
 >>>markdown
 
 Sources that are defined in one file can be imported into another using `import "path/to/some/file.malloy"`. For example, if the `airports` source above were defined in a file called `flights.malloy`, you could create a new file that imports it and immediately start using the `airports` source:
-
 >>>markdown
 ```malloy
 import "airports.malloy" 
@@ -148,7 +138,6 @@ run: airports -> {
 >>>markdown
 
 Sources can also contain named queries. These "source-level" queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.
-
 >>>malloy
 source: airports_with_named_query is duckdb.table('../data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
@@ -156,7 +145,7 @@ source: airports_with_named_query is duckdb.table('../data/airports.parquet') ex
   measure: average_elevation is avg(elevation)
 
   // This is a "source-level" query:
-  query: top_county_and_state is -> {
+  view: top_county_and_state is {
     group_by: county_and_state
     aggregate: airport_count
     limit:10
@@ -171,7 +160,6 @@ run: airports_with_named_query -> top_county_and_state
 ## Joins
 
 [Joins](../language/join.malloynb) are declared as part of a source. When joining a source to another, it brings with it all child joins.
-
 >>>malloy
 source: aircraft_models is duckdb.table('../data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
@@ -202,7 +190,6 @@ In this example, the `aircraft` source is joined to `flights`, and `aircraft_mod
 Now, any query that uses the `flights` source has access to fields in both `aircraft` and `aircraft_models` without having to explicitly specify the join condition. The joins are specified once in the source, and usable by any query on `flights`.
 
 An ad hoc join can also be specified in a query block. In the query below, we join in the `airports` table using the `destination` column as a join key, then compute the top 5 destination airports by flight count.
-
 >>>malloy
 source: airports2 is duckdb.table('../data/airports.parquet')
 
@@ -221,7 +208,6 @@ run: flights2 -> {
 When working with data, filtering is something you do in almost every query. Malloy provides consistent syntax for filtering everywhere within a query. The most basic type of filter is applied using a `where:` clause, very similar to a <code>WHERE</code> clause in SQL.
 
 The following query grabs the top 5 counties in California with the highest airport count:
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   where: state = 'CA'
@@ -232,7 +218,6 @@ run: duckdb.table('../data/airports.parquet') -> {
 >>>markdown
 
 Filters can also be applied to sources:
-
 >>>malloy
 source: airports_in_california is duckdb.table('../data/airports.parquet') extend {
   where: state = 'CA'
@@ -250,7 +235,6 @@ Any query run on the `airports_in_california` source will run against the `airpo
 ### Filtering Measures
 
 A filter on an aggregate calculation (a _measure_) narrows down the data used in that specific calculation. In the example below, the calculations for `airports` and `heliports` are filtered separately.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: state
@@ -276,7 +260,6 @@ GROUP BY state
 ## Nested Queries
 
 The next several examples will use this simple source definition:
-
 >>>markdown
 ```malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
@@ -288,12 +271,11 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
 ### Nested Queries
 
 In Malloy, queries can be [nested](../language/nesting.malloynb) to produce subtables on each output row.
-
 >>>malloy
 run: airports -> {
   group_by: state
   aggregate: airport_count
-  nest: by_facility is -> {
+  nest: by_facility is  {
     group_by: fac_type
     aggregate: airport_count
     limit: 3
@@ -306,17 +288,16 @@ Here we can see that the `by_facility` column of the output table contains a nes
 When a query is nested inside another query, each output row of the outer query will have a nested table for the inner query which only includes data limited to that row.
 
 Queries can be nested infinitely, allowing for rich, complex output structures. A query may always include another nested query, regardless of depth.
-
 >>>malloy
 #(docs) html
 run: airports -> {
   group_by: state
   aggregate: airport_count
-  nest: top_5_counties is -> {
+  nest: top_5_counties is  {
     limit: 5
     group_by: county
     aggregate: airport_count
-    nest: by_facility is -> {
+    nest: by_facility is  {
       group_by: fac_type
       aggregate: airport_count
     }
@@ -327,17 +308,16 @@ run: airports -> {
 ### Filtering Nested Queries
 
 Filters can be isolated to any level of nesting. In the following example, we limit the `major_facilities` query to only airports where `major` is `'Y'`. This particular filter applies _only_ to `major_facilities`, and not to other parts of the outer query.
-
 >>>malloy
 run: airports -> {
   where: state = 'CA'
   group_by: county
   aggregate: airport_count
-  nest: major_facilities is -> {
+  nest: major_facilities is  {
     where: major = 'Y'
     group_by: name is concat(code, ' (', full_name, ')')
   }
-  nest: by_facility is -> {
+  nest: by_facility is  {
     group_by: fac_type
     aggregate: airport_count
   }
@@ -354,7 +334,6 @@ Literals of type `date` and `timestamp` are notated with an `@`, e.g. `@2003-03-
 
 Time literals can be used as values, but are more often useful in filters. For example, the following query
 shows the number of flights in 2003.
-
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
   where: dep_time ? @2003 
@@ -363,7 +342,6 @@ run: duckdb.table('../data/flights.parquet') -> {
 >>>markdown
 
 There is a special time literal `now`, referring to the current timestamp, which allows for relative time filters.
-
 >>>malloy
 query: duckdb.table('../data/flights.parquet') -> {
   where: dep_time > now - 6 hours
@@ -374,7 +352,6 @@ query: duckdb.table('../data/flights.parquet') -> {
 ### Truncation
 
 Time values can be truncated to a given timeframe, which can be `second`, `minute`, `hour`, `day`, `week`, `month`, `quarter`, or `year`.
-
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
   group_by:
@@ -387,7 +364,6 @@ run: duckdb.table('../data/flights.parquet') -> {
 ### Extraction
 
 Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](../language/timestamp-operations.malloynb#extraction).
-
 >>>malloy
 #(docs) html limit=7 size=large
 run: duckdb.table('../data/flights.parquet') -> {
@@ -405,7 +381,6 @@ And likewise for any other data type that has interesting output metadata. -->
 ### Time Ranges
 
 Two kinds of time ranges are given special syntax: the range between two times and the range starting at some time for some duration. These are represented like `@2003 to @2005` and `@2004-Q1 for 6 quarters` respectively. These ranges can be used in filters just like time literals.
-
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
   where: dep_time ? @2003 to @2005
@@ -417,7 +392,6 @@ Time literals and truncations can also behave like time ranges. Each kind of tim
 timeframe from the truncation, e.g. `now.month` means the entirety of the current month.
 
 When a time range is used in a comparison, `=` checks for "is in the range", `>` "is after", and `<` "is before." So `some_time > @2003` filters dates starting on January 1, 2004, while `some_time = @2003` filters to dates in the year 2003.
-
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
   where: dep_time > @2003
@@ -431,13 +405,12 @@ run: duckdb.table('../data/flights.parquet') -> {
 ## Pipelines and Multi-stage Queries
 
 The output from one stage of a query can be passed into another stage using `->`. For example, we'll start with this query which outputs, for California and New York, the total number of airports, as well as the number of airports in each county.
-
 >>>malloy
 run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
   aggregate: airport_count
-  nest: by_county is -> {
+  nest: by_county is  {
     group_by: county
     aggregate: airport_count
   }
@@ -446,20 +419,19 @@ run: airports -> {
 
 Next, we'll use the output of that query as the input to another, where we determine which counties have the highest
 percentage of airports compared to the whole state, taking advantage of the nested structure of the data to to so.
-
 >>>malloy
 #(docs) html 
 run: airports -> {
   where: state = 'CA' | 'NY'
   group_by: state
   aggregate: airport_count
-  nest: by_county is -> {
+  nest: by_county is  {
     group_by: county
     aggregate: airport_count
   }
 } -> {
   limit: 10; order_by: 4 desc
-  project:
+  select:
     by_county.county
     airports_in_county is by_county.airport_count
     airports_in_state is airport_count
@@ -471,7 +443,6 @@ run: airports -> {
 ## Aggregate Locality
 
  When computing `sum`, `avg`, and `count` on fields in joined sources with one-to-many relationships, Malloy will automatically handle the duplication of rows that occurs in the join, and compute accurate aggregations on the fanned-out table. See the [Aggregate Locality](../language/aggregates.malloynb#aggregate-locality) section for more information.
-
 >>>malloy
 run: aircraft -> {
   aggregate:
@@ -488,7 +459,6 @@ Malloy code can include both line and block comments. Line comments, which begin
 may appear anywhere within a line, and cause all subsequent characters on that line to be ignored.
 Block comments, which are enclosed between <code>/\*</code> and <code>\*/</code>, cause all enclosed characters to be ignored
 and may span multiple lines.
-
 >>>markdown
 ```malloy
 --  The total number of flight entries
@@ -512,7 +482,6 @@ run: flights -> {
 In Malloy, ordering and limiting work pretty much the same way they do in SQL, though Malloy introduces some [reasonable defaults](../language/order_by.malloynb).
 
 The `limit:` statement limits the number of rows returned. Results below are sorted by the first measure descending—in this case, `airport_count`.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   limit: 2
@@ -522,7 +491,6 @@ run: duckdb.table('../data/airports.parquet') -> {
 >>>markdown
 
 Default ordering can be overridden with `order_by:`, as in the following query, which shows the states in alphabetical order.  `order_by:` can take a field index number or the name of a field.
-
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   order_by: state

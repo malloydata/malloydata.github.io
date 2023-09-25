@@ -44,7 +44,7 @@ source: limited_users is from_sql(my_sql_query2) {
   measure: user_count is count()
 }
 
-query: limited_users -> {
+run: limited_users -> {
   aggregate: user_count
 }
 >>>markdown

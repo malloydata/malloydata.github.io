@@ -80,7 +80,7 @@ source: order_items is duckdb.table('../data/order_items.parquet') extend {
   join_one: inventory_items  on inventory_item_id = inventory_items.id
   measure: order_item_count is count()
 
-  query: category_growth is -> {
+  view: category_growth is {
     extend: {
       // add measures for use just in this query
       measure:

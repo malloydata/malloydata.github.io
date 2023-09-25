@@ -13,15 +13,15 @@ File <code>airports.malloysql</code>:
   source: airports is duckdb.table('data/airports.parquet') extend {
     measure: airport_count is count()
 
-    query: major_airports is -> {
+    view: major_airports is {
       where: major = 'Y'
-      project: *
+      select: *
     }
 
-    query: by_state is -> {
+    view: by_state is {
       group_by: state
       aggregate: airport_count
-      nest: by_fac_type is -> {
+      nest: by_fac_type is  {
         group_by: fac_type
         aggregate: airport_count
       }

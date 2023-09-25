@@ -8,7 +8,7 @@ Malloy's ability to nest queries allows you to compute two levels of queries sim
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: state
   aggregate: facility_count is count()
-  nest: by_fac_type is -> {
+  nest: by_fac_type is  {
     group_by: fac_type
     aggregate: facility_count is count()
   }
@@ -24,7 +24,7 @@ run: duckdb.table('../data/airports.parquet') -> {
   group_by: state
   aggregate: facility_count is count()
   # pivot
-  nest: by_fac_type is -> {
+  nest: by_fac_type is  {
     group_by: fac_type
     aggregate: facility_count is count()
   }
@@ -55,7 +55,7 @@ Carriers by FAA Region
 run: flights -> {
   group_by: carriers.nickname
   # pivot
-  nest: by_faa_region is -> {
+  nest: by_faa_region is  {
     group_by: orig.faa_region
     aggregate: flight_count 
   }
@@ -70,7 +70,7 @@ You can control which dimension are shown in the pivot with a filter (and their 
 run: flights -> {
   group_by: carriers.nickname
   # pivot
-  nest: by_state is -> {
+  nest: by_state is  {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
@@ -87,7 +87,7 @@ Pivots can have multiple aggregates. In this case we show `flight_count` and `to
 run: flights -> {
   group_by: carriers.nickname
   # pivot
-  nest: by_state is -> {
+  nest: by_state is  {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: 
@@ -109,7 +109,7 @@ run: flights -> {
     total_flights is flight_count   // outside the pivot
     total_distance
   # pivot
-  nest: by_state is -> {
+  nest: by_state is  {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
@@ -128,14 +128,14 @@ run: flights -> {
   aggregate: 
     total_flights is flight_count   // outside the pivot
   # pivot
-  nest: by_state is -> {
+  nest: by_state is  {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
     order_by: state   // sort order of the pivoted columns
   }
   # pivot
-  nest: by_year is -> {
+  nest: by_year is  {
     where: dep_time.year > @2003
     group_by: dep_year is dep_time.year
     aggregate: flight_count
@@ -154,7 +154,7 @@ run: flights -> {
   # hidden
   aggregate: ca_count is flight_count { where: orig.state = 'CA' }
   # pivot
-  nest: by_state is -> {
+  nest: by_state is  {
     where: orig.state = 'CA' | 'NY' | 'WA'  // only show these states
     group_by: orig.state
     aggregate: flight_count 
@@ -171,14 +171,14 @@ run: flights -> {
   group_by: carriers.nickname
   aggregate: total_flights is flight_count
   # pivot { dimensions=["dep_year"] }
-  nest: by_year is -> {
+  nest: by_year is  {
     group_by: dep_year is dep_time.year
     aggregate: flight_count
     calculate: growth is (flight_count - lag(flight_count, 1)) / flight_count
     order_by: dep_year
   } -> {
     where: dep_year > @2003
-    project:
+    select:
       dep_year
       flight_count
       # percent

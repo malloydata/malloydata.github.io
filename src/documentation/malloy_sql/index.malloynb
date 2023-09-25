@@ -81,7 +81,7 @@ Here is a more realistic example, using a Malloy model to wrangle raw data and c
       join_one: raw_ratings on tconst = raw_ratings.tconst
       join_one: raw_crew on tconst = raw_crew.tconst
       where: raw_ratings.numVotes > 30000
-      project:
+      select:
         tconst
         isAdult, originalTitle, primaryTitle
         startYear is startYear:::number

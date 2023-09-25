@@ -7,10 +7,9 @@ tables in a database, constant values to be used in later analysis, computed met
 
 ## Defining Fields
 
-Fields defined in sources are reusable. A field is a `dimension`, `measure` or `query`.  When these are used in a query, these fields are invoked with `project`, `group_by`, `aggregate` or `nest`.   The definitions are the same  whether part of a source or a query stage. In either case, they are defined using the `is` keyword.
+Fields defined in sources are reusable. A field is a `dimension`, `measure` or `query`.  When these are used in a query, these fields are invoked with `select:`, `group_by:`, `aggregate:` or `nest:`.   The definitions are the same  whether part of a source or a query stage. In either case, they are defined using the `is` keyword.
 
 **In a source**
-
 >>>malloy
 source: users is duckdb.table('../data/users.parquet') extend {
   dimension: age_in_dog_years is age * 7
@@ -18,9 +17,8 @@ source: users is duckdb.table('../data/users.parquet') extend {
 >>>markdown
 
 **In a query stage**
-
 >>>malloy
-query: users -> {
+run: users -> {
   group_by: age_in_dog_years is age * 7
 }
 >>>markdown
@@ -33,12 +31,11 @@ Queries (see [below](#source-level-queries)) can also be defined as
 part of a source or query stage. When a query is defined in a query stage, it is known as a "nested query" or an "aggregating
 subquery." See the [Nesting](nesting.malloynb) section for a
 detailed discussion of nested queries.
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   nest: by_month is {
     group_by: departure_month is dep_time.month
@@ -63,7 +60,6 @@ inherited directly from a table are dimensions.
 
 Dimensions are defined using expressions that contain no
 aggregate functions.
-
 >>>malloy
 source: users2 is duckdb.table('../data/users.parquet') extend {
   dimension: full_name is concat(first_name, ' ', last_name)
@@ -72,7 +68,6 @@ source: users2 is duckdb.table('../data/users.parquet') extend {
 
 Dimensions may be used in both `reduce` and `project`
 queries.
-
 >>>malloy
 // Show the top 10 full names by number of occurrences
 run: users2 -> {
@@ -83,7 +78,7 @@ run: users2 -> {
 
 // Show 10 users' full names
 run: users2 -> {
-  project: full_name
+  select: full_name
   limit: 10
 }
 >>>markdown
@@ -94,24 +89,22 @@ Measures are fields representing aggregated data over
 multiple records.
 
 Measures may not be used in `project` queries. However, any measures that appear in a `reduce` query stage are "dimensionalized" as part of the query, and are therefore usable as dimensions in subsequent stages.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
   aggregate: flight_count is count()
 } -> {
-  project: flight_count
+  select: flight_count
 }
 >>>markdown
 
 ### Source-Level Queries
 
 A query represents a pipelined data transformation including a source and one or more stages. When a query is defined as part of a source extension, its source is implicit.
-
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
-  query: by_carrier is -> {
+  view: by_carrier is {
     group_by: carrier
     aggregate: flight_count is count()
   }
@@ -122,13 +115,12 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 Notice how the query is defined like any other query, except that no source name is specified to the left of the `->`.
 
 A source-level query's pipeline can always begin with another query from the same source.
-
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   ...
-  query: top_carriers is by_carrier -> {
-    project: carrier
+  view: top_carriers is by_carrier {
+    select: carrier
     limit: 5
   }
 }

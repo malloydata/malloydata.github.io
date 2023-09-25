@@ -6,7 +6,6 @@ Filtering which data is used in a query is an incredibly important aspect of dat
 ## Filter Syntax
 
 Regardless of the placement of a filter, the syntax looks the same.
-
 >>>markdown
 ```malloy
 { where: filter_one, filter_two }
@@ -28,34 +27,31 @@ A filter can be applied to the source of a query, to just one stage of a query, 
 ### Filtering a Query's Source
 
 When filtering a query's source, the filter applies to the whole query.
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
 >>>malloy
-query: flights { where: distance > 1000 } -> { aggregate: flight_count } 
+run: flights { where: distance > 1000 } -> { aggregate: flight_count } 
 >>>markdown
 
 ### Filtering in a Query Stage
 
 A filter can also be applied to an individual query stage.
-
 >>>malloy
-query: flights -> {
+run: flights -> {
   group_by: carrier
   aggregate: flight_count
 } -> {
   where: carrier ? 'UA' | 'AA'
-  project: carrier, flight_count
+  select: carrier, flight_count
 }
 >>>markdown
 
 ### Filtering Aggregate Calculations
 
 Any measure can be filtered by adding a where clause.
-
 >>>malloy
-query: flights -> {
+run: flights -> {
   aggregate:
     ca_flights is flight_count { where: origin.state = 'CA' }
     ny_flights is count() { where: origin.state = 'NY' }
@@ -68,7 +64,6 @@ query: flights -> {
 Even complex measures can be filtered.  A common use case is to create a filtered
 measure and then create that as a percent of total.
 
-
 >>>malloy
 // add a couple of measures to the `flights` source
 source: my_flights is flights {
@@ -76,7 +71,7 @@ source: my_flights is flights {
   measure: percent_delayed is delayed_flights / flight_count
 }
 
-query: my_flights -> {
+run: my_flights -> {
   aggregate:
     ca_flights is flight_count { where: origin.state = 'CA' }
     ca_delayed_flights is delayed_flights { where: origin.state = 'CA' }
@@ -92,12 +87,11 @@ query: my_flights -> {
 Even complex measures can be filtered.  A common use case is to create a filtered
 measure and then create that as a percent of total.
 
-
 >>>malloy
 // add a couple of measures to the `flights` source
 source: my_flights2 is flights {
   measure: delayed_flights is flight_count { where: dep_delay > 30 }
-  query: delay_stats is {
+  view: delay_stats is {
     aggregate:
       flight_count
       delayed_flights
@@ -105,7 +99,7 @@ source: my_flights2 is flights {
   }
 }
 
-query: my_flights2 -> {
+run: my_flights2 -> {
   nest:
     ca_stats is delay_stats { where: origin.state = 'CA' }
     ny_stats is delay_stats { where: origin.state = 'NY' }

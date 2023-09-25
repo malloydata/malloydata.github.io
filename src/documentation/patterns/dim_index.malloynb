@@ -32,7 +32,7 @@ run: duckdb.table('../data/airports.parquet') -> {
   index: *
 } -> {
   where: fieldType = 'string'
-  project: *
+  select: *
   order_by: weight desc
 }
 >>>markdown
@@ -47,7 +47,7 @@ run: duckdb.table('../data/airports.parquet') -> {
   index: *
 } -> {
   where: fieldValue ~ r'SANTA'
-  project: *
+  select: *
   order_by: weight desc
   limit: 15
 }
@@ -59,7 +59,7 @@ We can then write a simple query to show the rows.  It turns out that 'SANTA CRU
 #(docs) size=medium limit=100
 run: duckdb.table('../data/airports.parquet') -> {
   where: county ~ 'SANTA CRUZ'
-  project: *
+  select: *
 }
 >>>markdown
 
@@ -91,7 +91,7 @@ run: duckdb.table('../data/airports.parquet') -> {
   sample: 5000  // sample only 5000 rows
 } -> {
   group_by: fieldName
-  nest: values is -> {
+  nest: values is  {
     group_by: fieldValue, weight
     order_by: weight desc
     limit: 10
@@ -145,7 +145,7 @@ run: movies -> {
   by total_ratings
   sample: 5000
 } -> {
-  project: *
+  select: *
   order_by: weight desc
 }
 >>>markdown
@@ -163,7 +163,7 @@ source: movies2 is duckdb.table('../data/titles.parquet') extend {
 
   measure: total_ratings is numVotes.sum()
 
-  query: search_index is -> {
+  view: search_index is {
     index:
       *
       genres.*
@@ -180,7 +180,7 @@ So to look for 'Brad'
 >>>malloy
 #(docs) size=small limit=200
 run: movies2 -> search_index -> { 
-  project: *
+  select: *
   where: fieldValue ~ 'Brad%'
   order_by: weight desc
 }
@@ -191,7 +191,7 @@ So to look for 'Bat'
 >>>malloy
 #(docs) size=small limit=200
 run: movies2 -> search_index -> { 
-  project: *
+  select: *
   where: fieldValue ~ 'Bat%'
   order_by: weight desc
 }

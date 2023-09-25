@@ -1,44 +1,72 @@
 >>>markdown
+# Annotation
+
+Annotations are text strings collected with objects as a file is compiled. Annotations are intended to be a generally useful method for connecting meta-data about a model with the source code for a model.
+
+Annotations are strings of text in the model beginning with the `#` character. Annotations which start `##` are collected with the file or "model" and annotations which only have one `#` are associated with the object being defined.
+An annotation starts at the `#` character and continues to the end of the line.
+
+    ## This is a model annotation
+
+    # This is an object annotation
+    view: how_many is things -> { aggregate: total_count is count() }
+
+An object annotation which happens before a definition list is distributed to each member of the list, but each member can also have their own unique annotations
+
+    # Every member of this list will have this annotation
+    measure:
+      max_x is max(x)
+      # only min_x will have this annotation
+      min_x is min(x)
+
+The design of annotations is that the characters immediately following the `#` in an annotation will be available to applications to be able to add different types of annotations. Malloy itself uses the following annotation prefixes
+
+* `#-space` and `##-space` (e.g. `# hello` and `## hello`) The Malloy VSCode extension parses these as tags and uses these tags to render results
+* `##!` The malloy compiler uses these annotations as tags specifying compiler options
+*  `#"`  and `##"` Reserved for future documentation annotations
+* `#(docs)` and `##(docs)` Used by the malloy documentation site
+
 # Tags
+
+The primary use of annotations in Malloy is for tags, which are simply a subset of the annotations strings which will be interpreted in simple programming language for setting key/value properties.
 
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
 
-Tags look similar to comments, but they begin with the `#` (hash, octothorpe, number sign). The text contained in tags is collected and distributed to the objects defined after each tag, with the following rules:
+Annotations which do not start with `#-space` or `##-space` are not parsed as tags by the renderer, though an application may decide to parse annotations with some other leading characters as as tags.
 
-* Tags with `##!` are parsed by the compiler and interpreted as compiler flags
-* Tags with `##` are collected and attached to the document
-* All other tags are attached the the object defined after the tag
-* Statements which define multiple objects, distribute their tags to each object defined in the statement.
+None of these are render tags, even though they use the tag property language.
 
->>>markdown
-```malloy
-// Compiler flag
-##! enable_cool_malloy_feature
+* `#bar_chart` without a space after the `#`, this is not a render tag
+* `##! disableWarnings` tags are parsed by the compiler and interpreted as compiler flags
+* `#(myApp) custom="application" values="here"` something like this could be used by an app to write custom tags
 
-// Attached to the document/model
-## tag_1
+## Tag Property Language
 
-// Attached to the next query
-# tag_2
-query: myQuery is someSource -> { project: * }
+A quick overview of the syntax of properties and values in the Malloy Tag Language used by the renderer.
 
-// Applied to both "a" and "b"
-# tag_3
-dimension:
-  // Applied to "a"
-  # tag_4
-  a is 'a'
-  // Applied to "b"
-  # tag_5
-  b is 'b'
-```
->>>markdown
+* `tName`
+  * Sets the property `tName` to exist, but with no value
+  * ( for example `# hidden` could mean to set a property called `hidden` on an object )
+* `tName=tVal`
+  * Sets the property tName to exist, and have the value `tVal`
+  * ( for example `# color=red` set set the color property to te string `red`)
+  * You can also use quotes to assign values as as `# name="John J. Johnson"`
+  * `"` and `'` can be used to quote strings
+  * To assign a property name which needs quoting, use `` `my long property name`=red ``
+  * `tName=[val1, val2]` The value of a property can be a list of values
+* `-tName` unset the property tName
+  * ( `-hidden` to remove the `hidden` property from and object)
+* `tName { p1=v1 p2=v2 }` `tName` is a collection of sub properties
+  * An example might look like `barchart { bgColor=white fgColor=red }`
 
-Tags are collected by the Malloy parser but their contents are parsed by the application (e.g. VSCode), making them extensible for many use cases. In VSCode, tags are interpreted in two ways:
-* As rendering instructions: `# bar_chart`
-* As documentation comments: `#" This query calculates ...`
+### Advanced Property Syntax
 
-Other formats of tags are ignored:
-* `#bar_chart` without a space after the `#`
-* `#! custom="application" values="here"`
-
+* `tName=value { p1=v1 p2=v2 }` It is possible for a property have both a top level value
+   and a list of sub properties with values.
+* `tName=value` Assign new value to tName but delete any existing properties
+* `tName=value {...}` Assign a new value to `tName` but do not erase the sub properties like `tName=value` would
+* `tName={ p1=v1 p2=v2 p3 }` Assign new properties to tName, but delete any existing value.
+* `tName { p1=v1 p2=v2 p3 }` Add properties to existing properties of tName, preserve value
+* `tName=...{ p1=v1 p2=v2 p3 }` Assign new properties to tName, but keep the existing value
+* `tName.p1=value` Assign a value to one specific property of tName, value of tName and other properties are preserved.
+* `tName.p1=value { pp1=v1 pp2=v2 }` The value of a property can also have properties

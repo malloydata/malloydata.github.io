@@ -962,3 +962,18 @@ div.document h6 code,
 .blog .document h2 code {
   font-size: 18px;
 }
+
+div.document div.warning {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  background-color: #ECECEC;
+  border: 1px solid #cfcfcf;
+  color: black;
+  border-radius: 5px;
+  overflow-y: visible;
+  padding: 10px;
+  font-size: 14px;
+  overflow-x: auto;
+  line-height: 18px;
+  margin-block-end: 0.67em;
+  margin-block-start: 1.67em;
+}

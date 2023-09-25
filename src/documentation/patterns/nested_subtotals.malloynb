@@ -51,12 +51,12 @@ run: order_items -> {
   aggregate: total_sales
   order_by: fiscal_year desc
 
-  nest: by_quarter is -> {
+  nest: by_quarter is  {
     group_by: fiscal_quarter is created_at.quarter
     aggregate: total_sales
     order_by: fiscal_quarter 
 
-    nest: top_days is -> {
+    nest: top_days is  {
       group_by: sale_date is created_at.day
       aggregate: total_sales
       limit: 5

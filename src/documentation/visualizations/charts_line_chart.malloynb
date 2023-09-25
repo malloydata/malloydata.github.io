@@ -54,7 +54,7 @@ run: flights -> {
   group_by: destination
   aggregate: flight_count
   # line_chart
-  nest: by_month is -> {
+  nest: by_month is  {
     group_by: departure_month is dep_time.month
     aggregate: flight_count
     group_by: carriers.nickname

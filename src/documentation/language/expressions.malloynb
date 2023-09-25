@@ -50,15 +50,15 @@ dimension:
 ##(docs) hidden
 import "flights.malloy"
 >>>malloy
-query: flights -> { 
+run: flights -> { 
   where: origin.county != null
   group_by: origin.state
-  nest: by_county is -> {
+  nest: by_county is  {
     group_by: origin.county
     aggregate: flight_count
   }
 } -> {
-  project: by_county.county
+  select: by_county.county
   limit: 3
 }
 >>>markdown
