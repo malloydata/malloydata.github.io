@@ -24,17 +24,16 @@
 import * as shiki from "shiki";
 import * as fs from "fs";
 
-const malloyTMGrammar = JSON.parse(fs.readFileSync(
-  "./malloy.tmGrammar.json",
-  "utf-8"
-));
+const malloyTMGrammar = JSON.parse(
+  fs.readFileSync(
+    "./node_modules/@malloydata/syntax-highlight/grammars/malloy/malloy.tmGrammar.json",
+    "utf-8"
+  )
+);
 
 const malloyDocsTMGrammar = {
   ...malloyTMGrammar,
-  patterns: [
-    ...malloyTMGrammar.patterns,
-    { include: "#docvar" },
-  ],
+  patterns: [...malloyTMGrammar.patterns, { include: "#docvar" }],
   repository: {
     ...malloyTMGrammar.repository,
     docvar: {
@@ -42,22 +41,24 @@ const malloyDocsTMGrammar = {
         {
           match: "\\<\\<[^(\\>\\>)]*\\>\\>",
           beginCaptures: {
-            0: { name: "punctuation.definition.comment.begin" }
+            0: { name: "punctuation.definition.comment.begin" },
           },
           endCaptures: {
-            0: { name: "punctuation.definition.comment.end" }
+            0: { name: "punctuation.definition.comment.end" },
           },
-          name: "markup.italic.markdown"
-        }
-      ]
-    }
-  }
+          name: "markup.italic.markdown",
+        },
+      ],
+    },
+  },
 };
 
-const malloySQLTMGrammar = JSON.parse(fs.readFileSync(
-  "./malloy-sql.tmGrammar.json",
-  "utf-8"
-));
+const malloySQLTMGrammar = JSON.parse(
+  fs.readFileSync(
+    "./node_modules/@malloydata/syntax-highlight/grammars/malloy-sql/malloy-sql.tmGrammar.json",
+    "utf-8"
+  )
+);
 
 const HIGHLIGHTER = shiki.getHighlighter({
   theme: "light-plus",
@@ -91,8 +92,10 @@ export async function highlight(
   const highlightedRaw = highlighter.codeToHtml(code, { lang });
   // In docs, the highlighter recognizes <<foo>> as a way to make
   // "foo" look like a meta-variable. Here we remove the << and >>
-  const removeDocVarEnclosing = highlightedRaw
-    .replace(/(>)(&lt;&lt;)(.*?)(&gt;&gt;)(<)/g, "$1$3$5");
+  const removeDocVarEnclosing = highlightedRaw.replace(
+    /(>)(&lt;&lt;)(.*?)(&gt;&gt;)(<)/g,
+    "$1$3$5"
+  );
   if (inline) {
     return removeDocVarEnclosing
       .replace(/^<pre class="shiki"/, `<code class="language-${lang}"`)
