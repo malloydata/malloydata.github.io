@@ -182,7 +182,14 @@ let BLOG_POSTS: BlogPostInfo[] = [];
 
 function buildBlogIndex() {
   const blogPostsRaw = JSON.parse(fs.readFileSync(BLOG_LIST_PATH, "utf8")) as BlogPostInfoRaw[];
-  BLOG_POSTS = blogPostsRaw.map(post => ({ ...post, published: new Date(post.published) }));
+  BLOG_POSTS = blogPostsRaw.map(post => ({ 
+    ...post, 
+    published: new Date(
+      parseInt(post.published.slice(0, 4)), 
+      parseInt(post.published.slice(5, 7)) - 1, 
+      parseInt(post.published.slice(8, 10))
+    )
+  }));
 
   BLOG_POSTS.sort((a, b) => b.published.getTime() - a.published.getTime());
 
