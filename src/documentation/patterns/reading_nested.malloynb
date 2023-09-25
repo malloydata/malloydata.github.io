@@ -80,7 +80,7 @@ run: ga_sessions -> {
     total_hits
     total_page_views
     sold_count
-  nest: by_source is -> {
+  nest: by_source is  {
     where: trafficSource.`source` != '(direct)'
     group_by: trafficSource.`source`
     aggregate:

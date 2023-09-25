@@ -8,7 +8,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   # bar_chart
   view: by_elevation is {
     aggregate: bin_size is (max(elevation) - min(elevation)) / 30
-    nest: data is -> {
+    nest: data is  {
       group_by: elevation
       aggregate: row_count is count()
     }

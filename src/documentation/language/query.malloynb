@@ -69,7 +69,7 @@ Here, `by_carrier` is a query defined nested inside another query stage, and its
 >>>malloy
 run: duckdb.table('../data/flights.parquet') -> {
   group_by: dep_year is dep_time.year
-  nest: by_carrier is -> {
+  nest: by_carrier is  {
     group_by: carrier
     aggregate: flight_count is count()
     limit: 2

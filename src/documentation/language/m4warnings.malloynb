@@ -133,3 +133,11 @@ Prior to Malloy 4.0, SQL blocks were declared using `sql: sql_block is ...`. Now
 | Pre-4.0 Malloy | Post-4.0 Malloy |
 | --- | --- |
 | <pre> `sql: sql_block is {`  `  select: """SELECT * FROM (%{ flights -> by_carrier }%)"""` `  connection: "bigquery"` `}`</pre> | <pre> `source: sql_source is ` `  bigquery.sql("""SELECT * FROM (%{ flights -> by_carrier })""")`</pre>  |
+
+<div class="warning">Leading '->' in a view or nest definition is no longer needed.</div>
+
+A leading `->` operator no longer signifies the beginning of a query pipeline.
+
+| Pre-4.0 Malloy | Post-4.0 Malloy |
+| --- | --- |
+| `query: x is -> { group_by: y}`<br />`nest: z is -> x + { aggregate: c is  count() }` | `view: x is { group_by: y}`<br />`nest: z is  x + { aggregate: c is  count() }` |

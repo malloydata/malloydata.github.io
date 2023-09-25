@@ -189,7 +189,7 @@ run: airports3 -> {
   group_by: state
   aggregate: airport_count
   limit: 5
-  nest: by_facility_type is -> {
+  nest: by_facility_type is  {
     group_by: fac_type
     aggregate: airport_count
   }
@@ -215,10 +215,10 @@ Queries can be nested to any level of depth.
 run: airports3 -> {
   group_by: faa_region
   aggregate: airport_count
-  nest: by_state_and_county is -> {
+  nest: by_state_and_county is  {
     group_by: state
     aggregate: airport_count
-    nest: by_county is -> {
+    nest: by_county is  {
       group_by: county
       aggregate: airport_count
       limit: 4
@@ -347,7 +347,7 @@ run: flights2 -> {
   limit: 10
   group_by: origin
   aggregate: carriers2.carrier_count   // <-- calculation in joined table
-  nest: top_3_carriers is -> {
+  nest: top_3_carriers is  {
     limit: 3
     group_by: carriers2.nickname
     aggregate:
@@ -428,7 +428,7 @@ run: airports5 -> {
   where: fac_type = 'HELIPORT'
   group_by: state
   aggregate: airport_count
-  nest: top_3_county is -> {
+  nest: top_3_county is  {
     limit: 3
     group_by: county
     aggregate: airport_count
@@ -448,7 +448,7 @@ run: airports6 -> {
   where: fac_type = 'HELIPORT'
   group_by: state
   aggregate: airport_count
-  nest: top_3_county is -> {
+  nest: top_3_county is  {
     limit: 3
     group_by: county
     aggregate: airport_count
@@ -473,7 +473,7 @@ source: airports7 is duckdb.table('../data/airports.parquet') extend {
     where: fac_type = 'HELIPORT'
     group_by: state
     aggregate: airport_count
-    nest: top_3_county is -> {
+    nest: top_3_county is  {
       limit: 3
       group_by: county
       aggregate: airport_count

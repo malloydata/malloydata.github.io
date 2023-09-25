@@ -48,6 +48,7 @@ the [4.0 Warnings FAQ](../../documentation/language/m4warnings.malloynb) documen
 * [Explicit `source.`` required to clarify aggregate locality for sum() and avg()`](../../documentation/language/aggregates.malloynb#required-explicit-aggregate-locality)
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
+* The `->` after the `is` in a [`view:`](../../documentation/language/source.malloynb#connecting-views) or [`nest:`](../../documentation/language/nesting.malloynb) statement is not longer needed.
 * [ `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`](../../documentation/language/aggregates.malloynb#count-expr-)
 * [`COUNT(*)` is now just `count()`](../../documentation/language/aggregates.malloynb#count) 
 * [Malloy has a function library](../../documentation/language/functions.malloynb) for doing common data manipulation operations

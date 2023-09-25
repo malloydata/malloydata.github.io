@@ -11,7 +11,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
     limit: 10
     group_by: state
     aggregate: airport_count
-    nest: by_fac_type is -> {
+    nest: by_fac_type is  {
       group_by: fac_type
       aggregate: airport_count
     }

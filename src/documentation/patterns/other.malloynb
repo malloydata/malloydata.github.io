@@ -15,7 +15,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
     group_by: state
     aggregate: avg_elevation
     calculate: row_num is row_number()
-    nest: data is -> {  
+    nest: data is  {  
       group_by: code, elevation
     }
   } -> {

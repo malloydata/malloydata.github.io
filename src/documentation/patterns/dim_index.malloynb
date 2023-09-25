@@ -91,7 +91,7 @@ run: duckdb.table('../data/airports.parquet') -> {
   sample: 5000  // sample only 5000 rows
 } -> {
   group_by: fieldName
-  nest: values is -> {
+  nest: values is  {
     group_by: fieldValue, weight
     order_by: weight desc
     limit: 10

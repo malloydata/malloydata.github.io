@@ -19,7 +19,7 @@ run: duckdb.table('../data/flights.parquet') extend {
       flight_count 
       max_delay is max(dep_delay)
       total_distance is distance.sum()
-  nest: flight_legs is -> {
+  nest: flight_legs is  {
     order_by: 3
     calculate: flght_leg is row_number() 
     group_by:
