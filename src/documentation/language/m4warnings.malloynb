@@ -5,7 +5,7 @@
 
 The old filter shortcut syntax `{? <<condition>> }` is deprecated. Use the more explicit `{ where: <<condition>> }` syntax instead.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `flight_count {? distance > 2 }` | `flight_count { where: distance > 2}` |
 | `flights {? distance > 2 }` | `flights extend { where: distance > 2}` |
@@ -15,7 +15,7 @@ The old filter shortcut syntax `{? <<condition>> }` is deprecated. Use the more 
 
 Query interpolation in SQL strings should use `}` to end the interpolation rather than `}%`.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `sql: sql_source is {`  `  select: """SELECT * FROM (%{ flights -> by_carrier }%)"""` `  connection: "bigquery"` `}`</pre> | <pre> `source: sql_source is ` `  bigquery.sql("""SELECT * FROM (%{ flights -> by_carrier })""")`</pre>  |
 
@@ -23,7 +23,7 @@ Query interpolation in SQL strings should use `}` to end the interpolation rathe
 
 The old refinement syntax `<<query>> { <<refinements>> }` is now deprecated; use `<<query>> + { <<refinements>> }` instead.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `query: flights -> by_carrier { limit: 5 }` | `run: flights -> by_carrier + { limit: 5 }`  |
 
@@ -31,7 +31,7 @@ The old refinement syntax `<<query>> { <<refinements>> }` is now deprecated; use
 
 It used to be necessary to use an arrow (`->`) to base a new source or query off of an existing query. This is no longer necessary.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `query: -> flights_by_carrier -> { project: * }` | `run: flights_by_carrier -> { select: * }`  |
 
@@ -39,7 +39,7 @@ It used to be necessary to use an arrow (`->`) to base a new source or query off
 
 The old extension syntax `<<source>> { <<extensions>> }` is now deprecated; use `<<source>> extend { <<extensions>> }` instead.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `source: flights is table('duckdb:flights.parquet') {` `   primary_key: id ` `}`</pre> | <pre> `source: flights is duckdb.table('flights.parquet') extend {` `   primary_key: id ` `}`</pre>  |
 
@@ -47,7 +47,7 @@ The old extension syntax `<<source>> { <<extensions>> }` is now deprecated; use 
 
 When referencing a SQL table, the connection name should now be specified `connection_name.table('table_path')` instead of `table('connection_name:table_path')`.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `source: flights is table('duckdb:flights.parquet')` | `source: flights is duckdb.table('flights.parquet')` |
 
@@ -55,7 +55,7 @@ When referencing a SQL table, the connection name should now be specified `conne
 
 Prior to Malloy 4.0, SQL blocks were declared using `sql: sql_block is ...` and used with `from_sql(sql_block) ...`. Now, SQL blocks are created with the `connection_name.sql(...)` syntax and can be used as sources directly.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `sql: sql_block is {`  `  select: """SELECT * FROM (%{ flights -> by_carrier }%)"""` `  connection: "bigquery"` `}` ` ` `source: sql_source is from_sql(sql_block)`</pre> | <pre> `source: sql_source is ` `  bigquery.sql("""SELECT * FROM (%{ flights -> by_carrier })""")`</pre>  |
 
@@ -63,7 +63,7 @@ Prior to Malloy 4.0, SQL blocks were declared using `sql: sql_block is ...` and 
 
 Prior to Malloy 4.0, the `from()` function was required to convert a query into a source. Now a query can be used directly anywhere where a source is needed.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `source: source_from_query is from(flights -> by_carrier) {` `  measure: carrier_count is count()` `}`</pre> | <pre> `source: source_from_query is flights -> by_carrier extend {` `  measure: carrier_count is count()` `}`</pre>  |
 
@@ -71,7 +71,7 @@ Prior to Malloy 4.0, the `from()` function was required to convert a query into 
 
 On the fly joins in queries should now be specified in an `extend:` block.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `run: flights -> {` `  join_one: carriers with carrier` `  group_by: carriers.nickname` `}`</pre> | <pre> `run: flights -> {` `  extend: { join_one: carriers with carrier }` `  group_by: carriers.nickname` `}`</pre>  |
 
@@ -79,7 +79,7 @@ On the fly joins in queries should now be specified in an `extend:` block.
 
 The `declare:` keyword has been deprecated, and should be replaced with `dimension:` or `measure:`. If the `declare:` is used inside a query, it also needs to be put into an `extend:` block.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `source: flights is table('duckdb:flights.parquet') {` `  declare: distance_km is distance * 1.6`  `  declare: flight_count is count()` `}`</pre> | <pre> `source: flights is duckdb.table('flights.parquet') {` `  dimension: distance_km is distance * 1.6`  `  measure: flight_count is count()` `}`</pre>  |
 | <pre> `run: flights -> {` `  declare: distance_km is distance * 1.6`  `  declare: flight_count is count()` `  group_by: distance_km` `  aggregate: flight_count` `}`</pre> | <pre> `run: flights -> {` `   extend: { ` `    dimension: distance_km is distance * 1.6` `    measure: flight_count is count()` `  }` `  group_by: distance_km` `  aggregate: flight_count` `}`</pre>  |
@@ -88,7 +88,7 @@ The `declare:` keyword has been deprecated, and should be replaced with `dimensi
 
 The `project:` keyword has been renamed to `select:`.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `query: flights -> { project: * }` | `run: flights -> { select: * }`  |
 
@@ -97,7 +97,7 @@ The `project:` keyword has been renamed to `select:`.
 
 Previously, you could specify an ordering field in the `top:` specification. Now you should use `order_by:` explicitly.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre>`query: flights -> { ` `   group_by: carrier ` `   aggregate: flight_count ` `   top: 5 by flight_count ` `}`</pre> | <pre>`query: flights -> { ` `   group_by: carrier ` `   aggregate: flight_count ` `   limit: 5 ` `   order_by: flight_count ` `}`</pre>  |
 
@@ -105,7 +105,7 @@ Previously, you could specify an ordering field in the `top:` specification. Now
 
 `query:` should now only be used to declare a query with a name. To run a query without naming it, use `run:`.
  
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `query: flights -> by_carrier` | `run: flights -> by_carrier`  |
 | `query: flights_by_carrier is flights -> by_carrier` | Unchanged  |
@@ -114,7 +114,7 @@ Previously, you could specify an ordering field in the `top:` specification. Now
 
 The SQL syntax for distinct counts `count(distinct <<expression>>)` is deprecated in favor of `count(<<expression>>)`.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre>`query: people -> { ` `   aggregate: distinct_first_names is count(distinct first_name)` `}`</pre> | <pre>`run: people -> { ` `   aggregate: distinct_first_names is count(first_name)` `}`</pre>  |
 
@@ -122,7 +122,7 @@ The SQL syntax for distinct counts `count(distinct <<expression>>)` is deprecate
 
 The SQL syntax for counting the records of a table `count(*)` is deprecated in favor of `count()`.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `query: flights -> { aggregate: flight_count is count(*) }` | `run: flights -> { aggregate: flight_count is count() }` |
 
@@ -130,7 +130,7 @@ The SQL syntax for counting the records of a table `count(*)` is deprecated in f
 
 Prior to Malloy 4.0, SQL blocks were declared using `sql: sql_block is ...`. Now, SQL blocks are created with the `connection_name.sql(...)` syntax.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | <pre> `sql: sql_block is {`  `  select: """SELECT * FROM (%{ flights -> by_carrier }%)"""` `  connection: "bigquery"` `}`</pre> | <pre> `source: sql_source is ` `  bigquery.sql("""SELECT * FROM (%{ flights -> by_carrier })""")`</pre>  |
 
@@ -138,6 +138,6 @@ Prior to Malloy 4.0, SQL blocks were declared using `sql: sql_block is ...`. Now
 
 A leading `->` operator no longer signifies the beginning of a query pipeline.
 
-| Pre-4.0 Malloy | Post-4.0 Malloy |
+| Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
 | `query: x is -> { group_by: y}`<br />`nest: z is -> x + { aggregate: c is  count() }` | `view: x is { group_by: y}`<br />`nest: z is  x + { aggregate: c is  count() }` |
