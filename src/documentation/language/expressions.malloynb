@@ -14,7 +14,7 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
 | [Aggregation Control / Subtotals](ungrouped-aggregates.malloynb) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
 | [Filtered expressions](#filtered-expressions) | `avg(age) { where: state = 'CA' }`<br/>`flight_count { where: origin.county != null }` |
-| [Type cast](#type-cast) | `total_distance::string`<br/>`some_date::timestamp` |
+| [Type cast](#type-cast) | <ul><li>[Standard](#type-cast) `total_distance::string`<br/>`some_date::timestamp`</li><li>[Safe type cast](#safe-type-cast) `birth_year::number`<br/>`start_time_string::timestamp`</li><li>[Database native types](#casting-to-specific-database-types) `name::"VARCHAR(32)"`</li></ul> |
 | [Safe type cast](#safe-type-cast) | `birth_year::number`<br/>`start_time_string::timestamp` |
 | [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/>`kind ? pick 'other' when null` |
 | [Time ranges](#time-ranges)<br/>Ranges with start and end or duration |  `start_time for 3 hours`<br/>`@2003 for 10 months` <br/> `@2003 to @2005` |
@@ -37,19 +37,15 @@ Fields may be referenced by name, and fields in joins or nested structures can b
 
 If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword. Back-quoted identifiers can also
 contain spaces and any special characters the database supports in field names; `.`s in back-quoted identifiers are not currently supported.
-
 >>>markdown
 ```malloy
 dimension: 
   year_plus_one is `year` + 1
   `name with spaces` is <<some value>>
 ```
->>>markdown
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
->>>malloy
 run: flights -> { 
   where: origin.county != null
   group_by: origin.state
@@ -114,7 +110,6 @@ Aggregations may included in an expression to create [measures](fields.malloynb#
 <!-- * `flight_count : [origin.county != null]` -->
 
 Aggregate expressions may be filtered, using the [usual filter syntax](filters.malloynb).
-
 >>>malloy
 run: flights -> {
   aggregate:
@@ -130,7 +125,6 @@ Type cast may be accomplished with the `::` operator.
 <!-- * `some_date::timestamp` -->
 
 Type casting may be accomplished with the `::type` syntax.
-
 >>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
@@ -146,10 +140,23 @@ if an error occurs during the cast operation. Safe Type Cast is particularly use
 <!-- * `some_date:::timestamp` -->
 
 Type casting may be accomplished with the `:::type` syntax.
-
 >>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance:::string, ' miles')
+}
+>>>markdown
+
+## Casting to specific database types
+
+Malloy has its own type system. A database engine needs to know for how each piece of data is stored, but Malloy only needs to worry about the underlying type (like string or numeric) of a piece of data. Sometimes, when writing a data transformation, it is important torefelct back to the SQL engine a particular datatype. Quoting the destination type will tell Malloy to use that specific type for the result.
+
+Note: If you cast an expression to an [unsupported data type, there is a very limited set of operations in Malloy which can use that value](datatypes.malloynb#unsupported)
+>>>malloy
+run: flights -> {
+    select:
+        dest is destination_code::"VARCHAR(3)"
+        dist is distance::"smallint"
+    limit: 1
 }
 >>>markdown
 
@@ -157,7 +164,6 @@ run: flights -> {
 ## Pick Expressions
 
 The `pick` construction in Malloy is similar to <code>CASE</code> statements in SQL.
-
 >>>markdown
 ```malloy
 pick 'small'  when size < 10
@@ -167,7 +173,6 @@ else 'large'
 >>>markdown
 
 Pick expressions are also compatible with the [apply operator](#application) and partial comparisons.
-
 >>>markdown
 ```malloy
 size ?
@@ -180,7 +185,6 @@ size ?
 Pick can be used to "clean" data, combining similar dirty values into one clean value. In the following example, the `pick` statement collects all the "this actually
 shipped" statuses, and because there is no `else`, leaves the other
 status values alone.
-
 >>>markdown
 ```malloy
 shipping_status ?
@@ -192,7 +196,6 @@ shipping_status ?
 Another common kind of cleaning is to have a small set you want to group
 by and all other values are compressed into `null`. A `pick` clause with no value
 picks an applied value when the condition is met.
-
 >>>markdown
 ```malloy
 status ?
@@ -202,7 +205,6 @@ status ?
 >>>markdown
 
 If you need to match on multiple fields and conditions, use a dimension.
-
 >>>markdown
 ```malloy
 dimension: Facility_Type_State is
@@ -306,7 +308,6 @@ Applying a value to another value applies a default comparison on the two values
 | `date` or `timestamp` | `date` or `timestamp` | `time ? @2003` | `time` is during 2003 |
 
 Values can be applied to [pick expressions](#pick-expressions) to make them more succinct.
-
 >>>markdown
 ```malloy
 size ?
@@ -321,7 +322,6 @@ size ?
 Malloy has the keyword `null` to represent the null value.
 
 To check to see if a value is null, simply compare it to `null`, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.
-
 >>>markdown
 ```malloy
 dimension: name_not_present is name = null
@@ -330,7 +330,6 @@ dimension: name_present is name != null
 >>>markdown
 
 Malloy also has the operator `??`, which in other languages is sometimes called the "Nullish Coalescing" operator, for providing a value to use in case an expression is null.
-
 >>>markdown
 ```malloy
 dimension: name_cleaned is name ?? '(No Name Provided)'
