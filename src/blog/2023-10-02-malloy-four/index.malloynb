@@ -64,7 +64,8 @@ these will continue to work. They are listed here to provide a complete list of 
 
 * [There are three kinds of string literals, `'`, `"`, and `"""`.](../../documentation/language/datatypes.malloynb#string)
   These can be used interchangeably anywhere a literal is legal.
-calculations* Casting to a specific database type is now legal using a quoted type name
+calculations
+* [Casting to a specific database type is now legal using a quoted type name](../../documentation/language/expressions.malloynb#casting-to-specific-database-types)
 * [Safe cast operator `:::`](../../documentation/language/expressions.malloynb#safe-type-cast) 
 * [Annotations and Tags](../../documentation/language/tags.malloynb)
 * [`??` (the nullish coalescing operation)](../../documentation/language/expressions.malloynb#null-operations)

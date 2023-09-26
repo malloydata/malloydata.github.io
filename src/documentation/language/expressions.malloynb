@@ -14,7 +14,7 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
 | [Aggregation Control / Subtotals](ungrouped-aggregates.malloynb) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
 | [Filtered expressions](#filtered-expressions) | `avg(age) { where: state = 'CA' }`<br/>`flight_count { where: origin.county != null }` |
-| [Type cast](#type-cast) | `total_distance::string`<br/>`some_date::timestamp` |
+| [Type cast](#type-cast) | <ul><li>[Standard](#type-cast) `total_distance::string`<br/>`some_date::timestamp`</li><li>[Safe type cast](#safe-type-cast) `birth_year::number`<br/>`start_time_string::timestamp`</li><li>[Database native types](#casting-to-specific-database-types) `name::"VARCHAR(32)"`</li></ul> |
 | [Safe type cast](#safe-type-cast) | `birth_year::number`<br/>`start_time_string::timestamp` |
 | [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/>`kind ? pick 'other' when null` |
 | [Time ranges](#time-ranges)<br/>Ranges with start and end or duration |  `start_time for 3 hours`<br/>`@2003 for 10 months` <br/> `@2003 to @2005` |
@@ -150,6 +150,20 @@ Type casting may be accomplished with the `:::type` syntax.
 >>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance:::string, ' miles')
+}
+>>>markdown
+
+## Casting to specific database types
+
+Malloy has its own type system. A database engine needs to know for how each piece of data is stored, but Malloy only needs to worry about the underlying type (like string or numeric) of a piece of data. Sometimes, when writing a data transformation, it is important torefelct back to the SQL engine a particular datatype. Quoting the destination type will tell Malloy to use that specific type for the result.
+
+Note: If you cast an expression to an [unsupported data type, there is a very limited set of operations in Malloy which can use that value](expressions.malloynb#unsupported)
+>>>malloy
+run: flights -> {
+    select:
+        dest is destination_code::"VARCHAR(3)"
+        dist is distance::"smallint"
+    limit: 1
 }
 >>>markdown
 
