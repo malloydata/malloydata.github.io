@@ -43,11 +43,9 @@ dimension:
   year_plus_one is `year` + 1
   `name with spaces` is <<some value>>
 ```
->>>markdown
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
->>>malloy
 run: flights -> { 
   where: origin.county != null
   group_by: origin.state
