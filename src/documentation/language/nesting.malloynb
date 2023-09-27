@@ -1,7 +1,7 @@
 >>>markdown
-# Nested Queries
+# Nested Views
 
-Nested queries, more formally known as "aggregating subqueries" are queries included in other queries. A nested query produces a subtable per row in the query in which it is embedded. The technical term "aggregating subquery" is a bit of a mouthful, so we more often refer to it as a "nested query."
+Nested views are views included in other views. When a nested view is used in a query, it generates an _aggregating subquery_, which produces a subtable per row in the view in which it is embedded. The term _nested query_ is often used to refer to a query which uses a nested view.
 >>>malloy
 ##(docs) hidden
 import "airports.malloy"
@@ -16,9 +16,9 @@ run: airports -> {
 }
 >>>markdown
 
-## Nesting Nested Queries
+## Nesting Nested Views
 
-Aggregating subqueries can be nested infinitely, meaning that a nested query can contain another nested query.
+Aggregating subqueries can be nested infinitely, meaning that a nested view can contain another nested view.
 >>>malloy
 run: airports -> {
   group_by: state
@@ -35,9 +35,9 @@ run: airports -> {
 }
 >>>markdown
 
-## Filtering Nested Queries
+## Filtering Nested Views
 
-Filters can be applied at any level within nested queries.
+Filters can be applied at any level within nested views.
 >>>malloy
 run: airports -> {
   where: state ? 'CA' | 'NY' | 'MN'
@@ -58,25 +58,28 @@ run: airports -> {
   }
 }
 >>>markdown
-## Nesting And Views
+## Nesting Named Views
 
-A nested query can also be created, or refined from, any of the existing views defined in a source
+Any views defined in a source can be used by name in a `nest:` clause or a query.
 >>>malloy
 source: airports_with_views is airports extend {
-    view: by_facility is {
-      group_by: fac_type
-      aggregate: airport_count
-    }
-    view: major_facilities is {
-      where: major = 'Y'
-      group_by: name is concat(code, ' - ', full_name)
-    }
-    view: top_5_counties is {
-        limit: 5
-        group_by: county
-        nest: major_facilities
-        nest: by_facility
-    }
+  view: by_facility is {
+    group_by: fac_type
+    aggregate: airport_count
+  }
+
+  view: major_facilities is {
+    where: major = 'Y'
+    group_by: name is concat(code, ' - ', full_name)
+  }
+
+  view: top_5_counties is {
+    limit: 5
+    group_by: county
+    nest: 
+      major_facilities
+      by_facility
+  }
 }
 
 run: airports_with_views -> top_5_counties

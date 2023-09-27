@@ -6,18 +6,22 @@ Annotations are text strings collected with objects as a file is compiled. Annot
 Annotations are strings of text in the model beginning with the `#` character. Annotations which start `##` are collected with the file or "model" and annotations which only have one `#` are associated with the object being defined.
 An annotation starts at the `#` character and continues to the end of the line.
 
-    ## This is a model annotation
+```malloy
+## This is a model annotation
 
-    # This is an object annotation
-    view: how_many is things -> { aggregate: total_count is count() }
+# This is an object annotation
+view: how_many is things -> { aggregate: total_count is count() }
+```
 
 An object annotation which happens before a definition list is distributed to each member of the list, but each member can also have their own unique annotations
 
-    # Every member of this list will have this annotation
-    measure:
-      max_x is max(x)
-      # only min_x will have this annotation
-      min_x is min(x)
+```malloy
+# Every member of this list will have this annotation
+measure:
+  max_x is max(x)
+  # only min_x will have this annotation
+  min_x is min(x)
+```
 
 The design of annotations is that the characters immediately following the `#` in an annotation will be available to applications to be able to add different types of annotations. Malloy itself uses the following annotation prefixes
 

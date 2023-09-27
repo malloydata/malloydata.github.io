@@ -44,63 +44,6 @@
         {
           "title": "SQL to Malloy",
           "link": "/language/sql_to_malloy.malloynb"
-        },
-        {
-          "title": "Common Patterns",
-          "items": [
-            {
-              "title": "Comparing Timeframes",
-              "link": "/patterns/yoy.malloynb"
-            },
-            {
-              "title": "Foreign Sums and Averages",
-              "link": "/patterns/foreign_sums.malloynb"
-            },
-            {
-              "title": "Reading Nested Data",
-              "link": "/patterns/reading_nested.malloynb"
-            },
-            {
-              "title": "Percent of Total",
-              "link": "/patterns/percent_of_total.malloynb"
-            },
-            {
-              "title": "Cohort Analysis",
-              "link": "/patterns/cohorts.malloynb"
-            },
-            {
-              "title": "Nested Subtotals",
-              "link": "/patterns/nested_subtotals.malloynb"
-            },
-            {
-              "title": "Bucketing with 'Other'",
-              "link": "/patterns/other.malloynb"
-            },
-            {
-              "title": "Auto-binning Histograms",
-              "link": "/patterns/autobin.malloynb"
-            },
-            {
-              "title": "Moving Average",
-              "link": "/patterns/moving_avg.malloynb"
-            },
-            {
-              "title": "Transform Data",
-              "link": "/patterns/transform.malloynb"
-            },
-            {
-              "title": "Data from JSON APIs",
-              "link": "/patterns/apijson.malloynb"
-            },
-            {
-              "title": "Sessionize - Map/Reduce",
-              "link": "/patterns/sessionize.malloynb"
-            },
-            {
-              "title": "Dimensional Indexes",
-              "link": "/patterns/dim_index.malloynb"
-            }
-          ]
         }
       ]
     },
@@ -118,6 +61,10 @@
         {
           "title": "Queries",
           "link": "/language/query.malloynb"
+        },
+        {
+          "title": "Views",
+          "link": "/language/views.malloynb"
         },
         {
           "title": "Data Types",
@@ -144,7 +91,7 @@
           "link": "/language/join.malloynb"
         },
         {
-          "title": "Nested Queries",
+          "title": "Nested Views",
           "link": "/language/nesting.malloynb"
         },
         {
@@ -178,6 +125,63 @@
         {
           "title": "Change Log",
           "link": "/language/changelog.malloynb"
+        }
+      ]
+    },
+    {
+      "title": "Common Patterns",
+      "items": [
+        {
+          "title": "Comparing Timeframes",
+          "link": "/patterns/yoy.malloynb"
+        },
+        {
+          "title": "Foreign Sums and Averages",
+          "link": "/patterns/foreign_sums.malloynb"
+        },
+        {
+          "title": "Reading Nested Data",
+          "link": "/patterns/reading_nested.malloynb"
+        },
+        {
+          "title": "Percent of Total",
+          "link": "/patterns/percent_of_total.malloynb"
+        },
+        {
+          "title": "Cohort Analysis",
+          "link": "/patterns/cohorts.malloynb"
+        },
+        {
+          "title": "Nested Subtotals",
+          "link": "/patterns/nested_subtotals.malloynb"
+        },
+        {
+          "title": "Bucketing with 'Other'",
+          "link": "/patterns/other.malloynb"
+        },
+        {
+          "title": "Auto-binning Histograms",
+          "link": "/patterns/autobin.malloynb"
+        },
+        {
+          "title": "Moving Average",
+          "link": "/patterns/moving_avg.malloynb"
+        },
+        {
+          "title": "Transform Data",
+          "link": "/patterns/transform.malloynb"
+        },
+        {
+          "title": "Data from JSON APIs",
+          "link": "/patterns/apijson.malloynb"
+        },
+        {
+          "title": "Sessionize - Map/Reduce",
+          "link": "/patterns/sessionize.malloynb"
+        },
+        {
+          "title": "Dimensional Indexes",
+          "link": "/patterns/dim_index.malloynb"
         }
       ]
     },

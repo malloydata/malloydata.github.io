@@ -36,8 +36,8 @@ join_cross: order_items2 is duckdb.table('data/order_items.parquet') on user_id 
 `join_cross:` - the join is a cross product and there will be many rows in each side of the join.
 
 
-Malloy's joins are left outer by default.
-Since Malloy deals in graphs, some SQL Join types don't make sense (RIGHT JOIN, for example).
+Malloy's joins are left outer joins by default.
+Since Malloy deals in graphs, some SQL Join types don't make sense (<code>RIGHT JOIN</code>, for example).
 
 
 ## Join Types
@@ -65,7 +65,7 @@ This is simply a shortcut, when joining based on the primary key of a joined sou
 source: order_items is duckdb.table('../data/order_items.parquet') extend {
   join_one: users on order_items.user_id = users.id
 }
-```malloy
+```
 >>>markdown
 
 
@@ -75,6 +75,7 @@ If no alias is specified using `is`, the name of the join will be the name of th
 >>>malloy
 source: carriers is duckdb.table('../data/carriers.parquet') extend {
   primary_key: code
+  measure: carrier_count is count()
 }
 
 source: flights is duckdb.table('../data/flights.parquet') extend {
@@ -113,25 +114,24 @@ run: flights3 -> {
 }
 >>>markdown
 
-Measures and queries defined in joined sources may be used in addition to dimensions.
+Measures defined in joined sources may be used in addition to dimensions.
 >>>malloy
-run: flights3 -> {
+run: flights -> {
   group_by: destination
-  aggregate: carrier_count is carriers.count()
+  aggregate: carriers.carrier_count
 }
 >>>markdown
 
 ## Join Example
 
 This example demonstrates the definition of several different joins in a model and their use in a query.
-Entire subtrees of data can be joined.  In the example below, `aircraft` joins `aircraft_models`.  `flights`
-joins aircraft (which already has a join to aircraft manufacturer). The tree nature of the join relationship
+Entire subtrees of data can be joined.  In the example below, `aircraft` joins `aircraft_models`, and `flights`
+joins `aircraft` and `airports`. The tree nature of the join relationship
 retained.
 >>>markdown
 ```malloy
 group_by: aircraft.aircraft_models.manufacturer
 ```
->>>markdown
 >>>malloy
 source: aircraft_models is duckdb.table('../data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code

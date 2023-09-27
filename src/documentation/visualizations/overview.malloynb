@@ -8,8 +8,7 @@ In Malloy, anything that can be named can be tagged. A tag starts with a `#`. Ta
 Malloy's rendering library interprets these tags to change how results are rendered. 
 
 ## Tagging individual elements
-In the query below, the measure **percent_of_total** is tagged as a percentage. Any time *percent_of_total* is used in a query, Malloy's rendering library will be displayed as a percentage.
-
+In the query below, the measure `percent_of_total` is tagged as a percentage. Any time `percent_of_total` is used in a query, Malloy's rendering library will be displayed as a percentage.
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   measure:
@@ -25,8 +24,6 @@ run: flights -> {
     flight_count 
     percent_of_flights
 }
->>>markdown
-
 >>>malloy
 #(docs) size=small limit=5000
 run: duckdb.table('../data/flights.parquet') ->  {
@@ -36,7 +33,6 @@ run: duckdb.table('../data/flights.parquet') ->  {
 >>>markdown
 
 Simply adding `# bar_chart` before the query tags it and tells the rendering library to show the result as a bar chart. See the docs on the [Bar Chart tag](./bar_charts.malloynb) for more information.
-
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart

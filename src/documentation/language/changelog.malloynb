@@ -4,9 +4,15 @@ _Breaking changes indicated with *_
 
 We will use this space to highlight major and/or breaking changes to Malloy.
 
-## Malloy 4.0 Preview (v0.0.40 - v0.0.56)
+## Malloy 4.0 Preview (v0.0.40 - v0.0.86)
 
 In this set of changes, several new syntactical constructs have been introduced, in some cases directly replacing existing syntaxes. The old syntaxes will be deprecated in version 4.0. For the time being, both sets of syntaxes are legal. To preview warnings (and eventually errors) that will be added in 4.0, you can include the <code>m4warnings</code> [compiler flag](./tags.malloynb) in your source code: `##! m4warnings`.
+
+### Views
+
+To resolve some confusion about the difference between "source-level queries" and "model-level queries," source-level queries have been renamed to "views." To define views in a source, use `view:` instead of `query:`. The latter will be deprecated in 4.0. At the top level of a model, queries can still be defined and named with `query:`.
+
+For more information about views, see the [Views](./views.malloynb) section.
 
 ### Connection Table Method
 
@@ -37,7 +43,6 @@ Previously in order to reference an existing query (e.g. to use as the source fo
 ### Addition of Leading Arrow for Queries Defined in Sources
 
 An optional leading arrow can now be placed in query definitions inside of sources:
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
@@ -92,7 +97,6 @@ Function arguments are now typechecked for a set of "built-in" functions. All un
 ### Forced function call syntax
 
 For functions which are not "built-in", or to call the native SQL version of a function, there is special syntax:
-
 >>>markdown
 ```malloy
 // Exclamation point indicates to not typecheck arguments and directly call the named SQL function
@@ -106,7 +110,6 @@ dimension: timestamp_value is timestamp_seconds!timestamp(value)
 ### Calculations (analytic functions / window functions)
 
 There is a new keyword `calculate:` which can appear in a query, for use with [analytic functions](./functions.malloynb#analytic-functions).
-
 >>>malloy
 run: flights -> { 
   group_by: carrier
@@ -123,13 +126,11 @@ New functions are in the global namespace, which means that top level objects (S
 ### The apply operator is now ? and not :
 
 In the transition from filters being with an array like syntax ...
-
 >>>markdown
 sourceName :[ fieldName: value1|value2 ]
 >>>markdown
 
 The use of `:` as the apply operator became a readability problem ...
-
 >>>markdown
 sourceName { where: fieldName: value1|value2 }
 >>>markdown
@@ -137,7 +138,6 @@ sourceName { where: fieldName: value1|value2 }
 As of this release, use of the `:` as an apply operator will generate a warning,
 and in a near future release it will be a compiler error. The correct
 syntax for apply is now the `?` operator. As in
-
 >>>markdown
 sourceName { where: fieldName ? value1|value2 }
 >>>markdown

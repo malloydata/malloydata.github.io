@@ -56,7 +56,7 @@ source: limited_users is duckdb.sql("""
 run: limited_users -> { aggregate: user_count }
 >>>markdown
 
-## Embedding Malloy queries in an SQL block (A.K.A. "Turducken")
+## Embedding Malloy Queries in an SQL Block (A.K.A. "Turducken")
 
 Malloy queries can be embedded in SQL blocks as well. When `%{` and `}` appear inside a `"""` quoted (but not a `"` or `'` quoted) string of an SQL source, the Malloy query between the brackets is compiled and replaced with the <code>SELECT</code> statement generated from the query.
 >>>malloy
@@ -75,5 +75,4 @@ source: malloy_in_sql_query is duckdb.sql("""
 
 run: malloy_in_sql_query -> { select: * }
 >>>markdown
-
-\> _We have referred to this feature the ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinite nesting, but it is amusing_
+_We have referred to this feature as ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you then take the SQL block and wrap it in an SQL source. It isn't the perfect name for infinite nesting, but it is amusing_

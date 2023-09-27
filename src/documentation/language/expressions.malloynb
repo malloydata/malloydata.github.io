@@ -26,26 +26,23 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`!= null`<br/>`~ r'C.*'` |
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
 | [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
-| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != NULL`<br/> `eventStatus ?? 'unknown'` |
+| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != null`<br/> `eventStatus ?? 'unknown'` |
 | [Operator Precedence](#operator-precedence) | `a + b * c and d ?? e > f`
 
 ## Identifiers
 
 <!-- * `` `year` `` -->
 
-Fields may be referenced by name, and fields in joins or nested structures can be accessed using period as in `item.item_property`
+Fields may be referenced by name, and fields in joins or nested structures can be accessed using a period (`.`) as in `item.item_property`
 
 If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword. Back-quoted identifiers can also
 contain spaces and any special characters the database supports in field names; `.`s in back-quoted identifiers are not currently supported.
-
 >>>markdown
 ```malloy
 dimension: 
   year_plus_one is `year` + 1
   `name with spaces` is <<some value>>
 ```
->>>markdown
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
@@ -114,7 +111,6 @@ Aggregations may included in an expression to create [measures](fields.malloynb#
 <!-- * `flight_count : [origin.county != null]` -->
 
 Aggregate expressions may be filtered, using the [usual filter syntax](filters.malloynb).
-
 >>>malloy
 run: flights -> {
   aggregate:
@@ -130,7 +126,6 @@ Type cast may be accomplished with the `::` operator.
 <!-- * `some_date::timestamp` -->
 
 Type casting may be accomplished with the `::type` syntax.
-
 >>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
@@ -146,7 +141,6 @@ if an error occurs during the cast operation. Safe Type Cast is particularly use
 <!-- * `some_date:::timestamp` -->
 
 Type casting may be accomplished with the `:::type` syntax.
-
 >>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance:::string, ' miles')
@@ -157,7 +151,6 @@ run: flights -> {
 ## Pick Expressions
 
 The `pick` construction in Malloy is similar to <code>CASE</code> statements in SQL.
-
 >>>markdown
 ```malloy
 pick 'small'  when size < 10
@@ -167,7 +160,6 @@ else 'large'
 >>>markdown
 
 Pick expressions are also compatible with the [apply operator](#application) and partial comparisons.
-
 >>>markdown
 ```malloy
 size ?
@@ -180,7 +172,6 @@ size ?
 Pick can be used to "clean" data, combining similar dirty values into one clean value. In the following example, the `pick` statement collects all the "this actually
 shipped" statuses, and because there is no `else`, leaves the other
 status values alone.
-
 >>>markdown
 ```malloy
 shipping_status ?
@@ -192,7 +183,6 @@ shipping_status ?
 Another common kind of cleaning is to have a small set you want to group
 by and all other values are compressed into `null`. A `pick` clause with no value
 picks an applied value when the condition is met.
-
 >>>markdown
 ```malloy
 status ?
@@ -202,7 +192,6 @@ status ?
 >>>markdown
 
 If you need to match on multiple fields and conditions, use a dimension.
-
 >>>markdown
 ```malloy
 dimension: Facility_Type_State is
@@ -251,9 +240,7 @@ Time literals are specified in Malloy with the `@` character. A literal
 specified this way has an implied duration which means a literal
 can act like a range. See [Timestamp literals](datatypes.malloynb#timestamp-literals) and [Date literals](datatypes.malloynb#date-literals) for more details.
 
-In addition the `@` based literal syntax, Malloy also has one built in time constant.
-
-* `now` -- The current time
+In addition the `@` based literal syntax, Malloy also has one built in time constant, `now`, representing the current time.
 
 ## Numeric Ranges
 
@@ -306,7 +293,6 @@ Applying a value to another value applies a default comparison on the two values
 | `date` or `timestamp` | `date` or `timestamp` | `time ? @2003` | `time` is during 2003 |
 
 Values can be applied to [pick expressions](#pick-expressions) to make them more succinct.
-
 >>>markdown
 ```malloy
 size ?
@@ -321,7 +307,6 @@ size ?
 Malloy has the keyword `null` to represent the null value.
 
 To check to see if a value is null, simply compare it to `null`, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.
-
 >>>markdown
 ```malloy
 dimension: name_not_present is name = null
@@ -330,7 +315,6 @@ dimension: name_present is name != null
 >>>markdown
 
 Malloy also has the operator `??`, which in other languages is sometimes called the "Nullish Coalescing" operator, for providing a value to use in case an expression is null.
-
 >>>markdown
 ```malloy
 dimension: name_cleaned is name ?? '(No Name Provided)'
@@ -355,4 +339,4 @@ From highest to lowest precedence, here are the Malloy operators
 | `not`       | Unary boolean not
 | `and`       | Bolean and
 | `or`        | Bolean or
-| `??`        | Nullish coalesce
+| `??`        | Null coalesce
