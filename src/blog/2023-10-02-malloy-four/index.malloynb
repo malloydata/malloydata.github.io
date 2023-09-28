@@ -33,22 +33,22 @@ needs to change, once the rollout begins. For examples showing both the old and 
 the [4.0 Warnings FAQ](../../documentation/language/m4warnings.malloynb) document.
 
 * [New sources are only created with `extend {}`](../../documentation/language/source.malloynb#source-extensions)
-* [Existing queries are only refined with `+ {}`](../../documentation/language/query.malloynb#refinement) 
-* [`view:` inside a source replaces `query:` inside of a source](../../documentation/language/source.malloynb#connecting-views) 
-* [Extensions of a source inside of a query operation must be contained in an `extend: { }`.](../../documentation/language/query.malloynb#source-extensions)
+* [Existing queries are only refined with `+ {}`](../../documentation/language/views.malloynb#refining-views) 
+* [`view:` inside a source replaces `query:` inside of a source](../../documentation/language/source.malloynb#adding-fields) 
+* [Extensions of a source inside of a query operation must be contained in an `extend: { }`.](../../documentation/language/views.malloynb#source-extensions)
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
 * `run:` replaces `query:` with no name
 * [The `sql:` statement is replaced by SQL sources](../../documentation/language/sql_sources.malloynb)
 * [The source `table('connectionName:tablePath')` is now `connectionName.table('tablePath')`](../../documentation/language/source.malloynb#sources-from-tables-or-views) 
-* [The `project:` statement is now called `select:`](../../documentation/language/query.malloynb#projection)
+* [The `project:` statement is now called `select:`](../../documentation/language/views.malloynb#projection)
 * `from()` to create a source from a query is no longer needed
 * [When nesting Malloy code inside a multi-line literal, the syntax 
   is  `%{ malloyCode }` and not `%{ malloyCode }%`](../../documentation/language/sql_sources.malloynb#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-) 
 * [Explicit `source.`` required to clarify aggregate locality for sum() and avg()`](../../documentation/language/aggregates.malloynb#required-explicit-aggregate-locality)
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `queryName` instead of `-> queryName`
-* The `->` after the `is` in a [`view:`](../../documentation/language/source.malloynb#connecting-views) or [`nest:`](../../documentation/language/nesting.malloynb) statement is not longer needed.
+* The `->` after the `is` in a [`view:`](../../documentation/language/source.malloynb#adding-fields) or [`nest:`](../../documentation/language/nesting.malloynb) statement is not longer needed.
 * [ `COUNT(DISTINCT `_expression_`)` is now just `count(`_expression_`)`](../../documentation/language/aggregates.malloynb#count-expr-)
 * [`COUNT(*)` is now just `count()`](../../documentation/language/aggregates.malloynb#count) 
 * [Malloy has a function library](../../documentation/language/functions.malloynb) for doing common data manipulation operations

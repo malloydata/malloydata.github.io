@@ -34,7 +34,7 @@ Previously, there was one gesture used for source extensions and query refinemen
 
 This makes `from` no longer required, and it will be deprecated with the old extension/refinement syntax.
 
-See the [Query Refinement](./query.malloynb#refinement) and [Source Extension](./source.malloynb#source-extensions) sections for more details.
+See the [Query Refinement](./views.malloynb#refining-views) and [Source Extension](./source.malloynb#source-extensions) sections for more details.
 
 ### Deprecation of Leading Arrows for Query References
 
