@@ -3,7 +3,7 @@
 
 MalloySQL enables mixing dialect-specific SQL (including DDL) with Malloy. For example, MalloySQL can be used to create a new table in BigQuery, based on a model of existing data:
 
-  ```malloy
+  ```malloysql
   >>>malloy
   import "airports.malloy"
 
@@ -22,14 +22,14 @@ MalloySQL can be used in the VSCode Extension and the Malloy CLI. In both cases,
 
 MalloySQL files are composed of two kinds of statements - Malloy statements and SQL statements. Each statement is preceeded by a line that defines the statement type: `>>>malloy` or `>>>sql`. The SQL statement can also be passed a connection name - this is the name of the connection to use when executing the query. This is valid MalloySQL:
 
-  ```malloy
+  ```malloysql
   >>>sql connection:duckdb
   SELECT 1;
   ```
 
 SQL statements can also contain embedded Malloy queries by wrapping the Malloy statement with `%{` and `}%`. To use embedded Malloy, a source must first be imported to use with the Malloy query:
 
-  ```malloy
+  ```malloysql
   >>>malloy
   import "mysource.malloy"
 
@@ -39,7 +39,7 @@ SQL statements can also contain embedded Malloy queries by wrapping the Malloy s
 
 It is possible to use multiple SQL commands in one statement (although only the final result will be shown in the VSCode extension):
 
-  ```malloy
+  ```malloysql
   >>>malloy
   import "mysource.malloy"
 
@@ -50,7 +50,7 @@ It is possible to use multiple SQL commands in one statement (although only the 
 
 The first SQL statement must define a connection to be used for queries, but future SQL statements only need to define a connection if a different connection should be used. This is valid:
 
-  ```malloy
+  ```malloysql
   >>>malloy
   import "mysource.malloy"
 
@@ -70,7 +70,7 @@ Running a specific SQL statement in a Malloy file (by, for example, clicking the
 
 Here is a more realistic example, using a Malloy model to wrangle raw data and create a useful parquet file with DuckDB:
 
-  ```malloy
+  ```malloysql
   >>>malloy
   import "raw_data.malloy"
 

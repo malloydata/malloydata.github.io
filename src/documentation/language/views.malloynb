@@ -1,0 +1,222 @@
+>>>markdown
+# Views
+
+Malloy separates queries into a *source* and a *view* on that source. Views can be defined in a source or used directly in queries. Views that are named as part of a [source extension](./source.malloynb#source-extensions) can be reused, nested, and refined.
+
+A view consists of one or more _stages_ separated by `->`s. Most views only have one stage, but [multi-stage views](#multi-stage-views) can be used for more complex analysis. 
+
+## Reduction vs Projection
+
+Each stage of a view performs a transformation of one of two kinds:
+* **Reduction**: reduce the grain of the data
+* **Projection**: select fields without reducing 
+
+Reductions use `group_by:` and/or `aggregate:`, whereas projections use `select:`.
+
+>>>malloy
+##(docs) hidden
+import "flights.malloy"
+>>>markdown
+
+### Reduction 
+The following is an example of a **reduction**:
+>>>malloy
+run: flights -> {
+  group_by: carrier        
+  aggregate: flight_count is count()
+}
+>>>markdown
+
+### Projection
+
+The following is an example of a **projection**:
+>>>malloy
+run: flights -> {
+  select: *
+  limit: 20
+}
+>>>markdown
+
+Note that the operations in a stage are for the most part not order-sensitive like SQL; they can be arranged in any order.
+
+## View Operations
+
+Views can contain a number of different kinds of operations which affect the behavior of the transformation. The following sections describe these various operations.
+
+### Fields
+
+In a stage, fields (dimensions, measures,
+views, and calculations) may be specified either by referencing an existing
+name or defining them inline.
+>>>malloy
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count is count()
+}
+>>>markdown
+
+Dimensions are included with `group_by` (or `select` in a projection), measures are included with `aggregate:`, and views are nested with `nest:`.
+
+When referencing existing fields in a `select:` clause, wildcard expressions like `*`, or `some_join.*` may be used.
+
+See the [Fields](fields.malloynb) section for more information
+about the different kinds of fields and how they can be
+defined.
+
+### Filters
+
+Filters can be included in a view with `where:`, which is equivalent to SQL's <code>WHERE</code> clause.
+>>>malloy
+run: flights -> {
+  where: distance > 1000
+  group_by: distance
+  aggregate: flight_count
+}
+>>>markdown
+
+Filters may be also be applied to a [source](source.malloynb#filtering-sources), or a [measure](expressions.malloynb#filtered-expressions).
+
+See the [Filters](filters.malloynb) section for more information.
+
+See [Post-Aggregation Filtering](#post-aggregation-filtering) below for information about `having:`.
+
+### Ordering and Limiting
+
+Views may also include ordering and limiting specifications.
+>>>malloy
+run: flights -> {
+  limit: 4
+  group_by: carrier
+  aggregate: flight_count
+}
+>>>markdown
+
+For detailed information on ordering and limiting, see the [Ordering and Limiting](order_by.malloynb) section.
+
+### Post-Aggregation Filtering
+
+Views may filter entire groupings based on aggregate values using the `having:` clause, which corresponds to SQL's <code>HAVING</code> clause.
+>>>malloy
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  having: flight_count > 35000
+}
+>>>markdown
+
+### Calculations (Window Functions)
+
+Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.malloynb) section for details.
+>>>malloy
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  calculate: flight_count_rank is rank()
+}
+>>>markdown
+### Source Extensions
+
+When writing a query, if additional source extensions are needed, they can be `extend`-ed into the source in the query expression, as in
+
+```malloy
+run: some_source extend { <<extensions>> } -> { <<view operations>> }
+```
+
+Such extensions can also be included in a view using the `extend:` block. 
+>>>malloy
+##(docs) hidden
+import "airports.malloy"
+>>>markdown
+
+
+>>>malloy
+run: flights -> {
+  extend: {
+    join_one: origin_airport is airports on origin_airport.code = origin_code
+    dimension: origin_state is origin_airport.state
+  }
+
+  group_by: origin_state
+  aggregate: flight_count
+  limit: 5
+}
+>>>markdown
+
+When the view is defined inside a source, source extensions can only be added in this way. The legal extensions in a view are:
+* Defining fields with `dimension:` and `measure:`
+* Declaring joins with `join_one:`, `join_many:`, and `join_cross:`
+
+## Reusing, Nesting, and Refining Views
+
+When views are defined in a source, they can be reused in a number of ways.
+
+### Reusing Views
+
+They can serve as the starting point for multiple different queries:
+
+```malloy
+run: flights -> by_carrier -> { select: nickname; limit: 1 }
+run: flights -> by_carrier -> { index: * }
+```
+
+### Nesting Views
+
+Views can also be nested in other views:
+>>>malloy
+run: flights -> {
+  group_by: origin.state
+  nest: by_carrier
+}
+>>>markdown
+
+### Refining Views
+
+A view can be "refined," which means adding clauses such as `select:`, `group_by:`, `aggregate:`, or `where:`. For example, let's define a source with a view and use that to create a query
+>>>malloy
+source: flights4 is duckdb.table('../data/flights.parquet') extend {
+  view: top_destinations is {
+    group_by: destination
+    aggregate: flight_count is count()
+  }
+}
+>>>markdown
+
+Running the query gives us flight count by destination:
+>>>malloy
+run: flights4 -> top_destinations
+>>>markdown
+
+Now let's refine it by adding `+ { group_by: origin }`. This adds a `group_by` clause to the original query
+>>>malloy
+run: flights4 -> top_destinations + {
+  group_by: origin
+}
+>>>markdown
+
+The query is now calculating `flight_count` grouped by both `destination` and `origin`.
+
+Refinement can be thought of as similar to extending a class in object-oriented programming. The new view inherits the properties of the original, and adds new properties to it. (That said, it should not be confused with the similar concept of [source extension](./source.malloynb#source-extensions).) This makes query logic much more reusable, since views can be easily saved and modified. 
+
+## Multi-Stage Views
+
+This example shows a view with 3 stages separated by `->`. Each stage generates a CTE in the SQL.
+>>>malloy
+run: duckdb.table('../data/flights.parquet') -> {
+  select: *
+  where: dep_time > @2003
+} -> {    
+  -- extend: allows you to define fields for use within the view
+  extend: { measure: flight_count is count() }   
+  aggregate: flight_count
+  nest: main_view is {
+    group_by: carrier
+    aggregate: flight_count
+  }
+} -> {
+  select:
+    main_view.carrier
+    main_view.flight_count
+    # percent
+    flight_count_as_a_percent_of_total is main_view.flight_count / flight_count
+}
+>>>markdown

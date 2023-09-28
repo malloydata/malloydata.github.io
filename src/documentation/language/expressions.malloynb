@@ -26,14 +26,14 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`!= null`<br/>`~ r'C.*'` |
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
 | [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
-| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != NULL`<br/> `eventStatus ?? 'unknown'` |
+| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != null`<br/> `eventStatus ?? 'unknown'` |
 | [Operator Precedence](#operator-precedence) | `a + b * c and d ?? e > f`
 
 ## Identifiers
 
 <!-- * `` `year` `` -->
 
-Fields may be referenced by name, and fields in joins or nested structures can be accessed using period as in `item.item_property`
+Fields may be referenced by name, and fields in joins or nested structures can be accessed using a period (`.`) as in `item.item_property`
 
 If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword. Back-quoted identifiers can also
 contain spaces and any special characters the database supports in field names; `.`s in back-quoted identifiers are not currently supported.
@@ -253,9 +253,7 @@ Time literals are specified in Malloy with the `@` character. A literal
 specified this way has an implied duration which means a literal
 can act like a range. See [Timestamp literals](datatypes.malloynb#timestamp-literals) and [Date literals](datatypes.malloynb#date-literals) for more details.
 
-In addition the `@` based literal syntax, Malloy also has one built in time constant.
-
-* `now` -- The current time
+In addition the `@` based literal syntax, Malloy also has one built in time constant, `now`, representing the current time.
 
 ## Numeric Ranges
 
@@ -354,4 +352,4 @@ From highest to lowest precedence, here are the Malloy operators
 | `not`       | Unary boolean not
 | `and`       | Bolean and
 | `or`        | Bolean or
-| `??`        | Nullish coalesce
+| `??`        | Null coalesce

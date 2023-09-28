@@ -7,7 +7,7 @@ tables in a database, constant values to be used in later analysis, computed met
 
 ## Defining Fields
 
-Fields defined in sources are reusable. A field is a `dimension`, `measure` or `query`.  When these are used in a query, these fields are invoked with `select:`, `group_by:`, `aggregate:` or `nest:`.   The definitions are the same  whether part of a source or a query stage. In either case, they are defined using the `is` keyword.
+Fields defined in sources are reusable. A field is a *dimension*, *measure* or *view*, or *calculation*.  When these are used in a query, these fields are invoked with `select:`, `group_by:`, `aggregate:`, `nest:`, or `calculate:`.  Their definitions are syntactically identical whether defined in a source or a view (with the exception of calculations, which can only be defined in a view, and not in a source). In either case, they are defined using the `is` keyword.
 
 **In a source**
 >>>malloy
@@ -16,7 +16,7 @@ source: users is duckdb.table('../data/users.parquet') extend {
 }
 >>>markdown
 
-**In a query stage**
+**In a query**
 >>>malloy
 run: users -> {
   group_by: age_in_dog_years is age * 7
@@ -27,10 +27,10 @@ The right hand side of this kind of definition can be any
 field expression. See the [Expressions](expressions.malloynb)
 section for more information.
 
-Queries (see [below](#source-level-queries)) can also be defined as
-part of a source or query stage. When a query is defined in a query stage, it is known as a "nested query" or an "aggregating
+Like dimensions and measures, views can also be defined as
+part of a source or in a query's view. When a view is used or defined in another view, it is known as a "nested view" and produces an "aggregating
 subquery." See the [Nesting](nesting.malloynb) section for a
-detailed discussion of nested queries.
+detailed discussion of nested views.
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
@@ -47,11 +47,11 @@ run: flights -> {
 
 ## Field Names
 
-Field names must start with a letter or underscore, and can only contain letters, numbers, and underscores. Field names which conflict with keywords must be enclosed in back ticks, e.g. `` `year` is dep_time.year``.
+Field names generally must start with a letter or underscore, and can only contain letters, numbers, and underscores. Field names which don't follow these rules, or which conflict with a Malloy keyword, must be enclosed in back ticks, e.g. `` `year` is dep_time.year``.
 
 ## Kinds of Fields
 
-Malloy includes three different _kinds_ of fields: _dimensions_, _measures_, and _queries_.
+Malloy includes three different kinds of fields: _dimensions_, _measures_, _views_, and _calculations_.
 
 ### Dimensions
 
@@ -66,8 +66,7 @@ source: users2 is duckdb.table('../data/users.parquet') extend {
 }
 >>>markdown
 
-Dimensions may be used in both `reduce` and `project`
-queries.
+Dimensions may be used in both reductions and projections.
 >>>malloy
 // Show the top 10 full names by number of occurrences
 run: users2 -> {
@@ -88,7 +87,7 @@ run: users2 -> {
 Measures are fields representing aggregated data over
 multiple records.
 
-Measures may not be used in `project` queries. However, any measures that appear in a `reduce` query stage are "dimensionalized" as part of the query, and are therefore usable as dimensions in subsequent stages.
+Measures may not be used in projections (`select:` views). However, any measures that appear in a reduction are "dimensionalized" as part of the query, and are therefore usable as dimensions in subsequent stages.
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -98,9 +97,9 @@ run: flights -> {
 }
 >>>markdown
 
-### Source-Level Queries
+### Views
 
-A query represents a pipelined data transformation including a source and one or more stages. When a query is defined as part of a source extension, its source is implicit.
+A view represents a pipelined data transformation of one or more stages. 
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
@@ -112,14 +111,12 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 ```
 >>>markdown
 
-Notice how the query is defined like any other query, except that no source name is specified to the left of the `->`.
-
-A source-level query's pipeline can always begin with another query from the same source.
+A view can always begin with another view from the same source.
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   ...
-  view: top_carriers is by_carrier {
+  view: top_carriers is by_carrier -> {
     select: carrier
     limit: 5
   }
@@ -129,4 +126,14 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 
 <!-- TODO this does not seem to work in a query stage, but it does work in an source or model -->
 
-See the [Nesting](nesting.malloynb) section for more details about nested queries.
+See the [Nesting](nesting.malloynb) section for more details about nested views.
+
+### Calculations
+
+*Calculations* are fields based off of groupings and aggregate values in a view, and therefore can only be created in a view with `calculate:` and can not be predefined in a source. See the [Calculations](./calculations.malloynb) section for details.
+>>>malloy
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  calculate: flight_count_rank is rank()
+}

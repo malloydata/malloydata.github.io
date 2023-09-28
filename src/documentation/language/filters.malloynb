@@ -14,7 +14,7 @@ Regardless of the placement of a filter, the syntax looks the same.
 
 Each filter can be any expression of type `boolean`, whether that's a boolean field `is_commercial_flight`, a comparison `distance > 1000`, or any of the other kinds of boolean expressions that Malloy supports. For examples see [the table below](#examples-of-filter-expressions), or for detailed information on the kinds of expressions Malloy supports, see the [Expressions](expressions.malloynb) section.
 
-Logically, the comma-separated list of filters are `and`ed together, though in reality different conditions are checked in different places in the generated SQL, depending on what types of computation occurs in the expression.
+The comma-separated list of filters are `and`ed together, so `where: x, y` is equivalent to `where: x and y`.
 
 <!--
 TODO "see where vs having for more information on how Malloy generates SQL for filters"
@@ -22,7 +22,7 @@ TODO "see where vs having for more information on how Malloy generates SQL for f
 
 ## Filter Placement
 
-A filter can be applied to the source of a query, to just one stage of a query, or even to a particular field or expression (measure or nested query).
+A filter can be applied to the source of a query, to just one stage of a query, or even to a particular field or expression (measure or nested view).
 
 ### Filtering a Query's Source
 
@@ -31,7 +31,7 @@ When filtering a query's source, the filter applies to the whole query.
 ##(docs) hidden
 import "flights.malloy"
 >>>malloy
-run: flights { where: distance > 1000 } -> { aggregate: flight_count } 
+run: flights extend { where: distance > 1000 } -> { aggregate: flight_count } 
 >>>markdown
 
 ### Filtering in a Query Stage
@@ -59,11 +59,10 @@ run: flights -> {
 }
 >>>markdown
 
-### Filtering Complex Measure
+### Filtering Measures
 
 Even complex measures can be filtered.  A common use case is to create a filtered
 measure and then create that as a percent of total.
-
 >>>malloy
 // add a couple of measures to the `flights` source
 source: my_flights is flights {
@@ -82,13 +81,10 @@ run: my_flights -> {
 }
 >>>markdown
 
-### Filtering Nested Queries
+### Filtering Nested Views
 
-Even complex measures can be filtered.  A common use case is to create a filtered
-measure and then create that as a percent of total.
-
+Nested views can also be filtered using [refinement](./views.malloynb#refining-views).
 >>>malloy
-// add a couple of measures to the `flights` source
 source: my_flights2 is flights {
   measure: delayed_flights is flight_count { where: dep_delay > 30 }
   view: delay_stats is {
@@ -101,8 +97,8 @@ source: my_flights2 is flights {
 
 run: my_flights2 -> {
   nest:
-    ca_stats is delay_stats { where: origin.state = 'CA' }
-    ny_stats is delay_stats { where: origin.state = 'NY' }
+    ca_stats is delay_stats + { where: origin.state = 'CA' }
+    ny_stats is delay_stats + { where: origin.state = 'NY' }
 }
 >>>markdown
 
@@ -170,7 +166,7 @@ Checking equality against multiple possible values is extremely common, and can 
 
 Example| Meaning
  --- | ---
-`color: 'red' \| 'green' \| 'blue'` | `color` is one of the primary colors
+`color ? 'red' \| 'green' \| 'blue'` | `color` is one of the primary colors
 `email ~ '%.com' \| '%.org'` | `email` has `.com` or `.org` domain
 
 ## Examples of Filter Expressions
@@ -184,13 +180,13 @@ Example| Meaning
 `size != 10` | `size` is not equal to 10
 `size:  10 to 100` | `size` is greater than or equal to 10 and less than 100
 `size >= 10 and size < 100` | `size` is greater than or equal to 10 and less than 100
-`size: >= 10 & < 100` | `size` is greater than or equal to 10 and less than 100
-`color : 'red' \| 'green' \| 'blue'` | `color` is red, green or blue
-`size: 14 \| 42 \| > 100` | `size` is 14, 42, or greater than 100
-`time: @2003 to @2013` | `time` is between the years 2003 and 2013 (excluding 2013)
+`size ? >= 10 & < 100` | `size` is greater than or equal to 10 and less than 100
+`color ? 'red' \| 'green' \| 'blue'` | `color` is red, green or blue
+`size ? 14 \| 42 \| > 100` | `size` is 14, 42, or greater than 100
+`time ? @2003 to @2013` | `time` is between the years 2003 and 2013 (excluding 2013)
 `time > 1591129283 + 10 hours` | `time` greater than 10 hours after 1591129283 (epoch timestamp)
-`time: now.date` | `time` is today
-`time: now.month - 1` | `time` is in the previous calendar month
+`time ? now.date` | `time` is today
+`time ? now.month - 1` | `time` is in the previous calendar month
 `name ~ 'M%'` | first letter of `name` is a capital M
 `name !~ '%z%'` | `name` does not contain a lower case Z
 `state ~ r'^(CA\|NY)$'` | `state` is 'CA' or 'NY'

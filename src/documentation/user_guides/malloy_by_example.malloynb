@@ -57,7 +57,7 @@ run: duckdb.table('../data/airports.parquet') -> {
 
 ## Source: A data source for queries
 
-Malloy separates a query from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table.  ([Source Documentation](../language/source.malloynb)).
+Malloy separates a query's view from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table.  ([Source Documentation](../language/source.malloynb)).
 
 [Fields](../language/fields.malloynb) can be defined as part of a source.
 
@@ -73,7 +73,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
 }
 >>>markdown
 
-## Querying against a Source
+## Querying Against a Source
 
 Queries can be run against `source:` objects and can utilize the modeled fields from that source, as well as introduce new ones. ([Query Documentation](../language/query.malloynb))
 
@@ -102,9 +102,9 @@ run: airports -> {
 >>>markdown
 
 
-## Defining Queries inside a Source
+## Defining Views in a Source
 
-A source can also contain a set of useful queries relating to that source.
+A source can also contain a set of useful views relating to that source, which can be run in queries.
 
 *using the above declared `airports` source*
 >>>malloy
@@ -118,24 +118,19 @@ source: airports2 is duckdb.table('../data/airports.parquet') extend {
 }
 >>>markdown
 
-Note that the source is implied, so the source name is not needed to define the query. 
+###  Executing Views
 
-##  Executing Source-Level Queries
-
-The simplest form of a query in Malloy is the name of a source, the query operator `->`, and the name of one of its contained queries.
+The simplest form of a query in Malloy is the name of a source, the query operator `->`, and the name of one of its contained views.
 
 *using the above declared `airports` source*
 >>>malloy
 run: airports2 -> by_state
 >>>markdown
 
-
-
 ## Filtering a Source
 
-You can filter a source by adding a filter expression using the `where:` keyword and then use this extended version of `airports` to run the `by_state` query.  ([Filter Documentation](../language/filters.malloynb))
+You can filter a source by adding a filter expression using the `where:` keyword in an extension. In this example, we filter an existing `airports` source and then use this extended version to execute the `by_state` view in a query. For more information on filtering, see the [Filters](../language/filters.malloynb) section.
 
-*using the above declared `airports` source*
 >>>malloy
 run: airports2 extend {
   where: fac_type = 'SEAPLANE BASE'   // <- run the query with an added filter
@@ -156,7 +151,7 @@ run: airports -> {
 }
 >>>markdown
 
-## Composing with Queries
+## Composing with Views
 
 For the next section assume the following source declaration.
 >>>malloy
@@ -177,10 +172,10 @@ source: airports3 is duckdb.table('../data/airports.parquet') extend {
 }
 >>>markdown
 
-## The `nest:` property embeds one query in another
+## The `nest:` property embeds one view in another
 
 Malloy allows you to create nested subtables easily in a query.
-In the case below, the top level query groups by state and nested query groups by facility type.
+In the case below, the top level view groups by state and the nested view groups by facility type.
 This mechanism is really useful for understanding data and creating complex data structures. ([Nesting Documentation](../language/nesting.malloynb))
 
 *using the above declared `airports` source*
@@ -196,7 +191,7 @@ run: airports3 -> {
 }
 >>>markdown
 
-Queries can contain multiple nested queries.
+Queries can contain multiple nested views.
 
 *using the above declared `airports` source*
 >>>malloy
@@ -208,7 +203,7 @@ run: airports3 -> {
 }
 >>>markdown
 
-Queries can be nested to any level of depth.
+Views can be nested to any level of depth.
 
 *using the above declared `airports` source*
 >>>malloy
@@ -228,9 +223,9 @@ run: airports3 -> {
 }
 >>>markdown
 
-## Refining a Source-Level Query
+## Refining a View
 
-The gesture `+ {}` allows you to base a new query on an existing query while adding new refinements to the query terms.
+The gesture `+ { <<refinements>> }` allows you to base a new view on an existing view while adding new refinements to the query terms.
 
 For example we can add a limit and an order by to `by_state`
 >>>malloy
@@ -257,14 +252,12 @@ run: airports3 -> by_facility_type + {
 }
 >>>markdown
 
-### You can nest another query
+### You can nest another view
 >>>malloy
 run: airports3 -> top_5_states + {
   nest: by_facility_type
 }
 >>>markdown
-
-## Composing with Queries
 
 Changing the inner and outer query in the example above reveals very different information.
 >>>malloy
@@ -398,7 +391,7 @@ source: airports4 is duckdb.table('../data/airports.parquet') extend {
 
 ## Calculations work properly regardless of where you are in the graph
 
-This query is very difficult to express in SQL. Malloy's understanding of source relationships allows it to compute aggregate computations at any node of the join path,unlike SQL which can only do aggregate computation at the. outermost level.
+This query is very difficult to express in SQL. Malloy's understanding of source relationships allows it to compute aggregate computations at any node of the join path, unlike SQL which can only do aggregate computation at the. outermost level.
 ([Aggregate Documentation](../language/aggregates.malloynb))
 
 *using the above declared `airports` source*
@@ -428,7 +421,7 @@ run: airports5 -> {
   where: fac_type = 'HELIPORT'
   group_by: state
   aggregate: airport_count
-  nest: top_3_county is  {
+  nest: top_3_county is {
     limit: 3
     group_by: county
     aggregate: airport_count
@@ -448,7 +441,7 @@ run: airports6 -> {
   where: fac_type = 'HELIPORT'
   group_by: state
   aggregate: airport_count
-  nest: top_3_county is  {
+  nest: top_3_county is {
     limit: 3
     group_by: county
     aggregate: airport_count
@@ -463,7 +456,7 @@ run: airports6 -> {
 }
 >>>markdown
 
-## Pipelines can be named as queries in sources
+## Pipelines can be named as views in sources
 
 Pipelines can do pretty complex things.  They can be built into source objects.
 >>>malloy
@@ -473,7 +466,7 @@ source: airports7 is duckdb.table('../data/airports.parquet') extend {
     where: fac_type = 'HELIPORT'
     group_by: state
     aggregate: airport_count
-    nest: top_3_county is  {
+    nest: top_3_county is {
       limit: 3
       group_by: county
       aggregate: airport_count
@@ -493,7 +486,7 @@ run: airports7 -> county_rollup
 
 ## Extending Sources
 
-As with a query, a source can be extended with the `extend { ... }` gesture to create a new version of the source with additional properties.
+Similar to query refinement, a source can be extended with the `extend { ... }` gesture to create a new version of the source with additional properties.
 >>>markdown
 ```malloy
 source: <<new name>> is <<old name>> extend {
