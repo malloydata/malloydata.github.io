@@ -7,7 +7,7 @@ nix-shell --quiet --pure --command "$(cat <<NIXCMD
   git remote set-url origin git@github.com:malloydata/malloydata.github.io
   git config --global user.email "malloy-ci-bot@google.com"
   git config --global user.name "Malloy CI Bot"
-  npm ci --silent
+  npm ci --loglevel error
   npm run build-prod
   git checkout -b docs-release
   git add -f docs/
