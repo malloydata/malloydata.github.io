@@ -47,7 +47,7 @@ the [4.0 Messages FAQ](../../documentation/language/m4warnings.malloynb) documen
 * [Source extensions in a query](../../documentation/language/views.malloynb#source-extensions) must be contained in an `extend: { }` 
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
-* The new [run statement](../../documentation/statement#run-statements), `run:` replaces `query:` with no name
+* The new [run statement](../../documentation/language/statement.malloynb#run-statements), `run:` replaces `query:` with no name
 * The `sql:` statement is replaced by [SQL sources](../../documentation/language/sql_sources.malloynb), e.g. `duckdb.sql("SELECT ...")`
 * [Table sources](../../documentation/language/source.malloynb#sources-from-tables-or-views) have new syntax: `connection_name.table('table_path')` instead of `table('connection_name:table_path')`
 * [Projections](../../documentation/language/views.malloynb#projection) are performed with `select:` instead of `project:` 
