@@ -831,13 +831,17 @@ div.code-wrapper a img:hover {
   margin-bottom: 0;
 }
 
+.document-outer.blog .document > img,
+.document-outer.blog .document > p > img {
+  margin-bottom: 5px;
+  max-width: 100%;
+  width: unset;
+}
+
 .document-outer.blog .document > img:not(.no-shadow),
 .document-outer.blog .document > p > img:not(.no-shadow) {
   border-radius: 6px;
   box-shadow: 1px 1px 11px 0px #8080802c;
-  margin-bottom: 5px;
-  max-width: 100%;
-  width: unset;
 }
 
 .document-outer.blog .document > p > img {
@@ -971,6 +975,7 @@ div.document div.warning {
   border-radius: 5px;
   overflow-y: visible;
   padding: 10px;
+  padding-left: 3em;
   font-size: 14px;
   overflow-x: auto;
   line-height: 18px;
