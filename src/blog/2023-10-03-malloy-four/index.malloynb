@@ -31,7 +31,8 @@ The rollout of 4.0 will happen in stages, so that users will have time to upgrad
 
 ### Incompatible Changes
 
-These changes will require users to edit existing code. The IDE will issue warnings to flag code which
+With the Malloy 4.0 language changes, we're making Malloy more consistent readable and learnable. Some of
+these changes will require users to edit existing code. The IDE will issue warnings to flag code which
 needs to change, once the rollout begins. For examples showing both the old and new syntaxes, refer to
 the [4.0 Messages FAQ](../../documentation/language/m4warnings.malloynb) document.
 
