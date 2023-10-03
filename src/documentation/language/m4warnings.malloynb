@@ -4,8 +4,6 @@ There are a few places where Malloy 4.0 will require existing code to change. In
 
 This is a list of all the 4.0 compatibility messages, with examples code showing how to transform existing code for Malloy 4.0.
 
-# Messages
-
 ## Extend a source with `extend`
 
 <div class="warning">Implicit source extension is deprecated, use the `extend` operator.</div>
