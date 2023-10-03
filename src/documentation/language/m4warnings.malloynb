@@ -26,7 +26,7 @@ Creating a new query by adding properties to an existing query is called `refine
 
 | Pre-4.0 Malloy | 4.0 Malloy |
 | --- | --- |
-| <pre>`query: flights -> by_carrier { limit: 5 }` `query: flights -> by_carrier refine { limit: 5 }`</pre>| `query: flights -> by_carrier refine { limit: 5 }`  |
+| <pre>`query: flights -> by_carrier { limit: 5 }` `query: flights -> by_carrier refine { limit: 5 }`</pre>| `query: flights -> by_carrier refine + { limit: 5 }`  |
 
 ## Sources contain views
 
