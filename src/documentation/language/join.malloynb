@@ -179,7 +179,7 @@ source: users4 is duckdb.table('../data/users.parquet') extend {
 >>>markdown
 ## Joins from Queries
 
-Queries may be used as a source for joins, either as-is or extended:
+Queries may be used as a source for joins, either as-is or extended. They may be referenced by name (as in the example below) or written in-line.
 >>>malloy
 query: aircraft_facts is duckdb.table('../data/flights.parquet') -> {
   group_by: tail_num
