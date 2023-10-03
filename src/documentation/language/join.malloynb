@@ -189,7 +189,7 @@ query: aircraft_facts is duckdb.table('../data/flights.parquet') -> {
 }
 
 source: flights5 is duckdb.table('../data/flights.parquet') extend {
-  join_one: aircraft_facts is aircraft_facts on tail_num = aircraft_facts.tail_num
+  join_one: aircraft_facts on tail_num = aircraft_facts.tail_num
 }
 
 run: flights5 -> {
