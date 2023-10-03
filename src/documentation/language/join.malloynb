@@ -177,3 +177,26 @@ source: users4 is duckdb.table('../data/users.parquet') extend {
   where: orders.user_id != null
 }
 >>>markdown
+## Joins from Queries
+
+Queries may be used as a source for joins, either as-is or extended:
+>>>malloy
+query: aircraft_facts is duckdb.table('../data/flights.parquet') -> {
+  group_by: tail_num
+  aggregate:
+    lifetime_flights is count()
+    lifetime_distance is distance.sum()
+}
+
+source: flights5 is duckdb.table('../data/flights.parquet') extend {
+  join_one: aircraft_facts is aircraft_facts on tail_num = aircraft_facts.tail_num
+}
+
+run: flights5 -> {
+  group_by: carrier
+  nest: top_aircraft is {
+    group_by: tail_num, aircraft_facts.lifetime_flights
+    limit: 5
+    order_by: lifetime_flights desc
+  }
+}
