@@ -10,7 +10,7 @@ The next major update to the Malloy syntax is here.
 
 _PREVIEW: NOT "PUBLISHED" YET_
 
-While was never an official "3.0," we are calling this release 4.0 because this is the fourth major
+While there was never an official "3.0" version we are calling this release 4.0 because this is the fourth major
 renovation of the language. It could also be thought of as "1.0" because this is when we stop using
 the word "experimental" to describe the language. At this point we have experimented enough.  We believe
 Malloy is now the best language for working with data stored in an SQL server.
