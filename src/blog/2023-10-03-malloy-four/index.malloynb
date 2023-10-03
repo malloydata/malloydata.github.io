@@ -1,16 +1,19 @@
 >>>markdown
-# Malloy 4.0 (PREVIEW UNPUBLISHED POST)
+<img src="malloy-four-dot-zero.png"/>
 
-We WILL BE IN THE FUTURE BUT ARE NOT NOW very excited to announce version 4.0 of the Malloy language.
+# Announcing Malloy 4.0
 
-There was never an official "3.0", we are calling this release 4.0 because this is the fourth major
+The next major update to the Malloy syntax is now released.
+
+While was never an official "3.0", we are calling this release 4.0 because this is the fourth major
 renovation of the language. It could also be thought of as "1.0" because this is when we stop using
 "experimental" to describe the language. At this point we have experimented enough.  We believe
 Malloy is now the best language for working with data stored in an SQL server.
 
+
 ## The 4.0 Release Timeline
 
-Before 4.0, when Malloy was in the experimental phase, it was considered acceptable to make breaking
+While Malloy 4.0 was in development, it was considered acceptable to make breaking
 changes to the language as we discovered better ways to express data computations.  Beginning with
 4.0, it is our intention to keep code compatibility for existing code, even as we continue to add
 capabilities to the language.
@@ -19,7 +22,7 @@ The rollout of 4.0 will happen in stages, so that users will have time to upgrad
 
 | Date | Malloy Langauge Status |
 | ----------: | :-------------------- |
-| **2003-10-02** | Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension<br/><ul><li>If you are using a language construct which will not work in 4.0, the IDE will show you a warning.</li><li>The [Documentation](../../documentation/index.malloynb) describes the 4.0 syntax.</li></ul>
+| **2003-10-03** | Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension<br/><ul><li>If you are using a language construct which will not work in 4.0, the IDE will show you a warning.</li><li>The [Documentation](../../documentation/index.malloynb) describes the 4.0 syntax.</li></ul>
 | **2023-10-09** | The Release version of the extension will begin to warn on pre-4.0 compatibility problems.
 | **2023-10-23** | The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.
 | **2023-10-30** | The Release version of the extension will give errors, not warnings, on pre-4.0 code.
@@ -30,7 +33,7 @@ The rollout of 4.0 will happen in stages, so that users will have time to upgrad
 
 These changes will require users to edit existing code. The IDE will issue warnings to flag code which
 needs to change, once the rollout begins. For examples showing both the old and new syntaxes, refer to
-the [4.0 Warnings FAQ](../../documentation/language/m4warnings.malloynb) document.
+the [4.0 Messages FAQ](../../documentation/language/m4warnings.malloynb) document.
 
 * [New sources are only created with `extend {}`](../../documentation/language/source.malloynb#source-extensions)
 * [Existing queries are only refined with `+ {}`](../../documentation/language/views.malloynb#refining-views) 
@@ -58,8 +61,8 @@ the [4.0 Warnings FAQ](../../documentation/language/m4warnings.malloynb) documen
 ### New features
 
 These features are all active now.  Most are not "new" in that they have already appeared in the
-Release version of the extension, even though they were part of the 4.0 project.  Code which uses
-these will continue to work. They are listed here to provide a complete list of "What Is Malloy
+Release version of the Malloy VS Code extension, even though they were part of the 4.0 project.  Code which uses
+these will continue to work. They are listed here to provide a complete record of "What Is Malloy
 4.0"
 
 * [There are three kinds of string literals, `'`, `"`, and `"""`.](../../documentation/language/datatypes.malloynb#string)
@@ -71,3 +74,4 @@ calculations
 * [`??` (the nullish coalescing operation)](../../documentation/language/expressions.malloynb#null-operations)
 * [Selective `import` of objects from other files](../../documentation/language/imports.malloynb#selective-imports)
 * [`calculate:` added to provide additional aggregation control](../../documentation/language/calculations.malloynb) (often done with window functions in SQL)
+>>>markdown
