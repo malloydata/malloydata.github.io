@@ -1,0 +1,15 @@
+>>>malloy
+source: titles is duckdb.table('../data/titles.parquet') extend {
+ dimension:
+    # image
+    movie_image is concat('https://artifacts.flyxit.com/flyx-artifacts/',tconst,'.jpg')
+    # link
+    movie_url is concat('https://www.imdb.com/title/',tconst)
+}
+>>>malloy
+
+run: titles -> {
+  where: primaryTitle ~ r'Batman' and startYear < 2022
+  select: 
+    primaryTitle, movie_image, movie_url
+}
