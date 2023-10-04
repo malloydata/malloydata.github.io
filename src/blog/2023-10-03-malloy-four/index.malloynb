@@ -14,8 +14,8 @@ the word "experimental" to describe the language. At this point we have experime
 Malloy is now the best language for working with data stored in an SQL server.
 
 If you haven't tried Malloy yet, you can try it right now with just your browser by
-* going to the [Malloy Examples Repository](https://github.com/malloydata/malloy-samples) on github
-* log into github
+* going to the [Malloy Examples Repository](https://github.com/malloydata/malloy-samples) on Github
+* log into Github
 * press '.' (the period key) to launch VSCode
 * Install the Malloy Extension
 
