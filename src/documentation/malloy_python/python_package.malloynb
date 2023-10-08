@@ -1,0 +1,38 @@
+>>>markdown
+# The Malloy Python Package
+
+Malloy provides a Python package that allows you to load Malloy model files, compile Malloy queries, and run Malloy statements on your database from within your Python application or script. The package is open source, MIT-licensed, and hosted in the [malloy-py Github repo](https://github.com/malloydata/malloy-py). It currently works with DuckDB and BigQuery.
+
+## Installation
+
+The Malloy package is hosted on [PyPI](https://pypi.org/project/malloy/), and can be installed via:
+
+```
+pip install malloy
+```
+
+## Usage
+
+Import the `malloy` package, and the connector for your database:
+
+```python
+import asyncio
+import malloy
+from malloy.data.duckdb import DuckDbConnection
+```
+
+Then instantiate a Malloy `Runtime` object (in the example below, we use a Python context manager), and pass it a database connection object.
+
+```python
+  with malloy.Runtime() as runtime:
+    runtime.add_connection(DuckDbConnection(home_dir=home_dir))
+```
+
+The `runtime` object has a few key methods:
+
+* `add_connection(connection: ConnectionInterface)`: used above to connect the runtime to an actual database.
+* `load_file(str)`: Takes a filepath pointing to a file containing sources and/or queries, loads the sources and/or queries into the runtime.
+* `load_source(str)`: Takes a string containing Malloy code (source definitions and/or queries), loads the sources and/or queries into the runtime.
+* `get_sql(query: str, named_query: str)`: Takes either a string containing a Malloy query, or the name of a named query from a Malloy model. Compiles the query and returns the equivalent SQL string.
+* `run(query: str, named_query: str)`: Takes either a string containing a Malloy query, or the name of a named query from a Malloy model. Compiles the query, executes it using the database connection, and returns the results. Results are returned in the native format of the database connection (e.g., a [DuckDB result object](https://duckdb.org/docs/api/python/result_conversion), or a [BigQuery result object](https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.job.QueryJob#google_cloud_bigquery_job_QueryJob_result))
+
