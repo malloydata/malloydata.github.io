@@ -102,4 +102,21 @@ This command will prompt you to authenticate. Enter 'Y' in the textbox that asks
 
 <img src="jupyternb_gcp_auth.png"/>
 
-Once you've authenticated to GCP, you should be able to issue queries to BigQuery. You can define a Source that points to a table in BQ, and write a query against that source.
+Once you've authenticated to GCP, you should be able to issue queries to BigQuery. You can define a Source that points to a table in BQ, and write a query against that source. Try running something against one of the BigQuery public datasets to confirm things are working.
+
+First, create a cell that defines source on the GA4 sample data:
+
+  ```malloy
+  %%malloy_source ga4
+  source: events_table is bigquery.table('bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*')
+  ```
+
+Then create a cell that queries this source:
+
+  ```malloy
+  %%malloy_query ga4
+  run: events_table -> {
+    group_by: event_name
+    aggregate: row_count is count()
+  }
+  ```
