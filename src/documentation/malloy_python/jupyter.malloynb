@@ -1,97 +1,91 @@
 >>>markdown
-# MalloySQL
+# Using Malloy in Jupyter Notebooks
 
-MalloySQL enables mixing dialect-specific SQL (including DDL) with Malloy. For example, MalloySQL can be used to create a new table in BigQuery, based on a model of existing data:
+Malloy provides built-in iPython magic commands that allow you to define Malloy models and run Malloy queries inside of Jupyter notebooks. [Click here](https://colab.research.google.com/drive/1eo1fe3878DfUvo1RcyhFUKcFhjdaSlzp?usp=sharing) to see a simple example of this in Colab.
 
-  ```malloysql
-  >>>malloy
-  import "airports.malloy"
+## Installation
 
-  >>>sql connection:bigquery
-  CREATE TABLE major_airports AS ( // this is SQL
-    SELECT name
-    FROM %{
-      airports -> major_airports  // this is a Malloy query
-    }%
-  );
+In a Jupyter notebook, simply run the following commands to install Malloy from PyPI, and load the extension into your kernel:
+
+  ```
+  !pip install malloy
+  %reload_ext malloy
   ```
 
 ## Usage
 
-MalloySQL can be used in the VSCode Extension and the Malloy CLI. In both cases, the extension of the file should be `.malloysql`.
+There are two [iPython cell magic functions](https://ipython.readthedocs.io/en/stable/config/custommagics.html) available: `%%malloy_model` and `%%malloy_query`
 
-MalloySQL files are composed of two kinds of statements - Malloy statements and SQL statements. Each statement is preceeded by a line that defines the statement type: `>>>malloy` or `>>>sql`. The SQL statement can also be passed a connection name - this is the name of the connection to use when executing the query. This is valid MalloySQL:
+### %%malloy_model
 
-  ```malloysql
-  >>>sql connection:duckdb
-  SELECT 1;
+This magic function is used to declare or import a Malloy model. It takes a single parameter -- the variable name in which the Malloy model is stored. The contents of the cell can either be an import statement that points to a Malloy file containing sources and/or queries, or it can be a text field containing Malloy sources and/or queries.
+
+Examples:
+
+The following statement looks for a file called `flights.malloy`, attempts to read the file, and load any model contents (sources or queries) into a model called `flights`.
+
+  ```malloy
+  %%malloy_model flights
+  import 'flights.malloy'
   ```
 
-SQL statements can also contain embedded Malloy queries by wrapping the Malloy statement with `%{` and `}%`. To use embedded Malloy, a source must first be imported to use with the Malloy query:
+The `flights` model can then be referenced in future Malloy magic cells.
 
-  ```malloysql
-  >>>malloy
-  import "mysource.malloy"
+The following statement defines a model called `flights` using the cell's input text as the model definition:
 
-  >>>sql connection:duckdb
-  SELECT name_count from %{ mysource -> names }%;
+  ```malloy
+  %%malloy_model flights
+
+  source: airports is duckdb.table('../data/airports.parquet') extend {
+    primary_key: code
+    measure: airport_count is count()
+  }
+
+  source: flights is duckdb.table('../data/flights.parquet') extend {
+    rename:
+      origin_code is origin
+      destination_code is destination
+
+    join_one: origin is airports with origin_code
+    join_one: destination is airports with destination_code
+
+    measure:
+      flight_count is count()
+      destination_count is destination.count()
+      origin_count is origin.count()
+  }
+```
+
+### %%malloy_query
+
+This magic function is used the execute a Malloy query. It has one required parameter: the name of the model to use. It optionally takes a second parameter: the variable name of the Pandas dataframe in which to store the result.
+
+Examples:
+
+The following statement loads the flights model and executes a query using the definitions in the file.
+
+  ```malloy
+  %% malloy_query flights
+  run: flights -> {
+    group_by:
+      origin.full_name
+
+    aggregate:
+      flight_count
+      destination_count
+  }
   ```
 
-It is possible to use multiple SQL commands in one statement (although only the final result will be shown in the VSCode extension):
+The following statement executes a query, and stores the results in a pandas dataframe called `result_df`. This dataframe can then be used in any downstream process.
 
-  ```malloysql
-  >>>malloy
-  import "mysource.malloy"
+  ```malloy
+  %% malloy_query flights result_df
+  run: flights -> {
+    group_by:
+      origin.full_name
 
-  >>>sql connection:duckdb
-  SELECT name_count from %{ mysource -> names }%;
-  SELECT airport_count from %{ mysource -> airports }%;
-  ```
-
-The first SQL statement must define a connection to be used for queries, but future SQL statements only need to define a connection if a different connection should be used. This is valid:
-
-  ```malloysql
-  >>>malloy
-  import "mysource.malloy"
-
-  >>>sql connection:duckdb
-  SELECT name_count from %{ mysource -> names }%;
-  >>>sql
-  SELECT airport_count from %{ mysource -> airports }%;
-  ```
-
-It is also possible to define connections in SQL using `--connection:{my_connection}`. This is useful when writing `.malloynb` files, as notebooks cannot obtain data from delimiter lines.
-
-MalloySQL can contain multi (`/*...*/`) and single-line (`//` or `--`) comments.
-
-Running a specific SQL statement in a Malloy file (by, for example, clicking the "Run" codelens in the VSCode extension) will execute all preceeding Malloy statements, but only the selected SQL statement.
-
-## Example
-
-Here is a more realistic example, using a Malloy model to wrangle raw data and create a useful parquet file with DuckDB:
-
-  ```malloysql
-  >>>malloy
-  import "raw_data.malloy"
-
-  >>>sql connection:duckdb
-
-  copy %{
-    raw_titles -> {
-      join_one: raw_ratings on tconst = raw_ratings.tconst
-      join_one: raw_crew on tconst = raw_crew.tconst
-      where: raw_ratings.numVotes > 30000
-      select:
-        tconst
-        isAdult, originalTitle, primaryTitle
-        startYear is startYear:::number
-        endYear is endYear:::number
-        runtimeMinutes is runtimeMinutes:::number
-        genres is str_split!(genres,',')
-        directors is str_split!(raw_crew.directors,',')
-        writers is str_split!(raw_crew.writers,',')
-        averageRating is raw_ratings.averageRating:::number
-        numVotes is raw_ratings.numVotes:::number
-      }
-  }%  to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
+    aggregate:
+      flight_count
+      destination_count
+  }
   ```
