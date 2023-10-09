@@ -1,0 +1,91 @@
+>>>markdown
+# Using Malloy in Jupyter Notebooks
+
+Malloy provides built-in iPython magic commands that allow you to define Malloy models and run Malloy queries inside of Jupyter notebooks. [Click here](https://colab.research.google.com/drive/1eo1fe3878DfUvo1RcyhFUKcFhjdaSlzp?usp=sharing) to see a simple example of this in Colab.
+
+## Installation
+
+In a Jupyter notebook, simply run the following commands to install Malloy from PyPI, and load the extension into your kernel:
+
+  ```
+  !pip install malloy
+  %reload_ext malloy
+  ```
+
+## Usage
+
+There are two [iPython cell magic functions](https://ipython.readthedocs.io/en/stable/config/custommagics.html) available: `%%malloy_model` and `%%malloy_query`
+
+### %%malloy_model
+
+This magic function is used to declare or import a Malloy model. It takes a single parameter -- the variable name in which the Malloy model is stored. The contents of the cell can either be an import statement that points to a Malloy file containing sources and/or queries, or it can be a text field containing Malloy sources and/or queries.
+
+Examples:
+
+The following statement looks for a file called `flights.malloy`, attempts to read the file, and load any model contents (sources or queries) into a model called `flights`.
+
+  ```malloy
+  %%malloy_model flights
+  import 'flights.malloy'
+  ```
+
+The `flights` model can then be referenced in future Malloy magic cells.
+
+The following statement defines a model called `flights` using the cell's input text as the model definition:
+
+  ```malloy
+  %%malloy_model flights
+
+  source: airports is duckdb.table('../data/airports.parquet') extend {
+    primary_key: code
+    measure: airport_count is count()
+  }
+
+  source: flights is duckdb.table('../data/flights.parquet') extend {
+    rename:
+      origin_code is origin
+      destination_code is destination
+
+    join_one: origin is airports with origin_code
+    join_one: destination is airports with destination_code
+
+    measure:
+      flight_count is count()
+      destination_count is destination.count()
+      origin_count is origin.count()
+  }
+```
+
+### %%malloy_query
+
+This magic function is used the execute a Malloy query. It has one required parameter: the name of the model to use. It optionally takes a second parameter: the variable name of the Pandas dataframe in which to store the result.
+
+Examples:
+
+The following statement loads the flights model and executes a query using the definitions in the file.
+
+  ```malloy
+  %% malloy_query flights
+  run: flights -> {
+    group_by:
+      origin.full_name
+
+    aggregate:
+      flight_count
+      destination_count
+  }
+  ```
+
+The following statement executes a query, and stores the results in a pandas dataframe called `result_df`. This dataframe can then be used in any downstream process.
+
+  ```malloy
+  %% malloy_query flights result_df
+  run: flights -> {
+    group_by:
+      origin.full_name
+
+    aggregate:
+      flight_count
+      destination_count
+  }
+  ```

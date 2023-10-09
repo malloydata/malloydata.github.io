@@ -251,6 +251,19 @@
           "link": "/malloy_cli/index.malloynb"
         }
       ]
+    },
+    {
+      "title": "Malloy with Python",
+      "items": [
+        {
+          "title": "Malloy Python Package",
+          "link": "/malloy_python/python_package.malloynb"
+        },
+        {
+          "title": "Malloy in Jupyter Notebooks",
+          "link": "/malloy_python/jupyter.malloynb"
+        }
+      ]
     }
   ]
 }
