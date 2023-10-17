@@ -2,7 +2,7 @@
 # Malloy and Jupyter Notebooks
 Advanced data science needs trustworthy metrics
 
-*October 15, 2023 by Carlin Eng*
+*October 19, 2023 by Carlin Eng*
 <br/><br/><br/>
 
 The Malloy team is on a mission to replace SQL for analytics. This is an incredibly ambitious goal, and in order to succeed we need to make Malloy available in all the places where SQL runs. This is why I’m particularly excited about the work we’ve done to make Malloy usable in Python and Jupyter Notebooks. SQL is the lingua franca of data, but it doesn’t have a monopoly. Many data scientists live primarily in Python, and only use SQL as a method to pull datasets from a remote database into their local Python environment. From there, a rich ecosystem of Python libraries enables them to execute complex tasks like forecasting and ML model training. 
