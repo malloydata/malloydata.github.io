@@ -1,8 +1,7 @@
 >>>markdown
 # Foreign Sums
-Malloy allows you to compute sums and averages correctly based on your join tree. Fan-outs based on join relationships will never impact the correctness of these aggregations. This example has `flights`, joining to `aircraft`, joining to `aircraft_model``.
+Malloy allows you to compute sums and averages correctly based on your join tree. Fan-outs based on join relationships will never impact the correctness of these aggregations. This example has `flights`, joining to `aircraft`, joining to `aircraft_model`.
 `aircraft_model` has the number of seats specified on this model of aircraft.  Code below computes sums and averages at various places in the join tree.
-
 >>>malloy
 #(docs) size=large
 // join 3 tables, flights, aircraft and aircraft models.
@@ -34,7 +33,7 @@ run: flights -> {
     // number of different aircraft_models
     aircraft_model_count is aircraft.aircraft_models.count()
     // count each seat once for each flight.
-    seats_for_sale is sum(aircraft.aircraft_models.seats)
+    seats_for_sale is source.sum(aircraft.aircraft_models.seats)
     // count the seat once for each plane
     seats_on_all_planes is aircraft.sum(aircraft.aircraft_models.seats)
     // average number of seats on each model by model
