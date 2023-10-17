@@ -4,12 +4,11 @@
 In Malloy, named connection objects are used to interact with a database, including fetching schemas for SQL queries and tables, as well as actually running queries.
 
 Connection objects are defined implicitly on their first use when referencing a table or SQL source:
-
 >>>malloy
 // This creates a model-level connection definition, `duckdb`
-source: users is duckdb.table('../data/users.parquet')
+// source: users is duckdb.table('../data/users.parquet')
 
-run: users -> { group_by: first_name; limit: 5 }
+// run: users -> { group_by: first_name; limit: 5 }
 >>>markdown
 
 # Connection Methods
