@@ -10,7 +10,7 @@ DuckDB can be used to query a JSON API endpoint, and Malloy makes it simple to t
 ## Query by Country
 This query builds a line chart showing exchange rate values over time. With a simple Malloy query, we can easily transform and analyze a dataset directly from an HTTP API, without any intermediate database required.
 >>>malloy
-#(docs) limit=5000 size=large
+-- #(docs) limit=5000 size=large
 -- run: exchange_rates -> {
 --   group_by: data.country_currency_desc
 --   # line_chart
