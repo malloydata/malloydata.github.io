@@ -1,10 +1,10 @@
 [
   {
     "title": "Using Malloy in Jupyter Notebooks",
-    "path":"/2023-10-25-malloy-python-notebooks",
+    "path":"/2023-10-19-malloy-python-notebooks",
     "subtitle": "Advanced data science needs trustworty metrics",
     "author": "Carlin Eng",
-    "published": "2023-10-16"
+    "published": "2023-10-19"
   },
   {
     "title": "Announcing Malloy 4.0",
