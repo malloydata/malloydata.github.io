@@ -61,7 +61,7 @@ the [4.0 Messages FAQ](../../documentation/language/m4warnings.malloynb) documen
 * The filter shortcut `{? }` has been removed
 * The expression to run an existing query is now `query_name` instead of `-> query_name`
 * The `->` after the `is` in a [`view:`](../../documentation/language/source.malloynb#adding-fields) or [`nest:`](../../documentation/language/nesting.malloynb) statement is not longer needed
-* New syntax for [distinct counts](../../documentation/language/aggregates.malloynb#count-expr-), `count(distinct <<expression>>)` instead of `count(<<expression>>)` 
+* New syntax for [distinct counts](../../documentation/language/aggregates.malloynb#count-expr-), `count(<<expression>>)` instead of `count(distinct <<expression>>)`
 * The syntax for [counts](../../documentation/language/aggregates.malloynb#count) is now just `count()`, and `count(*)` is deprecated 
 * Malloy has a [function library](../../documentation/language/functions.malloynb) for doing common data manipulation operations
   * Access to the database's internal functions directly must be through the [raw sql function syntax](../../documentation/language/functions.malloynb#raw-sql-functions)
