@@ -172,10 +172,6 @@
           "link": "/patterns/transform.malloynb"
         },
         {
-          "title": "Data from JSON APIs",
-          "link": "/patterns/apijson.malloynb"
-        },
-        {
           "title": "Sessionize - Map/Reduce",
           "link": "/patterns/sessionize.malloynb"
         },
