@@ -1,0 +1,171 @@
+>>>markdown
+# Drawing Bump Charts in Malloy
+Yes, it can do that
+
+*October 25, 2023 by Speros Kokenes*
+<br/><br/><br/>
+
+The Malloy language recently [hit 4.0 and left experimental status](http://localhost:4000/blog/2023-10-03-malloy-four/). With the language now stable, we are focusing on the next stage of Malloy which includes further language capabilities, deeper third-party integrations, and a more powerful rendering system. Our rendering roadmap is ambitious and exciting, but today I want to share a little bit about what you can already accomplish with Malloy's renderer.
+
+In this post, let's explore some capabilities of the renderer by creating a novel visualization known as a **bump chart**.
+
+## What's a Bump Chart?
+A bump chart is a visualization used to show changes in ranking amongst a group of values over time. [Consider this example from Dominik Koch](https://dominikkoch.github.io/Bump-Chart/), where each country in the 2018 Winter Olympics is plotted day by day of the competition, ranked by the number of medals won:
+
+<img src ="bumpChart_example.png" class="no-shadow" style="display: block; max-height: 600px"/>
+
+The name "bump chart" is inspired by a form of rowing race called a [bumps race](https://en.wikipedia.org/wiki/Bumps_race), which commonly employs this type of visualization to show race results. In a bumps race, boats are lined up in a single file and pass each other in ranked position by bumping the boat in front of them. This race can take place over several days, with the starting order of the boats being dictated by their finishing rank from the previous day. Hence the need for a nice visualization to show the ranking results changing from day to day.
+
+<img src ="cambridge_bumps.png" class="no-shadow" style="display: block; max-height: 400px"/>
+Example bump chart from Cambridge bump races
+
+## Making it in Malloy
+If you've used the Malloy renderer before, you may be saying "wait, you can make THAT with Malloy?". Well, not _yet_. But today we can make a poor man's version of a bump chart. Using data about the Olympics, we will use Malloy's table, list, and image renderer to produce a chart that shows from Olympic year to Olympic year how the ranking of countries by medals shook out:
+
+<img src ="malloy_bump.png" class="no-shadow" style="display: block; max-height: 600px"/>
+>>>markdown
+
+### Our data
+To create the chart above, let's use a dataset of [Olympics competition data](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results). This data contains a record for every athlete, event competed in, and outcome of that event (what medal did they win, if any).
+>>>malloy
+##(docs) hidden
+#(docs) limit=100 size=medium
+run: duckdb.table("athlete_events.csv") -> {
+    select: *
+}
+>>>markdown
+
+In the data, we have a column called NOC that stands for "National Olympic Committees" and is a special identifier for each competing country. Unfortunately, this code does not line up with ISO standard codes for countries, so we need additional data to map this to any useful country data outside of this Olympics set. In our case, this will be important as we can look up flag images by ISO code, so we can use this mapping table:
+>>>malloy
+##(docs) hidden
+#(docs) limit=100 size=medium
+run: duckdb.sql("select * from read_csv_auto('noc_regions.csv', header=true)") -> {
+    select: *
+    limit: 100
+}
+>>>markdown
+Let's model this data together. We can load our Athlete events, and then use a join to link it with our NOC mapping data.
+Then, we can create a flagUrl dimension that uses the ISO 2 country code to look up a flag image and a measure which counts how many medals were won.
+>>>malloy
+-- Mapping table of NOC to ISO 2 country codes
+source: regions is duckdb.sql("select * from read_csv_auto('noc_regions.csv', header=true)");
+
+-- Model based on table of athlete events data
+source: model is duckdb.table("athlete_events.csv") extend {
+    -- Join the mapping table on NOC columns
+    join_many: regions on regions.NOC = NOC
+    dimension: 
+        -- Create a dimension containing image urls for flags
+        flagUrl is concat('https://raw.githubusercontent.com/cristiroma/countries/master/data/flags/PNG-32/', regions.CC2, '-32.png')
+        -- Simple country name
+        Country is regions.region
+    measure:
+        -- Create a measure which counts medals won
+        medal_count is count() { where: Medal != 'NA' }
+}
+>>>markdown
+## Calculating the ranks over time
+To create a data structure that supports our bump chart format, we need to calculate the ranks of each country within each year, then regroup that data by ranking and pivot out the year. It sounds complicated, but thanks to Malloy's conciseness and reusability, we can break this into smaller steps and easily put them all together.
+
+Let's start with just calculating a simple rank of countries by medal count:
+>>>malloy
+#(docs) size=medium limit=100
+run: model -> {
+    group_by: Country
+    aggregate: 
+        medal_count
+    calculate: rank is rank()
+}
+>>>markdown
+This gives us the overall ranking for the entire dataset, but we actually want that within each year. With Malloy, its easy enough to just re-use that query within another query by year. We will also add a filter to only look at Summer Olympics.
+>>>malloy
+#(docs) size=medium limit=100
+run: model -> {
+    group_by: `Year`
+    nest: results is {
+        group_by: Country
+        aggregate: 
+            medal_count
+        calculate: rank is rank()
+    }
+    where: Season='Summer'
+}
+>>>markdown
+Great, we have all of the data that we need for our chart. But it's in the wrong format. Let's fix that by introducing a second stage to the query, where we take the results above and re-aggregate by the nested rank value, with the rest of the data for the ranking nested. Also, within an Olympic year, if two or more countries have the same medal count, they will tie with the same ranking. So we need to nest countries within each year as well in case we have more than 1 value.
+>>>malloy
+#(docs) size=medium limit=100
+run: model -> {
+    group_by: `Year`
+    nest: results is {
+        group_by: Country
+        aggregate: 
+            medal_count
+        calculate: rank is rank()
+    }
+    where: Season='Summer'
+} -> {
+    group_by: results.rank
+    nest: rankingNest is {
+        group_by: `Year`
+        order_by: `Year`
+        nest: country is {
+            group_by: results.Country
+        }
+    }
+}
+>>>markdown
+Almost there! There are two things off in this data structure. First, we want the Years pivoted. Second, some ranks have ties for certain years, which means more than 1 country is represented in the dataset. It would be best if we could show this as a list within one cell. 
+
+These two issues can be resolved using Malloy's `pivot` and `list` tags.
+>>>malloy
+#(docs) size=large limit=100
+run: model -> {
+    group_by: `Year`
+    nest: results is {
+        group_by: Country
+        aggregate: 
+            medal_count
+        calculate: rank is rank()
+    }
+    where: Season='Summer'
+} -> {
+    group_by: results.rank
+    # pivot
+    nest: rankingNest is {
+        group_by: `Year`
+        order_by: `Year`
+        # list
+        nest: country is {
+            group_by: results.Country
+        }
+    }
+}
+>>>markdown
+### Rendering the flags
+Our data is now in the format we need for a bump chart. The only thing its missing is the flag images instead of text. This is easily accomplished with Malloy's `image` tag. To use this tag, we will need an image url for the country flags. So we will replace the `Country` dimension in our query above with the `flagUrl` dimension instead.
+>>>malloy
+#(docs) size=large limit=100
+run: model -> {
+    group_by: `Year`
+    nest: results is {
+        group_by: flagUrl
+        aggregate: 
+            medal_count
+        calculate: rank is rank()
+    }
+    where: Season='Summer'
+} -> {
+    group_by: results.rank
+    # pivot
+    nest: rankingNest is {
+        group_by: `Year`
+        order_by: `Year`
+        # list
+        nest: country is {
+            # image
+            group_by: results.flagUrl
+        }
+    }
+}
+>>>markdown
+And there you have it. A pseudo bump chart with the Malloy renderer.
