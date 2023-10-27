@@ -186,7 +186,6 @@ source: model is duckdb.table("athlete_events.csv") extend {
 run: model -> bump_chart
 ```
 >>>malloy
-
 ##(docs) hidden
 #(docs) size=large limit=100
 run: model -> medal_ranking_by_year -> {

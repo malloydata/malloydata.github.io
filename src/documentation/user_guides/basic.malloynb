@@ -118,7 +118,6 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: average_elevation is avg(elevation)
 }
 >>>markdown
-
 >>>malloy
 run: airports -> { 
   group_by: county_and_state
@@ -193,10 +192,11 @@ An ad hoc join can also be specified in a query block. In the query below, we jo
 >>>malloy
 source: airports2 is duckdb.table('../data/airports.parquet')
 
-source: flights2 is duckdb.table('../data/flights.parquet')
+source: flights2 is duckdb.table('../data/flights.parquet') extend {
+  join_one: airports2 on destination = airports2.code
+}
 
 run: flights2 -> {
-  join_one: airports2 on destination = airports2.code
   group_by: airports2.full_name
   aggregate: flight_count is count()
   limit: 5
@@ -343,7 +343,7 @@ run: duckdb.table('../data/flights.parquet') -> {
 
 There is a special time literal `now`, referring to the current timestamp, which allows for relative time filters.
 >>>malloy
-query: duckdb.table('../data/flights.parquet') -> {
+run: duckdb.table('../data/flights.parquet') -> {
   where: dep_time > now - 6 hours
   aggregate: flights_last_6_hours is count()
 }

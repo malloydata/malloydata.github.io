@@ -4,20 +4,18 @@
 There are two types of bar charts. _Two measure bar charts_ (gradient bar charts) and _Two Dimension Bar_ Charts (stacked bar charts).
 
 The examples below all use the following semantic model.
-
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: carriers is duckdb.table('../data/carriers.parquet') 
     on carrier = carriers.code
   measure: 
     flight_count is count()
-    aircraft_count is count(distinct tail_num)
+    aircraft_count is count(tail_num)
 }
 >>>markdown
 
 ## Simple Bar Chart
 A basic bar chart takes a table where the first column is a string and the second is a number.
-
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
@@ -31,7 +29,6 @@ run: flights -> {
 
 This chart looks at flights and counts the number of aircraft owned by each carrier.  It also, using a gradient,
 shows the number of flights made per plane.
-
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
@@ -46,7 +43,6 @@ run: flights -> {
 ## Two Dimensions
 In this case we are going to look at carriers by flight count and stack the destination.  We are only going to look at flights
 with the destination SFO, OAK or SJC.
-
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
@@ -60,7 +56,6 @@ run: flights -> {
 
 
 We could flip the dimensions around and look at the airports' flights by carrier.
-
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
@@ -74,7 +69,6 @@ run: flights -> {
 
 ## Nested bar Charts
 Barcharts can be used in nested queries
-
 >>>malloy
 #(docs) size=large limit=5000
 run: flights -> {

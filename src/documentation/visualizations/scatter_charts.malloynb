@@ -18,7 +18,7 @@ run: flights -> {
   where: origin = 'ORD'
   group_by: seats is aircraft.aircraft_models.seats
   group_by: distance is distance
-  aggregate: route_count is count(distinct concat(origin, destination))
+  aggregate: route_count is count(concat(origin, destination))
 }
 >>>markdown
 
@@ -31,7 +31,7 @@ run: flights -> {
   nest: seats_by_distance_scatter_chart is  {
     group_by: seats is aircraft.aircraft_models.seats
     group_by: distance is distance
-    aggregate: route_count is count(distinct concat(origin, destination))
+    aggregate: route_count is count(concat(origin, destination))
   }
 }
 >>>markdown

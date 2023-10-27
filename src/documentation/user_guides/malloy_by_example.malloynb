@@ -130,7 +130,6 @@ run: airports2 -> by_state
 ## Filtering a Source
 
 You can filter a source by adding a filter expression using the `where:` keyword in an extension. In this example, we filter an existing `airports` source and then use this extended version to execute the `by_state` view in a query. For more information on filtering, see the [Filters](../language/filters.malloynb) section.
-
 >>>malloy
 run: airports2 extend {
   where: fac_type = 'SEAPLANE BASE'   // <- run the query with an added filter
@@ -538,15 +537,15 @@ source: airport_facts is q_airport_facts extend {
     group_by: flight_year
     aggregate:
       flight_count
-      carrier_count is count(distinct carrier)
-      origin_count is count(distinct origin)
+      carrier_count is count(carrier)
+      origin_count is count(origin)
   }
 
   view: flights_by_origin is {
     group_by: origin
     aggregate:
       flight_count
-      carrier_count is count(distinct carrier)
+      carrier_count is count(carrier)
   }
 }
 >>>markdown

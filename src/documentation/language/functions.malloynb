@@ -8,18 +8,13 @@ These functions are defined in Malloy in order to provide basic typechecking of 
 For quick function lookup, see the [alphebetized table of all available functions](#all-functions).
 
 Note: the behavior of functions changed in v0.0.39. For more information, see [a description of that change](./new_functions.malloynb).
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
-sql: my_sql_query is {
-  select: """
-    SELECT 1
-  """
-  connection: "duckdb"
-}
 
-source: empty is from_sql(my_sql_query) {}
+source: empty is duckdb.sql("""
+    SELECT 1
+  """) extend {}
 >>>markdown
 
 
@@ -94,8 +89,6 @@ Concatenates multiple values together, casting non-`string` values to `string`. 
 If no values are given, `concat` returns the empty string.
 
 Behavior for `null` depends on dialect: in BigQuery, if any argument is `null`, the result is `null`; in DuckDB and Postgres, `null` is treated as an empty string.
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -128,7 +121,6 @@ upper(value)
 ```
 
 Returns a string like `value` but with all alphabetic characters in uppercase.
-
 >>>malloy
 run: empty -> {
   group_by: e1 is upper('foo')
@@ -142,7 +134,6 @@ strpos(test_string, search_string)
 ```
 
 Returns the 1-based position of the first occurrence of `search_string` in `test_string`, or `0` if `search_string` is not found.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -160,7 +151,6 @@ starts_with(value, prefix)
 ```
 
 Returns `true` if `value` begins with `prefix` and `false` otherwise. If either `value` or `prefix` is `null`, the result is `false` (unlike in SQL, where it would be `null`).
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -178,7 +168,6 @@ ends_with(value, suffix)
 ```
 
 Returns `true` if `value` ends with `prefix` and `false` otherwise. If either `value` or `suffix` is `null`, the result is `false` (unlike in SQL, where it would be `null`).
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -197,7 +186,6 @@ trim(value, trim_characters)
 ```
 
 Returns a string with leading and trailing characters in `trim_characters` (or whitespace, if `trim_characters` is unspecified) removed.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -217,7 +205,6 @@ ltrim(value, trim_characters)
 ```
 
 Like `trim(value, trim_characters)` but only removes leading characters.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -237,7 +224,6 @@ rtrim(value, trim_characters)
 ```
 
 Like `trim(value, trim_characters)` but only removes trailing characters.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -257,7 +243,6 @@ substr(value, position, length)
 ```
 
 Returns a substring of `value` starting at the 1-based index `position`. If `length` is specified, the returned string will be at most `length` characters long; otherwise the returned string will extend to the end of `value`. Negative values of `position` index the starting value from the end of the string (with `-1` for the last character of the string). A `position` of `0` is equivalent to a `position` of `1`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -280,7 +265,6 @@ regexp_extract(value, pattern)
 ```
 
 Returns the first substring of `value` which matches `pattern`. Returns `null` if there is no matching substring.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -302,7 +286,6 @@ Returns a copy of `value` with all occurrences of `pattern` replaced with `repla
 If `pattern` is empty, no replacement occurs and `value` is returned unchanged.
 
 If `pattern` is a regular expression, parenthesized capturing groups can be included in the `replacement` string with `'\\1'` to `'\\9'`. In BigQuery and DuckDB, the full matched string can be referenced with `'\\0'`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -325,7 +308,6 @@ length(value)
 ```
 
 Returns the number of characters in `value`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -343,7 +325,6 @@ byte_length(value)
 ```
 
 Returns the number of bytes in the unicode encoding of `value`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -361,7 +342,6 @@ chr(value)
 ```
 
 Returns a unicode code point `value` and returns a string containing the character with the matching code point. If `value` is 0, returns an empty string _not_ a string containing the null character.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -383,7 +363,6 @@ ascii(value)
 Returns the ASCII code point of the first character of `value`. If `value` is empty, returns 0.
 
 In BigQuery, `ascii` errors if the first character of `value` is not representable in ASCII. In Postgres and DuckDB, `ascii` returns the Unicode code point of the first character.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -400,7 +379,6 @@ unicode(value)
 ```
 
 Returns the Unicode code point of the first character of `value`. If `value` is empty, returns 0.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -420,7 +398,6 @@ repeat(value, num_repetitions)
 Return a string consisting of `value` repeated `num_repetitions` times.
 
 Undefined behavior if `num_repetitions` is negative or a non-integer.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -440,7 +417,6 @@ reverse(value)
 ```
 
 Return a copy of `value` with the characters in reverse order.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -497,8 +473,6 @@ round(value, precision)
 ```
 
 Round `value` to the nearest integer, or if `precision` is specified, round to `precision` decimal places right of the decimal. If `precision` is negative, round to a precision that many places to the left of the decimal. Halfway cases are rounded away from zero.
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -534,7 +508,6 @@ trunc(value, precision)
 ```
 
 Truncate `value` to an integer, or if `precision` is specified, truncate after that many decimal places. If `precision` is negative, truncate to that many decimal places to the left of the decimal point. Similar to `round(value, precision)` but always rounds toward zero.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -557,7 +530,6 @@ floor(value)
 ```
 
 Round `value` down to the greatest integer not larger than `value`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -575,7 +547,6 @@ ceil(value)
 ```
 
 Round `value` up to the smallest integer not less than `value`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -593,7 +564,6 @@ cos(angle)
 ```
 
 Computes the cosine of `angle` where `angle` is specified in radians.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -611,7 +581,6 @@ acos(value)
 ```
 
 Computes the principal value of the inverse cosine of `value`. The return value is in the range [0,π]. Generates an error if `value` is a value outside of the range [-1, 1].
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -629,8 +598,6 @@ sin(angle)
 ```
 
 Computes the sine of `angle` where `angle` is specified in radians.
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -648,7 +615,6 @@ asin(value)
 ```
 
 Computes the principal value of the inverse sine of `value`. The return value is in the range [-π/2,π/2]. Generates an error if `value` is outside of the range [-1, 1].
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -667,7 +633,6 @@ tan(angle)
 ```
 
 Computes the tangent of `angle` where `angle` is specified in radians.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -686,7 +651,6 @@ atan(value)
 ```
 
 Computes the principal value of the inverse tangent of `value`. The return value is in the range [-π/2,π/2].
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -704,8 +668,6 @@ atan2(y, x)
 ```
 
 Calculates the principal value of the inverse tangent of `x / y` using the signs of the two arguments to determine the quadrant. The return value is in the range [-π,π].
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -725,8 +687,6 @@ sqrt(value)
 ```
 
 Computes the square root of `value`. Generates an error if `value < 0`.
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -743,7 +703,6 @@ pow(base, exponent)
 ```
 
 Returns `base` raised to the power of `exponent`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -767,7 +726,6 @@ abs(value)
 ```
 
 Returns the absolute value of `value`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -785,7 +743,6 @@ sign(value)
 ```
 
 Returns `-1`, `0`, or `1` for negative, zero and positive arguments respectively. For floating point arguments, this function does not distinguish between positive and negative zero.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -803,7 +760,6 @@ is_inf(value)
 ```
 
 Returns `true` if `value` is infinite (positive or negative), `false` otherwise. Unlike in SQL, `is_inf(null) = false` (not `null`).
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -822,7 +778,6 @@ is_nan(value)
 ```
 
 Returns `true` if `value` is `NaN`, `false` otherwise. Unlike in SQL, `is_nan(null) = false` (not `null`).
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -840,7 +795,6 @@ div(dividend, divisor)
 ```
 
 Returns the (truncated) integer part of the division of `dividend` by `divisor`. Division by zero returns an error. 
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -860,7 +814,6 @@ rand()
 ```
 
 Returns a random number in the range [0, 1).
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -877,7 +830,6 @@ pi()
 ```
 
 Returns the value of π.
-
 >>>malloy
 run: empty -> {
   group_by: pi is pi()
@@ -891,7 +843,6 @@ log(value, base)
 ```
 
 Returns the logarithm of `value` with the specified `base`. Note that `base` is required. Errors if `value <= 0`, `base <= 0`, or if `base = 1`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -910,7 +861,6 @@ ln(value)
 ```
 
 Returns the natural log (log base _e_) of `value`. Equivalent to `log(value, exp(1))`. Errors if `value <= 0`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -928,7 +878,6 @@ exp(power)
 ```
 
 Returns _e_ (Euler's number) raised to the given `power`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1021,8 +970,6 @@ years(interval)
 ```
 
 Calculate the number of years in `interval`. Note: this function does not currently work.
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1141,9 +1088,8 @@ second(time)
 ```
 
 Returns the second of the minute (from 0 to 59) of `time`.
-
 >>>malloy
-run: empty { dimension: t is @2023-12-31 23:59:59 } -> {
+run: empty extend { dimension: t is @2023-12-31 23:59:59 } -> {
   group_by: 
     doy is day_of_year(t)
     dom is day(t)
@@ -1186,7 +1132,6 @@ greatest(value, ...)
 ```
 
 Returns the greatest value of all arguments, supporting, `number`, `string`, `date`, and `timestamp`. Returns `null` if any argument is `null`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1205,8 +1150,6 @@ least(value, ...)
 ```
 
 Returns the least value of all arguments, supporting, `number`, `string`, `date`, and `timestamp`. Returns `null` if any argument is `null`.
-
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1227,7 +1170,6 @@ ifnull(value, default)
 Return `value` unless it is `null`, or `default` otherwise.
 
 Note: it is more idiomatic in Malloy to use `??`, the null-coalescing operator.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1245,7 +1187,6 @@ ifnull(value, ...)
 Return the first `value` which is not `null`, or `null` if all `value`s are `null`. Essentially the same as `ifnull` but allowing more than two arguments.
 
 Note: it is more idiomatic in Malloy to use `??`, the null-coalescing operator.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1263,9 +1204,8 @@ nullif(value, condition)
 Equivalent to the SQL <code>NULLIF</code> function: returns `value` unless `value = condition`, in which case it returns `null`.
 
 Note: the use of `nullif` is not idiomatic to Malloy; use `pick` statements instead, as they are more flexible.
-
 >>>malloy
-run: empty { dimension: value is 1 } -> {
+run: empty extend { dimension: value is 1 } -> {
   group_by: 
     a_sql is nullif(value, 2)
     a_malloy is value ? pick null when 2
@@ -1280,7 +1220,6 @@ There are many functions which are useful in SQL which are not part of Malloy fo
 ### IFNULL, COALESCE
 
 Neither <code>IFNULL</code> nor <code>COALESCE</code> is available in Malloy, because Malloy has a specific coalescing operator: `??`.
-
 >>>malloy
 run: empty -> {
   group_by: 
@@ -1292,9 +1231,8 @@ run: empty -> {
 ### NULLIF
 
 The <code>NULLIF</code> SQL function is not available in Malloy, because the same thing is expressible in a more Malloy-like way, using a `pick` statement. This is also more flexible, as the pick statement allows for partial comparisons.
-
 >>>malloy
-run: empty { dimension: value is 1 } -> {
+run: empty extend { dimension: value is 1 } -> {
   group_by: 
     a is value ? pick null when 2   // same as NULLIF(value, 2)
     b is value ? pick null when < 2 // same as CASE NULL WHEN value < 2 ELSE value END
@@ -1330,7 +1268,6 @@ stddev(value)
 ```
 
 Returns the standard deviation of values of `value` across all rows.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1358,8 +1295,6 @@ Malloy has two [ungrouped aggregate functions](./ungrouped-aggregates.malloynb),
 ### Syntax
 
 Analytic functions can only appear in a `calculate:` statement:
-
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1370,7 +1305,6 @@ run: flights -> {
 For more detailed information, see the [Calculations](./calculations.malloynb) section.
 
 <!-- Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field. -->
-
 >>>malloy
 run: flights -> {
   group_by: 
@@ -1425,7 +1359,6 @@ row_number()
 ```
 
 Returns the row number of the current result row after grouping and aggregating.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1440,7 +1373,6 @@ rank()
 ```
 
 Returns the rank according to the query ordering, with values having equal ordering value getting equal rank.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1463,7 +1395,6 @@ Returns the value of `expr` for the previous row. If `offset` is specified, retu
 Generates an error if `offset` is `null`, negative, or not an integer.
 
 The value of `offset` must be a _constant_.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1486,7 +1417,6 @@ Returns the value of `expr` for the next row. If `offset` is specified, returns 
 Generates an error if `offset` is `null`, negative, or not an integer.
 
 The value of `offset` must be a _constant_.
-
 >>>malloy
 run: flights -> { 
   group_by: carrier
@@ -1506,7 +1436,6 @@ first_value(expr)
 ```
 
 Returns the first value of `expr` across all rows (i.e. the value for the first row).
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1521,7 +1450,6 @@ last_value(expr)
 ```
 
 Returns the last value of `expr` across all rows (i.e. the value for the last row).
-
 >>>malloy
 run: flights -> { 
   group_by: carrier
@@ -1539,7 +1467,6 @@ min_cumulative(expr)
 ```
 
 Returns the minimum value of `expr` among rows from the first row to the current row.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1556,7 +1483,6 @@ max_cumulative(expr)
 ```
 
 Returns the maximum value of `expr` among rows from the first row to the current row.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1573,7 +1499,6 @@ sum_cumulative(expr)
 ```
 
 Returns the cumulative sum of values of `expr` from the first row to the current row.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1590,7 +1515,6 @@ min_window(expr)
 ```
 
 Returns the minimum of all values of `expr` across all rows.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1606,7 +1530,6 @@ max_window(expr)
 ```
 
 Returns the maximum of all values of `expr` across all rows.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1622,7 +1545,6 @@ sum_window(expr)
 ```
 
 Returns the sum of all values of `expr` across all rows.
-
 >>>malloy
 run: flights -> {
   group_by: carrier
