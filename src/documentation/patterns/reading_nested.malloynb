@@ -16,11 +16,10 @@ To perform aggregate calculations in Malloy, you can simply specify the complete
 ## A simple Google Analytics Semantic model
 
 Here is a very simple Malloy model describing some interesting calculations on Google Analytics data:
-
 >>>malloy
 source: ga_sessions is duckdb.table('../data/ga_sample.parquet') extend {
   measure:
-    user_count is count(distinct fullVisitorId)
+    user_count is count(fullVisitorId)
     # percent
     percent_of_users is user_count / all(user_count)
     session_count is count()
@@ -35,7 +34,6 @@ source: ga_sessions is duckdb.table('../data/ga_sample.parquet') extend {
 >>>markdown
 
 ## Show Data by Traffic Source
-
 >>>malloy
 #(docs) size=large limit=5000
 run: ga_sessions -> {
@@ -52,7 +50,6 @@ run: ga_sessions -> {
 >>>markdown
 
 ## Show Data By Browser
-
 >>>malloy
 #(docs) size=large limit=5000
 run: ga_sessions -> {
@@ -68,7 +65,6 @@ run: ga_sessions -> {
 >>>markdown
 
 ## With Nested Results
-
 >>>malloy
 #(docs) size=large limit=5000
 run: ga_sessions -> {

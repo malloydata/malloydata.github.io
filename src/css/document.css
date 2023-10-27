@@ -796,6 +796,11 @@ div.code-wrapper a img:hover {
   border: none;
 }
 
+.document-outer.blog .document .code-wrapper {
+  margin-block: 24px;
+}
+
+
 .blog-post-link {
   margin-bottom: 40px;
   color: #707277;
@@ -833,7 +838,7 @@ div.code-wrapper a img:hover {
 
 .document-outer.blog .document > img,
 .document-outer.blog .document > p > img {
-  margin-bottom: 5px;
+  margin-block: 24px;
   max-width: 100%;
   width: unset;
 }

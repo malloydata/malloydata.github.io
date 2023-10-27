@@ -3,9 +3,8 @@
 # Shape Maps
 
 The plugin currently supports US maps and state names. The model and data styles for the subsequent examples are:
-
 >>>malloy
-source: airports is duckdb.table('../data/airports.parquet') {
+source: airports is duckdb.table('../data/airports.parquet') extend {
   primary_key: code
   measure: airport_count is count()
   view: by_state is {
@@ -18,10 +17,9 @@ source: airports is duckdb.table('../data/airports.parquet') {
 >>>markdown
 
 
-## Run a query and tag the reusults as a shape map
+## Run a query and tag the results as a shape map
 
 We can explicitly return a result as a shape map.
-
 >>>malloy
 #(docs) size=large
 # shape_map
@@ -31,7 +29,6 @@ run: airports -> by_state
 ## The tag is in the semantic model 
 
 In the query below the tag is in the semantic model.
-
 >>>malloy
 #(docs) size=large
 run: airports -> by_state_shaped {where: fac_type='SEAPLANE BASE'}
@@ -40,7 +37,6 @@ run: airports -> by_state_shaped {where: fac_type='SEAPLANE BASE'}
 
 ## Run as a trellis
 By calling the configured map as a nested subtable, a trellis is formed.
-
 
 >>>malloy
 #(docs) size=large
@@ -53,7 +49,6 @@ run: airports -> {
 >>>markdown
 
 ## Run as a trellis, repeated with different filters
-
 >>>malloy
 #(docs) size=large
 run: airports -> {

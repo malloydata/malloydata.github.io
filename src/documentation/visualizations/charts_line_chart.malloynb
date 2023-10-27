@@ -2,14 +2,13 @@
 # Line Charts
 
 The examples below all use the following semantic model.
-
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: carriers is duckdb.table('../data/carriers.parquet') 
     on carrier = carriers.code
   measure: 
     flight_count is count()
-    aircraft_count is count(distinct tail_num)
+    aircraft_count is count(tail_num)
 }
 >>>markdown
 
@@ -20,7 +19,6 @@ Line charts take two or three parameters.
 * Third (optional) Pivot is dimensional field (numeric or string)
 
 ## Single line line_chart
-
 >>>malloy
 #(docs) size=large limit=5000
 # line_chart
@@ -33,7 +31,6 @@ run: flights -> {
 ## Multi line line_chart
 
 The third parameter in a line chart adds a line for each dimension found.  
-
 >>>malloy
 #(docs) size=large limit=50000
 # line_chart
@@ -47,7 +44,6 @@ run: flights -> {
 ## Line Charts nested in tables
 
 When line charts are nested in tables the size is reduced.  Nested line charts increase the density of information provided by the result.
-
 >>>malloy
 #(docs) size=large limit=5000
 run: flights -> {

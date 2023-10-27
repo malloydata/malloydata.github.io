@@ -1,0 +1,273 @@
+>>>markdown
+# Drawing Bump Charts in Malloy
+Yes, it can do that
+
+*October 25, 2023 by Speros Kokenes*
+<br/><br/><br/>
+
+The Malloy language recently [hit 4.0 and left experimental status](http://localhost:4000/blog/2023-10-03-malloy-four/). With the language now stable, we are focusing on the next stage of Malloy which includes further language capabilities, deeper third-party integrations, and a more powerful rendering system. Our rendering roadmap is ambitious and exciting, but today I want to share a little bit about what you can already accomplish with Malloy's renderer.
+
+In this post, let's explore some capabilities of the renderer by creating a novel visualization known as a **bump chart**.
+
+## What's a Bump Chart?
+A bump chart is a visualization used to show changes in ranking amongst a group of values over time. [Consider this example from Dominik Koch](https://dominikkoch.github.io/Bump-Chart/), where each country in the 2018 Winter Olympics is plotted day by day of the competition, ranked by the number of medals won:
+
+<img src ="bumpChart_example.png" class="no-shadow" style="display: block; max-height: 600px"/>
+
+The name "bump chart" is inspired by a form of rowing race called a [bumps race](https://en.wikipedia.org/wiki/Bumps_race), which commonly employs this type of visualization to show race results. In a bumps race, boats are lined up in a single file and pass each other in ranked position by bumping the boat in front of them. This race can take place over several days, with the starting order of the boats being dictated by their finishing rank from the previous day. Hence the need for a nice visualization to show the ranking results changing from day to day.
+
+<img src ="cambridge_bumps.png" class="no-shadow" style="display: block; max-height: 400px"/>
+Example bump chart from Cambridge bump races
+
+## Making it in Malloy
+If you've used the Malloy renderer before, you may be saying "wait, you can make THAT with Malloy?". Well, not _yet_. But today we can make a poor man's version of a bump chart. Using data about the Olympics, we will use Malloy's table, list, and image renderer to produce a chart that shows from Olympic year to Olympic year how the ranking of countries by medals shook out:
+
+<img src ="malloy_bump.png" class="no-shadow" style="display: block; max-height: 600px"/>
+>>>malloy
+##(docs) hidden
+source: regions is duckdb.sql("select * from read_csv_auto('noc_regions.csv', header=true)");
+-- Model based on table of athlete events data
+source: model is duckdb.table("athlete_events.csv") extend {
+  -- Join the mapping table on NOC columns
+  join_many: regions on regions.NOC = NOC
+  dimension: 
+    -- Create a dimension containing image urls for flags
+    # image { height=16px width=32px }
+    flag is concat('https://raw.githubusercontent.com/cristiroma/countries/master/data/flags/PNG-32/', regions.CC2, '-32.png')
+    -- Simple country name
+    Country is regions.region
+  measure:
+    -- Create a measure which counts medals won
+    medal_count is count() { where: Medal != 'NA' }
+
+  view: medal_ranking is {
+    group_by: flag, Country
+    aggregate: medal_count
+    calculate: rank is rank()
+  }
+
+  view: medal_ranking_by_year is {
+    group_by: `Year`
+    nest: medal_ranking
+    where: Season = 'Summer'
+  }
+
+  view: bump_chart is medal_ranking_by_year -> {
+    group_by: medal_ranking.rank
+    # pivot
+    nest: rankingNest is {
+      group_by: `Year`
+      order_by: `Year`
+      # list
+      nest: countries is {
+        group_by: medal_ranking.flag
+      }
+    }
+  }
+}
+>>>markdown
+
+### Our data
+To create the chart above, let's use a dataset of [Olympics competition data](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results). This data contains a record for every athlete, event competed in, and outcome of that event (what medal did they win, if any).
+>>>malloy
+##(docs) hidden
+#(docs) limit=100 size=medium
+run: duckdb.table("athlete_events.csv") -> {
+    select: *
+}
+>>>markdown
+Let's start by loading this data into a simple model, with a reusable measure for counting medals.
+
+```malloy
+source: model is duckdb.table("athlete_events.csv") extend {
+  measure:
+    -- Create a measure which counts medals won
+    medal_count is count() { where: Medal != 'NA' }
+}
+```
+>>>markdown
+Now using Malloy, we can easily rank our countries by medals won across the entire dataset.
+>>>malloy
+#(docs) limit=100 size=medium
+run: model -> {
+  group_by: NOC
+  aggregate: medal_count
+  calculate: rank is rank()
+}
+>>>markdown
+So far, so good. But we can do much better than this. For one thing, this view isn't reusable. Let's move it up into our model so that we can using this as a building block for further querying. Another problem is the NOC column. NOC stands for "National Olympic Committees" and is a special identifier for each competing country. Unfortunately, this code does not line up with ISO standard codes for countries, so we need additional data to map this to any useful country data outside of this Olympics set. In our case, this will be important as we can look up flag images by ISO code, so we can use this mapping table:
+>>>malloy
+##(docs) hidden
+#(docs) limit=100 size=medium
+run: duckdb.sql("select * from read_csv_auto('noc_regions.csv', header=true)") -> {
+    select: *
+    limit: 100
+}
+>>>markdown
+Let's model this data together. We can take our previous model and use a join to link it with our NOC mapping data. Then, we can create a Country dimension and a flag dimension that uses the ISO 2 country code to look up a flag image URL and shows an image. Finally, we can store our ranking query as a view inside the model.
+
+```malloy
+-- Mapping table of NOC to ISO 2 country codes
+source: regions is duckdb.sql("select * from read_csv_auto('noc_regions.csv', header=true)");
+
+-- Model based on table of athlete events data
+source: model is duckdb.table("athlete_events.csv") extend {
+  -- Join the mapping table on NOC columns
+  join_many: regions on regions.NOC = NOC
+  dimension: 
+    -- Create a dimension containing image urls for flags
+    # image { height=16px width=32px }
+    flag is concat('https://raw.githubusercontent.com/cristiroma/countries/master/data/flags/PNG-32/', regions.CC2, '-32.png')
+    -- Simple country name
+    Country is regions.region
+  measure:
+    -- Create a measure which counts medals won
+    medal_count is count() { where: Medal != 'NA' }
+
+  view: medal_ranking is {
+    group_by: flag, Country
+    aggregate: medal_count
+    calculate: rank is rank()
+  }
+}
+```
+>>>markdown
+Now our medal_ranking view has nice country names and flags, AND its reusable.
+>>>malloy
+#(docs) limit=100 size=medium
+run: model -> medal_ranking
+>>>markdown
+## Calculating the ranks over time
+To create a data structure that supports our bump chart format, we need to calculate the ranks of each country within each year, then regroup that data by ranking and pivot out the year. It sounds complicated, but thanks to Malloy's conciseness and reusability, we can break this into smaller steps and easily put them all together.
+
+We already have a view for ranking countries by medals won. We can reuse that view to create a new view that calculates that ranking on a country by country basis, and limits it to only Summer Olympics:
+
+```malloy
+source: model is duckdb.table("athlete_events.csv") extend {
+  // ...
+
+  view: medal_ranking is ...
+  
+  view: medal_ranking_by_year is {
+    group_by: `Year`
+    nest: medal_ranking
+    where: Season = 'Summer'
+  }
+}
+```
+>>>malloy
+#(docs) limit=100 size=medium
+run: model -> medal_ranking_by_year
+>>>markdown
+Great, we have all of the data that we need for our chart. But it's in the wrong format. Let's fix that by introducing a second stage to the query, where we take the results above and re-aggregate by the nested rank value, with the rest of the data for the ranking nested. Also, within an Olympic year, if two or more countries have the same medal count, they will tie with the same ranking. So we need to nest countries within each year as well in case we have more than 1 value.
+
+```malloy
+source: model is duckdb.table("athlete_events.csv") extend {
+  // ...
+
+  view: medal_ranking is ...
+
+  view: medal_ranking_by_year is ...
+
+  view: bump_chart is medal_ranking_by_year -> {
+    group_by: medal_ranking.rank
+    nest: rankingNest is {
+      group_by: `Year`
+      order_by: `Year`
+      nest: countries is {
+        group_by: medal_ranking.flag
+      }
+    }
+  }
+}
+```
+
+```malloy
+run: model -> bump_chart
+```
+>>>malloy
+##(docs) hidden
+#(docs) size=large limit=100
+run: model -> medal_ranking_by_year -> {
+    group_by: medal_ranking.rank
+    nest: rankingNest is {
+      group_by: `Year`
+      order_by: `Year`
+      nest: countries is {
+        group_by: medal_ranking.flag
+      }
+    }
+  }
+>>>markdown
+Almost there! There are two things off in this data structure. First, we want the Years pivoted. Second, some ranks have ties for certain years, which means more than 1 country is represented in the dataset. It would be best if we could show this as a list within one cell. 
+
+These two issues can be resolved using Malloy's `pivot` and `list` tags.
+
+```malloy
+source: model is duckdb.table("athlete_events.csv") extend {
+  -- ...
+
+  view: bump_chart is medal_ranking_by_year -> {
+    group_by: medal_ranking.rank
+    # pivot
+    nest: rankingNest is {
+      group_by: `Year`
+      order_by: `Year`
+      # list
+      nest: countries is {
+        group_by: medal_ranking.flag
+      }
+    }
+  }
+}
+```
+>>>malloy
+#(docs) size=large limit=100
+run: model -> bump_chart
+>>>markdown
+And there you have it. A pseudo bump chart with the Malloy renderer.
+
+Here is what our final model looks like, end to end:
+
+```malloy
+source: regions is duckdb.sql("select * from read_csv_auto('noc_regions.csv', header=true)");
+-- Model based on table of athlete events data
+source: model is duckdb.table("athlete_events.csv") extend {
+  -- Join the mapping table on NOC columns
+  join_many: regions on regions.NOC = NOC
+  dimension: 
+    -- Create a dimension containing image urls for flags
+    # image { height=16px width=32px }
+    flag is concat('https://raw.githubusercontent.com/cristiroma/countries/master/data/flags/PNG-32/', regions.CC2, '-32.png')
+    -- Simple country name
+    Country is regions.region
+  measure:
+    -- Create a measure which counts medals won
+    medal_count is count() { where: Medal != 'NA' }
+
+  view: medal_ranking is {
+    group_by: flag, Country
+    aggregate: medal_count
+    calculate: rank is rank()
+  }
+
+  view: medal_ranking_by_year is {
+    group_by: `Year`
+    nest: medal_ranking
+    where: Season = 'Summer'
+  }
+
+  view: bump_chart is medal_ranking_by_year -> {
+    group_by: medal_ranking.rank
+    # pivot
+    nest: rankingNest is {
+      group_by: `Year`
+      order_by: `Year`
+      # list
+      nest: countries is {
+        group_by: medal_ranking.flag
+      }
+    }
+  }
+}
+```

@@ -1,26 +1,26 @@
 --! styles ecommerce.styles.json
-source: users is duckdb.table('../data/users.parquet') {
+source: users is duckdb.table('../data/users.parquet') extend {
   primary_key: id
   dimension: full_name is initcap!(concat(first_name, ' ', last_name))
   measure: user_count is count()
 }
 
-source: product is duckdb.table('../data/products.parquet') {
+source: product is duckdb.table('../data/products.parquet') extend {
   primary_key: id
   measure: product_count is count()
 }
 
-source: inventory_items is duckdb.table('../data/inventory_items.parquet') {
+source: inventory_items is duckdb.table('../data/inventory_items.parquet') extend {
   primary_key: id
 
   join_one: product with product_id
 
   measure:
-    inventory_item_count is count(distinct id)
+    inventory_item_count is count(id)
     total_cost is cost.sum()
 }
 
-source: user_order_facts is from(
+source: user_order_facts is 
   duckdb.table('../data/order_items.parquet')  ->  {
     group_by: user_id
     aggregate: first_order is min(created_at)
@@ -28,7 +28,7 @@ source: user_order_facts is from(
     aggregate: lifetime_orders is count()
     aggregate: lifetime_spend is sale_price.sum() {where: status != 'Cancelled' & 'Returned'}
   }
-){
+extend {
   primary_key: user_id
 
   dimension: top_customer is lifetime_orders > 10
@@ -46,7 +46,7 @@ source: user_order_facts is from(
     else null
 }
 
-source: order_items is duckdb.table('../data/order_items.parquet') {
+source: order_items is duckdb.table('../data/order_items.parquet') extend {
   primary_key: id
 
   join_one:
@@ -58,7 +58,7 @@ source: order_items is duckdb.table('../data/order_items.parquet') {
     gross_margin is sale_price - inventory_items.cost
 
   measure:
-    order_count is count(distinct order_id)
+    order_count is count(order_id)
     order_item_count is count()
     total_sales is sale_price.sum()
     total_gross_margin is gross_margin.sum()

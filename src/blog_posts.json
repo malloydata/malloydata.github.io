@@ -1,5 +1,12 @@
 [
   {
+    "title": "Bump charts",
+    "path":"/2023-10-26-malloy-bump-chart",
+    "subtitle": "Yes, it can do that",
+    "author": "Speros Kokenes",
+    "published": "2023-10-26"
+  },
+  {
     "title": "Using Malloy in Jupyter Notebooks",
     "path":"/2023-10-18-malloy-python-notebooks",
     "subtitle": "Advanced data science needs trustworty metrics",
