@@ -1,0 +1,26 @@
+>>>markdown
+# Beyond YAML: Why Semantic Layers Need Real Programming Languages
+The easy thing is not always the right thing
+
+*November 6, 2023 by Carlin Eng*
+<br/><br/><br/>
+
+Many commercial implementations of semantic layers are built using YAML, a “human-readable” data serialization format often used for configuration files. Because of its superficial readability, it may seem like the natural choice. It’s also relatively easy to implement a system like this, so it’s a quick path to get a product to market. However, taking this shortcut creates a terrible developer experience, and customers ultimately suffer. In this post, I’ll lay out the reasons why, and describe why the Malloy team believes that a real Semantic Layer needs a full-fledged programming language.
+
+When writing YAML configuration in an IDE, the editing environment sees input fields as simple text strings. This means the IDE cannot validate the contents of the configuration. Parsing and validation is usually passed off to some external program that lives outside of the IDE, and can take several seconds to run to completion. Unfortunately, users oftentimes need to write complex expressions in these configurations, and since the IDE has no knowledge of what those expressions can or cannot contain, those users are trapped in a vicious cycle of guessing the correct syntax, leaving the IDE to run a validation script, trying to interpret any resulting error messages, and returning back to the IDE to try to fix their syntax. For cognitively demanding tasks like data modeling, fast feedback loops are absolutely critical, and this experience is crippling. The Malloy team experienced these limitations firsthand when they initially built LookML back in 2012 as a domain-specific language (DSL) on top of YAML. It’s one of the many lessons they took to heart when creating Malloy.
+
+Let’s look at a concrete example of this problem by inspecting a metric definition from another YAML-based semantic layer solution:
+
+<img src="filter_example.png"/>
+
+In this example, the correct syntax for the filter is quite complex. The field takes an expression where some values are enclosed in double-curlies, and those values have their own parenthesized subexpressions. Until you run a validation command, you have no idea if this is the correct syntax, or if you’ve referenced a non-existent field. Your code editor just sees a string, and provides no help whatsoever.
+
+Modern programming environments don’t work this way. When someone writes syntactically invalid Javascript or Python code, they get immediate feedback from the IDE. Features like “jump to reference” or “peek at definition” allows developers to quickly explore a codebase and understand how complex components work together. By implementing a real programming language, instead of just a configuration DSL, Malloy offers this same functionality. In Malloy, when you type an invalid expression (either because the syntax isn’t correct, or because the object you’re referencing doesn’t exist), you get instantaneous feedback:
+
+<img src="error_highlighting.gif"/>
+
+When reading someone else’s query that uses complex dimensions or measures, it’s a single click to see exactly how those objects are defined:
+
+<img src="show_definition.gif"/>
+
+This doesn’t come for free. Writing a real compiler is a complex undertaking that requires a lot of hard work, knowledge, and skill. However, we believe it’s 100% worth the effort. Just like programming, data modeling and exploration is a very cognitively demanding process, and cognitively demanding processes benefit tremendously from fast feedback loops. At the Malloy team, we’re trying as hard as we can to ensure that data modelers and analysts can achieve “flow state” while doing their work. This means doing hard things, and sweating every tiny detail that causes friction in the experience.
