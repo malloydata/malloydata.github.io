@@ -22,7 +22,7 @@ In this example, the logic for the filter field is fairly simple, but the correc
 * *Semantic Model DSL*: you need to explicitly run your DSL’s compilation program to see the problem. Maybe it’s a syntax error, maybe it’s an undefined field.
 * *SQL*: semantic model DSLs typically contain SQL fragments, and the only way to test these is to run or compile the query.
 
-Modern programming environments don’t work this way. When someone writes syntactically invalid Javascript or Python code, they get immediate feedback from the IDE. Features like “jump to reference” or “peek at definition” allows developers to quickly explore a codebase and understand how complex components work together. By implementing a real programming language, instead of just a configuration DSL, Malloy offers this same functionality. In Malloy, when you type an invalid expression (either because the syntax isn’t correct, or because the object you’re referencing doesn’t exist), you get instantaneous feedback:
+Modern programming environments don’t work this way. When someone writes syntactically invalid Javascript or Python code, they get immediate feedback from the IDE. Features like “jump to reference” or “peek at definition” allow developers to quickly explore a codebase and understand how complex components work together. By implementing a real programming language, instead of just a configuration DSL, Malloy offers this same functionality. In Malloy, when you type an invalid expression (either because the syntax isn’t correct, or because the object you’re referencing doesn’t exist), you get instantaneous feedback:
 
 <img src="error_highlighting.gif"/>
 
