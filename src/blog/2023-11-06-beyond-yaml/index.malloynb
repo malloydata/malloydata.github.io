@@ -14,7 +14,7 @@ YAML was designed to create human-readable configuration files. When writing YAM
 
 Let’s look at a concrete example of this problem by inspecting a metric definition from another YAML-based semantic layer solution:
 
-<img src="filter_example.png"/>
+<img src="yaml_filter_example.png"/>
 
 In this example, the logic for the filter field is fairly simple, but the correct syntax is quite complex. The field takes an expression where some values are enclosed in double-curlies, and those values have their own parenthesized subexpressions. Until you run a validation command, you have no idea if this is the correct syntax, or if you’ve referenced a non-existent field. Errors in this semantic data model can come from one of 3 totally separate languages:
 
