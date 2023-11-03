@@ -11,7 +11,8 @@
     "path": "/2023-11-06-beyond-yaml",
     "subtitle": "The easy thing is not always the right thing",
     "author": "Carlin Eng",
-    "published": "2023-11-06"
+    "published": "2023-11-06",
+    "previewImage": "no_yaml_small.png"
   },
   {
     "title": "Bump charts",
