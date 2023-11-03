@@ -135,6 +135,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         footer: isBlog ? undefined : footers[shortPath],
         nextPost: nextBlog,
         previousPost: prevBlog,
+        previewImage: previewImage
       }
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
@@ -426,9 +427,9 @@ function blogTitle(blogShortPath: string) {
 
 function getPreviewImage(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
-  const post_path = `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current].path}`
 
-  if (BLOG_POSTS[current].previewImage) {
+  if (current !== -1 && BLOG_POSTS[current].previewImage) {
+    const post_path = `${DEFAULT_CONTEXT.site.baseurl}/blog${BLOG_POSTS[current].path}`
     return `${post_path}/${BLOG_POSTS[current].previewImage}`
   }
 }
