@@ -1,5 +1,12 @@
 [
   {
+    "title": "Beyond YAML: Why Semantic Layers Need Real Programming Languages",
+    "path":"/2023-11-06-beyond-yaml",
+    "subtitle": "The easy thing is not always the right thing",
+    "author": "Carlin Eng",
+    "published": "2023-11-06"
+  },
+  {
     "title": "Bump charts",
     "path":"/2023-10-26-malloy-bump-chart",
     "subtitle": "Yes, it can do that",

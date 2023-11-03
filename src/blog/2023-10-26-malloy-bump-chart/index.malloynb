@@ -5,7 +5,7 @@ Yes, it can do that
 *October 25, 2023 by Speros Kokenes*
 <br/><br/><br/>
 
-The Malloy language recently [hit 4.0 and left experimental status](http://localhost:4000/blog/2023-10-03-malloy-four/). With the language now stable, we are focusing on the next stage of Malloy which includes further language capabilities, deeper third-party integrations, and a more powerful rendering system. Our rendering roadmap is ambitious and exciting, but today I want to share a little bit about what you can already accomplish with Malloy's renderer.
+The Malloy language recently [hit 4.0 and left experimental status](https://malloydata.github.io/blog/2023-10-03-malloy-four/). With the language now stable, we are focusing on the next stage of Malloy which includes further language capabilities, deeper third-party integrations, and a more powerful rendering system. Our rendering roadmap is ambitious and exciting, but today I want to share a little bit about what you can already accomplish with Malloy's renderer.
 
 In this post, let's explore some capabilities of the renderer by creating a novel visualization known as a **bump chart**.
 
