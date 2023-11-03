@@ -1,5 +1,5 @@
 >>>markdown
-
+<meta name="image" property="og:image" content="no_yaml_small.png">
 <img src="no_yaml_small.png" class="no-shadow"/>
 
 # Beyond YAML: Why Semantic Layers Need Real Programming Languages
