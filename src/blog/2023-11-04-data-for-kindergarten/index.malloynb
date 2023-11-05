@@ -1,25 +1,25 @@
 >>>markdown
 # Data for Kindergarteners
 
-Given that we learn about data in Kindergarten, It is really surprising how hard it is to query data.  In kindergarten we "notice" attributes about things, make piles, and count the things in the piles.  We do this even before we learn any "real" math.  Strangely, that almost all there is to data.
+Given that we learn about data in Kindergarten, I find it really surprising how hard it is to query data.  In kindergarten we "notice" attributes about things, make piles, and count the things in the piles.  We do this even before we learn any "real" math.  Strangely, putting things in piles and counting almost all there is to working with data.
 
 ## Two types of queries.
 
 There are really two types of queries in the world, *lookup* and *aggregating*.  
 
-*Lookup* queries are pretty easy.  Google search is a lookup query.  Type in some terms, and see a list of results.  Usually it involves some kind of filter.  In SQL this often looks like "SELECT * FROM <something> WHERE <FILTER>".
+*Lookup* queries are pretty easy.  Google search is a lookup query.  Type in some terms, and see a list of results.  Usually it involves some kind of filter.  In SQL this often looks like `SELECT * FROM <something> WHERE <FILTER>`.
 
-The interesting queries, the kindergarten queries, are *aggregating*.  Aggregating queries tell you something about a set of data.  The query has two main parts, the *dimensions* (what determings the grouping) and the *measures*, what you are going to measure about each group.  We learn to look at data this way this in kindergarten.  
+The interesting queries, the kindergarten queries, are *aggregating*.  Aggregating queries tell you something about a set of data.  The an aggregating query has two main parts, the *dimensions* (what determings the grouping) and the *measures*, what you are going to measure about each group.  
 
-"Ok class lets take this pile of coins and separate them.  How many pennies?  How many nickels? How many dimes?  How many quarters?"
+"Ok class lets take this pile of coins and separate them.  How many coins are pennies?  How many coins are nickels? Dimes?  Quarters?"
 
 *Aggregating queries* tell us things about a datasets.  *Lookup queries* find things.
 
 ## Data tools are rectangular.
 
-Aggregating queries produce rectanglular matricies .  All of tools work hard so that you can take a dataset, notice some attribute.  The attribute becomes a row in the matrix.   Columns are things you can measure about the data grouped into that row.
+In data world, aggregating queries produce rectanglular matricies .  Most data tools allow you to take a dataset and group by some attribute.  Each different value for that attribute becomes a row in the matrix.   Columns are things you can measure about the data grouped into that row.
 
-We have a simple table `coins.csv` that has two columns, `face_value and `year_minted`.  Let's see how we can notice things about these coins. 
+We have a simple table `coins.csv` that has two columns, `face_value` and `year_minted`.  Let's see how we can notice things about these coins. 
 >>>malloy
 run: duckdb.table('coins.csv') -> {select:*}
 >>>markdown
@@ -89,13 +89,10 @@ Malloy is designed to make building queries easy.  Queries can be constructed fr
 
 Two partial queries (the code between the `{}` can be combined) with a `+` operator.  This is called refinement.
 >>>malloy
-run: coins -> {
-  group_by: coin_type
-} + {
-  aggregate: coin_count
-} + {
-  aggregate: total_value
-}
+run: coins -> 
+  {group_by: coin_type}
+  + {aggregate: coin_count} 
+  + {aggregate: total_value}
 >>>markdown
 ## Dimensions and measures can be used as partial queries.
 When writing a query  `... -> {group_by: coin_type} ...` is the same as ` ... -> coin_type  ...`
@@ -103,7 +100,7 @@ When writing a query  `... -> {group_by: coin_type} ...` is the same as ` ... ->
 Press the command key (or control key) and hover over a word and you can see the definition.
 >>>malloy
 ##! experimental { scalar_lenses }
-run: coins -> 
+run: coins ->       //        same as:
   coin_type         // {group_by: coin_type}
   + coin_count      // {aggregate: coin_count}
   + total_value     // {aggregate: coin_count}
