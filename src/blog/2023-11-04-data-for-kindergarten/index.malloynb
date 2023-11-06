@@ -151,7 +151,15 @@ source: coins2 is coins extend {
   view: by_type is coin_type + metrics
 }
 >>>markdown
-## The most common ways of looking at the data.
+## The schema for coins
+
+<img src="coins2_schema.png">
+
+## Views: The most common ways of looking at the data.
+
+Notice the views.  Views can be used by them selves or in combination with other queries.  Views are bigger building blocks.
+
+Let's start with `metrics`.  Metrics is a view that comuptes *all* the things we might want to ask about a pile of coins.
 >>>malloy
 ##! experimental { scalar_lenses }
 run: coins2 -> metrics
@@ -163,10 +171,13 @@ In our model above we've defined a view called 'metrics' and a dimension called 
 run: coins2 -> color + metrics
 >>>markdown
 ## Looking at data by type is the most common query.
+
+Often with a dataset, we might want to commonly look at the data in a particular way.  In this case, we probably want to look at coins by coin_type so we've built a `by_type` view.
 >>>malloy
 run: coins2 -> by_type
 >>>markdown
 ## We can add filters to any query
+Adding filters let us look at subsets of the data.  In this case we are looking at coins minted this century.
 >>>malloy
 run: coins2 -> by_type + {where: is_new}
 >>>markdown
