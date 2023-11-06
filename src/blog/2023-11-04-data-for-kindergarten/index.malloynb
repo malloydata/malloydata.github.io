@@ -1,7 +1,9 @@
 >>>markdown
 # Data for Kindergarteners
 
-Given that we learn about data in Kindergarten, I find it really surprising how hard it is to query data.  In kindergarten we "notice" attributes about things, make piles, and count the things in the piles.  We do this even before we learn any "real" math.  Strangely, putting things in piles and counting almost all there is to working with data.
+The is a funny thing about data is that we learn about it in Kindergarten, before we even learn about "math".  In kindergarten we ask children to "notice" attributes about things and count things.  "What color is that?",  "how many fish are in this picture?".  To teach this concept, we often make piles, and count the things in the piles. Strangely, putting things in piles and counting the thing we do most with data.
+
+Given we learn it so early, I find it really surprising how hard it is to query data.
 
 ## Two types of queries.
 
@@ -17,13 +19,16 @@ The interesting queries, the kindergarten queries, are *aggregating*.  Aggregati
 
 ## Data tools are rectangular.
 
-In data world, aggregating queries produce rectanglular matricies .  Most data tools allow you to take a dataset and group by some attribute.  Each different value for that attribute becomes a row in the matrix.   Columns are things you can measure about the data grouped into that row.
+In data world, aggregating queries the piles we make become rows in the output an table.  We pick some attribue from the source table and for every differt attribute we recognize, there is only one table in the output table.  We add columns to the output by measuring things about the pile.   
 
-We have a simple table `coins.csv` that has two columns, `face_value` and `year_minted`.  Let's see how we can notice things about these coins. 
+For this example we are going to use a pile of coins.  Each coin has only two attributes.  The value of the coin and the year it was minted.  We've stored the data about these coins in a [data table](coins.csv).
+
+The columns are named `face_value` and `year_minted`.  Let's see how we can notice things about these coins. 
 >>>malloy
 run: duckdb.table('coins.csv') -> {select:*}
 >>>markdown
 ## The first questions is "How Many coins do we have?"
+Usually the very first question, "let's count all the coins".  In Malloy, the data *source*, `duckdb.table('coins.cs)`, is where the  comes from.  The `->` operator asks a question from the source and the stuff in the `{}` is the question.  `aggregate:` is used to write an expression that tells us something about the size of the pile.
 >>>malloy
 run: duckdb.table('coins.csv') -> {
   aggregate: coin_count is count()
@@ -31,15 +36,15 @@ run: duckdb.table('coins.csv') -> {
 >>>markdown
 ## Ok Class, how many of each coin do we have?
 
-Lets notice things about these coins and put them into piles.  How many coins in each pile?
+Lets notice things about these coins and put them into piles. The most obvious feature is the value of the coin.  Let's make piles by the `face_value` of the coins.   `group_by:` is used to determine which pile a coin goes into.  How many coins in each pile?  We can use the same `aggregate:` calculation above.
 >>>malloy
 run: duckdb.table('coins.csv') -> {
   group_by: face_value
   aggregate: coin_count is count()
 }
 >>>markdown
-## Next question? 
-Some of you students are more advanced in your math.  How much are the coins in each pile worth?
+## Gifted Student 
+A gifted student asks "How much is each pile worth".  We can compute as many calculations as we'd like on each of the piles so we add another calculation `total_value`.  Notice that we write the calculation a little differently than in other language.  Malloy writes sums this way to insure that calculations are always correct when things get complex.
 >>>malloy
 run: duckdb.table('coins.csv') -> {
   group_by: face_value
@@ -49,7 +54,9 @@ run: duckdb.table('coins.csv') -> {
 }
 >>>markdown
 ## We're repeating ourselves.
-Notice that we use the calculation for `coin_count` in two different queries.  It is probably a useful concept in this dataset.  Also `total_value`.  We encode these concepts into a `source:` so we can use them simply in subsequent queries. If we ever had to change a calculation, it would be all in one place.
+Notice that we use the calculation for `coin_count` in all the queries.  It is probably a useful concept in this dataset.  Also `total_value`.  We encode these concepts into a `source:` so we can use them simply in subsequent queries. If we were ever have to change a calculation, it would be all in one place.
+
+We're going to add some `dimension:` calculations too.  It would be nice to know the `coin_type` and the `color` of each of the coins.  `dimension`s are used in `group_by:` in queries.  
 >>>malloy
 ##! experimental { scalar_lenses }
 source: coins is duckdb.table('coins.csv') extend {
@@ -69,7 +76,14 @@ source: coins is duckdb.table('coins.csv') extend {
     else 'silver'
 }
 >>>markdown
+## source: coins
+
+If we were to click the 'schema' button we'd see all the definitions in 'coins'  We can use them in queries witout having to repeat the definitions.
+
+<img src="short_hand1.png">
+
 ## How many coins of each color?
+Asking questions is much easier now.  We have `coins` as a shorthand for `duckdb.table('coins.csv')` and `color` and `coin_count` as shorthad for those calculations.
 >>>malloy
 run: coins -> {
   group_by: color
@@ -77,6 +91,7 @@ run: coins -> {
 }
 >>>markdown
 ## How many of each type of coin?
+Another easy query, and pretty easy to read too.
 >>>malloy
 run: coins -> {
   group_by: coin_type
@@ -84,8 +99,10 @@ run: coins -> {
   aggregate: total_value
 }
 >>>markdown
-## Shorthand.
-Malloy is designed to make building queries easy.  Queries can be constructed from reusable parts.  Above we saw how e can put reusable definitions into a `source:`.  We can also use a shorthand to combine these parts (dimensions, measures, and queries) together.  
+## Shorter-hand.
+Malloy is designed to make building queries easy. 
+
+Queries can be constructed from reusable parts.  Above we saw how e can put reusable definitions into a `source:`.  We can also use a shorthand to combine these parts (dimensions, measures, and queries) together.  
 
 Two partial queries (the code between the `{}` can be combined) with a `+` operator.  This is called refinement.
 >>>malloy
