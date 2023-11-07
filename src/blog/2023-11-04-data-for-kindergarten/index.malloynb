@@ -28,7 +28,7 @@ The columns are named `face_value` and `year_minted`.  Let's see how we can noti
 run: duckdb.table('coins.csv') -> {select:*}
 >>>markdown
 ## The first questions is "How Many coins do we have?"
-Usually the very first question, "let's count all the coins".  In Malloy, the data *source*, `duckdb.table('coins.cs)`, is where the  comes from.  The `->` operator asks a question from the source and the stuff in the `{}` is the question.  `aggregate:` is used to write an expression that tells us something about the size of the pile.
+Usually the very first question, "let's count all the coins".  In Malloy, the data *source*, `duckdb.table('coins.csv')`, is where the  comes from.  The `->` operator asks a question from the source and the stuff in the `{}` is the question.  `aggregate:` is used to write an expression that tells us something about the size of the pile.
 >>>malloy
 run: duckdb.table('coins.csv') -> {
   aggregate: coin_count is count()
@@ -44,7 +44,7 @@ run: duckdb.table('coins.csv') -> {
 }
 >>>markdown
 ## Gifted Student 
-A gifted student asks "How much is each pile worth".  We can compute as many calculations as we'd like on each of the piles so we add another calculation `total_value`.  Notice that we write the calculation a little differently than in other language.  Malloy writes sums this way to insure that calculations are always correct when things get complex.
+A gifted student asks "How much is each pile worth".  We can compute as many calculations as we'd like on each of the piles so we add another calculation `total_value`.  Notice that we write the calculation a little differently than in other languages.  Malloy writes `sum()` this way to insure that calculations are always correct when things get complex.
 >>>malloy
 run: duckdb.table('coins.csv') -> {
   group_by: face_value
@@ -78,7 +78,7 @@ source: coins is duckdb.table('coins.csv') extend {
 >>>markdown
 ## source: coins
 
-If we were to click the 'schema' button we'd see all the definitions in 'coins'  We can use them in queries witout having to repeat the definitions.
+If we were to click the 'schema' button we'd see all the definition for 'coins'.  We can use named object in queries witout having to repeat the definitions.
 
 <img src="short_hand1.png">
 
@@ -99,12 +99,19 @@ run: coins -> {
   aggregate: total_value
 }
 >>>markdown
+## See the definitions
+If we hold the control (or command) key and hovor over a variable, VSCode will show us the definition.  This can be really useful when you come upon a query you didn't write.
+
+<img src="info.png">
+
 ## Shorter-hand.
 Malloy is designed to make building queries easy. 
 
 Queries can be constructed from reusable parts.  Above we saw how e can put reusable definitions into a `source:`.  We can also use a shorthand to combine these parts (dimensions, measures, and queries) together.  
 
-Two partial queries (the code between the `{}` can be combined) with a `+` operator.  This is called refinement.
+A partial query is either a name or something between curlies (`{}`).  Partial queries can be combined with a `+` operator.
+
+The query below is the same as the query above.
 >>>malloy
 run: coins -> 
   {group_by: coin_type}
@@ -113,14 +120,24 @@ run: coins ->
 >>>markdown
 ## Dimensions and measures can be used as partial queries.
 When writing a query  `... -> {group_by: coin_type} ...` is the same as ` ... -> coin_type  ...`
-
-Press the command key (or control key) and hover over a word and you can see the definition.
 >>>malloy
 ##! experimental { scalar_lenses }
 run: coins ->       //        same as:
   coin_type         // {group_by: coin_type}
   + coin_count      // {aggregate: coin_count}
   + total_value     // {aggregate: coin_count}
+>>>markdown
+We can write any part of the query either way.  All the queries below represent the same queries.
+
+```malloy
+run: coins -> coin_type + coin_count + total_value
+run: coins -> {group_by: coin_type} + coin_count + total_value
+run: coins -> coin_type + {aggregate: coin_count, total_value}
+run: coins -> {
+  group_by: coin_type
+  aggregate: coin_count, total_value
+}
+```
 >>>markdown
 ## Rendering results
 By default, Malloy shows results as tables.  Results can be annotated by placing a line before the definition that starts with `#`  In the case below, we want to show the results as a bar_chart.  A bar chart expects 2 or three columns.  The first is the x axis, second is the y axis and the third, if it exists, controls the color.
