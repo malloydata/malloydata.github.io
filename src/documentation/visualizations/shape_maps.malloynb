@@ -55,8 +55,8 @@ run: airports -> {
   aggregate: airport_count
   nest:
     // shape map is declared in the model
-    heliports is by_state_shaped { where: fac_type = 'HELIPORT' }
+    heliports is by_state_shaped + { where: fac_type = 'HELIPORT' }
     # shape_map
-    seaplane_bases is by_state { where: fac_type = 'SEAPLANE BASE' }
+    seaplane_bases is by_state + { where: fac_type = 'SEAPLANE BASE' }
 }
 >>>markdown
