@@ -23,7 +23,7 @@ A *measure* is something you can say about the pile.  "How many object?", "How m
 
 In data world, aggregating queries the piles things we make become rows in the output an table.  We pick some attribue from the source table and for every different attribute we recognize, we make a row in the output table.  We add columns to the output by measuring things about the rows underlying object.   
 
-For this example we are going to use a pile of coins.  Each coin has only two attributes.  The value of the coin and the year it was minted.  We've stored the data about these coins in a [data table](coins.csv).
+For this example we are going to use a pile of coins.  Each coin has only two attributes.  The value of the coin and the year it was minted.  We've stored the data about these coins in a data table.
 
 The columns are named `face_value` and `year_minted`.  Let's see how we can notice things about these coins. 
 >>>malloy
