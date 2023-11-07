@@ -1,17 +1,19 @@
 >>>markdown
 # Data for Kindergarteners
 
-The is a funny thing about data is that we learn about it in Kindergarten, before we even learn about "math".  In kindergarten we ask children to "notice" attributes about things and count things.  "What color is that?",  "how many fish are in this picture?".  To teach this concept, we often make piles, and count the things in the piles. Strangely, putting things in piles and counting the thing we do most with data.
+Given that we learn about data in Kindergarten, It is really surprising how hard it is to query data in the "big" world.  In kindergarten data we notice attributes about *things*, make piles of *things*, and count *things* in the piles.  We do this even before we learn any "real" math.  Strangely, noticing attributes about *things* and counting *things* is almost all there is to working with data.
 
-Given we learn it so early, I find it really surprising how hard it is to query data.
-
-## Two types of queries.
+### Two types of queries, "Where's Waldo" and "Making Piles"
 
 There are really two types of queries in the world, *lookup* and *aggregating*.  
 
-*Lookup* queries are pretty easy.  Google search is a lookup query.  Type in some terms, and see a list of results.  Usually it involves some kind of filter.  In SQL this often looks like `SELECT * FROM <something> WHERE <FILTER>`.
+*Lookup* queries are pretty easy.  Google search is a lookup query.  To search, type in some terms then see a list of results. Searching in SQL this often looks like `SELECT * FROM <something> WHERE <FILTER>``.
 
-The interesting queries, the kindergarten queries, are *aggregating*.  Aggregating queries tell you something about a set of data.  The an aggregating query has two main parts, the *dimensions* (what determings the grouping) and the *measures*, what you are going to measure about each group.  
+The interesting queries, the kindergarten queries, are *aggregating*.  Aggregating queries tell you something about a set of data.  The an aggregating query has two main parts, the *dimensions* and *measures*.
+
+*Dimensions* are the attribute you use to decide which pile the *thing* goes in.
+
+A *measure* is something you can say about the pile.  "How many object?", "How much does it weigh?", "What is the average size of an object in this pile?".  
 
 "Ok class lets take this pile of coins and separate them.  How many coins are pennies?  How many coins are nickels? Dimes?  Quarters?"
 
@@ -19,7 +21,7 @@ The interesting queries, the kindergarten queries, are *aggregating*.  Aggregati
 
 ## Data tools are rectangular.
 
-In data world, aggregating queries the piles we make become rows in the output an table.  We pick some attribue from the source table and for every differt attribute we recognize, there is only one table in the output table.  We add columns to the output by measuring things about the pile.   
+In data world, aggregating queries the piles things we make become rows in the output an table.  We pick some attribue from the source table and for every different attribute we recognize, we make a row in the output table.  We add columns to the output by measuring things about the rows underlying object.   
 
 For this example we are going to use a pile of coins.  Each coin has only two attributes.  The value of the coin and the year it was minted.  We've stored the data about these coins in a [data table](coins.csv).
 
