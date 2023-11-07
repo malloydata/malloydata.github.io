@@ -1,0 +1,245 @@
+>>>markdown
+# Data for Kindergarteners
+
+Given that we learn about data in Kindergarten, It is really surprising how hard it is to query data in the "big" world.  In kindergarten data we notice attributes about *things*, make piles of *things*, and count *things* in the piles.  We do this even before we learn any "real" math.  Strangely, noticing attributes about *things* and counting *things* is almost all there is to working with data.
+
+### Two types of queries, "Where's Waldo" and "Making Piles"
+
+There are really two types of queries in the world, *lookup* and *aggregating*.  
+
+*Lookup* queries are pretty easy.  Google search is a lookup query.  To search, type in some terms then see a list of results. Searching in SQL this often looks like `SELECT * FROM <something> WHERE <FILTER>``.
+
+The interesting queries, the kindergarten queries, are *aggregating*.  Aggregating queries tell you something about a set of data.  The an aggregating query has two main parts, the *dimensions* and *measures*.
+
+*Dimensions* are the attribute you use to decide which pile the *thing* goes in.
+
+A *measure* is something you can say about the pile.  "How many object?", "How much does it weigh?", "What is the average size of an object in this pile?".  
+
+"Ok class lets take this pile of coins and separate them.  How many coins are pennies?  How many coins are nickels? Dimes?  Quarters?"
+
+*Aggregating queries* tell us things about a datasets.  *Lookup queries* find things.
+
+## Data tools are rectangular.
+
+In data world, aggregating queries the piles things we make become rows in the output an table.  We pick some attribue from the source table and for every different attribute we recognize, we make a row in the output table.  We add columns to the output by measuring things about the rows underlying object.   
+
+For this example we are going to use a pile of coins.  Each coin has only two attributes.  The value of the coin and the year it was minted.  We've stored the data about these coins in a data table.
+
+The columns are named `face_value` and `year_minted`.  Let's see how we can notice things about these coins. 
+>>>malloy
+run: duckdb.table('coins.csv') -> {select:*}
+>>>markdown
+## The first questions is "How Many coins do we have?"
+Usually the very first question, "let's count all the coins".  In Malloy, the data *source*, `duckdb.table('coins.csv')`, is where the  comes from.  The `->` operator asks a question from the source and the stuff in the `{}` is the question.  `aggregate:` is used to write an expression that tells us something about the size of the pile.
+>>>malloy
+run: duckdb.table('coins.csv') -> {
+  aggregate: coin_count is count()
+}
+>>>markdown
+## Ok Class, how many of each coin do we have?
+
+Lets notice things about these coins and put them into piles. The most obvious feature is the value of the coin.  Let's make piles by the `face_value` of the coins.   `group_by:` is used to determine which pile a coin goes into.  How many coins in each pile?  We can use the same `aggregate:` calculation above.
+>>>malloy
+run: duckdb.table('coins.csv') -> {
+  group_by: face_value
+  aggregate: coin_count is count()
+}
+>>>markdown
+## Gifted Student 
+A gifted student asks "How much is each pile worth".  We can compute as many calculations as we'd like on each of the piles so we add another calculation `total_value`.  Notice that we write the calculation a little differently than in other languages.  Malloy writes `sum()` this way to insure that calculations are always correct when things get complex.
+>>>malloy
+run: duckdb.table('coins.csv') -> {
+  group_by: face_value
+  aggregate: 
+    coin_count is count()
+    total_value is face_value.sum()
+}
+>>>markdown
+## We're repeating ourselves.
+Notice that we use the calculation for `coin_count` in all the queries.  It is probably a useful concept in this dataset.  Also `total_value`.  We encode these concepts into a `source:` so we can use them simply in subsequent queries. If we were ever have to change a calculation, it would be all in one place.
+
+We're going to add some `dimension:` calculations too.  It would be nice to know the `coin_type` and the `color` of each of the coins.  `dimension`s are used in `group_by:` in queries.  
+>>>malloy
+##! experimental { scalar_lenses }
+source: coins is duckdb.table('coins.csv') extend {
+  measure:
+    coin_count is count()
+    total_value is face_value.sum()
+
+  dimension: coin_type is face_value ? 
+    pick 'penny' when 1
+    pick 'nickle' when 5
+    pick 'dime' when 10
+    pick 'quarter' when 25
+    else null
+
+  dimension: color is face_value ? 
+    pick 'copper' when 1
+    else 'silver'
+}
+>>>markdown
+## source: coins
+
+If we were to click the 'schema' button we'd see all the definition for 'coins'.  We can use named object in queries witout having to repeat the definitions.
+
+<img src="short_hand1.png">
+
+## How many coins of each color?
+Asking questions is much easier now.  We have `coins` as a shorthand for `duckdb.table('coins.csv')` and `color` and `coin_count` as shorthad for those calculations.
+>>>malloy
+run: coins -> {
+  group_by: color
+  aggregate: coin_count
+}
+>>>markdown
+## How many of each type of coin?
+Another easy query, and pretty easy to read too.
+>>>malloy
+run: coins -> {
+  group_by: coin_type
+  aggregate: coin_count
+  aggregate: total_value
+}
+>>>markdown
+## See the definitions
+If we hold the control (or command) key and hovor over a variable, VSCode will show us the definition.  This can be really useful when you come upon a query you didn't write.
+
+<img src="info.png">
+
+## Shorter-hand.
+Malloy is designed to make building queries easy. 
+
+Queries can be constructed from reusable parts.  Above we saw how e can put reusable definitions into a `source:`.  We can also use a shorthand to combine these parts (dimensions, measures, and queries) together.  
+
+A partial query is either a name or something between curlies (`{}`).  Partial queries can be combined with a `+` operator.
+
+The query below is the same as the query above.
+>>>malloy
+run: coins -> 
+  {group_by: coin_type}
+  + {aggregate: coin_count} 
+  + {aggregate: total_value}
+>>>markdown
+## Dimensions and measures can be used as partial queries.
+When writing a query  `... -> {group_by: coin_type} ...` is the same as ` ... -> coin_type  ...`
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins ->       //        same as:
+  coin_type         // {group_by: coin_type}
+  + coin_count      // {aggregate: coin_count}
+  + total_value     // {aggregate: coin_count}
+>>>markdown
+We can write any part of the query either way.  All the queries below represent the same queries.
+
+```malloy
+run: coins -> coin_type + coin_count + total_value
+run: coins -> {group_by: coin_type} + coin_count + total_value
+run: coins -> coin_type + {aggregate: coin_count, total_value}
+run: coins -> {
+  group_by: coin_type
+  aggregate: coin_count, total_value
+}
+```
+>>>markdown
+## Rendering results
+By default, Malloy shows results as tables.  Results can be annotated by placing a line before the definition that starts with `#`  In the case below, we want to show the results as a bar_chart.  A bar chart expects 2 or three columns.  The first is the x axis, second is the y axis and the third, if it exists, controls the color.
+>>>malloy
+# bar_chart
+run: coins -> coin_type + coin_count + total_value
+>>>markdown
+## Extending Sources
+Suppose someone had written this great coin counting model and I wanted to use it in my analysis.  Malloy lets you extend (inherit from) a source and create a new source with new definitions.  We add a couple of new dimensions, a new calculation and some `views`.  In Malloy `views` are common ways of looking at data.  We've added two views here.  The first is `metrics` which is the common ways of look at data.  And by_type, the most common over all query.
+>>>malloy
+// import 'coins.malloy'
+##! experimental { scalar_lenses }
+
+source: coins2 is coins extend {
+  dimension: is_new is minted_year >= 2000
+  dimension: minted_decade is floor(minted_year/10) * 10
+  
+  measure: 
+    # percent
+    percent_of_value is total_value/all(total_value)
+    # percent
+    percent_of_coins is coin_count/all(coin_count)
+
+  view: metrics is {
+    aggregate: total_value, coin_count, percent_of_value, percent_of_coins
+  }
+  // we always look at this data by coin type
+  view: by_type is coin_type + metrics
+}
+>>>markdown
+## The schema for coins
+
+<img src="coins2_schema.png">
+
+## Views: The most common ways of looking at the data.
+
+Notice the views.  Views can be used by them selves or in combination with other queries.  Views are bigger building blocks.
+
+Let's start with `metrics`.  Metrics is a view that comuptes *all* the things we might want to ask about a pile of coins.
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> metrics
+>>>markdown
+## Composing with metrics
+In our model above we've defined a view called 'metrics' and a dimension called 'color'
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> color + metrics
+>>>markdown
+## Looking at data by type is the most common query.
+
+Often with a dataset, we might want to commonly look at the data in a particular way.  In this case, we probably want to look at coins by coin_type so we've built a `by_type` view.
+>>>malloy
+run: coins2 -> by_type
+>>>markdown
+## We can add filters to any query
+Adding filters let us look at subsets of the data.  In this case we are looking at coins minted this century.
+>>>malloy
+run: coins2 -> by_type + {where: is_new}
+>>>markdown
+## We can query by more than one dimension
+(but this is hard to read)
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> coin_type + is_new + metrics
+>>>markdown
+## Nesting data lets us look at more than one dimension at a time.
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> coin_type + metrics + {
+  nest: is_new + coin_count
+}
+>>>markdown
+# Pivoting data is even better.
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> coin_type + metrics + {
+  # pivot
+  nest: is_new + metrics
+}
+>>>markdown
+# We can nest any query to get a more complete understanding of the data.
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> coin_type + metrics + {
+  nest: minted_year + coin_count
+}
+>>>markdown
+## We nested data can be shown with a variety can have a variety of rendering options.
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> coin_type + metrics + {
+  # list_detail
+  nest: minted_year + coin_count + {order_by: minted_year}
+}
+>>>markdown
+## Choosing a different outer dimension teaches us something entirely different.
+>>>malloy
+##! experimental { scalar_lenses }
+run: coins2 -> minted_decade + metrics + {
+  order_by: minted_decade desc
+  nest: by_type
+}

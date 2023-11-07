@@ -31,13 +31,12 @@ run: airports -> by_state
 In the query below the tag is in the semantic model.
 >>>malloy
 #(docs) size=large
-run: airports -> by_state_shaped {where: fac_type='SEAPLANE BASE'}
+run: airports -> by_state_shaped + {where: fac_type='SEAPLANE BASE'}
 >>>markdown
 
 
 ## Run as a trellis
 By calling the configured map as a nested subtable, a trellis is formed.
-
 >>>malloy
 #(docs) size=large
 run: airports -> {
@@ -56,8 +55,8 @@ run: airports -> {
   aggregate: airport_count
   nest:
     // shape map is declared in the model
-    heliports is by_state_shaped { where: fac_type = 'HELIPORT' }
+    heliports is by_state_shaped + { where: fac_type = 'HELIPORT' }
     # shape_map
-    seaplane_bases is by_state { where: fac_type = 'SEAPLANE BASE' }
+    seaplane_bases is by_state + { where: fac_type = 'SEAPLANE BASE' }
 }
 >>>markdown
