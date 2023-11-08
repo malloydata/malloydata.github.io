@@ -31,6 +31,7 @@ In a Semantic Data Model, the calculations for measures, join relationships and 
 ## A Simple Example
 Below is a semantic data model for some flight data.   Each flight has an origin, destination and carrier.  Flights can be delayed.  Each flight has an aircraft that made the flight and more.  The Semantic data model provided us with the dimension (in blue) and the measures and  graph of the related objects.  This model is encoded in a file called ‘flights.malloy’.  
 >>>malloy
+##! experimental.scalar_lenses
 import {flights} from 'flights.malloy' 
 >>>markdown
 <img src="schema.png">
@@ -38,7 +39,6 @@ import {flights} from 'flights.malloy'
 ##  First query: How big is the pile?
 Often, the first thing you want to know is, how big is the dataset?  
 >>>malloy
-##! experimental.scalar_lenses
 run: flights-> flight_count
 >>>markdown
 ### How it works.
@@ -48,7 +48,7 @@ In Malloy, queries start with `run: <source>`.  In this case, flights.  The `->`
 ## Dimensions and Measures
 As we talked about earlier.  Aggregating queries have two parts what you want to group by and what you want to measure about things in that group.  Let's group the flights by the origin and count how many flights.  When building a query, we use the `+` operator to combine the parts.
 >>>malloy
-##! experimental.scalar_lenses
+#(docs) limit=5000 size=small
 run: flights -> origin_name + flight_count 
 >>>markdown
 ## Shorthand and Seats
@@ -56,11 +56,13 @@ Another way of measuring how busy an airport is to try and estimate the number o
 
 Notice Chicago has more people traveling through than Dallas-Fort Worth.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> origin_name + seats_for_sale + flight_count
 >>>markdown
 ## Filtering
 Isolating the data to analyze is a big part of working with data.  Let's limit our analysis to California airports.  We've reformated the query.  In Malloy, spaces and new lines are the same thing.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> 
   origin_name 
   + seats_for_sale
@@ -74,6 +76,7 @@ It looks like Jetblue, on average, has the longest flights.
 
 You may also noticed that by default, Malloy sorts results by the first measure descending.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> 
   carrier_name
   + {aggregate: avg_distance is distance.avg()}
@@ -82,6 +85,7 @@ run: flights ->
 ### Changing the sort order
 We can change the sort order by adding a `{order_by: }` clause
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> 
   carrier_name
   + {aggregate: avg_distance is distance.avg()}
@@ -91,6 +95,7 @@ run: flights ->
 ## Adding your own dimensions
 You can group by an expression.  The expressions can contain just about any calculation you can do in SQL.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> 
   {group_by: carrier is concat(carrier, ' - ', carrier_name)}
   + origin_count
@@ -100,6 +105,7 @@ run: flights ->
 ## Working with Time
 A big part of working with data is working with time.  Queries that have time in the first column are sorted by time descending.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> 
   {group_by: flight_month is dep_time.month}
   + flight_count
@@ -108,6 +114,7 @@ run: flights ->
 ## Annotations and Charting
 Charts are generally another view on tables.  For example, the table above can be viewed as a line chart.  The x-axis is `flight_month` and the y-axis would be `flight_count`.  Malloy's annotations let you tag a query so the rendering engine can show the results in different ways.  We simply tag the query above as a `# line_chart`.
 >>>malloy
+#(docs) limit=5000 size=large
 # line_chart
 run: flights -> 
   {group_by: flight_month is dep_time.month}
@@ -117,35 +124,41 @@ run: flights ->
 ## Filtering Time
 Filtering time ranges is always difficult in SQL.  Malloy time ranges can be specified simply.  We add a filter to filter the time range to the year 2001.
 >>>malloy
+#(docs) limit=5000 size=large
 # line_chart
 run: flights -> 
   {group_by: flight_month is dep_time.month}
   + flight_count
-  + {where: carrier = 'WN'}
+  + carrier_name
   + {where: dep_time ? @2001}
 >>>markdown
 ## Views: Pre-built Queries
 Semantic models can include views.  Views are pre-built queries.  Often in a dataset there are several interesting ways of looking at the dataset.  A common use for views is to declare these in advance.
 >>>malloy
-run: flights -> by_carrier + {where: origin.state='CA'}
+#(docs) limit=5000 size=small
+run: flights -> by_carrier
 >>>markdown
 ## Convention the 'metrics' view.
 Malloy models often contain a `metrics` view.  The metrics view contains just measures contains the common ways of measuring data in this data set.  The metrics view makes it easy build queries on the fly.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> metrics
 >>>markdown
 ## Metrics by Origin
 Views can be combined in queries just like all the other parts.
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> origin_name + metrics
 >>>markdown
-## By Manufacturer
+## Metric by Manufacturer
 >>>malloy
+#(docs) limit=5000 size=small
 run: flights -> plane_manufacturer + metrics
 >>>markdown
 ## Nesting
 One of the really powerful features of the Malloy language is nesting.  We can see which carriers fly which airplanes.
 >>>malloy
+#(docs) limit=5000 size=large
 run: flights -> plane_manufacturer + metrics + {
   nest: carrier_name + aircraft_count
 }
@@ -153,6 +166,7 @@ run: flights -> plane_manufacturer + metrics + {
 ## Nesting multiple queries
 More than one query can be nested.
 >>>malloy
+#(docs) limit=5000 size=large
 run: flights -> by_carrier + {
   nest: plane_manufacturer + metrics
   nest: origin_name + metrics + {limit: 5}
