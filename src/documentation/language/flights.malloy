@@ -237,7 +237,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 }
 
 query: sessionize_delta_southwest is
-  flights -> sessionize { where: carrier ? 'WN' | 'DL', dep_time ? @2002-03-03 }
+  flights -> sessionize + { where: carrier ? 'WN' | 'DL', dep_time ? @2002-03-03 }
 
 query: kayak_query_sj_to_la is
   flights -> kayak + {
@@ -254,7 +254,7 @@ query: southwest_dashboard is flights -> carrier_dashboard + {
 query: jetblue_dashbaord is flights -> carrier_dashboard + {
   where: carriers.nickname ? 'Jetblue'
 }
-query: sjc_dashboard is flights -> airport_dashboard {
+query: sjc_dashboard is flights -> airport_dashboard + {
   where: origin.code ? 'SJC'
 }
 
