@@ -50,6 +50,11 @@ run: flights -> origin_name + metrics + {
   nest: dep_month + flight_count 
 }
 >>>markdown
+## Wait, that looks really complex?  What do those things mean?
+If you press the control key and hovor over any of the terms, the Malloy VSCode extension will show you the semantic definition for the term.
+
+<img src="metrics.gif">
+
 ##  First query: How big is the pile?
 Often, the first thing you want to know is, how big is the dataset?  
 >>>malloy
