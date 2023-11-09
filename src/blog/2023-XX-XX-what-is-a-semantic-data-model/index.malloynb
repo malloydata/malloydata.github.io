@@ -1,12 +1,14 @@
 >>>markdown
-Querying a Semantic Data Model?   
+# Querying a Semantic Data Model?
 
-Let’s start simply.  Define: *dimension*, *measure*, *aggregating query*, *lookup query*.   
+A semantic data model contains prebuilt calculation and relationships for data.  This artile will show you the basics of querying a semantic Data model in [Malloy](https://www.malloydata.dev) 
+
+Let’s start simply, we'lll define: *dimension*, *measure*, *aggregating query*, *lookup query*.   
 
 ## Data for Kindergarteners
 Given that we learn about data in Kindergarten, It is really surprising how hard it is to query data in the "big" world.  In kindergarten data we notice attributes about things, make piles of things, and count things in the piles.  We do this even before we learn any "real" math.  Strangely, noticing attributes about *things* and counting *things* is almost all there is to working with data.
 
-Two types of queries, "Where's Waldo" and "Making Piles"
+### Two types of queries, "Where's Waldo" and "Making Piles"
 There are really two types of queries in the world, lookup and aggregating. 
 
 *Lookup* queries are pretty easy.  Google search is a lookup query.  To search, type in some terms then see a list of results. Searching in SQL this often looks like `SELECT * FROM <something> WHERE <FILTER>``.
@@ -29,15 +31,19 @@ In the SQL world, the interface to your data is just that, data.  The data sits 
 In a Semantic Data Model, the calculations for measures, join relationships and the common ways of looking at data are coded.  The act of querying becomes simply picking dimensions and measure, filtering the input and output data and sorting the results.  The simplification is powerful in that the measuring calculations are always vetted and that it becomes much harder to get incorrect results.  
 
 ## A Simple Example
-Below is a semantic data model for some flight data.   Each flight has an origin, destination and carrier.  Flights can be delayed.  Each flight has an aircraft that made the flight and more.  The Semantic data model provided us with the dimension (in blue) and the measures and  graph of the related objects.  This model is encoded in a file called ‘flights.malloy’.  
+Below is a semantic data model for some flight data.  For now, let's not concern ourselves with how it is implemented.  Dimensions, measure, joined relationships are all exposed as a list of variables.
+
+Each flight has an origin, destination and carrier.  Flights can be delayed.  Each flight has an aircraft that made the flight and more.  The Semantic data model provided us with the dimension (in blue) and the measures and  graph of the related objects.  This model is encoded in a file called ‘flights.malloy’.  
 >>>malloy
 ##! experimental.scalar_lenses
 import {flights} from 'flights.malloy' 
 >>>markdown
 <img src="schema.png">
 >>>markdown
-## Step 0:  Actually, Complex example
-A semantic data model let's you do complicated things simply.  Shamelessly, I want to make sure you read the full article.  I'll start with a seemingly complex example and then we'll show you how we got here, simply.
+## Step 10:  We'll jump to the end, complex example
+A semantic data model let's you do complicated things simply.  Shamelessly, I want to make sure you read the full article.  I'll start with a seemingly complex example and then we'll show you how we got here, actually quite simply.
+
+The dashboard below shows flights from Airport in Californa, where you can go and which carriers will take you there.  It shows how this has changed over time.
 >>>malloy
 #(docs) limit=10 size=large
 # dashboard
@@ -55,7 +61,9 @@ If you press the control key and hovor over any of the terms, the Malloy VSCode 
 
 <img src="metrics.gif">
 
-##  First query: How big is the pile?
+##  Back to Step 1: How big is the pile?
+Ok, let's slow down and go step by step.
+
 Often, the first thing you want to know is, how big is the dataset?  
 >>>malloy
 run: flights-> flight_count
@@ -162,6 +170,7 @@ Malloy models often contain a `metrics` view.  The metrics view contains just me
 >>>malloy
 #(docs) limit=5000 size=small
 run: flights -> metrics
+>>>markdown
 >>>markdown
 ## Metrics by Origin
 Views can be combined in queries just like all the other parts.
