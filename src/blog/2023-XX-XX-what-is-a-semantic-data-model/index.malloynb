@@ -1,5 +1,5 @@
 >>>markdown
-# What is a Semantic Data Model?   
+Querying a Semantic Data Model?   
 
 Let’s start simply.  Define: *dimension*, *measure*, *aggregating query*, *lookup query*.   
 
@@ -35,6 +35,20 @@ Below is a semantic data model for some flight data.   Each flight has an origin
 import {flights} from 'flights.malloy' 
 >>>markdown
 <img src="schema.png">
+>>>markdown
+## Step 0:  Actually, Complex example
+A semantic data model let's you do complicated things simply.  Shamelessly, I want to make sure you read the full article.  I'll start with a seemingly complex example and then we'll show you how we got here, simply.
+>>>malloy
+#(docs) limit=10 size=large
+# dashboard
+run: flights -> origin_name + metrics + {
+  where: origin.state = 'CA'
+  nest: destination_name + metrics + carrier_list + {limit: 6} 
+  # bar_chart
+  nest: carrier_name + flight_count
+  # line_chart
+  nest: dep_month + flight_count 
+}
 >>>markdown
 ##  First query: How big is the pile?
 Often, the first thing you want to know is, how big is the dataset?  
