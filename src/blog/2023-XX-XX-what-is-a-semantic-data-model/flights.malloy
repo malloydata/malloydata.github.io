@@ -51,6 +51,7 @@ source: flights is duckdb.table('../../documentation/data/flights.parquet') exte
     destination_name is concat(destination.code," - ", destination.city)
     carrier_name is carriers.nickname
     plane_manufacturer is aircraft.aircraft_models.manufacturer
+    dep_month is dep_time.month
 
   view: metrics is {
     aggregate: flight_count, total_distance, percent_of_flights
@@ -59,4 +60,13 @@ source: flights is duckdb.table('../../documentation/data/flights.parquet') exte
   view: by_carrier is 
     {group_by: carrier is concat(carrier, ' - ', carrier_name) }
     + metrics
+
+ 
+  view: carrier_list is {
+    # list
+    nest: cl is {
+      group_by: carriers.nickname
+      aggregate: flight_count
+    }
+  }
 }

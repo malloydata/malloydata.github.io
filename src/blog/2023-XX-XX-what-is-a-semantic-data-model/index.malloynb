@@ -1,5 +1,5 @@
 >>>markdown
-# What is a Semantic Data Model?   
+Querying a Semantic Data Model?   
 
 Let’s start simply.  Define: *dimension*, *measure*, *aggregating query*, *lookup query*.   
 
@@ -36,6 +36,25 @@ import {flights} from 'flights.malloy'
 >>>markdown
 <img src="schema.png">
 >>>markdown
+## Step 0:  Actually, Complex example
+A semantic data model let's you do complicated things simply.  Shamelessly, I want to make sure you read the full article.  I'll start with a seemingly complex example and then we'll show you how we got here, simply.
+>>>malloy
+#(docs) limit=10 size=large
+# dashboard
+run: flights -> origin_name + metrics + {
+  where: origin.state = 'CA'
+  nest: destination_name + metrics + carrier_list + {limit: 6} 
+  # bar_chart
+  nest: carrier_name + flight_count
+  # line_chart
+  nest: dep_month + flight_count 
+}
+>>>markdown
+## Wait, that looks really complex?  What do those things mean?
+If you press the control key and hovor over any of the terms, the Malloy VSCode extension will show you the semantic definition for the term.
+
+<img src="metrics.gif">
+
 ##  First query: How big is the pile?
 Often, the first thing you want to know is, how big is the dataset?  
 >>>malloy
@@ -51,7 +70,7 @@ As we talked about earlier.  Aggregating queries have two parts what you want to
 #(docs) limit=5000 size=small
 run: flights -> origin_name + flight_count 
 >>>markdown
-## Shorthand and Seats
+## Seats in the Air
 Another way of measuring how busy an airport is to try and estimate the number of people that travel through the airport.  Planes are of different sizes.  If we count up all the seats in all the planes that have arrived we can approximate the busyness.  The measure `seats_for_sale` will give us the maximum number of people that could have landed there.  
 
 Notice Chicago has more people traveling through than Dallas-Fort Worth.
@@ -171,3 +190,8 @@ run: flights -> by_carrier + {
   nest: plane_manufacturer + metrics
   nest: origin_name + metrics + {limit: 5}
 }
+>>>markdown
+## An there you have it.
+Writing queries with a pre-built model is really powerful.  You can easily explore a complex dataset in a simple composiable way.  The output of these queries can be used in lots of different ways, from Data Science to transforming data for consumption in other systems.
+
+Pre-built semantic models take much of the pain out of working with data.
