@@ -325,7 +325,7 @@ export async function runNotebookCode(
   // tags and not those from other cells, unsure if this is the right approach
   // long term, but it prevents `##(docs) hidden` from affecting subsequent cells
   const modelTagParse = Tag.annotationToTag({
-    notes: model._modelDef.annotation.notes
+    notes: model._modelDef?.annotation?.notes
   }, { prefix: DOCS_M_TAG_PREFIX });
   const modelTags = modelTagParse.tag;
   const newModelDef = model._modelDef;
