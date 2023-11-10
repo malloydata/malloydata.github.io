@@ -37,6 +37,7 @@ import {
   Connection,
   Result,
   ModelDef,
+  Tag,
 } from "@malloydata/malloy";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
@@ -320,7 +321,12 @@ export async function runNotebookCode(
     ._loadModelFromModelDef(modelDef)
     .extendModel(fakeURL);
   const model = await newModel.getModel();
-  const modelTagParse = model.tagParse({ prefix: DOCS_M_TAG_PREFIX });
+  // TODO this is a quick hack to make each snippet only use its own
+  // tags and not those from other cells, unsure if this is the right approach
+  // long term, but it prevents `##(docs) hidden` from affecting subsequent cells
+  const modelTagParse = Tag.annotationToTag({
+    notes: model._modelDef.annotation.notes
+  }, { prefix: DOCS_M_TAG_PREFIX });
   const modelTags = modelTagParse.tag;
   const newModelDef = model._modelDef;
   let hasQuery = false;
