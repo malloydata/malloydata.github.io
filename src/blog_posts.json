@@ -1,35 +1,42 @@
 [
   {
+    "title": "Querying a Semantic Data Model",
+    "path": "/2023-11-13-querying-a-semantic-model",
+    "subtitle": "Getting the right answers, faster",
+    "author": "Lloyd Tabb",
+    "published": "2023-11-13"
+  },
+  {
     "title": "Beyond YAML: Why Semantic Layers Need Real Programming Languages",
-    "path":"/2023-11-06-beyond-yaml",
+    "path": "/2023-11-06-beyond-yaml",
     "subtitle": "The easy thing is not always the right thing",
     "author": "Carlin Eng",
     "published": "2023-11-06"
   },
   {
     "title": "Bump charts",
-    "path":"/2023-10-26-malloy-bump-chart",
+    "path": "/2023-10-26-malloy-bump-chart",
     "subtitle": "Yes, it can do that",
     "author": "Speros Kokenes",
     "published": "2023-10-26"
   },
   {
     "title": "Using Malloy in Jupyter Notebooks",
-    "path":"/2023-10-18-malloy-python-notebooks",
+    "path": "/2023-10-18-malloy-python-notebooks",
     "subtitle": "Advanced data science needs trustworty metrics",
     "author": "Carlin Eng",
     "published": "2023-10-18"
   },
   {
     "title": "Announcing Malloy 4.0",
-    "path":"/2023-10-03-malloy-four",
+    "path": "/2023-10-03-malloy-four",
     "subtitle": "Important Language Update",
     "author": "The Malloy Team",
     "published": "2023-10-03"
   },
   {
     "title": "Introducing the Malloy Command Line Interface",
-    "path":"/2023-08-25-malloy-cli",
+    "path": "/2023-08-25-malloy-cli",
     "subtitle": "Lightweight, powerful, concise data transformation",
     "author": "lloyd tabb and Carlin Eng",
     "published": "2023-08-25"
