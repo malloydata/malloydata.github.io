@@ -30,7 +30,7 @@ Aggregating queries tell us things about datasets.  Lookup queries find things.
 In the SQL world, the interface to your data is just that, data.  The data sits in *tables*.  Everytime, you ask a question (run a query), you need to restate all the things about the data: the calculations, the relationships between *tables*. The unit of reusability is a *table*. You can run a query that makes a new *table*. You can turn a query into a SQL View, which is basically a *table* based on a calculation.
 
 ## The Semantic Data Model is the interface to your data
-In a Semantic Data Model, the calculations (*dimensions* and *measures*) are the reusable. The join relationships are built into the semantic data model. The calculations (common ways of looking at data) are coded into the semantic data model. The act of querying becomes simply picking dimensions and measures, filtering the data, and sorting the results. This simplification is powerful in that the calculations are always vetted, so it becomes much harder to get incorrect results.  
+In a Semantic Data Model, the calculations (*dimensions* and *measures*) are reusable. The join relationships are built into the semantic data model. The calculations (common ways of looking at data) are coded into the semantic data model. The act of querying becomes simply picking dimensions and measures, filtering the data, and sorting the results. This simplification is powerful in that the calculations are always vetted, so it becomes much harder to get incorrect results.  
 
 ## A Simple Example
 Below is a semantic data model for some flight data. For now, let's not concern ourselves with how this model is built but instead focus on how we can ask questions of the model.  In the semantic model, *dimensions*, *measures*, and joined relationships are all exposed as a list of variables.
@@ -43,7 +43,7 @@ import {flights} from 'flights.malloy'
 <img src="schema.png">
 >>>markdown
 ## Step 10:  We'll jump to the end with a complex example
-A semantic data model lets you do complicated things simply. Shamelessly, I want to make sure you read the full article, so I'll start with a seemingly complex example and then show you how we got here. It's actually quite simple.
+A semantic data model lets you do complicated things simply. Shamelessly, to ensure you read the full article, I'll start with a seemingly complex example and then explain how we got here. It's actually quite simple.
 
 The dashboard below shows flights from airports in California, where you can go, and which carriers will take you there. It shows how this has changed over time.
 >>>malloy
@@ -59,7 +59,7 @@ run: flights -> origin_name + metrics + {
 }
 >>>markdown
 ## Wait, that looks really complex?  What do those things mean?
-If you press the control key and hovor over any of the terms, the Malloy VSCode extension will show you the semantic definition for the term.
+If you press the control key and hover over any of the terms, the Malloy VSCode extension will show you the semantic definition for the term.
 
 <img src="metrics.gif">
 
@@ -199,7 +199,7 @@ run: flights -> by_carrier + {
   nest: origin_name + metrics + {limit: 5}
 }
 >>>markdown
-## An there you have it.
+## And there you have it
 Writing queries with a pre-built model is really powerful.  You can easily explore a complex dataset in a simple, composable way.  The output of these queries can be used in lots of different ways, from Data Science to transforming data for consumption in other systems.
 
 Pre-built semantic models take much of the pain out of working with data.
