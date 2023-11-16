@@ -15,6 +15,8 @@ _**NOTE:**  DuckDB is natively supported, allowing you to skip these initial ste
 
 5. Hit "Save," then dive into writing Malloy! We recommend starting with one of our Samples, which can be found [here](https://github.com/malloydata/malloy-samples/)
 
+If you've given your connection a name, that name must be used when referencing a table in your database. If you have not named your connection, the default name is either `bigquery`, `duckdb`, or `postgres`, depending on which database you're connecting to; e.g., `bigquery.table('project-id.dataset-id.tablename')`.
+
 ## BigQuery
 
 Authenticating to BigQuery can be done either via OAuth (using your Google Cloud Account) or with a Service Account Key downloaded from Google Cloud
@@ -38,12 +40,16 @@ _**NOTE:**  The Malloy Extension used the BigQuery Node SDK, which does its best
 
 Add the relevant account information to the new connection, and include the path to the [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
 
+The default name of a BigQuery connection is `bigquery`. 
+
 ## PostgreSQL
 
 Add the relevant database connection information. Once you click save, the password (if you have entered one) will be stored in your system keychain.
 
+The default name of a PostgreSQL connection is `postgres`
+
 ## Parquet and CSV Files (via DuckDB)
 
-Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is duckdb.table('babynames.csv')`
+Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is duckdb.table('babynames.csv')` The default name of a DuckDB connection is `duckdb`.
 
 There are a number of examples on public data using DuckDB available [here](https://github.com/lloydtabb/malloy_examples).

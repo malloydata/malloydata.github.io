@@ -35,6 +35,8 @@ the same syntax users are familiar with. However, Malloy also introduces several
 
 Fields may be referenced by name, and fields in joins or nested structures can be accessed using a period (`.`) as in `item.item_property`
 
+### Escaping reserved keywords
+
 If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword. Back-quoted identifiers can also
 contain spaces and any special characters the database supports in field names; `.`s in back-quoted identifiers are not currently supported.
 >>>markdown
