@@ -121,6 +121,8 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     const layoutName = frontmatter.layout ?? isBlog ? "blog.html" : "documentation.html";
     const nextBlog = nextPost(shortPath);
     const prevBlog = previoustPost(shortPath);
+    const previewImage = getPreviewImage(shortPath);
+
     // TODO validate that layout exists and log an error if not.
     const compiledPage = LAYOUTS[layoutName]({
       ...DEFAULT_CONTEXT,
@@ -132,7 +134,8 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         content: renderedDocument,
         footer: isBlog ? undefined : footers[shortPath],
         nextPost: nextBlog,
-        previousPost: prevBlog
+        previousPost: prevBlog,
+        previewImage: previewImage
       }
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
@@ -168,6 +171,7 @@ interface BlogPostInfoRaw {
   author: string;
   subtitle?: string;
   published: string;
+  previewImage?: string;
 }
 
 interface BlogPostInfo {
@@ -176,6 +180,7 @@ interface BlogPostInfo {
   author: string;
   published: Date;
   subtitle?: string;
+  previewImage?: string;
 }
 
 let BLOG_POSTS: BlogPostInfo[] = [];
@@ -418,6 +423,15 @@ function nextPost(blogShortPath: string) {
 function blogTitle(blogShortPath: string) {
   const title = BLOG_POSTS.find(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length))?.title;
   return title ? title : "Malloy Blog";
+}
+
+function getPreviewImage(blogShortPath: string) {
+  const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
+
+  if (current !== -1 && BLOG_POSTS[current].previewImage) {
+    const post_path = `${DEFAULT_CONTEXT.site.baseurl}/blog${BLOG_POSTS[current].path}`
+    return `${post_path}/${BLOG_POSTS[current].previewImage}`
+  }
 }
 
 function previoustPost(blogShortPath: string) {
