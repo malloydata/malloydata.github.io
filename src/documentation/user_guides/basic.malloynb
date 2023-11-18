@@ -157,7 +157,7 @@ run: airports_with_named_query -> top_county_and_state
 
 ## Joins
 
-[Joins](../language/join.malloynb) are declared as part of a source. When joining a source to another, it brings with it all child joins.
+[Joins](../language/join.malloynb) are declared as part of a source. When a source is joined to another, it includes all child joins.
 >>>malloy
 source: aircraft_models is duckdb.table('../data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
@@ -203,7 +203,7 @@ run: flights -> {
 
 ## Filtering
 
-When working with data, filtering is something you do in almost every query. Malloy provides consistent syntax for filtering everywhere within a query. The most basic type of filter is applied using a `where:` clause, very similar to a <code>WHERE</code> clause in SQL.
+Filtering is a common operation in almost every query. Malloy provides consistent syntax for filtering everywhere within a query. The most basic type of filter is applied using a `where:` clause, very similar to a <code>WHERE</code> clause in SQL.
 
 The following query grabs the top 5 counties in California with the highest airport count:
 >>>malloy
@@ -416,7 +416,7 @@ run: airports -> {
 >>>markdown
 
 Next, we'll use the output of that query as the input to another, where we determine which counties have the highest
-percentage of airports compared to the whole state, taking advantage of the nested structure of the data to to so.
+percentage of airports compared to the whole state, taking advantage of the nested structure of the data to do so.
 >>>malloy
 #(docs) html 
 run: airports -> {
