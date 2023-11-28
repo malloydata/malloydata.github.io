@@ -342,6 +342,7 @@ From highest to lowest precedence, here are the Malloy operators
 
 | Operator    | Function
 | --------    | --------
+| `{ where: }` | Aggregate filtering |
 | `::`        | Type cast
 | `-`         | Unary negation
 | `* / %`     | Multiply, Divide, Modulo
