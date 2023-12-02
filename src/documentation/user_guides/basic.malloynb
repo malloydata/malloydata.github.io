@@ -128,7 +128,7 @@ run: airports -> {
 Sources that are defined in one file can be imported into another using `import "path/to/some/file.malloy"`. For example, if the `airports` source above were defined in a file called `flights.malloy`, you could create a new file that imports it and immediately start using the `airports` source:
 >>>markdown
 ```malloy
-import "airports.malloy" 
+import "flights.malloy" 
 
 run: airports -> {
   group_by: county_and_state
