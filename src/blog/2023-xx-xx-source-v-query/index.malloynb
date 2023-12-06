@@ -1,0 +1,20 @@
+>>>markdown
+# Malloy: Source vs Query
+
+New conceptual models are hard for people.  We generally don't like new ways of thinking about things.  We generally only engage in learning something new after someone tells us it is worth the effort.  Analogies help.  
+
+Think of Malloy as a language that let's you build function libraries for data.  Instead of having to write a program from scratch everytime you want to ask a question, you can make a reusable function library that aids you.
+ 
+## Malloy's two main concepts, `source:` and `query:`
+
+*Queries* are easy to understand. In writing this, I am presuming you know SQL and that you are probably pretty good at it.  In Malloy a `query:` is exactly analoguous to a SQL query.  The query is a specficitation that tells the database to do something and return results.  The specification tells the database how the data is related and what calculations to make.  The output is a table.
+
+A *source* is the new thing.  In Malloy, a `source:` is analogus to a function library in other language.  By itself, a source does nothing.  A source contains CODE that describes HOW to do something.  A source stands ready to be QUEREIED as a function library stands ready to be CALLED to perform some operation.  A source is made up of data and CODE, but returns nothing until it is QUERIED.
+
+## Like a function library, you don't have to be bothered with how it is built.
+In a function library, you care about its API.  The API are are the functions that the library exports.  Each function does something for you.  If the library is designed well, you simple invoke a function call and i performs the operation.
+
+Our goal, for a Malloy source, is like a function library. A Malloy source exposes objects that make it easy for you to compose queries.  Much of the complexity is hidden in the source.  To write queries, you don't have to be bothered with how the source is built, you just have to be aware of the meanings of the things the source exports. 
+
+Let's play with an example.
+>>>malloy
