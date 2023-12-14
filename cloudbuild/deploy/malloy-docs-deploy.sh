@@ -9,6 +9,7 @@ nix-shell --quiet --pure --command "$(cat <<NIXCMD
   git config --global user.name "Malloy CI Bot"
   npm ci --loglevel error
   npm run build-prod
+  echo "docs.malloydata.dev" > docs/CNAME
   git checkout -b docs-release
   git add -f docs/
   git commit -m "Docs Release"
