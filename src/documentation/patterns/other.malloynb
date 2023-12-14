@@ -4,7 +4,6 @@
 Often you want to limit the number of group-by values in a table, and bucket everything else into an 'other' category.  
 
 In the `top_states_by_eleveation` query below, we have a query with two stages. The first stage calculates the top states and nests the data to be aggregated. The second pipeline stage produces the actual aggregation.
-
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: 
@@ -14,17 +13,20 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   view: top_states_by_elevation is {
     group_by: state
     aggregate: avg_elevation
-    calculate: row_num is row_number()
+    calculate: is_other is row_number() > 5
     nest: data is  {  
       group_by: code, elevation
     }
   } -> {
     group_by: state is 
-      pick state when row_num < 5
+      pick state when not is_other
       else 'OTHER'
     aggregate: 
       avg_elevation is data.elevation.avg()
       airport_count is data.count()
+      # hidden
+      sort is data.count() {where: not is_other }
+      order_by: sort desc
   }
 }
 >>>markdown
