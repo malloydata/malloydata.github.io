@@ -1,10 +1,11 @@
 >>>markdown
-# Queries that return Databases
-Instead of tables
+# Queries that return databases instead of tables
+lloyd tabb, 2023-12-22
 
-[Joris Nix](https://bigdata.uni-saarland.de/people/nix.php) recently published a [paper](https://arxiv.org/pdf/2312.00638.pdf) asking the question, *"What if a SQL Query could return a datebase instead of just a single table?"*.  This is actually a fascinating and important question. Joris goes on to explain how it might be implemented in SQL.  
 
-In this article, I'm going to give a couple of reasons why this idea is reallly an important one and show, how in Malloy, with it's nesting, you can already use this concept.
+[Joris Nix](https://bigdata.uni-saarland.de/people/nix.php) recently published a paper *[What if an SQL Statement Returned a Database?](https://arxiv.org/pdf/2312.00638.pdf)*.  This is actually a fascinating and important question. Joris goes on to explain how it might be implemented in SQL.  
+
+In this article, I'm going to give a couple of reasons why this question and idea is really an important one. I will show, how in Malloy, with Malloy's nesting, you can already achieve some of what Joris asks.
 
 ## Why is this idea important?
 There are two main reasons why returning a set of tables (database) instead of a single table is important.  
