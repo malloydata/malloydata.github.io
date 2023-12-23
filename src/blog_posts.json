@@ -1,7 +1,7 @@
 [
   {
     "title": "Queries that return databases instead of tables",
-    "path": "/2023-12-22-querying-returns-database",
+    "path": "/2023-12-22-query-returns-database",
     "subtitle": "Reading data is expensive",
     "author": "lloyd tabb",
     "published": "2023-12-22" 
