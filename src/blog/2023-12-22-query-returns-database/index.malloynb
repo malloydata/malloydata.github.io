@@ -3,19 +3,23 @@
 lloyd tabb, 2023-12-22
 
 
-[Joris Nix](https://bigdata.uni-saarland.de/people/nix.php) recently published a paper *[What if an SQL Statement Returned a Database?](https://arxiv.org/pdf/2312.00638.pdf)*.  This is actually a fascinating and important question. Joris goes on to explain how it might be implemented in SQL.  
+[Joris Nix](https://bigdata.uni-saarland.de/people/nix.php) recently published a paper *[What if an SQL Statement Returned a Database?](https://arxiv.org/pdf/2312.00638.pdf)*.  The title of this paper ask a fascinating and important question. In data transformation, we often read the same data over and over producing multiple copies of the data at various granularities.  If we could read the data only once and produce multiple tables in a database, the efficiency gain is obvious.  It could also radically simplify data pipelines.
 
-In this article, I'm going to give a couple of reasons why this question and idea is really an important one. I will show, how in Malloy, with Malloy's nesting, you can already achieve some of what Joris asks.
+In their article, Joris goes on to explain how it might be implemented in SQL.  
 
-## Why is this idea important?
-There are two main reasons why returning a set of tables (database) instead of a single table is important.  
+In this article, I'm going to give a couple more reasons why this question and idea is really important. I'll will show, how in Malloy, with Malloy's nesting, you can already achieve some of what Joris asks.  The real benefit will only happen if underlying databases choose to do something here.
 
-**Reading data from storage** the most expensive thing when querying data and when dealing with streaming data, you sometimes only get a **single look at the data**.  If you can look at the data only once and produce multiple reuslts you have a chance of being much more efficient and closer to real time in your transformation.
+## Reading data from storage
+
+Reading data from storage the most expensive thing when querying data. The cost of computation is often incidental relative to the cost of reading data. In traditional data warehousing, the unit of reusability is a *fact table*.  A fact table is the data at some level of dimensional granularity.  Most data pipelines are built to produce fact tables. 
+
+## Streaming data
+When working with streaming data, you sometimes only get a **single look at the data** as it streams by.  If you can look at the data only once and produce multiple reuslts you have a chance of being much more efficient and closer to real time in your transformation.
 
 ## Malloy is mostly there already.
-In Joris's paper, the SQL required to perfom the multiple results is difficult to understand.  Malloy makes creating multiple results relatively easy.  
+In Joris's paper, the SQL required to perfom the multiple results is difficult to understand.  Malloy makes creating multiple results from a single query relatively easy.  
 
-Malloy queries always execute as a single SQL query so these concepts map nicely.
+Malloy queries *always* execute as a single SQL query so these concepts map nicely.
 >>>markdown
 ### Let's use Joris's data.
 We have a list of sections (lectures being given my mulitple professors) in CSV format.
@@ -39,9 +43,18 @@ source: sections is duckdb.table('lectures.csv') extend {
     lecture_id is md5!(lecture)  // define a primary key for lecture
     professor_id is md5!(name)  // define a promary key for professor
 }
+>>>markdown
+For ANY of the the queries below:
+
+Click on 'JSON' to see the output in JSON
+
+Click on 'SQL' to Query in SQL generated for the Malloy Query.
 >>>malloy
 run: sections -> {select: *}
 >>>markdown
+## First let's write the queries for each individual table.
+In Joris's document, there are three tables that are produced in results.  Let's first take a look at the equivalent Malloy queries to produce these tables. Click SQL to see the equivalent SQL.  You will see that the translation from the Malloy query to the equivalent SQL is relatively straight forward.
+
 ## Query to produce the professors table.
 The query below reads the sections table an produces a professors table.  
 >>>malloy
@@ -64,9 +77,22 @@ run: sections -> {
   aggregate: section_count
 }
 >>>markdown
-## Returning multiple reuslts with nesting
-Malloy's nesting produces subtables on each row.  In this case we have a table with a single row and the subtables *professors*, *lectures* and *gives*. (the `#dashboard` shows the data in dashboard form instead of a table)
+## Query for the gives table.
 >>>malloy
+run: sections -> {
+  group_by: 
+    lecture_id
+    professor_id
+}
+>>>markdown
+## Returning multiple reuslts with nesting
+Malloy's nesting produces subtables on each row.  In this case we have a table with a single row and the subtables *professors*, *lectures* and *gives*. (the `#dashboard` shows the data in dashboard form instead of a table).  
+
+Look at the SQL tab in the results to see the SQL generated for this query.
+
+Look at the JSON tab to see the resulting nested tables in JSON.
+>>>malloy
+#(docs) size=large
 # dashboard
 run: sections -> {
   nest: professors is {
@@ -82,30 +108,24 @@ run: sections -> {
   }
 }
 >>>markdown
-## In Malloy, you can make a data source based on a query.
-The query produces a result with some nested data.  This could be written to disk as a parquet file, but we're just going to create a source based on a query (see the nesting query below for this same query in SQL).
+## Querying the resulting JSON.
+We've taken the json output from the query above and placed it into a JSON file.  We could have just as also placed it in a *parquet* file or in BigQuery as it supports nested structures.  
+
+Below we define a Malloy source 'db' based on this data.
 >>>malloy
-source: db is sections -> {
-  nest: professors is {
-    group_by: professor_id, name, age
-    aggregate: total_sections is section_count
-  }
-  nest: lectures is {
-    group_by: lecture_id, lecture, difficulty
-    aggregate: total_sections is section_count
-  }
-  nest: gives is {
-    group_by: lecture_id, professor_id
-  }
-}
+source: db is duckdb.table('db.json')
 >>>markdown
+<img src='db_schema.png'>
+
+We can see from the schema above that the we have three nested tables in the above source.
+
 We can query the individual tables, for example professors.
 >>>malloy
 run: db -> {
   select: professors.professor_id, professors.name, professors.age
 }
 >>>markdown
-By default, with nested data, the results are cross joined so we'll write some where clauses.
+When working with nested data, accessing results from mulitple nested sources the results in a cross join, so we'll write some where clauses.
 >>>malloy
 run: db -> {
   where: 
