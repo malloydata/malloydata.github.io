@@ -1,0 +1,77 @@
+[
+    {
+      "professors": [
+        {
+          "professor_id": "0b6a03d81e7b137f3a6bc238d3802d9a",
+          "name": "Prof A",
+          "age": 30,
+          "total_sections": 2
+        },
+        {
+          "professor_id": "9aa3351834cd8de84eafd711dbd3e1d9",
+          "name": "Prof B",
+          "age": 40,
+          "total_sections": 2
+        },
+        {
+          "professor_id": "fb6561c76605336b6b166432e9f84740",
+          "name": "Prof C",
+          "age": 50,
+          "total_sections": 2
+        }
+      ],
+      "lectures": [
+        {
+          "lecture_id": "8329f5105520a1b72d062628c077ddfa",
+          "lecture": "Computer Science",
+          "difficulty": "low",
+          "total_sections": 3
+        },
+        {
+          "lecture_id": "ea2ef9b0d095bf991f4973633b485340",
+          "lecture": "Databases",
+          "difficulty": "low",
+          "total_sections": 1
+        },
+        {
+          "lecture_id": "7ccd622f92e98e5474d720bf66673398",
+          "lecture": "Artificial Intellegence",
+          "difficulty": "high",
+          "total_sections": 1
+        },
+        {
+          "lecture_id": "49110ba9c7e157360ed1b72f643bc1a3",
+          "lecture": "Data Structures",
+          "difficulty": "high",
+          "total_sections": 1
+        }
+      ],
+      "gives": [
+        {
+          "lecture_id": "49110ba9c7e157360ed1b72f643bc1a3",
+          "professor_id": "fb6561c76605336b6b166432e9f84740"
+        },
+        {
+          "lecture_id": "7ccd622f92e98e5474d720bf66673398",
+          "professor_id": "9aa3351834cd8de84eafd711dbd3e1d9"
+        },
+        {
+          "lecture_id": "8329f5105520a1b72d062628c077ddfa",
+          "professor_id": "0b6a03d81e7b137f3a6bc238d3802d9a"
+        },
+        {
+          "lecture_id": "8329f5105520a1b72d062628c077ddfa",
+          "professor_id": "9aa3351834cd8de84eafd711dbd3e1d9"
+        },
+        {
+          "lecture_id": "8329f5105520a1b72d062628c077ddfa",
+          "professor_id": "fb6561c76605336b6b166432e9f84740"
+        },
+        {
+          "lecture_id": "ea2ef9b0d095bf991f4973633b485340",
+          "professor_id": "0b6a03d81e7b137f3a6bc238d3802d9a"
+        }
+      ]
+    }
+  ]
+  
