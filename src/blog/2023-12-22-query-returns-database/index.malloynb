@@ -1,5 +1,7 @@
 >>>markdown
 # Queries that return databases instead of tables
+*Reading data is expensive.*
+
 lloyd tabb, 2023-12-22
 
 
