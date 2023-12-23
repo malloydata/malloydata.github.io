@@ -1,9 +1,16 @@
 [
   {
+    "title": "Queries that return databases instead of tables",
+    "path": "/2023-12-22-querying-returns-database",
+    "subtitle": "Reading data is expensive",
+    "author": "lloyd tabb",
+    "published": "2023-12-22" 
+  },
+  {
     "title": "Querying a Semantic Data Model",
     "path": "/2023-11-13-querying-a-semantic-model",
     "subtitle": "Getting the right answers, faster",
-    "author": "Lloyd Tabb",
+    "author": "lloyd tabb",
     "published": "2023-11-13"
   },
   {
