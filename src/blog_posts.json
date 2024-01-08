@@ -1,5 +1,13 @@
 [
   {
+    "title": "What's Next For Malloy in 2024",
+    "path": "/2024-01-09-whats-next-in-2024",
+    "subtitle": "A sneak preview at what's to come",
+    "author": "The Malloy Team",
+    "published": "2024-01-09",
+    "previewImage": "malloy_2024.png"
+  },
+  {
     "title": "Queries that return databases instead of tables",
     "path": "/2023-12-22-query-returns-database",
     "subtitle": "Reading data is expensive",
