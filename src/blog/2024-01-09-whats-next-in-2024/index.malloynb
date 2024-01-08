@@ -1,4 +1,6 @@
 >>>markdown
+<img src="malloy_2024.png" class="no-shadow"/>
+
 # What's Next for Malloy in 2024
 
 *January 9, 2024 by The Malloy Team*
@@ -14,10 +16,10 @@ As the Malloy community grows, we have folks from all over the world testing the
 Existing data renderers only work well with tabular data, where the data is laid out in rows and columns. Building a renderer to natively handle nested data opens up some fascinating opportunities for visualization. Malloy breaks free from the standard rectangular paradigm of data, and we’re making major improvements to how these hyperdimensional result sets are presented. Nested queries allow you to inspect your dataset from multiple levels of granularity simultaneously, creating what are effectively entire dashboards with a single query. As a sneak preview, here’s an example screenshot showing a complex, nested result from a single Malloy query in our current renderer, versus how it will look in the improved renderer:
 
 ### Legacy renderer
-<img src="renderer_before.jpg" class="no-shadow"/>
+<img src="renderer_before.jpg" />
 
 ### Improved renderer
-<img src="renderer_after.jpg" class="no-shadow"/>
+<img src="renderer_after.jpg" />
 
 We’re making a ton of other improvements as well: fixed column headers, fine-grained control over how charts are shown, sparklines, interactivity, and more. If you’re building an application with Malloy, and want to take advantage of our renderer, it’s simple to include in your own codebase. Check out the [Svelte app example](https://github.com/malloydata/malloy-svelte-example) on our Github repo.
 
