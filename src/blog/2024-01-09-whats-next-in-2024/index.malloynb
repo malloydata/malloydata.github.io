@@ -4,263 +4,31 @@
 *January 9, 2024 by The Malloy Team*
 <br/><br/><br/>
 
+Happy New Year from the Malloy Team! The end-of-year holiday break gave us all an opportunity to reflect on the accomplishments of the year and ponder what’s to come. To start the year, I’d like to give a quick rundown of what we’re excited about on our 2024 roadmap.
 
->>>markdown
-### Let's use Joris's data.
-We have a list of sections (lectures being given my mulitple professors) in CSV format.
+## Analytical Completeness
 
-```
-name, age,lecture,difficulty
-Prof A,30,Computer Science,low
-Prof A,30,Databases,low
-Prof B,40,Computer Science,low
-Prof B,40,Artificial Intellegence,high
-Prof C,50,Data Structures,high
-Prof C,50,Computer Science,low
-```
+As the Malloy community grows, we have folks from all over the world testing the limits of the language with their use cases. Most of these folks are coming to us with an advanced knowledge of SQL, and their use cases often rely on sophisticated SQL features such as window partition clauses and sliding window frames that are not yet expressible in Malloy. At the start of the year, we’re making a concerted effort to close these gaps. While there are existing workarounds today with the [Turducken](https://docs.malloydata.dev/documentation/language/sql_blocks#embedding-malloy-queries-in-an-sql-block-turducken-) (a clause that allows embedding SQL in Malloy and vice versa), we want to make this a rare bird. At the start of the year, we’ll be filling these gaps and implementing partition clauses, percentile functions, and a way for you to call any arbitrary aggregate or window function in the underlying database.
 
-We're going to make a Malloy `source:` that adds some definitions.  These are just common calculations associated with the `sections` data.  A source can be queried like a table, but since these definitions are part of the source, we don't have to repeat ourselves when writing queries.
->>>malloy
-source: sections is duckdb.table('lectures.csv') extend {
-  measure: 
-    section_count is count()
-  dimension: 
-    lecture_id is md5!(lecture)  // define a primary key for lecture
-    professor_id is md5!(name)  // define a promary key for professor
-}
->>>markdown
-For ANY of the the queries below:
+## Even More Magical Rendering
+Existing data renderers only work well with tabular data, where the data is laid out in rows and columns. Building a renderer to natively handle nested data opens up some fascinating opportunities for visualization. Malloy breaks free from the standard rectangular paradigm of data, and we’re making major improvements to how these hyperdimensional result sets are presented. Nested queries allow you to inspect your dataset from multiple levels of granularity simultaneously, creating what are effectively entire dashboards with a single query. As a sneak preview, here’s an example screenshot showing a complex, nested result from a single Malloy query in our current renderer, versus how it will look in the improved renderer:
 
-Click on 'JSON' to see the output in JSON
+### Legacy renderer
+<img src="renderer_before.jpg" class="no-shadow"/>
 
-Click on 'SQL' to Query in SQL generated for the Malloy Query.
->>>malloy
-run: sections -> {select: *}
->>>markdown
-## First let's write the queries for each individual table.
-In Joris's document, there are three tables that are produced in results.  Let's first take a look at the equivalent Malloy queries to produce these tables. Click SQL to see the equivalent SQL.  You will see that the translation from the Malloy query to the equivalent SQL is relatively straight forward.
+### Improved renderer
+<img src="renderer_after.jpg" class="no-shadow"/>
 
-## Query to produce the professors table.
-The query below reads the sections table an produces a professors table.  
->>>malloy
-run: sections -> {
-  group_by: 
-    professor_id
-    name
-    age
-  aggregate: section_count
-}
->>>markdown
-## Query to produce the lectures table.
-We'd have to read the data once more to produce the lectures table.
->>>malloy
-run: sections -> {
-  group_by: 
-    lecture_id
-    lecture
-    difficulty
-  aggregate: section_count
-}
->>>markdown
-## Query for the gives table.
->>>malloy
-run: sections -> {
-  group_by: 
-    lecture_id
-    professor_id
-}
->>>markdown
-## Returning multiple reuslts with nesting
-Malloy's nesting produces subtables on each row.  In this case we have a table with a single row and the subtables *professors*, *lectures* and *gives*. (the `#dashboard` shows the data in dashboard form instead of a table).  
+We’re making a ton of other improvements as well: fixed column headers, fine-grained control over how charts are shown, sparklines, interactivity, and more. If you’re building an application with Malloy, and want to take advantage of our renderer, it’s simple to include in your own codebase. Check out the [Svelte app example](https://github.com/malloydata/malloy-svelte-example) on our Github repo.
 
-Look at the SQL tab in the results to see the SQL generated for this query.
+## Parameters - Reusability, Composability, and Dynamic Filtering
+Today, Malloy users enjoy a level of composability and reusability that is completely absent from SQL via our semantic modeling concepts. We want to push this even further by introducing parameters into the language. Parameters in Malloy will allow the same artifact to be used in many different contexts, such as different customers inside of a multi-tenant SaaS application. A large percentage of our most passionate users are engineers who are building analytics-focused applications, and this functionality allows them to write a single data model and re-use it across different environments. Parameters will unlock powerful functionality for analysts and data scientists as well, such as the ability to build dashboards with dynamic time ranges and filters. You can read more about the proposal for implementing parameters and contribute to the discussion [here](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0002/wn-0002.md).
 
-Look at the JSON tab to see the resulting nested tables in JSON.
->>>malloy
-#(docs) size=large
-# dashboard
-run: sections -> {
-  nest: professors is {
-    group_by: professor_id, name, age
-    aggregate: total_sections is section_count
-  }
-  nest: lectures is {
-    group_by: lecture_id, lecture, difficulty
-    aggregate: total_sections is section_count
-  }
-  nest: gives is {
-    group_by: lecture_id, professor_id
-  }
-}
->>>markdown
-## Querying the resulting JSON.
-We've taken the json output from the query above and placed it into a JSON file.  We could have just as also placed it in a *parquet* file or in BigQuery as it supports nested structures.  
+## Database Connections
+The overarching mission of the Malloy team is to replace SQL for analytics. In order to achieve this goal, we need to make sure that users can run Malloy code anywhere that SQL runs. There are a huge number of databases out there that speak SQL, and it would be foolish for a team of our size to build connectors for all of them. Instead, we’re working on a different approach – we’re going to decouple the core Malloy language from the database connection code, and make it as easy as possible to write a custom database connection for Malloy. Our goal is to have an ecosystem of third-party connectors to handle the long-tail of database support, and if your desired database is not yet supported, it should be simple to get one up and running. Finally, we know that in order for Malloy to be successful, there’s a small number of cloud-native data warehouses that will need first-class support, and we’ll be investing in this in 2024.
 
-Below we define a Malloy source 'db' based on this data.
->>>malloy
-source: db is duckdb.table('db.json')
->>>markdown
-<img src='db_schema.png'>
+## A World Class IDE for Data Developers
+Software developers have had fantastic tooling for many years now. By comparison, data teams are living in the dark ages. We’re trying to build a first class development environment for data folks on par with what is available to other software domains, and so we put enormous effort into making our VS Code extension the best place for data modelers to do their work. Expect to see more tooling to make working with your data in Malloy a smooth and joyful experience. Some things to look forward to are improved code-completion, support for drilling into measures to look at more granular data, scratchpad support in Malloy notebooks, and allowing the VSCode extension to take advantage of the pluggable database connections described in the previous section.
 
-We can see from the schema above that the we have three nested tables in the above source.
-
-We can query the individual tables, for example professors.
->>>malloy
-run: db -> {
-  select: professors.professor_id, professors.name, professors.age
-}
->>>markdown
-When working with nested data, accessing results from mulitple nested sources the results in a cross join, so we'll write some where clauses.
->>>malloy
-run: db -> {
-  where: 
-   gives.professor_id = professors.professor_id
-   and gives.lecture_id = lectures.lecture_id    
-  select:
-    professors.name
-    lectures.lecture
-    lectures.difficulty
-}
->>>markdown
-## Conclusion: SQL syntax?
-If there were SQL syntax to create multiple tables, we can envision creating a syntax like `nest` to create an additional output table as part of a single SQL query.  The effiency here is obvious in that the data would only be read from storage once.
->>>markdown
-## Appendix: The nesting query and results
-Below is SQL query generated by Malloy to produce the nested data.
-
-```SQL
-WITH __stage0 AS (
-  SELECT
-    group_set,
-    CASE WHEN group_set=1 THEN
-      md5(sections."name")
-      END as "professor_id__1",
-    CASE WHEN group_set=1 THEN
-      sections."name"
-      END as "name__1",
-    CASE WHEN group_set=1 THEN
-      sections."age"
-      END as "age__1",
-    (CASE WHEN group_set=1 THEN
-      COUNT( 1)
-      END) as "total_sections__1",
-    CASE WHEN group_set=2 THEN
-      md5(sections."lecture")
-      END as "lecture_id__2",
-    CASE WHEN group_set=2 THEN
-      sections."lecture"
-      END as "lecture__2",
-    CASE WHEN group_set=2 THEN
-      sections."difficulty"
-      END as "difficulty__2",
-    (CASE WHEN group_set=2 THEN
-      COUNT( 1)
-      END) as "total_sections__2",
-    CASE WHEN group_set=3 THEN
-      md5(sections."lecture")
-      END as "lecture_id__3",
-    CASE WHEN group_set=3 THEN
-      md5(sections."name")
-      END as "professor_id__3"
-  FROM lectures.csv as sections
-  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,3,1)) as group_set  ) as group_set
-  GROUP BY 1,2,3,4,6,7,8,10,11
-)
-SELECT
-  COALESCE(LIST({
-    "professor_id": "professor_id__1", 
-    "name": "name__1", 
-    "age": "age__1", 
-    "total_sections": "total_sections__1"}  ORDER BY  "total_sections__1" desc NULLS LAST) FILTER (WHERE group_set=1),[]) as "professors",
-  COALESCE(LIST({
-    "lecture_id": "lecture_id__2", 
-    "lecture": "lecture__2", 
-    "difficulty": "difficulty__2", 
-    "total_sections": "total_sections__2"}  ORDER BY  "total_sections__2" desc NULLS LAST) FILTER (WHERE group_set=2),[]) as "lectures",
-  COALESCE(LIST({
-    "lecture_id": "lecture_id__3", 
-    "professor_id": "professor_id__3"}  ORDER BY  "lecture_id__3" asc NULLS LAST) FILTER (WHERE group_set=3),[]) as "gives"
-FROM __stage0
-```
-
-And the data produced, in JSON
-
-```JSON
-[
-  {
-    "professors": [
-      {
-        "professor_id": "0b6a03d81e7b137f3a6bc238d3802d9a",
-        "name": "Prof A",
-        "age": 30,
-        "total_sections": 2
-      },
-      {
-        "professor_id": "9aa3351834cd8de84eafd711dbd3e1d9",
-        "name": "Prof B",
-        "age": 40,
-        "total_sections": 2
-      },
-      {
-        "professor_id": "fb6561c76605336b6b166432e9f84740",
-        "name": "Prof C",
-        "age": 50,
-        "total_sections": 2
-      }
-    ],
-    "lectures": [
-      {
-        "lecture_id": "8329f5105520a1b72d062628c077ddfa",
-        "lecture": "Computer Science",
-        "difficulty": "low",
-        "total_sections": 3
-      },
-      {
-        "lecture_id": "ea2ef9b0d095bf991f4973633b485340",
-        "lecture": "Databases",
-        "difficulty": "low",
-        "total_sections": 1
-      },
-      {
-        "lecture_id": "7ccd622f92e98e5474d720bf66673398",
-        "lecture": "Artificial Intellegence",
-        "difficulty": "high",
-        "total_sections": 1
-      },
-      {
-        "lecture_id": "49110ba9c7e157360ed1b72f643bc1a3",
-        "lecture": "Data Structures",
-        "difficulty": "high",
-        "total_sections": 1
-      }
-    ],
-    "gives": [
-      {
-        "lecture_id": "49110ba9c7e157360ed1b72f643bc1a3",
-        "professor_id": "fb6561c76605336b6b166432e9f84740"
-      },
-      {
-        "lecture_id": "7ccd622f92e98e5474d720bf66673398",
-        "professor_id": "9aa3351834cd8de84eafd711dbd3e1d9"
-      },
-      {
-        "lecture_id": "8329f5105520a1b72d062628c077ddfa",
-        "professor_id": "0b6a03d81e7b137f3a6bc238d3802d9a"
-      },
-      {
-        "lecture_id": "8329f5105520a1b72d062628c077ddfa",
-        "professor_id": "9aa3351834cd8de84eafd711dbd3e1d9"
-      },
-      {
-        "lecture_id": "8329f5105520a1b72d062628c077ddfa",
-        "professor_id": "fb6561c76605336b6b166432e9f84740"
-      },
-      {
-        "lecture_id": "ea2ef9b0d095bf991f4973633b485340",
-        "professor_id": "0b6a03d81e7b137f3a6bc238d3802d9a"
-      }
-    ]
-  }
-]
-```
->>>markdown
+## Conclusion
+We’re a small team at the start of our journey, but we have huge ambitions. The above list is just a sampling of what we hope to achieve in the coming year. We love hearing feedback and suggestions, so if you’re excited about any of this, or you feel something is missing, we want to hear about it – [join the Malloy community Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1t32mufpy-THwP1o1ADJVkd3o2L2zaZw) and drop us a line!
