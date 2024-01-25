@@ -1,5 +1,13 @@
 [
   {
+    "title": "Instant BigQuery Usage Insights with Malloy",
+    "path": "/2024-01-25-bigquery-jobs",
+    "subtitle": "Showing Easiest, Fastest Way to Query BigQuery with Malloy",
+    "author": "Carlin Eng",
+    "published": "2024-01-25",
+    "previewImage": "malloy_and_bq.png"
+  },
+  {
     "title": "What's Next For Malloy in 2024",
     "path": "/2024-01-09-whats-next-in-2024",
     "subtitle": "A sneak preview at what's to come",
