@@ -3,19 +3,19 @@
 
 # Instant BigQuery Usage Insights with Malloy
 
-*January 25, 2024 by Carlin Eng
+*January 25, 2024 by Carlin Eng*
 <br/><br/><br/>
 
 Malloy is an innovative way to analyze and explore data. The Malloy team’s maniacal focus on user experience removes much of the toil of data analysis, and turns it into a joyful experience. With some recent advances on GCP, it’s now easier than ever to run Malloy against your data in BigQuery. This blog post will show you exactly how, and provide you with some sample analysis that you can take off the shelf and use to explore your BigQuery usage patterns.
 
-Google Cloud Shell is a browser-based environment that greatly simplifies developing and operating a GCP environment. It comes preloaded with all the necessary libraries and credentials for accessing resources in a GCP project, including BigQuery. It also comes with a VS Code-based editing environment called Cloud Code, with full access to the VS Code Extension Marketplace. Navigate to ide.cloud.google.com and you’ll see it open up. Make sure you are running the ‘Preview’ as it has a more recent version of VS Code.
+Google Cloud Shell is a browser-based environment that greatly simplifies developing and operating a GCP environment. It comes preloaded with all the necessary libraries and credentials for accessing resources in a GCP project, including BigQuery. It also comes with a VS Code-based editing environment called Cloud Code, with full access to the VS Code Extension Marketplace. Navigate to <a href="https://ide.cloud.google.com" target="_blank">ide.cloud.google.com</a> and you’ll see it open up. Make sure you are running the ‘Preview’ as it has a more recent version of VS Code.
 
 <img src="cloudshell_ide.png" class="no-shadow" />
 
-To start analyzing your BigQuery usage data with Malloy, you need to do a few things: install the Malloy VS Code extension, connect Cloud Code to your GCP Project, and clone the bigquery_jobs Github repository.
+To start analyzing your BigQuery usage data with Malloy, you need to do a few things: install the Malloy VS Code extension, connect Cloud Code to your GCP Project, and clone the <a href="https://github.com/malloydata/bigquery_jobs" target="_blank">bigquery_jobs</a> Github repository. Let's walk through it, step-by-step:
 
 ## Installing the Extension
-The VS Code extension is accessible through the Extension Marketplace. Click on the Extensions icon in the sidebar, search for “Malloy”, and install the extension.
+In your Cloud Shell Editor, the VS Code extension is accessible through the Extension Marketplace. Click on the Extensions icon in the sidebar, search for “Malloy”, and install the extension.
 
 <img src="installing_extension.png" class="no-shadow" />
 
@@ -32,7 +32,7 @@ Once you’ve selected a Google Cloud project, your Cloud Code environment is au
 
 ## Load the BigQuery Jobs Data Model from Github
 
-We’ve pre-built a Malloy data model on top of the BigQuery information_schema views. This will allow you to gather insights about your BigQuery usage without having to do the detective work of understanding the schema of the tables yourself. Just clone the data model, point the tables to your own internal data, and run the notebooks.
+We’ve pre-built a Malloy data model on top of the BigQuery <a href="https://cloud.google.com/bigquery/docs/information-schema-intro" target="_blank">information_schema</a> views. This will allow you to gather insights about your BigQuery usage without having to do the detective work of understanding the schema of the tables yourself. Just clone the data model, point the tables to your own internal data, and run the notebooks.
 
 Click on the “Clone Git Repository” button on the home screen and enter the URL for our git repository: https://github.com/malloydata/bigquery_jobs.git
 
@@ -50,7 +50,7 @@ source: table_storage_tbl is bigquery.sql('SELECT * FROM `region-US`.INFORMATION
 ```
 
 ## Run the Dashboard Queries
-Once your model has been configured to point at your own information_schema data, you can immediately start exploring. The “dashboard.malloynb” file contains a set of queries that will immediately give you an overview of your high level BigQuery usage patterns, including slot usage over time, hot and cold tables, most active users, and most expensive queries. Just open up the `dashboard.malloynb`` file and click the “Run All” button at the top to execute each of the queries, then scroll through the notebook to see the results:
+Once your model has been configured to point at your own `information_schema` data, you can immediately start exploring. The `dashboard.malloynb` file contains a set of queries that will immediately give you an overview of your high level BigQuery usage patterns, including slot usage over time, hot and cold tables, most active users, and most expensive queries. Open up the `dashboard.malloynb` file and click the “Run All” button at the top to execute each of the queries, then scroll through the notebook to see the results:
 
 <img src="notebook.png" class="no-shadow" />
 
@@ -59,6 +59,6 @@ Data analysis is an iterative process, and the answer to one question will spawn
 
 - Runaway queries in BigQuery can cause resource contention. Oftentimes these queries bump up against the [default 6 hour runtime limit](https://cloud.google.com/bigquery/quotas#query_jobs). Are there any recurring queries in your project that are hitting this limit and causing problems? Write a query to identify these queries, and the user responsible for issuing them.
 - BigQuery has the ability to instantaneously scale your compute resources up and down to meet demand. Does your BigQuery project exhibit any clear usage patterns around time of day or day of week?
-- The model we built in “jobs.malloy” is fairly basic. It includes some scalar transformations, some aggregating measures, and some queries of interest. What other calculations would you include in the model to make it interesting for your own data?
+- The model we built in the `jobs.malloy` file is fairly basic. It includes some scalar transformations, some aggregating measures, and some queries of interest. What other calculations would you include in the model to make it interesting for your own data?
 
 We love hearing feedback and suggestions, so once you've tried this out, let us know how your experience went -- [join the Malloy community Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1t32mufpy-THwP1o1ADJVkd3o2L2zaZw) and drop us a line!
