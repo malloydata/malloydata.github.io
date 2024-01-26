@@ -3,7 +3,7 @@
 
 # Instant BigQuery Usage Insights with Malloy
 
-*January 25, 2024 by Carlin Eng*
+*January 28, 2024 by Carlin Eng*
 <br/><br/><br/>
 
 Malloy is an innovative way to analyze and explore data. The Malloy team’s maniacal focus on user experience removes much of the toil of data analysis, and turns it into a joyful experience. With some recent advances on GCP, it’s now easier than ever to run Malloy against your data in BigQuery. This blog post will show you exactly how, and provide you with some sample analysis that you can take off the shelf and use to explore your BigQuery usage patterns.
