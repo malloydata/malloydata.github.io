@@ -49,6 +49,14 @@ source: tables_tbl is bigquery.sql('SELECT * FROM `region-US`.INFORMATION_SCHEMA
 source: table_storage_tbl is bigquery.sql('SELECT * FROM `region-US`.INFORMATION_SCHEMA.TABLE_STORAGE')
 ```
 
+Try clicking the "Preview" CodeLens action to show some examples of the data in the `information-schema`.
+
+<img src="preview_codelens.jpg">
+
+If you run into an error saying "bytes billed exceeded", you'll need to update the BigQuery connection settings.
+
+<img src="update_bytes_billed.png">
+
 ## Run the Dashboard Queries
 Once your model has been configured to point at your own `information_schema` data, you can immediately start exploring. The `dashboard.malloynb` file contains a set of queries that will immediately give you an overview of your high level BigQuery usage patterns, including slot usage over time, hot and cold tables, most active users, and most expensive queries. Open up the `dashboard.malloynb` file and click the “Run All” button at the top to execute each of the queries, then scroll through the notebook to see the results:
 
