@@ -6,13 +6,16 @@
 *January 28, 2024 by Carlin Eng*
 <br/><br/><br/>
 
-Malloy is an innovative way to analyze and explore data. The Malloy team’s maniacal focus on user experience removes much of the toil of data analysis, and turns it into a joyful experience. With some recent advances on GCP, it’s now easier than ever to run Malloy against your data in BigQuery. This blog post will show you exactly how, and provide you with some sample analysis that you can take off the shelf and use to explore your BigQuery usage patterns.
+Malloy is an innovative way to analyze and explore data. The Malloy team’s dedication to user experience removes much of the toil of data analysis, and turns it into a joyful experience. With some recent advances on GCP, it’s now easier than ever to run Malloy against your data in BigQuery. This blog post will show you exactly how, and provide you with some sample analysis that you can take off the shelf and use to explore your BigQuery usage patterns.
 
-Google Cloud Shell is a browser-based environment that greatly simplifies developing and operating a GCP environment. It comes preloaded with all the necessary libraries and credentials for accessing resources in a GCP project, including BigQuery. It also comes with a VS Code-based editing environment called Cloud Code, with full access to the VS Code Extension Marketplace. Navigate to <a href="https://ide.cloud.google.com" target="_blank">ide.cloud.google.com</a> and you’ll see it open up. Make sure you are running the ‘Preview’ as it has a more recent version of VS Code.
+[Google Cloud Shell](https://cloud.google.com/shell/docs) is a browser-based environment that greatly simplifies developing and operating a GCP environment. It comes preloaded with all the necessary libraries and credentials for accessing resources in a GCP project, including BigQuery. It also comes with a VS Code-based editing environment called [Cloud Code](https://cloud.google.com/code), with full access to the VS Code Extension Marketplace. Navigate to <a href="https://ide.cloud.google.com" target="_blank">ide.cloud.google.com</a> and you’ll see it open up. Make sure you are running the ‘Preview’ as it has a more recent version of VS Code.
 
 <img src="cloudshell_ide.png" class="no-shadow" />
 
-To start analyzing your BigQuery usage data with Malloy, you need to do a few things: install the Malloy VS Code extension, connect Cloud Code to your GCP Project, and clone the <a href="https://github.com/malloydata/bigquery_jobs" target="_blank">bigquery_jobs</a> Github repository. Let's walk through it, step-by-step:
+To start analyzing your BigQuery usage data with Malloy, you need to do a few things:
+- Install the Malloy VS Code extension
+- Connect Cloud Code to your GCP Project
+- Clone the <a href="https://github.com/malloydata/bigquery_jobs" target="_blank">bigquery_jobs Github repository</a> . Let's walk through it, step-by-step:
 
 ## Installing the Extension
 In your Cloud Shell Editor, the VS Code extension is accessible through the Extension Marketplace. Click on the Extensions icon in the sidebar, search for “Malloy”, and install the extension.
@@ -32,7 +35,7 @@ Once you’ve selected a Google Cloud project, your Cloud Code environment is au
 
 ## Load the BigQuery Jobs Data Model from Github
 
-We’ve pre-built a Malloy data model on top of the BigQuery <a href="https://cloud.google.com/bigquery/docs/information-schema-intro" target="_blank">information_schema</a> views. This will allow you to gather insights about your BigQuery usage without having to do the detective work of understanding the schema of the tables yourself. Just clone the data model, point the tables to your own internal data, and run the notebooks.
+We’ve pre-built a Malloy data model on top of the <a href="https://cloud.google.com/bigquery/docs/information-schema-intro" target="_blank">BigQuery information_schema views</a>. This will allow you to gather insights about your BigQuery usage without having to do the detective work of understanding the schema of the tables yourself. Just clone the data model, point the tables to your own internal data, and run the notebooks.
 
 Click on the “Clone Git Repository” button on the home screen and enter the URL for our git repository: https://github.com/malloydata/bigquery_jobs.git
 
