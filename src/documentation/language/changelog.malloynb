@@ -109,7 +109,7 @@ dimension: timestamp_value is timestamp_seconds!timestamp(value)
 
 ### Calculations (analytic functions / window functions)
 
-There is a new keyword `calculate:` which can appear in a query, for use with [analytic functions](./functions.malloynb#analytic-functions).
+There is a new keyword `calculate:` which can appear in a query, for use with [window functions](./functions.malloynb#window-functions).
 >>>malloy
 run: flights -> { 
   group_by: carrier

@@ -39,7 +39,7 @@ Functions that are _not_ built in may be called in the same way, but with an `!`
 | [Other Functions](#other-functions) |
 | [Aggregate Functions](#aggregate-functions)  |
 | [Ungrouped Aggregate Functions](#ungrouped-aggregate-functions)  |
-| [Analytic Functions](#analytic-functions)  |
+| [Analytic Functions](#window-functions)  |
 
 <!-- 
  | [Missing SQL Functions](#missing-sql-functions)  | 
@@ -1290,11 +1290,11 @@ Malloy has two [ungrouped aggregate functions](./ungrouped-aggregates.malloynb),
   </tr>
 </table>
 
-## Analytic Functions
+## Window Functions
 
 ### Syntax
 
-Analytic functions can only appear in a `calculate:` statement:
+Window functions can only appear in a `calculate:` statement:
 >>>malloy
 run: flights -> {
   group_by: carrier
@@ -1302,7 +1302,7 @@ run: flights -> {
 }
 >>>markdown
 
-For more detailed information, see the [Calculations](./calculations.malloynb) section.
+For more detailed information, see the [Calculations and Window Functions](./calculations_windows.malloynb) section.
 
 <!-- Field references in a `calculate:` statement by default use the "output" field with that name if it exists. In the above example, `group_by: carrier` creates an _output field_ called `carrier`. In a `calculate:` statement we can reference that output field. -->
 >>>malloy

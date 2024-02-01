@@ -105,7 +105,7 @@ run: flights -> {
 
 ### Calculations (Window Functions)
 
-Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations.malloynb) section for details.
+Calculations based on other groupings may be performed with the `calculate:` clause and analytic functions. See the [Calculations](./calculations_windows.malloynb) section for details.
 >>>malloy
 run: flights -> {
   group_by: carrier

@@ -92,7 +92,7 @@
         },
         {
           "title": "Calculations (window functions)",
-          "link": "/language/calculations.malloynb"
+          "link": "/language/calculations_windows.malloynb"
         },
         {
           "title": "Ordering and Limiting",
