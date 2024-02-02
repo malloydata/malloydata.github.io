@@ -1,11 +1,14 @@
 {
-  "exclude": ["**/node_modules"],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
-    "module": "es2022",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
     "moduleResolution": "node",
-    "jsx": "react-jsx",
-    "outDir": "dist"
-  }
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "es2019",
+    "lib": ["es2021"]
+  },
+  "include": ["src/**/*", "scripts/**/*"],
+  "exclude": ["dist"]
 }
