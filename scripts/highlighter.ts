@@ -62,6 +62,10 @@ const malloySQLTMGrammar = JSON.parse(
 
 const HIGHLIGHTER = shiki.getHighlighter({
   theme: "light-plus",
+  paths: {
+    themes: "node_modules/shiki/themes/", 
+    languages: "node_modules/shiki/languages/"
+  },
   langs: [
     "sql",
     "json",

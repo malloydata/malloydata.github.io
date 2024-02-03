@@ -11,6 +11,7 @@ npm-debug.log*
 .idea/
 .idea*
 *.iml
+dist/
 gems/
 .vscode/settings.json
 .vscode/spellright.dict
