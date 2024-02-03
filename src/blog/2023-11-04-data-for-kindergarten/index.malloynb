@@ -60,7 +60,6 @@ Notice that we use the calculation for `coin_count` in all the queries.  It is p
 
 We're going to add some `dimension:` calculations too.  It would be nice to know the `coin_type` and the `color` of each of the coins.  `dimension`s are used in `group_by:` in queries.  
 >>>malloy
-##! experimental { scalar_lenses }
 source: coins is duckdb.table('coins.csv') extend {
   measure:
     coin_count is count()
@@ -123,7 +122,6 @@ run: coins ->
 ## Dimensions and measures can be used as partial queries.
 When writing a query  `... -> {group_by: coin_type} ...` is the same as ` ... -> coin_type  ...`
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins ->       //        same as:
   coin_type         // {group_by: coin_type}
   + coin_count      // {aggregate: coin_count}
@@ -151,8 +149,6 @@ run: coins -> coin_type + coin_count + total_value
 Suppose someone had written this great coin counting model and I wanted to use it in my analysis.  Malloy lets you extend (inherit from) a source and create a new source with new definitions.  We add a couple of new dimensions, a new calculation and some `views`.  In Malloy `views` are common ways of looking at data.  We've added two views here.  The first is `metrics` which is the common ways of look at data.  And by_type, the most common over all query.
 >>>malloy
 // import 'coins.malloy'
-##! experimental { scalar_lenses }
-
 source: coins2 is coins extend {
   dimension: is_new is minted_year >= 2000
   dimension: minted_decade is floor(minted_year/10) * 10
@@ -180,13 +176,11 @@ Notice the views.  Views can be used by them selves or in combination with other
 
 Let's start with `metrics`.  Metrics is a view that comuptes *all* the things we might want to ask about a pile of coins.
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> metrics
 >>>markdown
 ## Composing with metrics
 In our model above we've defined a view called 'metrics' and a dimension called 'color'
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> color + metrics
 >>>markdown
 ## Looking at data by type is the most common query.
@@ -203,19 +197,16 @@ run: coins2 -> by_type + {where: is_new}
 ## We can query by more than one dimension
 (but this is hard to read)
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> coin_type + is_new + metrics
 >>>markdown
 ## Nesting data lets us look at more than one dimension at a time.
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> coin_type + metrics + {
   nest: is_new + coin_count
 }
 >>>markdown
 # Pivoting data is even better.
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> coin_type + metrics + {
   # pivot
   nest: is_new + metrics
@@ -223,22 +214,19 @@ run: coins2 -> coin_type + metrics + {
 >>>markdown
 # We can nest any query to get a more complete understanding of the data.
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> coin_type + metrics + {
   nest: minted_year + coin_count
 }
 >>>markdown
 ## We nested data can be shown with a variety can have a variety of rendering options.
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> coin_type + metrics + {
   # list_detail
-  nest: minted_year + coin_count + {order_by: minted_year}
+  nest: minted_year + coin_count
 }
 >>>markdown
 ## Choosing a different outer dimension teaches us something entirely different.
 >>>malloy
-##! experimental { scalar_lenses }
 run: coins2 -> minted_decade + metrics + {
   order_by: minted_decade desc
   nest: by_type
