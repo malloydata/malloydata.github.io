@@ -34,11 +34,11 @@
       "title": "User Guides",
       "items": [
         {
-          "title": "Quickstart",
-          "link": "/user_guides/basic.malloynb"
+          "title": "Querying a Semantic Model",
+          "link": "/user_guides/querying_a_model.malloynb"
         },
         {
-          "title": "Malloy By Example",
+          "title": "Building Semantic Models",
           "link": "/user_guides/malloy_by_example.malloynb"
         },
         {
@@ -79,8 +79,20 @@
           "link": "/language/aggregates.malloynb"
         },
         {
+          "title": "Expressions",
+          "link": "/language/expressions.malloynb"
+        },
+        {
+          "title": "Functions",
+          "link": "/language/functions.malloynb"
+        },
+        {
           "title": "Filters",
           "link": "/language/filters.malloynb"
+        },
+        {
+          "title": "Calculations (window functions)",
+          "link": "/language/calculations.malloynb"
         },
         {
           "title": "Ordering and Limiting",
@@ -95,24 +107,12 @@
           "link": "/language/nesting.malloynb"
         },
         {
-          "title": "Expressions",
-          "link": "/language/expressions.malloynb"
-        },
-        {
-          "title": "Functions",
-          "link": "/language/functions.malloynb"
-        },
-        {
           "title": "SQL Sources",
           "link": "/language/sql_sources.malloynb"
         },
         {
           "title": "Imports",
           "link": "/language/imports.malloynb"
-        },
-        {
-          "title": "Calculations",
-          "link": "/language/calculations.malloynb"
         },
         {
           "title": "Connections",

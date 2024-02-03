@@ -1,8 +1,6 @@
 >>>markdown
 # Querying a Semantic Data Model?
 
-*Note: this article contains some experimental language changes to Malloy*
-
 A semantic data model contains prebuilt calculations and relationships for a set of data. This article will show you the basics of querying a semantic data model in [Malloy](https://www.malloydata.dev).  
 
 Let’s start simply, we'll define: *dimension*, *measure*, *aggregating query*, and *lookup query*.   
@@ -37,7 +35,6 @@ Below is a semantic data model for some flight data. For now, let's not concern 
 
 Each flight has an origin, destination and carrier.  Flights can be delayed.  Each flight has an aircraft that made the flight, and more.  The semantic data model provides us with the dimensions (in blue), the measures (in orange), and the graph of related objects. This model is encoded in a file called ‘flights.malloy’.  
 >>>malloy
-##! experimental.scalar_lenses
 import {flights} from 'flights.malloy' 
 >>>markdown
 <img src="schema.png">
