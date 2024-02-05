@@ -12,7 +12,6 @@ Each stage of a view performs a transformation of one of two kinds:
 * **Projection**: select fields without reducing 
 
 Reductions use `group_by:` and/or `aggregate:`, whereas projections use `select:`.
-
 >>>malloy
 ##(docs) hidden
 import "flights.malloy"
@@ -114,6 +113,40 @@ run: flights -> {
   calculate: flight_count_rank is rank()
 }
 >>>markdown
+## Refinements, Query partials and Shorthand
+Query blocks write be written in parts, those parts can be either views in the source and combined with the refinement operator `+`
+
+The query below
+
+```malloy
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  limit: 10
+}
+```
+can be written as below.  Each of the parts of a query can be separated into a 'partial query'.
+
+```malloy
+run: flights -> 
+  {group_by: carrier}
+  + {aggregate: flight_count}
+  + {limit: 10}
+```
+
+The query can also be written as: 
+
+```malloy
+run: flights -> 
+  carrier
+  + flight_count
+  + {limit: 10}
+```
+
+In the query above, the refienment operator `+` combines the parameters of a query so the query can be built from parts.  Measure, dimension and views declared in the source can also be used.  Referencing dimension `carrier` expands to a partial of `{group_by: x}`. Referencing measure `flight_count` expands to a partial query of `{aggregate: flight_count}`
+
+
+>>>markdown
 ### Source Extensions
 
 When writing a query, if additional source extensions are needed, they can be `extend`-ed into the source in the query expression, as in
@@ -127,7 +160,6 @@ Such extensions can also be included in a view using the `extend:` block.
 ##(docs) hidden
 import "airports.malloy"
 >>>markdown
-
 
 >>>malloy
 run: flights -> {
