@@ -1,0 +1,42 @@
+>>>markdown
+## join_types
+
+Allow you to use INNER, RIGHT and FULL joins.  
+
+We'll likely allow this syntax in Queries, but probably not in sources (it can create confusion).  At the moment this syntax works everywhere.
+
+```
+join_<one|many>: foo [<left|inner|right|full>] on ... 
+```
+>>>malloy
+##! experimental {join_types}
+>>>markdown
+## Example Usage.
+
+Two sources, flights an carriers.
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  measure: flight_count is count()
+}
+
+source: carriers is duckdb.table('../data/carriers.parquet') -> {
+  where: nickname = 'Southwest' | 'Delta'
+  select: *
+} extend {
+  measure: carrier_count is count()
+}
+>>>malloy
+run: carriers -> {select: *}
+>>>malloy
+run: flights -> flight_count
+>>>markdown
+## Using an inner join in a query.
+Limits flights just Southwest and Delta flights.
+>>>malloy
+run: carriers -> {
+  extend: {
+    join_many: flights inner on code = flights.carrier
+  }
+  aggregate: flights.flight_count
+}
+>>>markdown

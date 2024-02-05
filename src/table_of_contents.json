@@ -260,6 +260,27 @@
           "link": "/malloy_python/jupyter.malloynb"
         }
       ]
+    },
+    {
+      "title": "Experiments (in process features)",
+      "items": [
+        {
+          "title": "Experiments",
+          "link": "/experiments/experiments.malloynb" 
+        },
+        {
+          "title": "Join INNER/RIGHT/FULL",
+          "link": "/experiments/join.malloynb"
+        },
+        {
+          "title": "SQL Expressions",
+          "link": "/experiments/sql_expressions.malloynb"
+        },
+        {
+          "title": "Window Partitions",
+          "link": "/experiments/window.malloynb"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,14 @@
+>>>markdown
+# Experimental Features
+
+Before releasing language features, we like to get a feel for how they work when used in programs.  We often find bugs or language problems.  We like when people use these features with the understanding that they might changed in their final form or never be released.  
+
+We value feedback during the experimental phase.  Please make sure you let us know what you think.
+
+Below is a list of currently running experiements and how to turn them on.
+
+* `##! experimental{ join_types }` - [Additional Join Type](joins.malloynb)
+* `## render_next` - [New table and visualization Rendering](renderer.malloynb)
+* `##! experimental {function_order_by partition_by aggregate_limit}` - [ordering and partitioning in calculations](window.malloynb)
+* `##! experimental {sql_functions}` - [Write expression in SQL](sql_expressions.malloynb)
+>>>malloy

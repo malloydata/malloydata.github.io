@@ -1,0 +1,19 @@
+>>>markdown
+# Improved Rendering.
+
+To turn on add the Tag
+
+>>>malloy
+## renderer_next
+>>>markdown
+Usage.  Normal results will display differently and better.
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  measure: 
+    flight_count is count()
+    avg_dist is distance.avg()
+}
+>>>malloy
+run: flights -> origin + flight_count + avg_dist + {
+  nest: destination + flight_count + {limit: 3}
+}
