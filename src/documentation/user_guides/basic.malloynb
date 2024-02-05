@@ -57,7 +57,7 @@ run: duckdb.table('../data/airports.parquet') -> {
 }
 >>>markdown
 
-For the most part, operations can be placed in any order within a query. A `where` can come before or after a `project`, and `limit` can be placed anywhere as well. The above query could also be written:
+For the most part, operations can be placed in any order within a query. A `where` can come before or after a `select`, and `limit` can be placed anywhere as well. The above query could also be written:
 >>>malloy
 run: duckdb.table('../data/airports.parquet') -> {
   limit: 10
@@ -110,15 +110,14 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 
 One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
 
-In the example below, we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
+In the example below, we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `select` and `where`.  Measures can be used in `aggregate` and `having`.
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
   measure: airport_count is count()
   measure: average_elevation is avg(elevation)
 }
->>>markdown
->>>malloy
+
 run: airports -> { 
   group_by: county_and_state
   aggregate: airport_count
@@ -158,7 +157,7 @@ run: airports_with_named_query -> top_county_and_state
 
 ## Joins
 
-[Joins](../language/join.malloynb) are declared as part of a source. When joining a source to another, it brings with it all child joins.
+[Joins](../language/join.malloynb) are declared as part of a source. When a source is joined to another, it includes all child joins.
 >>>malloy
 source: aircraft_models is duckdb.table('../data/aircraft_models.parquet') extend {
   primary_key: aircraft_model_code
@@ -190,14 +189,13 @@ Now, any query that uses the `flights` source has access to fields in both `airc
 
 An ad hoc join can also be specified in a query block. In the query below, we join in the `airports` table using the `destination` column as a join key, then compute the top 5 destination airports by flight count.
 >>>malloy
-source: airports2 is duckdb.table('../data/airports.parquet')
+run: flights -> {
 
-source: flights2 is duckdb.table('../data/flights.parquet') extend {
-  join_one: airports2 on destination = airports2.code
-}
+  extend: {
+    join_one: airports on destination = airports.code
+  }
 
-run: flights2 -> {
-  group_by: airports2.full_name
+  group_by: airports.full_name
   aggregate: flight_count is count()
   limit: 5
 }
@@ -205,7 +203,7 @@ run: flights2 -> {
 
 ## Filtering
 
-When working with data, filtering is something you do in almost every query. Malloy provides consistent syntax for filtering everywhere within a query. The most basic type of filter is applied using a `where:` clause, very similar to a <code>WHERE</code> clause in SQL.
+Filtering is a common operation in almost every query. Malloy provides consistent syntax for filtering everywhere within a query. The most basic type of filter is applied using a `where:` clause, very similar to a <code>WHERE</code> clause in SQL.
 
 The following query grabs the top 5 counties in California with the highest airport count:
 >>>malloy
@@ -368,7 +366,7 @@ Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` 
 #(docs) html limit=7 size=large
 run: duckdb.table('../data/flights.parquet') -> {
   order_by: 1
-  group_by: day_of_week is day(dep_time)
+  group_by: day_of_week is day_of_week(dep_time)
   aggregate: flight_count is count()
 }
 >>>markdown
@@ -418,7 +416,7 @@ run: airports -> {
 >>>markdown
 
 Next, we'll use the output of that query as the input to another, where we determine which counties have the highest
-percentage of airports compared to the whole state, taking advantage of the nested structure of the data to to so.
+percentage of airports compared to the whole state, taking advantage of the nested structure of the data to do so.
 >>>malloy
 #(docs) html 
 run: airports -> {
