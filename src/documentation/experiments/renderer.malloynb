@@ -1,8 +1,13 @@
 >>>markdown
 # Improved Rendering.
 
-To turn on add the Tag
+We're working on making a reusable rendering library for Malloy that does smart things with your data.  Features include:
 
+* Fixed column heading
+* Various sizing of visualizations
+* Shared axis on visualizations embedded in tables
+
+To turn on add the Tag
 >>>malloy
 ## renderer_next
 >>>markdown
@@ -16,4 +21,6 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 >>>malloy
 run: flights -> origin + flight_count + avg_dist + {
   nest: destination + flight_count + {limit: 3}
+  limit: 10
 }
+>>>malloy
