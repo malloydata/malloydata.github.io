@@ -21,7 +21,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import fs from 'fs';
+import fs from "fs";
 import { build, BuildOptions, Plugin } from "esbuild";
 import { nativeNodeModulesPlugin } from "../third_party/github.com/evanw/esbuild/native-modules-plugin";
 import * as path from "path";
@@ -64,13 +64,16 @@ function makeDuckdbNoNodePreGypPlugin(): Plugin {
   };
 }
 
-const outDir = './dist';
+const outDir = "./dist";
 
 async function doBuild(): Promise<void> {
-  fs.rmSync(outDir, {recursive: true, force: true});
-  fs.mkdirSync(outDir, {recursive: true});
+  fs.rmSync(outDir, { recursive: true, force: true });
+  fs.mkdirSync(outDir, { recursive: true });
 
-  fs.copyFileSync("./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js", `${outDir}/xhr-sync-worker.js`);
+  fs.copyFileSync(
+    "./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js",
+    `${outDir}/xhr-sync-worker.js`
+  );
 
   const duckDBPlugin = makeDuckdbNoNodePreGypPlugin();
   const extensionPlugins = [duckDBPlugin];
@@ -89,7 +92,7 @@ async function doBuild(): Promise<void> {
     platform: "node",
     plugins: nodeExtensionPlugins,
     entryPoints: ["./scripts/index.ts"],
-    external: ["vscode-oniguruma", "./xhr-sync-worker.js"],
+    external: ["canvas", "vscode-oniguruma", "./xhr-sync-worker.js"],
   };
 
   await build(buildOptions);
