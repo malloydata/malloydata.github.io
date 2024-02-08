@@ -169,7 +169,7 @@ run: order_items -> {
 ## Malloy renders charts at all different sizes
 Besides default and custom sizing, Malloy provides preset sizes to make it quick and easy to explore data at different scales on the fly. Depending on the size of the visualization and the amount of data, Malloy tweaks the display of the chart to best support analysis. 
 
-In our model, we have a **top_brands_bar** view that is already configured as a bar chart. We can explore Malloy's preset sizes by nesting the view multiple times, overriding the `# size` tag on column.
+In our model, we have a **top_brands_bar** view that is already configured as a bar chart. We can explore Malloy's preset sizes by nesting the view multiple times, overriding the `# size` tag on each column.
 ```malloy
 run: order_items -> {
   group_by: Customer
