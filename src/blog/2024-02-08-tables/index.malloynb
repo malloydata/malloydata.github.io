@@ -1,0 +1,218 @@
+>>>markdown
+# Malloy Renders Nested Data
+A preview of our new nested data renderer
+
+*February 8, 2024 by Speros Kokenes*
+<br/><br/><br/>
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.18.41@2x.png" style="" alt="">
+
+When I first encountered Malloy in the wild, the aspect that stood out the most to me was how effortlessly it allows working with nested data. Nested data can be used as both an input and an output in Malloy queries to easily ask complicated questions that require inspecting complex relationships.
+
+ But as a dataviz practioner, Malloy's nested outputs presented a new challenge to me: how do you visualize complex data structures in a consumable way? Since that first encounter, I've joined the Malloy team to work on this problem alongside some great thinkers. Below is a preview of where we are taking Malloy's rendering capabilities, which are available under the experimental `## renderer_next` model annotation.
+>>>markdown
+<style>
+  .table-post-img {
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+</style>
+## First, Our Dataset
+Let's explore the renderer with an ecommerce model called **order_items**. This model has data about retail clothing sales to customers.
+
+An example of a view found in this model is **Top Categories**,
+which shows which of our product categories are leading in total sales dollars. It is written in the Malloy model as:
+```malloy
+measure: Sales is sale_price.sum()
+
+view: `Top Categories` is {
+  group_by: `Product Category`
+  aggregate: Sales
+  top: 5
+}
+```
+
+
+## Malloy renders a single table of data.
+We can take any view in our **order_items** model and view the result in a table. The table aligns the columns properly based on data type and sizes to fit the data.
+
+```malloy
+run: order_items -> `Top Categories`
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 07.25.46@2x.png" style="width: 400px;" alt="A two column data table">
+
+## Malloy renders multiple tables side by side
+We are not limited to only one view at a time. Malloy can show tables side by side in the same structure by nesting them in adjacent columns. The output implements proper spacing and alignment to keep the tables separated, but visually cohesive. 
+
+Here, we add a second view from the model called **Top Brands** which tells us which brands are selling the most.
+```malloy
+run: order_items -> {
+  nest: `Top Categories`, `Top Brands`
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 07.46.19@2x.png" style="" alt="Two data tables side by side">
+
+## Malloy renders multiple tables within table rows
+We are not limited to looking at these views over the context of the entire dataset. We can nest these tables inside other tables in order to analyze our top categories and brands within subsets of the data.
+
+In this case, we break out by City to see which cities sell the most, and within those cities which categories and brands sell the most.
+```malloy
+run: order_items -> {
+  group_by: City
+  aggregate: Sales
+  nest: `Top Categories`, `Top Brands Margin`
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 07.56.06@2x.png" style="" alt="">
+
+## Malloy renders unevenly nested data
+The nested data we render doesn't have to match in breadth or depth. Nested data across different columns can have different numbers of rows, or even deeper levels of nesting. As users navigate these complex results, visual cues like pinned headers appear to help maintain context.
+
+Here we construct a different view: for our top customers, what are their top categories, favorite brands to purchase, and the last 3 purchases they've made with us?
+```malloy
+run: order_items -> {
+  group_by: Customer
+  where: isTopCustomer
+  aggregate: Sales
+  nest: 
+    `Top Categories`
+    `Favorite Brands`
+    `Last 3 Purchases`
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 07.58.45.gif" style="" alt="">
+
+## Malloy renders deeply nested data
+Data can be nested as deeply as needed. For example, instead of looking at each customer's overall favorite brands, what if we want to know their favorite brands within each of their top categories? We can find that out by making the **Favorite Brands** view a nest of the **Top Categories** view, instead of an adjacent column:
+```malloy
+run: order_items -> {
+  group_by: Customer
+  where: isTopCustomer
+  aggregate: Sales
+  nest: 
+    `Top Categories` + { nest: `Favorite Brands` }
+    `Last 3 Purchases`
+  limit: 5
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.05.14@2x.png" style="" alt="">
+
+## Malloy renders formatted numbers
+So far, we haven't told Malloy how to render anything. But we can give our own instructions on how to visualize the data. These instructions are provided with simple `#` tags on the data elements that we want to modify.
+
+For example, we can format numbers in different ways. Currencies, durations, percentages, and even spreadsheet formatting syntax is supported.
+```malloy
+run: order_items -> {
+  aggregate:
+    `Default Format` is count()
+
+    # currency 
+    Currency is count()
+
+    # duration
+    `Duration (seconds)` is count()
+
+    # duration=minutes
+    `Duration (minutes)` is count()
+
+    # number='0.0,,"M"'
+    `Spreadsheet format` is count()
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.06.46@2x.png" style="" alt="">
+
+## Malloy renders charts
+Simple tags can be used to produce charts as well. These charts can be nested inside of tables. When doing so, the charts make sure to align their displays such that all the charts in a column form a cohesive, comparable set of information.
+
+Here, we look at Customers broken out by their **Top Categories** and **Top Brands**, but tag Top Brands as a `# bar` to get a bar chart instead of a nested table.
+```malloy
+run: order_items -> {
+  group_by: Customer
+  where: isTopCustomer
+  aggregate: Sales
+  nest: 
+    `Top Categories`
+    # bar
+    `Top Brands` 
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.09.16@2x.png" style="" alt="">
+
+## Malloy renders customized charts
+Charts can be easily customized by setting additional tags and tag properties on a column. From the previous example, we can add size tags to customize the size of the nested **Top Brands** charts.
+```malloy
+run: order_items -> {
+  group_by: Customer
+  where: isTopCustomer
+  aggregate: Sales, Quantity
+  nest: 
+  `Top Categories`
+  # bar size.width=100 size.height=200
+  `Top Brands` 
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.11.02@2x.png" style="" alt="">
+
+## Malloy renders view settings with overrides
+Visual tags can be saved with view definitions in a model. In this case, we have a **Sales by Month Chart** view in our **order_items** model that has already been configured with bar chart settings. We can re-use this bar chart view, while also overriding tags to tweak any settings we want changed. Here, we use the bar chart as is with the expection of changing its size to the preset "spark" setting.
+```malloy
+run: order_items -> {
+  group_by: Brand
+  aggregate: Sales
+  nest: 
+    # size=spark
+    `Sales by Month Chart`
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.13.30@2x.png" style="width:600px;" alt="">
+
+## Malloy renders charts at all different sizes
+Besides default and custom sizing, Malloy provides preset sizes to make it quick and easy to explore data at different scales on the fly. Depending on the size of the visualization and the amount of data, Malloy tweaks the display of the chart to best support analysis. 
+
+In our model, we have a **top_brands_bar** view that is already configured as a bar chart. We can explore Malloy's preset sizes by nesting the view multiple times, overriding the `# size` tag on column.
+```malloy
+run: order_items -> {
+  group_by: Customer
+  where: isTopCustomer
+  aggregate: Sales
+  nest: 
+    `default` is top_brands_bar
+    # size=spark
+    `spark` is top_brands_bar
+    # size=xs
+    `xs` is top_brands_bar
+    # size=sm
+    `sm` is top_brands_bar
+    # size=md
+    `md` is top_brands_bar
+    # size=lg
+    `lg` is top_brands_bar
+    # size=xl
+    `xl` is top_brands_bar
+    # size=2xl
+    `2xl` is top_brands_bar
+  limit: 5
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.15.23.gif" style="" alt="">
+
+## Malloy renders deeply nested charts
+All of the charting features mentioned above work no matter how deeply nested a visualization is. In this example, we deeply nest the **Sales by Month Chart** as a spark. Despite being deeply nested, it still ensures that all instances of the chart in the column conform to the same set of visual properties and scaling.
+```malloy
+run: order_items -> {
+  group_by: City
+  aggregate: Sales, Quantity, `Gross Margin`
+  nest: `Key Brands` is {
+    group_by: Brand
+    aggregate: Sales
+    # size=spark
+    nest: `Sales by Month Chart`
+    limit: 3
+  }
+  limit: 5
+}
+```
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.18.41@2x.png" style="" alt="">
+
+## Whats Next
+Our next generation renderer is still a work in progress, and we are actively working on expanding the chart types, interactions, customization, and scaling. If you want to try it out early, use the `## renderer_next` model tag and give us your feedback in [our Slack community!](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw)
