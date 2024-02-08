@@ -18,7 +18,7 @@ When I first encountered Malloy in the wild, the aspect that stood out the most 
 
 </style>
 ## First, Our Dataset
-Let's explore the renderer with an ecommerce model called **order_items**. This model has data about retail clothing sales to customers.
+Let's explore the renderer with an ecommerce model called **order_items**. This model has data about a company's retail clothing sales.
 
 An example of a view found in this model is **Top Categories**,
 which shows which of our product categories are leading in total sales dollars. It is written in the Malloy model as:
@@ -34,7 +34,7 @@ view: `Top Categories` is {
 
 
 ## Malloy renders a single table of data.
-We can take any view in our **order_items** model and view the result in a table. The table aligns the columns properly based on data type and sizes to fit the data.
+We can take any view in our **order_items** model and view the result in a table. The table aligns the columns properly based on data type and sizes to fit the data. Let's look at the **Top Categories** view.
 
 ```malloy
 run: order_items -> `Top Categories`
