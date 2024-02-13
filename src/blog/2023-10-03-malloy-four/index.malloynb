@@ -80,5 +80,5 @@ these will continue to work. They are listed here to provide a complete record o
 * Addition of [annotations and tags](../../documentation/language/tags.malloynb)
 * New [null-coalescing operator](../../documentation/language/expressions.malloynb#null-operations) `??`
 * [Selective imports](../../documentation/language/imports.malloynb#selective-imports) of objects from other files
-* [Analytic/window functions](../../documentation/language/calculations.malloynb) using `calculate:`
+* [Analytic/window functions](../../documentation/language/calculations_windows.malloynb) using `calculate:`
 >>>markdown

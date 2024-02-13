@@ -128,9 +128,9 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 
 See the [Nesting](nesting.malloynb) section for more details about nested views.
 
-### Calculations
+### Calculations (Window Functions)
 
-*Calculations* are fields based off of groupings and aggregate values in a view, and therefore can only be created in a view with `calculate:` and can not be predefined in a source. See the [Calculations](./calculations.malloynb) section for details.
+*Calculations* are fields based off of groupings and aggregate values in a view, and therefore can only be created in a view with `calculate:` and can not be predefined in a source. See the [Calculations and Window Functions](./calculations_windows.malloynb) section for details.
 >>>malloy
 run: flights -> {
   group_by: carrier
