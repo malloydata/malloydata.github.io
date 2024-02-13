@@ -42,8 +42,8 @@ Note that Malloy queries use a [default ordering](order_by.malloynb#ordering-and
 Ordering can also be changed by adding an `order_by` property on the calculation. This allows you to control the ordering of the input to the window function independently from the ordering of the final results.
 
 >>>malloy
+##! experimental
 #(docs) html size=large
-##! experimental { function_order_by }
 run: flights -> {
   where: carrier = 'WN'
   group_by: dep_year is dep_time.year
@@ -61,8 +61,8 @@ In this example, the window function is calculated in ascending order with respe
 Some window function operations require the specification of <code>partition_by</code> clauses in SQL. For example, calculating year-over-year changes for a specific time span, such as "number of flights in March of this year versus March of last year". In Malloy, these can be specified by adding a `partition_by` property to the calculation.
 
 >>>malloy
+##! experimental
 #(docs) html size=large
-##! experimental { function_order_by }
 run: flights -> {
   where: carrier = 'WN'
   group_by:
