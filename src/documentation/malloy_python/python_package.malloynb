@@ -54,7 +54,7 @@ async def main():
     data = await runtime.load_file(home_dir + "/5_movie_complex.malloy").run(
         named_query="horror_combo")
 
-    dataframe = data.df()
+    dataframe = data.to_dataframe()
     print(dataframe)
 
 if __name__ == "__main__":
@@ -137,11 +137,52 @@ async def main():
         }
         """)
 
-    dataframe = data.df()
+    dataframe = data.to_dataframe()
     print(dataframe)
 
 
 if __name__ == "__main__":
   asyncio.run(main())
   
+```
+
+### Querying BigQuary tables
+
+BigQuery auth via OAuth using gcloud.
+```
+gcloud auth login --update-adc
+gcloud config set project {my_project_id} --installation
+```
+
+Actual usage is similar to DuckDB.
+
+```python
+import asyncio
+import malloy
+from malloy.data.bigquery import BigQueryConnection
+
+async def main():
+  with malloy.Runtime() as runtime:
+    runtime.add_connection(BigQueryConnection())
+
+    data = await runtime.load_source("""
+        source:ga_sessions is bigquery.table('bigquery-public-data.google_analytics_sample.ga_sessions_20170801') extend {
+          measure:
+            hits_count is hits.count()
+        }
+        """).run(query="""
+        run: ga_sessions -> {
+            where: trafficSource.`source` != '(direct)'
+            group_by: trafficSource.`source`
+            aggregate: hits_count
+            limit: 10
+          }
+        """)
+
+    dataframe = data.to_dataframe()
+    print(dataframe)
+
+if __name__ == "__main__":
+  asyncio.run(main())
+
 ```
