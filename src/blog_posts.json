@@ -1,5 +1,13 @@
 [
   {
+    "title": "Dataviz is Hierarchical",
+    "path": "/2024-02-29-hierarchical-viz",
+    "subtitle": "If only our data tools agreed",
+    "author": "Speros Kokenes",
+    "published": "2024-02-29",
+    "previewImage": "image-22.png"
+  },
+  {
     "title": "Malloy Renders Nested Data",
     "path": "/2024-02-08-tables",
     "subtitle": "A preview of our new nested data renderer",
