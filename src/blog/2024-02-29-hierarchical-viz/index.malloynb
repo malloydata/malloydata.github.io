@@ -22,7 +22,8 @@ What are its components? It has a set of rectangles arranged in a series.
 
 What does the data look like for this chart? In our tabular form:
 
-![alt text](<CleanShot 2024-02-29 at 11.58.13@2x.png>)
+
+<img src="CleanShot 2024-02-29 at 11.58.13@2x.png" style="width: 200px;">
 
 These map well together. There is 1 bar per row, creating a nice synergy.
 ![alt text](image-4.png)
@@ -44,7 +45,7 @@ We can treat the entire chart as a root node. Within the chart, the visuals are 
 
 How does 2D tabular data map to this visual structure? Not well. The rows no longer match the visual form we are creating. Awkward transformations are required to fit square pegs into round holes. Redundant data, like the name of each region, is repeated:
 
-![alt text](<CleanShot 2024-02-29 at 12.39.26@2x.png>)
+<img src="CleanShot 2024-02-29 at 12.39.26@2x.png" style="width: 300px" />
 
 ![alt text](image-6.png)
 
