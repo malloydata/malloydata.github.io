@@ -56,7 +56,3 @@ Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-li
 * [Scatter Charts](scatter_charts.malloynb)
 * [Shape Maps](shape_maps.malloynb)
 * [Segment Maps](segment_maps.malloynb)
-
-
-## Additional Charting with Vega Lite
-The `vega` renderer allows much more customization of rendering than the default visualization options provided in the Extension, using the [Vega-Lite](https://vega.github.io/vega-lite/) library. For examples of using these in Malloy, check out the `flights_custom_vis` model and styles files in the FAA [Sample Models](../samples.malloynb) download.
