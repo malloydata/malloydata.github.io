@@ -384,17 +384,20 @@ function validateLinks(
 
     // TODO check in section info
   }
+  const ABSOLUTE_LINK_EXCEPTIONS = ["/slack"];
   for (const file in links) {
     for (const link of links[file]) {
       if (link.link.startsWith("https://") || link.link.startsWith("http://")) {
         continue;
       }
       if (link.link.startsWith("/")) {
-        linkErrors.push({ 
-          path: file.substring(DOCS_ROOT_PATH.length), 
-          message: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`,
-          position: link.position
-        });
+        if(!ABSOLUTE_LINK_EXCEPTIONS.includes(link.link)) {
+          linkErrors.push({ 
+            path: file.substring(DOCS_ROOT_PATH.length), 
+            message: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`,
+            position: link.position
+          });
+        }
       } else if (link.link.startsWith("#")) {
         if (hashes) {
           validateHash(file, link.link, file, link.link, link.position);

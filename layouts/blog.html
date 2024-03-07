@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     {{#if page.previewImage }}
-    <meta property="og:image" content="https://malloydata.github.io{{ page.previewImage }}" />
+    <meta
+      property="og:image"
+      content="https://malloydata.github.io{{ page.previewImage }}"
+    />
     {{/if}}
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="{{ site.baseurl }}/css/document.css" />
@@ -19,7 +22,11 @@
       <div class="header">
         <div class="header-banner">
           <a href="http://www.malloydata.dev" target="_blank">
-            <img class="logo" src="{{ site.baseurl }}/img/logo.png" alt="malloy logo" />
+            <img
+              class="logo"
+              src="{{ site.baseurl }}/img/logo.png"
+              alt="malloy logo"
+            />
           </a>
 
           Malloy
@@ -27,9 +34,14 @@
         </div>
         <div class="header-right">
           <div class="header-links">
-            <a href="https://github.com/malloydata/malloy" target="_blank"><img src="{{ site.baseurl }}/img/github.svg" style="transform: scale(0.5)"/></a>
-            <a href="https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw" target="_blank"><img
-                src="{{ site.baseurl }}/img/slack.svg" /></a>
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="{{ site.baseurl }}/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="{{ site.baseurl }}/img/slack.svg"
+            /></a>
           </div>
         </div>
       </div>
@@ -37,16 +49,46 @@
         <div class="content">
           <div class="document-outer blog">
             {{#if page.isBlogIndex }}{{else}}
-              <div class="blog-header linear-navigation">
-                <div class="item"><a href="{{ site.baseurl }}/blog"><img src="{{ site.baseurl }}/img/previous.svg" alt="previous"/>All Posts</a></div>
-                <div class="edit-link"><a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src{{page.source}}#C1">VSCode <img src="{{ site.baseurl }}/img/open_notebook.svg" alt="document"/></a></div>
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="{{ site.baseurl }}/blog"
+                  ><img
+                    src="{{ site.baseurl }}/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
               </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src{{page.source}}#C1"
+                  >VSCode
+                  <img
+                    src="{{ site.baseurl }}/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+            {{/if}} {{{ page.content }}} {{#if page.isBlogIndex }}{{else}}
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                {{#if page.previousPost }}<a href="{{page.previousPost}}"
+                  ><img
+                    src="{{ site.baseurl }}/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >{{/if}}
+              </div>
+              <div class="item">
+                {{#if page.nextPost }}<a href="{{page.nextPost}}"
+                  >Next Post<img
+                    src="{{ site.baseurl }}/img/next.svg"
+                    alt="previous" /></a
+                >{{/if}}
+              </div>
+            </div>
             {{/if}}
-            {{{ page.content }}}
-            {{#if page.isBlogIndex }}{{else}}<div class="blog-footer linear-navigation">
-              <div class="item">{{#if page.previousPost }}<a href="{{page.previousPost}}"><img src="{{ site.baseurl }}/img/previous.svg" alt="previous"/>Previous Post</a>{{/if}}</div>
-              <div class="item">{{#if page.nextPost }}<a href="{{page.nextPost}}">Next Post<img src="{{ site.baseurl }}/img/next.svg" alt="previous"/></a>{{/if}}</div>
-            </div>{{/if}}
           </div>
         </div>
         <script src="{{ site.baseurl }}/js/view_toggles.js"></script>

@@ -72,4 +72,4 @@ Data analysis is an iterative process, and the answer to one question will spawn
 - BigQuery has the ability to instantaneously scale your compute resources up and down to meet demand. Does your BigQuery project exhibit any clear usage patterns around time of day or day of week?
 - The model we built in the `jobs.malloy` file is fairly basic. It includes some scalar transformations, some aggregating measures, and some queries of interest. What other calculations would you include in the model to make it interesting for your own data?
 
-We love hearing feedback and suggestions, so once you've tried this out, let us know how your experience went -- [join the Malloy community Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1t32mufpy-THwP1o1ADJVkd3o2L2zaZw) and drop us a line!
+We love hearing feedback and suggestions, so once you've tried this out, let us know how your experience went -- [join the Malloy community Slack channel](/slack) and drop us a line!

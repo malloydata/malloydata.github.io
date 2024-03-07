@@ -5,7 +5,7 @@ We've been kinda busy...
 *June 15, 2023 by Lloyd Tabb and Carlin Eng*
 <br/><br/><br/>
 >>>markdown
-There are a bunch of new features in [Malloy](http://www.malloydata.dev/) that will be landing in the coming weeks. Some of these features have already partially landed. We're pre-announcing so if some of these features are interesting to you, we can get early feedback. Expect detailed blog posts about each of these in the coming weeks. [Please join our slack and ask any question.](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw)
+There are a bunch of new features in [Malloy](http://www.malloydata.dev/) that will be landing in the coming weeks. Some of these features have already partially landed. We're pre-announcing so if some of these features are interesting to you, we can get early feedback. Expect detailed blog posts about each of these in the coming weeks. [Please join our slack and ask any question.](/slack)
 
 ## MalloySQL - Transform data with Malloy
 [Malloy](http://www.malloydata.dev/) aims to be syntactically the same no matter what database contains the data. Unfortunately, in different databases, the SQL DDL commands (<code>CREATE VIEW</code> for example) are all necessarily so different. Making something consistent for SQL DDL would also mean reducing power. We've are introduced a new file type <code>malloysql</code> that can contain both Malloy and SQL. MalloySQL allows you to import models and execute SQL commands. In SQL in place of <code>SELECT ... FROM</code>, you can use Malloy queries. We are pretty excited about this.
