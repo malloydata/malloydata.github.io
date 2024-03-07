@@ -113,4 +113,4 @@ For the dataviz nerds out there, perhaps we want to create rows of this form rep
 ![alt text](image-19.png)
 
 
-With a few lines of code, we can write a nested query and turn the hierarchical outputs into a complex visualization. The above is research we are doing on an experimental Plot API for Malloy's data renderer. We'd love to hear your feedback on the [Malloy Slack](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw).
+With a few lines of code, we can write a nested query and turn the hierarchical outputs into a complex visualization. The above is research we are doing on an experimental Plot API for Malloy's data renderer. We'd love to hear your feedback on the [Malloy Slack](/slack).

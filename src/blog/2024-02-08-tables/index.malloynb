@@ -215,4 +215,4 @@ run: order_items -> {
 <img class="table-post-img" src="CleanShot 2024-02-08 at 08.18.41@2x.png" style="" alt="">
 
 ## Whats Next
-Our next generation renderer is still a work in progress, and we are actively working on expanding the chart types, interactions, customization, and scaling. If you want to try it out early, use the `## renderer_next` model tag and give us your feedback in [our Slack community!](https://join.slack.com/t/malloy-community/shared_invite/zt-1kgfwgi5g-CrsdaRqs81QY67QW0~t_uw)
+Our next generation renderer is still a work in progress, and we are actively working on expanding the chart types, interactions, customization, and scaling. If you want to try it out early, use the `## renderer_next` model tag and give us your feedback in [our Slack community!](/slack)
