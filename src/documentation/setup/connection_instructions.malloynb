@@ -6,8 +6,9 @@ Currently, BigQuery, PostgreSQL, and DuckDB are supported.  These instructions a
 _**NOTE:**  DuckDB is natively supported, allowing you to skip these initial steps._
 
 1. Open the VS Code Command Palette (cmd+shift+p on Mac, or ctrl+shift+p on Windows), and type "malloy connections". Click on the "Malloy: Edit Connections" option that appears. This will take you to the Connection Manager page.
+<img src='connections_cmd_palette.png' style='width: 50%;'/>
 
-2. Click "Add Connection" and fill out the relevant details. See below for database-specific instructions.
+2. Click "New Connection" and fill out the relevant details. See below for database-specific instructions.
 
 3. Press "Test" on the connection to confirm that you have successfully connected to the database
 
