@@ -5,15 +5,14 @@ Currently, BigQuery, PostgreSQL, and DuckDB are supported.  These instructions a
 ## Adding the Connection in VS Code
 _**NOTE:**  DuckDB is natively supported, allowing you to skip these initial steps._
 
-1. Open or create a file that ends in <code>.malloy</code>. In the explorer view (the top left icon that looks like files), you'll see a section called "MALLOY CONNECTIONS".
+1. Open the VS Code Command Palette (cmd+shift+p on Mac, or ctrl+shift+p on Windows), and type "malloy connections". Click on the "Malloy: Edit Connections" option that appears. This will take you to the Connection Manager page.
+<img src='connections_cmd_palette.png' style='width: 50%;'/>
 
-2. In the "MALLOY CONNECTIONS" panel, select "Edit Connections". This opens the connection manager page.
+2. Click "New Connection" and fill out the relevant details. See below for database-specific instructions.
 
-3. Click "Add Connection" and fill out the relevant details. See below for database-specific instructions.
+3. Press "Test" on the connection to confirm that you have successfully connected to the database
 
-4. Press "Test" on the connection to confirm that you have successfully connected to the database
-
-5. Hit "Save," then dive into writing Malloy! We recommend starting with one of our Samples, which can be found [here](https://github.com/malloydata/malloy-samples/)
+4. Hit "Save," then dive into writing Malloy! We recommend starting with one of our Samples, which can be found [here](https://github.com/malloydata/malloy-samples/)
 
 If you've given your connection a name, that name must be used when referencing a table in your database. If you have not named your connection, the default name is either `bigquery`, `duckdb`, or `postgres`, depending on which database you're connecting to; e.g., `bigquery.table('project-id.dataset-id.tablename')`.
 
