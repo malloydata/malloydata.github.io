@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - whscullin/release
+      - whscullin/actions
 
 jobs:
   publish:
