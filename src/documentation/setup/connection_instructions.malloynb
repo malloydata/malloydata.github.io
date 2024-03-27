@@ -52,3 +52,13 @@ The default name of a PostgreSQL connection is `postgres`
 Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is duckdb.table('babynames.csv')` The default name of a DuckDB connection is `duckdb`.
 
 There are a number of examples on public data using DuckDB available [here](https://github.com/lloydtabb/malloy_examples).
+
+## Motherduck
+
+If you are using DuckDB, motherduck is really easy to use. 
+* set your `motherduck_token` in your environment [(see the docs on Motherduck)](https://motherduck.com/docs/authenticating-to-motherduck#authentication-using-a-service-token).  
+* make a new connection, type 'DuckDB' and set the database to 'md:'
+
+## Snowflake
+Use the connection dialog to set your connection type to 'Snowflake' and set the various parameters.  You will need to set default database.  Malloy identifiers are case sensitive.  If you columns are stored in uppercase, you will have to use uppercase identifiers with Malloy.  
+ 
