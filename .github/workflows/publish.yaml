@@ -1,4 +1,4 @@
-name: Test
+name: Publish
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - whscullin/release
 
 jobs:
-  test-all:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
