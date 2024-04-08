@@ -136,7 +136,7 @@ expressions using either the [apply operator](apply.malloynb), `name ? r'c.*'` o
 ### Ranges
 
 There are three types of ranges today: `number` ranges, `date` ranges, and `timestamp` ranges. The most basic ranges
-are of the form `start to end` and represent the inclusive range between `start` and `end`, e.g. `10 to 20` or `@2004-01 to @2005-05`.
+are of the form `start to end` and represent the range from `start` up to, but not including, `end`, e.g. `10 to 20` or `@2004-01 to @2005-05`.
 
 Ranges may be used in conjunction with the [apply operator](apply.malloynb) to test whether a value falls within a given range.
 
