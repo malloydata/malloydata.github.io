@@ -69,7 +69,7 @@ Identifiers that share a name with a keyword in Malloy must be enclosed in back 
 <!-- * `-cost` -->
 <!-- * `(a + b) / c` -->
 
-Typical mathematical operators `+`, `-`, `*`, and `/` work as expected, and parentheses may be used to override precedence, e.g. `six is 10 * (3 - 2) / 2 + 1`.
+Typical mathematical operators `+`, `-`, `*`, `/`, and `%` (modulo) work as expected, and parentheses may be used to override precedence, e.g. `six is 10 * (3 - 2) / 2 + 1`.
 
 The unary minus / negation operator is also allowed, e.g. `value is -cost`.
 
