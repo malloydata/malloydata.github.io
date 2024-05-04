@@ -14,7 +14,31 @@ _**NOTE:**  DuckDB is natively supported, allowing you to skip these initial ste
 
 4. Hit "Save," then dive into writing Malloy! We recommend starting with one of our Samples, which can be found [here](https://github.com/malloydata/malloy-samples/)
 
-If you've given your connection a name, that name must be used when referencing a table in your database. If you have not named your connection, the default name is either `bigquery`, `duckdb`, or `postgres`, depending on which database you're connecting to; e.g., `bigquery.table('project-id.dataset-id.tablename')`.
+If you've given your connection a name, that name must be used when referencing a table in your database. If you have not named your connection, the default name `bigquery`, `duckdb`, `md`, `snowflake`, `trinoe` or `postgres`, depending on which database you're connecting to; e.g., `bigquery.table('project-id.dataset-id.tablename')`.
+
+
+## DuckDB Parquet and CSV Files (via DuckDB)
+
+Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is duckdb.table('babynames.csv')` The default name of a DuckDB connection is `duckdb`.
+
+DuckDB also can run in browser only mode. For example.
+1) goto https://github.dev/malloydata/malloy-samples
+2) Install the Malloy extension
+3) Open any of the Malloy files and run queries.
+
+You can also specify a DuckDB database by configuring the or adding a DuckDB connection.
+
+## MotherDuck
+
+Motherduck is configured simply through a token. In motherduck click on 'settings' then copy token. The token can be set in your environment
+
+  export set MOTHERDUCK_TOKEN=....
+
+Then launch vscode.  For example:
+
+  `source: hacker_news is md.table('sample_data.hn.hacker_news')`
+
+The default name for a Motherduck Connection is `md`
 
 ## BigQuery
 
@@ -47,8 +71,32 @@ Add the relevant database connection information. Once you click save, the passw
 
 The default name of a PostgreSQL connection is `postgres`
 
-## Parquet and CSV Files (via DuckDB)
+## Snowflake
 
-Parquet and CSV files are queryable via DuckDB is available without needing to explicitly configure a connection. Local files can be referenced in a source. This example has the CSV in the same directory as the .malloy model file: `source: baby_names is duckdb.table('babynames.csv')` The default name of a DuckDB connection is `duckdb`.
+Snowflake can be setup to use a connection configured in VSCode or in in a file `~/.snowflake/connections.toml`. 
 
-There are a number of examples on public data using DuckDB available [here](https://github.com/lloydtabb/malloy_examples).
+```
+An example configuration
+[default]
+account = "..."
+user = "..."
+password = "..."
+warehouse="..."
+database="..."
+schema="..."
+
+```
+ The default name for a Snowflake connection is `snowflake`
+
+
+## Trino
+
+Trino connections are configured through the environment. Currently, there is now wayto configure directly in VSCode.  Set envirnment variables.
+
+```
+TRINO_PASSWORD=...
+TRINO_SERVER=...
+TRINO_USER=...
+```
+
+ The default name for a Trino connection is `trino`
