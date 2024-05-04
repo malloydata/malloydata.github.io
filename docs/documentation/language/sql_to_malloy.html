@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/connection_instructions.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Installing the Malloy Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/connection_instructions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connecting a Database
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/malloy_by_example.html,/documentation/language/sql_to_malloy.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building Semantic Models
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/language/sql_to_malloy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/changelog.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/join.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="../user_guides/malloy_by_example.html"><img src="/img/previous.svg" alt="previous"/>Building Semantic Models</a>
+  </div>
+  <div class="item">
+      <a href="statement.html">Models<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="sql-to-malloy" class="header-link anchor" href="#sql-to-malloy">
+          SQL to Malloy
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/sql_to_malloy.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>This document is intended to serve as a reference for those who already know SQL and may find it helpful to map Malloy concepts and syntax to SQL.</p>
+<!-- ## How Malloy Generates SQL
+Basic structure of a Malloy Query:
+
+```malloy
+run: <<source>> extend {
+  join_one: <<source>> with ...
+  join_many: <<source>> on ...
+} -> {
+   group_by:
+    <<field/dimension>>
+    <<field/dimension>>
+   aggregate:
+    <<aggregation/measure>>
+    <<aggregation/measure>>
+   nest:
+    <<named_query OR query_def>>
+    <<named_query OR query_def>>
+   where: <<filter_expression>>, <<filter_expression>>, ...
+   having: <<aggregate_filter_expression>>, <<aggregate_filter_expression>>
+   order_by: <<field/dimension>>, <<aggregation/measure>>, ...
+   limit: <<limit>>
+}
+```
+
+This maps to the below SQL query structure:
+
+```sql
+SELECT
+   <group_by>, <group_by>, ...
+   <aggregate>, <aggregate>, ...
+   <nest>, <nest>, ...  		       -- very much a simplification; read more in Nesting Queries doc.
+FROM <source>
+LEFT JOIN <source> ON ...
+LEFT JOIN <source> ON ...
+WHERE (<filter_expression>) AND (<filter_expression>) AND ...
+GROUP BY <group_by>, <group_by>, ...
+HAVING <aggregate_filter_expression> AND <aggregate_filter_expression> AND ...
+ORDER BY <group_by> | <aggregate>
+LIMIT <limit>
+``` -->
+      <h2>
+        <a id="components-of-a-query" class="header-link anchor" href="#components-of-a-query">
+          Components of a Query
+        </a>
+      </h2>
+    <table>
+<thead>
+<tr>
+<th>SQL</th>
+
+<th>Malloy</th>
+
+<th>Description / Docs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><pre><code>userName AS user_name</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">user_name</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">userName</span><span style="color: #000000">  </span></span></code></pre></td>
+
+<td><strong>AS</strong>: Names come before definitions in Malloy.</td>
+</tr>
+
+<tr>
+<td><pre><code>SELECT id FROM order_items</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; { </span><span style="color: #AF00DB">select</span><span style="color: #000000">: </span><span style="color: #001080">id</span><span style="color: #000000"> }</span></span></code></pre></td>
+
+<td><strong>SELECT / FROM</strong>: <a href="../user_guides/malloy_by_example">Malloy by Example</a></td>
+</tr>
+
+<tr>
+<td><pre><code>LEFT JOIN users</code><code> ON users.id = order_items.user_id </pre></code></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">users</span><span style="color: #000000"> </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">users</span><span style="color: #000000">.</span><span style="color: #001080">id</span><span style="color: #000000"> = </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">user_id</span></span></code></pre></td>
+
+<td><strong>JOIN</strong>: <a href="../language/join">Documentation</a> covers more join types and complex relationships. <a href="../language/sql_to_malloy#more-complex-example">Example</a></td>
+</tr>
+
+<tr>
+<td><pre><code>SELECT </code> <code>  status</code> <code>  , COUNT(*) AS items_count</code> <code>FROM order_items </code> <code>GROUP BY 1</code> </code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">status</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">items_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">}</span></span></code></pre></td>
+
+<td><strong>GROUP BY</strong>: Any field included in Malloy’s group_by selection will be included in both the generated <code>SELECT</code> and <code>GROUP BY</code>.</td>
+</tr>
+
+<tr>
+<td><pre><code>WHERE status = 'Complete'</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">status</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;Complete&#39;</span></span></code></pre></td>
+
+<td><strong>WHERE</strong></td>
+</tr>
+
+<tr>
+<td><pre><code>ORDER BY flight_count, avg_elevation</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000">, </span><span style="color: #795E26">avg</span><span style="color: #000000">(</span><span style="color: #001080">elevation</span><span style="color: #000000">)</span></span></code></pre></td>
+
+<td><strong>ORDER BY</strong>: By default, <code>ORDER BY</code> is generated following <a href="../language/order_by">implicit rules</a>; this can be overridden.</td>
+</tr>
+
+<tr>
+<td><pre><code>HAVING flight_count > 5</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">having</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> &gt; </span><span style="color: #098658">5</span></span></code></pre></td>
+
+<td><strong>HAVING</strong></td>
+</tr>
+
+<tr>
+<td><pre> <code>LIMIT 100</code> <code>TOP 100</code> </pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">100</span></span></code> </pre></td>
+
+<td><strong>LIMIT</strong></td>
+</tr>
+
+<tr>
+<td><pre><code>SELECT</code> <code>  ...</code> <code>FROM (</code> <code>  SELECT</code> <code>    ...</code> <code>  FROM order_items</code> <code>)</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; { ... } -&gt; { ... }</span></span></code></pre></td>
+
+<td><strong>Pipelines</strong> allow the output of one query to be used as the input to the next.</td>
+</tr>
+
+<tr>
+<td><pre><code> WITH user_facts AS (...) ... </code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">user_facts</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">from</span><span style="color: #000000">(...)</span></span></code> </pre></td>
+
+<td><strong>CTEs</strong>: Can be generated through <a href="../user_guides/basic#pipelines-and-multi-stage-queries">Pipelines</a> and <a href="../language/source#sources-from-malloy-queries">Sources from queries</a>.</td>
+</tr>
+
+<tr>
+<td><pre><code>FROM (...) AS user_facts</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">user_facts</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #AF00DB">sql</span><span style="color: #000000">(&quot;&quot;&quot;</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> ...&quot;&quot;&quot;)</span></span></code> </pre></td>
+
+<td><strong>Subqueries</strong>: Can be written into <a href="../language/sql_blocks">SQL Blocks</a>. Example below.</td>
+</tr>
+</tbody></table>
+<!-- TODO fix up the SQL subqueries example above -->
+      <h2>
+        <a id="expressions" class="header-link anchor" href="#expressions">
+          Expressions
+        </a>
+      </h2>
+    <p>Many SQL functions supported by the database can simply be used unchanged in Malloy. In certain cases, we have implemented what we feel are improvements and simplifications of certain SQL functions. This is intended to serve as a quick reference, more complete documentation can be found <a href="../language/expressions">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+
+<th>Malloy</th>
+
+<th>Description / Docs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><pre><code>SUM(), AVG(), MAX(), MIN(), COUNT(), etc </code></prE></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">sum</span><span style="color: #000000">(), </span><span style="color: #795E26">avg</span><span style="color: #000000">(), </span><span style="color: #795E26">max</span><span style="color: #000000">(), </span><span style="color: #795E26">min</span><span style="color: #000000">(), </span><span style="color: #795E26">count</span><span style="color: #000000">(), </span><span style="color: #001080">etc</span><span style="color: #000000">...</span></span></code> </pre></td>
+
+<td>Basic SQL aggregations are supported verbatim, but it’s worth learning about Malloy’s additional <a href="../language/aggregates#aggregate-locality">aggregate locality</a> / <a href="https://help.looker.com/hc/en-us/articles/360023722974-A-Simple-Explanation-of-Symmetric-Aggregates-or-Why-On-Earth-Does-My-SQL-Look-Like-That-">symmetric aggregate</a> handling.</td>
+</tr>
+
+<tr>
+<td><pre> <code>CASE</code> <code>  WHEN size_n < 3 THEN 'S'</code> <code>  WHEN size_n <5 THEN 'M'</code> <code>ELSE 'L' END</code> </pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">size_n</span><span style="color: #000000"> ?</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;S&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &lt; </span><span style="color: #098658">3</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;M&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &lt;</span><span style="color: #098658">5</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;L&#39;</span></span></code> </pre></td>
+
+<td><a href="../language/expressions#pick-expressions">Pick</a> is Malloy’s improvement of SQL’s <code>CASE</code> statement. This example also introduces the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">?</span></span></code> <a href="../language/expressions#application">Apply</a> operator, which  "applies" a value to another value, condition, or computation. This is most often used with <a href="../language/expressions#partial-comparison">partial</a> comparisons or <a href="../language/expressions#alternation">alternations</a>.</td>
+</tr>
+
+<tr>
+<td><pre> <code>COUNT(CASE WHEN status = 'Returned' THEN 1 END),</code> <code>AVG(CASE WHEN brand = 'Levi's' THEN price END)</code> </pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">count</span><span style="color: #000000">() { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">status</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;Returned&#39;</span><span style="color: #000000"> }</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">avg_price</span><span style="color: #000000"> { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">brand</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;Levi</span><span style="color: #EE0000">\&#39;</span><span style="color: #A31515">s&#39;</span><span style="color: #000000"> }</span></span></code> </pre></td>
+
+<td>Aggregates may be filtered using filter expressions. <a href="../language/expressions#filtered-expressions">Doc</a></td>
+</tr>
+
+<tr>
+<td><pre> <code>CAST(distance AS string),</code> <code>distance::string</code> </pre></td>
+
+<td><pre><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">distance</span><span style="color: #000000">::</span><span style="color: #267F99">string</span></span></code></pre></td>
+
+<td><a href="../language/expressions#safe-type-cast">Type Cast</a>. Also worth reviewing <a href="../language/datatypes">Types</a> doc.</td>
+</tr>
+</tbody></table>
+
+      <h3>
+        <a id="working-with-time" class="header-link anchor" href="#working-with-time">
+          Working with Time
+        </a>
+      </h3>
+    <p>The <a href="../language/expressions#time-expressions">Time Expressions</a> reference contains substantially more detail and examples.</p>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+
+<th>Malloy</th>
+
+<th>Docs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><pre> <code>TIMESTAMP_TRUNC(created_at, WEEK),</code> <code>DATE_TRUNC(order_items.shipped_at, MONTH)</code> </pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">created_at</span><span style="color: #000000">.</span><span style="color: #0000FF">week</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">shipped_at</span><span style="color: #000000">.</span><span style="color: #0000FF">month</span></span></code> </pre></td>
+
+<td><a href="../language/expressions#time-truncation">Truncation</a></td>
+</tr>
+
+<tr>
+<td><pre> <code>EXTRACT(DAYOFWEEK FROM shipped_at),</code> <code>EXTRACT(HOUR FROM created_at)</code></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">day_of_week</span><span style="color: #000000">(</span><span style="color: #001080">shipped_at</span><span style="color: #000000">)</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">hour</span><span style="color: #000000">(</span><span style="color: #001080">created_at</span><span style="color: #000000">)</span></span></code> </pre></td>
+
+<td><a href="../language/expressions#time-extraction">Extraction</a></td>
+</tr>
+
+<tr>
+<td><pre> <code>DATE_DIFF(DATE(CURRENT_TIMESTAMP()),DATE(created_at), DAY),</code> <code>TIMESTAMP_DIFF(TIMESTAMP(shipped_at), created_at, HOUR)</code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">days</span><span style="color: #000000">(</span><span style="color: #001080">created_at</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #001080">now</span><span style="color: #000000">)</span></span></code> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">hours</span><span style="color: #000000">(</span><span style="color: #001080">created_at</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #001080">shipped_at</span><span style="color: #000000">)</span></span></code> </pre></td>
+
+<td><a href="../language/time-ranges#interval-measurement">Date Diff / Intervals</a></td>
+</tr>
+
+<tr>
+<td><pre><code>created_at >= TIMESTAMP('2003-01-01', 'UTC') AND created_at < TIMESTAMP('2004-01-01', 'UTC') </code></pre> <pre><code>created_at >= TIMESTAMP(DATETIME_SUB(DATETIME(CURRENT_TIMESTAMP()),INTERVAL 1 YEAR)) AND created_at < TIMESTAMP(DATETIME_ADD(DATETIME(TIMESTAMP(DATETIME_SUB(DATETIME( CURRENT_TIMESTAMP()),INTERVAL 1 YEAR))),INTERVAL 1 YEAR)) </code></pre> <pre><code>(EXTRACT(DAYOFWEEK FROM created_at)) NOT IN (1,7) </code></pre></td>
+
+<td><pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">created_at</span><span style="color: #000000"> ? </span><span style="color: #098658">@2003</span></span></code> </pre> <br> <pre> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">created_at</span><span style="color: #000000"> ? </span><span style="color: #001080">now</span><span style="color: #000000"> - </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">year</span><span style="color: #000000"> </span><span style="color: #0000FF">for</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">year</span></span></code> </pre> <br> <pre><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span><span style="color: #000000">(</span><span style="color: #795E26">day_of_week</span><span style="color: #000000">(</span><span style="color: #001080">created_at</span><span style="color: #000000">) = </span><span style="color: #098658">1</span><span style="color: #000000"> | </span><span style="color: #098658">7</span><span style="color: #000000">)</span></span></code> </pre></td>
+
+<td><a href="../language/expressions#time-expressions">Filter Expressions</a>, <a href="../language/expressions#application">Apply Operator</a></td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="not-supported-and-or-coming-soon" class="header-link anchor" href="#not-supported-and-or-coming-soon">
+          Not Supported and/or Coming Soon
+        </a>
+      </h2>
+    <p>Feature requests are tracked using <a href="https://github.com/malloydata/malloy/issues">Issues on Github</a>.</p>
+<table>
+<thead>
+<tr>
+<th>SQL</th>
+
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><pre><code>FIRST_VALUE(product_brand) OVER (PARTITION BY user_id ORDER BY created_at ASC) </code></pre></td>
+
+<td><strong>Window Functions</strong>: For now, reach out for advice on achieving what you need (much is possible with nesting, pipelines, or <a href="../language/sql_blocks">SQL Blocks</a>). <a href="../language/sql_to_malloy#subqueries-ctes-">Example</a>.</td>
+</tr>
+
+<tr>
+<td><em>NA</em></td>
+
+<td>Querying arrays as nested objects</td>
+</tr>
+
+<tr>
+<td><pre> <code>SELECT</code> <code> id</code> <code>  , ( SELECT COUNT(*)</code> <code>    FROM orders o</code> <code>    WHERE o.id <= orders.id</code> <code>    AND o.user_id = orders.user_id</code> <code>  ) as sequence_number</code> <code>FROM orders ...</code></td>
+
+<td><strong>Correlated Subqueries</strong>: coming soon; note that functionality will be dependent on the database dialect.</td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="full-query-examples" class="header-link anchor" href="#full-query-examples">
+          Full Query Examples
+        </a>
+      </h2>
+    <p>Many of the above concepts are best understood in the context of complete queries.</p>
+
+      <h3>
+        <a id="the-basics" class="header-link anchor" href="#the-basics">
+          The Basics
+        </a>
+      </h3>
+    <p>We’ll start with a relatively simple SQL query:</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  TIMESTAMP_TRUNC(created_at, </span><span style="color: #795E26">DAY</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> order_date,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">SUM</span><span style="color: #000000">(sale_price) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_sale_price,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> order_id) </span><span style="color: #0000FF">as</span><span style="color: #000000"> order_count</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">`malloy-data.ecomm.order_items`</span></span>
+<span class="line"><span style="color: #0000FF">WHERE</span><span style="color: #000000"> created_at&gt;=</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;2021-01-01&#39;</span><span style="color: #000000">, </span><span style="color: #A31515">&#39;UTC&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">AND</span><span style="color: #000000"> created_at&lt;</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;2021-04-01&#39;</span><span style="color: #000000">, </span><span style="color: #A31515">&#39;UTC&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">AND</span><span style="color: #000000"> </span><span style="color: #0000FF">status</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #A31515">&#39;Returned&#39;</span><span style="color: #000000">,</span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span></span></pre></div><p>In Malloy, this is expressed:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/order_items.parquet&#39;</span><span style="color: #000000">) -&gt; {</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">created_at</span><span style="color: #000000"> = </span><span style="color: #098658">@2021-Q1</span><span style="color: #000000">, </span><span style="color: #001080">status</span><span style="color: #000000"> != </span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000"> &amp; </span><span style="color: #A31515">&#39;Returned&#39;</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">created_at</span><span style="color: #000000">.</span><span style="color: #0000FF">day</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #001080">total_sale_price</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">sale_price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()            </span><span style="color: #008000">-- names come before definitions</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #001080">order_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">(</span><span style="color: #795E26">distinct</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span><span style="color: #000000"> </span><span style="color: #AF00DB">asc</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h3>
+        <a id="more-complex-example" class="header-link anchor" href="#more-complex-example">
+          More Complex Example
+        </a>
+      </h3>
+    <div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">CASE</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> (</span><span style="color: #098658">100</span><span style="color: #000000">.</span><span style="color: #098658">0</span><span style="color: #000000">*(ii.product_retail_price-ii.cost)) / (</span><span style="color: #795E26">NULLIF</span><span style="color: #000000">(ii.product_retail_price,</span><span style="color: #098658">0</span><span style="color: #000000">)) &gt;=</span><span style="color: #098658">55</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;High (over 55%)&#39;</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> (</span><span style="color: #098658">100</span><span style="color: #000000">.</span><span style="color: #098658">0</span><span style="color: #000000">*(ii.product_retail_price-ii.cost)) / (</span><span style="color: #795E26">NULLIF</span><span style="color: #000000">(ii.product_retail_price,</span><span style="color: #098658">0</span><span style="color: #000000">))&gt;=</span><span style="color: #098658">45</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Medium (45% to 55%)&#39;</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #0000FF">ELSE</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Low (up to 45%)&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> gross_margin_pct_tier,</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #795E26">SUM</span><span style="color: #000000">(ii.product_retail_price) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> total_retail_price,</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #795E26">AVG</span><span style="color: #000000">((ii.product_retail_price-ii.cost)) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> avg_gross_margin</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">`malloy-data.ecomm.inventory_items`</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> ii</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> </span><span style="color: #A31515">`malloy-data.ecomm.order_items`</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> oi</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">ON</span><span style="color: #000000"> ii.id=oi.inventory_item_id</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> </span><span style="color: #A31515">`malloy-data.ecomm.users`</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> u</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">ON</span><span style="color: #000000"> oi.user_id = u.id</span></span>
+<span class="line"><span style="color: #0000FF">WHERE</span></span>
+<span class="line"><span style="color: #000000"> oi.status </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #A31515">&#39;Returned&#39;</span><span style="color: #000000">,</span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">AND</span><span style="color: #000000"> (u.country=</span><span style="color: #A31515">&#39;USA&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">3</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span></span></pre></div><p>In Malloy, this can be expressed in a query:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">inventory_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/inventory_items.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/order_items.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">id</span><span style="color: #000000"> = </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">inventory_item_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">users</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/users.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">user_id</span><span style="color: #000000"> = </span><span style="color: #001080">users</span><span style="color: #000000">.</span><span style="color: #001080">id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">gross_margin</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> (</span><span style="color: #001080">product_retail_price</span><span style="color: #000000"> - </span><span style="color: #001080">cost</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">gross_margin_pct</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">gross_margin</span><span style="color: #000000"> / </span><span style="color: #795E26">nullif</span><span style="color: #000000">(</span><span style="color: #001080">product_retail_price</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">} -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">gross_margin_pct_tier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">gross_margin_pct</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;High (over 55%)&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &gt;= </span><span style="color: #098658">0.55</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Medium (45% to 55%)&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &gt;= </span><span style="color: #098658">0.45</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Low (up to 45%)&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_retail_price</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">product_retail_price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">avg_gross_margin</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">gross_margin</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">status</span><span style="color: #000000"> != </span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000"> &amp; </span><span style="color: #A31515">&#39;Returned&#39;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">users</span><span style="color: #000000">.</span><span style="color: #001080">country</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;USA&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #001080">avg_gross_margin</span><span style="color: #000000"> </span><span style="color: #AF00DB">asc</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>Note that if we intend to query these tables and re-use these field definitions frequently, thinking about placing reusable definitions into the model will begin to save us a lot of time in the future.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">users</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/users.parquet&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/order_items.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">users</span><span style="color: #000000"> </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">user_id</span><span style="color: #000000"> = </span><span style="color: #001080">users</span><span style="color: #000000">.</span><span style="color: #001080">id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">valid_order</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">status</span><span style="color: #000000"> != </span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000"> &amp; </span><span style="color: #A31515">&#39;Returned&#39;</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">inventory_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;inventory_items.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">id</span><span style="color: #000000"> = </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">inventory_item_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">gross_margin</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> (</span><span style="color: #001080">product_retail_price</span><span style="color: #000000"> - </span><span style="color: #001080">cost</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">gross_margin_pct</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">gross_margin</span><span style="color: #000000"> / </span><span style="color: #795E26">nullif</span><span style="color: #000000">(</span><span style="color: #001080">product_retail_price</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">gross_margin_pct_tier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">gross_margin_pct</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;High (over 55%)&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &gt;= </span><span style="color: #098658">0.55</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Medium (45% to 55%)&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &gt;= </span><span style="color: #098658">0.45</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Low (up to 45%)&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_retail_price</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">product_retail_price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">avg_gross_margin</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">gross_margin</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">inventory_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">gross_margin_pct_tier</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_retail_price</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">avg_gross_margin</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">valid_order</span><span style="color: #000000">, </span><span style="color: #001080">order_items</span><span style="color: #000000">.</span><span style="color: #001080">users</span><span style="color: #000000">.</span><span style="color: #001080">country</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;USA&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #001080">avg_gross_margin</span><span style="color: #000000"> </span><span style="color: #AF00DB">asc</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h3>
+        <a id="subqueries-ctes-" class="header-link anchor" href="#subqueries-ctes-">
+          Subqueries / CTEs:
+        </a>
+      </h3>
+    <p>How much of our sales come from repeat customers vs loyal, repeat customers? Written in SQL:</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> user_facts </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">user_id</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #795E26">user_id</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> lifetime_orders</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">`malloy-data.ecomm.order_items`</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> user_facts.lifetime_orders=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;One-Time&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">ELSE</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Repeat&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> customer_category,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">SUM</span><span style="color: #000000">(order_items.sale_price) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> total_sale_price,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> order_items.order_id) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> order_count</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">`malloy-data.ecomm.order_items`</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> order_items</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> user_facts</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">ON</span><span style="color: #000000"> order_items.user_id = user_facts.user_id</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span></span></pre></div><p>In Malloy, the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">user_facts</span></span></code> CTE becomes a source of its own, defined from a query. Any aggregates in this query (for now, just <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">lifetime_orders</span></span></code>) become dimensions of that source.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">user_facts</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/order_items.parquet&#39;</span><span style="color: #000000">) -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">user_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">lifetime_orders</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/order_items.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">user_facts</span><span style="color: #000000"> </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">user_id</span><span style="color: #000000"> = </span><span style="color: #001080">user_facts</span><span style="color: #000000">.</span><span style="color: #001080">user_id</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">customer_category</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">user_facts</span><span style="color: #000000">.</span><span style="color: #001080">lifetime_orders</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;One-Time&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> = </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Repeat&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_sale_price</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">sale_price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">order_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">(</span><span style="color: #795E26">distinct</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>One can also define a source from a SQL query; see the <a href="../language/sql_sources">SQL Sources</a> section for more information on this.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">order_facts</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">bigquery</span><span style="color: #000000">.</span><span style="color: #AF00DB">sql</span><span style="color: #000000">(&quot;&quot;&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    order_id</span></span>
+<span class="line"><span style="color: #000000">    , </span><span style="color: #795E26">user_id</span></span>
+<span class="line"><span style="color: #000000">    , </span><span style="color: #795E26">ROW_NUMBER</span><span style="color: #000000">() </span><span style="color: #0000FF">OVER</span><span style="color: #000000">(</span><span style="color: #0000FF">PARTITION</span><span style="color: #000000"> </span><span style="color: #0000FF">BY</span><span style="color: #000000"> </span><span style="color: #795E26">user_id</span><span style="color: #000000"> </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> created_at) </span><span style="color: #0000FF">as</span><span style="color: #000000"> user_order_sequence_number</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> malloy-</span><span style="color: #0000FF">data</span><span style="color: #000000">.ecomm.order_items</span></span>
+<span class="line"><span style="color: #000000">&quot;&quot;&quot;)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">bigquery</span><span style="color: #000000">.</span><span style="color: #AF00DB">sql</span><span style="color: #000000">(&quot;&quot;&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    id</span></span>
+<span class="line"><span style="color: #000000">    , order_id</span></span>
+<span class="line"><span style="color: #000000">    , created_at</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> malloy-</span><span style="color: #0000FF">data</span><span style="color: #000000">.ecomm.order_items</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> </span><span style="color: #0000FF">status</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000">, </span><span style="color: #A31515">&#39;Returned&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">&quot;&quot;&quot;) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">order_facts</span><span style="color: #000000"> </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000"> = </span><span style="color: #001080">order_facts</span><span style="color: #000000">.</span><span style="color: #001080">order_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span><span style="color: #001080">order_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">(</span><span style="color: #795E26">distinct</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_facts</span><span style="color: #000000">.</span><span style="color: #001080">user_order_sequence_number</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">order_count</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>The above Malloy code will produce this SQL:</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  order_facts_0.user_order_sequence_number </span><span style="color: #0000FF">as</span><span style="color: #000000"> user_order_sequence_number,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">count</span><span style="color: #000000">(</span><span style="color: #0000FF">distinct</span><span style="color: #000000"> order_items.order_id) </span><span style="color: #0000FF">as</span><span style="color: #000000"> order_count</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    id</span></span>
+<span class="line"><span style="color: #000000">    , order_id</span></span>
+<span class="line"><span style="color: #000000">    , created_at</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> malloy-</span><span style="color: #0000FF">data</span><span style="color: #000000">.ecomm.order_items</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> </span><span style="color: #0000FF">status</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #A31515">&#39;Cancelled&#39;</span><span style="color: #000000">, </span><span style="color: #A31515">&#39;Returned&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> order_items</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    order_id</span></span>
+<span class="line"><span style="color: #000000">    , </span><span style="color: #795E26">user_id</span></span>
+<span class="line"><span style="color: #000000">    , </span><span style="color: #795E26">ROW_NUMBER</span><span style="color: #000000">() </span><span style="color: #0000FF">OVER</span><span style="color: #000000">(</span><span style="color: #0000FF">PARTITION</span><span style="color: #000000"> </span><span style="color: #0000FF">BY</span><span style="color: #000000"> </span><span style="color: #795E26">user_id</span><span style="color: #000000"> </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> created_at) </span><span style="color: #0000FF">as</span><span style="color: #000000"> user_order_sequence_number</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> malloy-</span><span style="color: #0000FF">data</span><span style="color: #000000">.ecomm.order_items</span></span>
+<span class="line"><span style="color: #000000">) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> order_facts_0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">ON</span><span style="color: #000000"> order_items.order_id=order_facts_0.order_id</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span></span></pre></div></div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+  </body>
+</html>
