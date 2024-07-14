@@ -91,12 +91,27 @@ schema="..."
 
 ## Trino
 
-Trino connections are configured through the environment. Currently, there is now wayto configure directly in VSCode.  Set envirnment variables.
+Trino connections are configured through the environment. Currently, there is no way to configure directly in VSCode.  Set envirnment variables.
 
 ```
 TRINO_PASSWORD=...
-TRINO_SERVER=...
+TRINO_SERVER=http://<host>:<port>
 TRINO_USER=...
+TRINO_CATALOG=..
+TRINO_SCHEMA=...
 ```
-
  The default name for a Trino connection is `trino`
+
+## Presto
+
+Presto connections are configured through the environment. Currently, there is no way to configure directly in VSCode.  Set envirnment variables.
+
+```
+PRESTO_PASSWORD=...
+PRESTO_HOST=http://<host>
+PRESTO_PORT=NNNN
+PRESTO_USER=...
+PRESTO_CATALOG=..
+PRESTO_SCHEMA=...
+```
+ The default name for a Trino connection is `presto`
