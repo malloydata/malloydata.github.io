@@ -1,0 +1,8 @@
+>>>markdown
+## Pick values must match
+The types of each `pick` (and the `else` if it is present), in a pick statement must match.
+A message `type 'TYPENAME', expected 'TYPENAME'` indicates that the referenced source line
+contains an expression whose type does not match the first `pick` in the pick statement. For example,
+the following code would generate this error
+
+    select: bad_pick is pick 1 when true else 'one'
