@@ -6,3 +6,14 @@ contains an expression whose type does not match the first `pick` in the pick st
 the following code would generate this error
 
     select: bad_pick is pick 1 when true else 'one'
+
+## Unsupported SQL native type not allowed in expression
+
+This error is most commonly generated when an expression is encountered where the types of the left and right side of a binary operation ( such as comparison ) do not match, and one of the values is a native SQL data type which doesn't have an equivalent Malloy datatype.
+
+The operations which are legal in Malloy with one of these native, but unsupported types are:
+
+1. Cast the value to another type
+2. Compare the value to NULL
+3. Compare the value to another value of the same type
+4. `group_by:` or `select:` the value in a query

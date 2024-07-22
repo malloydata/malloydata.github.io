@@ -107,13 +107,15 @@ Date literals are specified in Malloy with the <code>@</code> character. A liter
 * Year: `@2001`
 
 
-## Unsupported
+## Unsupported SQL native data
 
-Columns in sources which Malloy does not have a datatype for are considered "unsupported." The following operations are legal on unsupported types
+Malloy may not have a corresponding data type for every data type which the SQL engine supports.
 
-* Two expressions of the same unsupported type can be compared
-* An unsupported type can be compared to `NULL`
-* An expression of unsupported type can be cast to a supported type
+Columns in sources which Malloy does not have a datatype for are considered "unsupported." The following operations are legal on unsupported SQL native types
+
+* Two expressions of the same type can be compared
+* An unsupported SQL native type can be compared to `NULL`
+* An expression of unsupported SQL native type can be cast to a supported type
 
 ## Intermediate Types
 

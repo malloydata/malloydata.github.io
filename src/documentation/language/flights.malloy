@@ -42,7 +42,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
   measure:
     flight_count is count()
     total_distance is sum(distance)
-    seats_for_sale is sum(aircraft.aircraft_models.seats)
+    seats_for_sale is aircraft.aircraft_models.seats.sum()
     seats_owned is aircraft.sum(aircraft.aircraft_models.seats)
 
   // shows carriers and number of destinations (bar chart)

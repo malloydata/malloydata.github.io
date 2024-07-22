@@ -152,7 +152,7 @@ run: flights -> {
 
 Malloy has its own type system. A database engine needs to know for how each piece of data is stored, but Malloy only needs to worry about the underlying type (like string or numeric) of a piece of data. Sometimes, when writing a data transformation, it is important torefelct back to the SQL engine a particular datatype. Quoting the destination type will tell Malloy to use that specific type for the result.
 
-Note: If you cast an expression to an [unsupported data type, there is a very limited set of operations in Malloy which can use that value](datatypes.malloynb#unsupported)
+Note: If you cast an expression to an [unsupported data type, there is a very limited set of operations in Malloy which can use that value](datatypes.malloynb#unsupported-sql-native-data)
 >>>malloy
 run: flights -> {
     select:
