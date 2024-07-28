@@ -34,6 +34,7 @@ of the string.
 Flights to with lookup to SJC..
 >>>malloy
 run: flights -> {
+    where: destination = 'SJC'
     # link {url_template='https://www.flightsfrom.com/$$-SJC'}
     group_by: origin
     aggregate: flight_count
