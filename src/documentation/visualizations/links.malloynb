@@ -18,7 +18,7 @@ run: flights -> {
 }
 >>>markdown
 ## Link url_template, append to the end
-Often the think you want on the template is at the end of the string.
+Often the think you want on the template is at the end of the string.  Create links to flightsfrom.com.
 >>>malloy
 run: flights -> {
     # link {url_template='https://www.flightsfrom.com/'}
@@ -29,9 +29,9 @@ run: flights -> {
 >>>markdown
 ## Link url_template, substition
 Sometimes the variable part of the link needs to be substitued in the middle
-of the string.
+of the string.  In this case, the output columns value inserted where $$ appears in the url_template.
 
-Flights to with lookup to SJC..
+Flights to SJC with links to 'flightsfrom.com'.
 >>>malloy
 run: flights -> {
     where: destination = 'SJC'
