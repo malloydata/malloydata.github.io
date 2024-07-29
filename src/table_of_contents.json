@@ -193,6 +193,10 @@
           "link": "/visualizations/numbers.malloynb"
         },
         {
+          "title": "Links",
+          "link": "/visualizations/links.malloynb"
+        },
+        {
           "title": "Pivoted Tables",
           "link": "/visualizations/pivots.malloynb"
         },
