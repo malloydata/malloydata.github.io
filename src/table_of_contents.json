@@ -274,7 +274,7 @@
         },
         {
           "title": "Join INNER/RIGHT/FULL",
-          "link": "/experiments/join.malloynb"
+          "link": "/experiments/joins.malloynb"
         },
         {
           "title": "SQL Expressions",
@@ -283,6 +283,10 @@
         {
           "title": "Window Partitions",
           "link": "/experiments/window.malloynb"
+        },
+        {
+          "title": "Parameters",
+          "link": "/experiments/parameters.malloynb"
         }
       ]
     }
