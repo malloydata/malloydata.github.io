@@ -5,6 +5,7 @@ Results can annotated so the results are be rendered with links to external urls
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   measure: flight_count is count()
+  join_one: carriers is duckdb.table('../data/carriers.parquet') on carrier=carriers.code
 }
 >>>markdown
 ## Simple `link` annotation
@@ -37,6 +38,19 @@ run: flights -> {
     where: destination = 'SJC'
     # link {url_template='https://www.flightsfrom.com/$$-SJC'}
     group_by: origin
+    aggregate: flight_count
+    limit: 5
+}
+>>>markdown
+## Link with key column coming from another field.
+In the example below we want to show the Carrier's nickname with a link using the carriers code.  We can do this by including the code in the query, hiding it with a `#hidden` tag and referencing it using `key_column` in the `# link` tag.
+>>>malloy
+run: flights -> {
+    # link {url_template='https://www.flightsfrom.com/$$' key_column=carrier}
+    group_by: 
+      carriers.nickname
+      # hidden
+      carrier
     aggregate: flight_count
     limit: 5
 }
