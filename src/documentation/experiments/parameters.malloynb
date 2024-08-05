@@ -1,0 +1,136 @@
+>>>markdown
+# Parameters Experiment
+
+The parameters experiment enables the ability to add parameters to source definitions.
+
+Enable the parameters experiment with:
+
+```malloy
+##! experimental.parameters
+```
+
+This feature is still in development. Feedback is appreciated via [Slack](/slack) or [the dedicated GitHub discussion](https://github.com/malloydata/malloy/discussions/1409).
+
+**TL;DR**:
+- Sources can be parameterized like `source: my_source(param::string is "default") is ...`
+- Sources with parameters can be invoked like `run: my_source(param is "value") -> { ... }`
+- Parameters can be used in expressions _inside_ the source, in invocations of sources being extended, and in joins
+- The goal is that eventually parameters will have true lexical scope _inside_ the source, usable anywhere inside the source
+
+```malloy
+##! experimental.parameters
+
+source: flights(min_distance::number) is duckdb.table('../data/flights.parquet') extend {
+  measure: flight_count is count()
+  where: distance >= min_distance
+  view: by_distance_bucket is { 
+    group_by: distance_bucket is round(distance, 3) 
+    aggregate: count() 
+  }
+}
+
+run: flights(min_distance is 1000) -> by_distance_bucket
+run: flights(min_distance is 2000) -> by_distance_bucket
+```
+>>>markdown
+## New Syntax
+
+**Sources can be declared with parameters:**
+- `source: my_source(param::string) is ...`
+
+**Declared parameters may have a type and/or a default value:**
+- `source: my_source(param is 1) is ...`
+- `source: my_source(param::number is 1 + 1) is ...`
+- Error: `source: my_source(param) is ...` because it has neither a type nor a default value
+- Types may be any of the normal field types: `string`, `number`, `date`, `timestamp`, or `boolean`
+  - Error: `source: my_source(param is null)` because `null` is not a "regular" Malloy type
+  - A default value of null may be specified either by specifying a type and default value `null` or specifying a casted null
+    - `source: my_source(param::string is null)`
+    - `source: my_source(param is null::string)`
+
+**Source usages may specify parameters:**
+- `run: my_source(param is 1) -> ...`
+- Error: `run: my_source(1)` because parameter names are required
+- If a parameter has a default value, it need not be specified:
+```malloy
+source: my_source(param is 1) is ...
+run: my_source -> { ... } // Ok
+run: my_source() -> { ... } // Ok
+run: my_source(param is 2) -> { ... } // Ok
+```
+- If a parameter does not have a default value, it must be specified
+- Passing 0 params is equivalent to not passing params, so a source without parameters may be invoked `run: no_params_source() -> { ... }`
+
+## New Semantics
+
+**Parameters are only inherited from one source to an extended source explicitly:**
+```malloy
+source: my_source(param is 1) is ...
+source: ext_source_1 is my_source(param is 1) // No parameters
+source: ext_source_2(param::number) is my_source(param) // One parameter, but without default value
+```
+
+
+**Constant expressions are allowed _anywhere_ where sources can be invoked**
+- `run: my_source(param is 1 + 1)`
+- `source: new_source is my_source(param is concat("foo", "bar"))`
+- `join_one: my_source is my_source(param is 1) on ...`
+- `query: my_query is my_source(param is 1) -> ...`
+
+**Parameters can only be used in a few limited places:**
+- In source invocations in source declarations: 
+  - `source: ext_source(ext_param::string) is my_source(param is ext_param) extend ...`
+  - Convenience syntax: `my_source(param)` is sugar for `my_source(param is param)`:
+    - `source: ext_source(param::string) is my_source(param) extend ...`
+- In source invocations in join declarations
+  - `source: my_source(param::string) is ... { join_one: other_source is other_source(param) ... }`
+  - `source: my_source(param::string) is ... { join_one: other_source with param = other_source.value }`
+  - `source: my_source(param::string) is ... { join_one: other_source on param }`
+- In dimension/measure expressions defined in the source:
+  - `source: my_source(param::string) is ... { dimension: param_value is param }` 
+  - `source: my_source(param::number) is ... { measure: count_times_param is count() * param }`
+  - This includes in SQL functions: `dimension: x is sql_number("${ param }")` (note this requires the `sql_functions` experiment)
+- In the first stage of views defined in the source:
+  - `source: my_source(param::string) is ... { view: my_view is { group_by: param } }` 
+  - This includes nests:
+    - `source: my_source(param::string) is ... { view: my_view is { nest: x is { group_by: param } } }` 
+
+**Parameters cannot be used in the following places (*and likely will **not** in the future*):**
+- Anywhere outside of the initial source declaration
+  - Error: `run: my_source(param is 1) ->  { group_by: param }` 
+
+**Parameters of a source are not included in `index: *` or `select: *`**
+
+## Limitations
+
+**Parameters cannot be used in the following places (*but likely will in the future*):**
+- In subsequent stages of views defined in the source: 
+  - Error: `source: my_src(param::string) is ... { view: my_view is { ... } -> { group_by: param } }` 
+- In the sources of queries used to define sources or joins:
+  - Error: `source: my_source(param is 1) is base_source(param) -> { ... }`
+  - Error: `source: my_source(param is 1) ... { join_one: joined is other(param) -> { ... } on ...`
+- In SQL sources:
+  - Error: `source: my_source(param is 1) is conn.sql("""%{ other(param) -> { ... } }""")` 
+  - Error: `source: my_source(param is 1) is conn.sql("SELECT * ... WHERE %{ param } = 1")` 
+
+**Parameters cannot currently be annotated (_but they likely will be in the future_)**
+```malloy
+source: my_source(
+  # param_tag=1 // <— syntax error
+  param::string
+) is ...
+```
+
+**For the time being, shadowing of parameters by fields or vice versa is illegal**
+```malloy
+source: my_source(param::string) is ... extend {
+  dimension: param is ... // Error
+}
+```
+```
+source: base_source is ... extend {
+  dimension: param
+}
+source: my_source(param::string) is base_source // Error
+```
+Likely in the future this will be legal, but there will be some other syntax to help navigate conflicts
