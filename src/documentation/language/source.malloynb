@@ -252,10 +252,10 @@ source: airports5 is duckdb.table('../data/airports.parquet') extend {
 
 The list of fields available in a source  can be limited. This can be done either by `accept`ing a list of fields to include (in which case any other field from the source is excluded, i.e. an "allow list") or by `except`ing a list of fields to exclude (any other field is included, i.e. a "deny list"). These cannot be used in conjunction with one another.
 
-In this example, we define `airports` to `extend` the <code>airports.parquet</code> table, but we limit the included columns to only `id`, `name`, `code`, `city`, `state`, and `elevation`.
+In this example, we define `airports` to `extend` the <code>airports.parquet</code> table, but we limit the included columns to only `id`, `code`, `city`, `state`, and `elevation`.
 >>>malloy
 source: airports6 is duckdb.table('../data/airports.parquet') extend {
-  accept: id, name, code, city, state, elevation
+  accept: id, code, city, state, elevation
 }
 >>>markdown
 
