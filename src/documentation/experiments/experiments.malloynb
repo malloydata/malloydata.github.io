@@ -8,7 +8,7 @@ We value feedback during the experimental phase.  Please make sure you let us kn
 Below is a list of currently running experiements and how to turn them on.
 
 * `##! experimental.join_types` - [Additional Join Type](joins.malloynb)
-* `## render_next` - [New table and visualization Rendering](renderer.malloynb)
+* `## renderer_next` - [New table and visualization Rendering](renderer.malloynb)
 * `##! experimental { function_order_by partition_by aggregate_limit }` - [ordering and partitioning in calculations](window.malloynb)
 * `##! experimental.sql_functions` - [Write expression in SQL](sql_expressions.malloynb)
 * `##! experimental.parameters` - [Declare sources with parameters](parameters.malloynb)
