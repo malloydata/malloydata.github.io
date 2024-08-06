@@ -16,22 +16,21 @@ This feature is still in development. Feedback is appreciated via [Slack](/slack
 - Sources with parameters can be invoked like `run: my_source(param is "value") -> { ... }`
 - Parameters can be used in expressions _inside_ the source, in invocations of sources being extended, and in joins
 - The goal is that eventually parameters will have true lexical scope _inside_ the source, usable anywhere inside the source
-
-```malloy
+>>>malloy
 ##! experimental.parameters
 
 source: flights(min_distance::number) is duckdb.table('../data/flights.parquet') extend {
   measure: flight_count is count()
   where: distance >= min_distance
   view: by_distance_bucket is { 
-    group_by: distance_bucket is round(distance, 3) 
-    aggregate: count() 
+    group_by: distance_bucket is round(distance, -3) 
+    aggregate: c is count() 
   }
 }
 
 run: flights(min_distance is 1000) -> by_distance_bucket
+>>>malloy
 run: flights(min_distance is 2000) -> by_distance_bucket
-```
 >>>markdown
 ## New Syntax
 
@@ -127,10 +126,14 @@ source: my_source(param::string) is ... extend {
   dimension: param is ... // Error
 }
 ```
-```
+
+```malloy
 source: base_source is ... extend {
   dimension: param
 }
-source: my_source(param::string) is base_source // Error
+
+source: my_source(
+  param::string  // Error
+) is base_source
 ```
 Likely in the future this will be legal, but there will be some other syntax to help navigate conflicts
