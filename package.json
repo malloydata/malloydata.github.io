@@ -3,15 +3,6 @@
   "version": "0.0.1",
   "description": "Malloy documentation",
   "private": true,
-  "config": {
-    "malloy_packages": [
-      "@malloydata/malloy",
-      "@malloydata/db-duckdb",
-      "@malloydata/render",
-      "@malloydata/malloy-sql",
-      "@malloydata/syntax-highlight"
-    ]
-  },
   "scripts": {
     "clean": "rm -rf docs",
     "build-script": "ts-node scripts/build",
@@ -20,10 +11,13 @@
     "start-server": "http-server docs -p 4000",
     "build-prod": "npm run build-script && node dist/build --baseurl ''",
     "serve": "concurrently --kill-others 'npm run build-watch' 'npm run start-server'",
-    "malloy-update-next": "npm install --no-fund --no-audit --save-exact $(echo $npm_package_config_malloy_packages | sed -E 's/(@malloydata\\/[-a-z]+)/\\1@next/g')",
-    "malloy-update": "npm install --no-fund --no-audit --save-exact $(echo $npm_package_config_malloy_packages | sed -E 's/(@malloydata\\/[-a-z]+)/\\1@latest/g')",
-    "malloy-link": "npm --no-fund --no-audit link $npm_package_config_malloy_packages",
-    "malloy-unlink": "npm --no-fund --no-save --no-audit unlink $npm_package_config_malloy_packages && npm --no-fund --no-audit install --force"
+    "malloy-update-next": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.js next)",
+    "malloy-update": "npm install  --no-fund --no-audit --save-exact $(./scripts/malloy-packages.js latest)",
+    "malloy-link": "npm --no-fund --no-audit link $(./scripts/malloy-packages.js)",
+    "malloy-unlink": "npm --no-fund --no-save --no-audit unlink $(./scripts/malloy-packages.js) && npm --no-fund --no-audit install --force"
+  },
+  "bin": {
+    "malloy-packages": "./scripts/malloy-packages.js"
   },
   "repository": {
     "type": "git",
