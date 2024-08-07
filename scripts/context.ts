@@ -20,7 +20,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
+import packageJson from "../package.json";
 const argIndex = process.argv.indexOf("--baseurl");
 const BASEURL =  argIndex != -1 ? process.argv[argIndex + 1] : undefined;
 
@@ -32,5 +32,6 @@ export const DEFAULT_CONTEXT = {
   site: {
     baseurl: BASEURL,
     ga_site_id: 'G-0M10W7C20Y',
+    malloyRenderVersion: packageJson.devDependencies["@malloydata/render"],
   },
 }

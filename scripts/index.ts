@@ -279,14 +279,15 @@ function outputSearchSegmentsFile(
 }
 
 function outputMalloyRender() {
+  const outputFile = `malloy-render-${DEFAULT_CONTEXT.site.malloyRenderVersion}.js`;
   fs.copyFileSync(
     path.join(
       "__dirname",
       "../node_modules/@malloydata/render/dist/webcomponent/malloy-render.umd.js"
     ),
-    path.join(JS_OUT_PATH, "malloy-render.js")
+    path.join(JS_OUT_PATH, outputFile)
   );
-  log(`File js/generated/malloy-render.js written.`);
+  log(`File js/generated/${outputFile} written.`);
 }
 
 function extractFrontmatter(contents: string) {
