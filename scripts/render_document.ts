@@ -88,7 +88,7 @@ class Renderer {
         hidden = isHidden;
         this.modelDef = newModel;
         const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C${this.cellNumber}`;
-        prefix = `<a href="${githubDevURL}" target="_blank"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>`;
+        prefix = `<a href="${githubDevURL}" target="_blank" class="open_notebook"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>`;
       } catch (error) {
         log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
         result = `<div class="error">Error: ${error.toString()}</div>`;

@@ -1,0 +1,29 @@
+>>>markdown
+# The New Renderer
+
+A new renderer is currently being developed for Malloy. To use this experimental renderer, use the model tag `## renderer_next`. More docs to come.
+>>>malloy
+## renderer_next
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  dimension: name is concat(code, ' - ', full_name)
+  measure: airport_count is count()
+}
+>>>markdown
+
+## An example table
+>>>malloy
+#(docs) size=medium limit=5000
+run: airports -> {
+  group_by: fac_type
+  aggregate: 
+    airport_count
+    major_count is airport_count { where: major = 'Y' }
+    average_elevation is elevation.avg()
+  nest: top_states is {
+    group_by: state
+    aggregate:
+      airport_count
+      average_elevation is elevation.avg()
+    limit: 3
+  }
+}
