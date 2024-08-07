@@ -255,17 +255,32 @@ async function renderResult(
   options: RunOptions,
 ): Promise<string> {
   const showAs = options.showAs || "html";
-
+  const isNextRenderer = queryResult.modelTag.has("renderer_next");
+  const resultContainerId = crypto.randomUUID();
+  let htmlResult = "";
+  if (isNextRenderer) {
+    const script = `
+    (function() {
+      const modelDef = ${JSON.stringify(queryResult._modelDef)};
+      const queryResult = ${JSON.stringify(queryResult._queryResult)};
+      const element = document.getElementById("${resultContainerId}");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();`;
+    htmlResult = `<script>${script}</script>`;
+  } else {
+    const document = new JSDOM().window.document;
+    const element = await new HTMLView(document).render(queryResult, {
+      dataStyles,
+    });
+    htmlResult = element.outerHTML;
+  }
   const jsonResult = await highlight(
     JSON.stringify(queryResult.data.toObject(), null, 2),
     "json"
   );
-
-  const document = new JSDOM().window.document;
-  const element = await new HTMLView(document).render(queryResult, {
-    dataStyles,
-  });
-  const htmlResult = element.outerHTML;
   const sqlResult = await highlight(queryResult.sql, "sql");
 
   const htmlSelected = showAs === "html" ? "selected" : "";
@@ -282,7 +297,7 @@ async function renderResult(
       </div>
     </div>
     <div class="result-middle" data-result-kind="html" ${htmlSelected}>
-      <div class="result-inner">
+      <div class="result-inner" id="${resultContainerId}">
         ${htmlResult}
       </div>
     </div>

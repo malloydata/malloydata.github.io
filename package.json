@@ -30,11 +30,11 @@
   },
   "homepage": "https://github.com/malloydata/malloydata.github.io#readme",
   "devDependencies": {
-    "@malloydata/db-duckdb": "0.0.160",
-    "@malloydata/malloy": "0.0.160",
-    "@malloydata/malloy-sql": "0.0.160",
-    "@malloydata/render": "0.0.160",
-    "@malloydata/syntax-highlight": "0.0.160",
+    "@malloydata/db-duckdb": "0.0.162",
+    "@malloydata/malloy": "0.0.162",
+    "@malloydata/malloy-sql": "0.0.162",
+    "@malloydata/render": "0.0.162",
+    "@malloydata/syntax-highlight": "0.0.162",
     "@types/jsdom": "^20.0.0",
     "concurrently": "^6.2.1",
     "esbuild": "^0.17.16",
@@ -52,5 +52,8 @@
     "handlebars": "^4.7.7",
     "remark-frontmatter": "^4.0.1",
     "yaml": "^2.3.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

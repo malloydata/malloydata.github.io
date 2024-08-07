@@ -278,6 +278,18 @@ function outputSearchSegmentsFile(
   log(`File js/generated/search_segments.js written.`);
 }
 
+function outputMalloyRender() {
+  const outputFile = `malloy-render-${DEFAULT_CONTEXT.site.malloyRenderVersion}.js`;
+  fs.copyFileSync(
+    path.join(
+      "__dirname",
+      "../node_modules/@malloydata/render/dist/webcomponent/malloy-render.umd.js"
+    ),
+    path.join(JS_OUT_PATH, outputFile)
+  );
+  log(`File js/generated/${outputFile} written.`);
+}
+
 function extractFrontmatter(contents: string) {
   if (contents.startsWith("---\n")) {
     const afterFirstLine = contents.slice(4);
@@ -472,6 +484,7 @@ function previoustPost(blogShortPath: string) {
   const errors = [...snippetErrors, ...linkErrors];
   // TODO make this update in watch mode
   outputSearchSegmentsFile(allSegments);
+  outputMalloyRender();
   log(`All docs compiled in ${timeString(startTime, performance.now())}`, 'success');
   if (WATCH_ENABLED) {
     log(`\nWatching /documentation and /models for changes...`);

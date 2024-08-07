@@ -769,13 +769,13 @@ div.code-wrapper {
   position: relative;
 }
 
-div.code-wrapper a {
+div.code-wrapper a.open_notebook {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
-div.code-wrapper a img {
+div.code-wrapper a.open_notebook img {
   width: 22px;
   height: 22px;
 
@@ -784,7 +784,7 @@ div.code-wrapper a img {
   border-radius: 3px;
 }
 
-div.code-wrapper a img:hover {
+div.code-wrapper a.open_notebook img:hover {
   background-color: #ffffffcd;
 }
 

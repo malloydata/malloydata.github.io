@@ -231,6 +231,10 @@
         {
           "title": "Segment Maps",
           "link": "/visualizations/segment_maps.malloynb"
+        },
+        {
+          "title": "New Renderer",
+          "link": "/visualizations/renderer_next.malloynb"
         }
       ]
     },
