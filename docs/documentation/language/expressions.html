@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/connection_instructions.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Installing the Malloy Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/connection_instructions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connecting a Database
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/malloy_by_example.html,/documentation/language/sql_to_malloy.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building Semantic Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_to_malloy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/changelog.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/renderer_next.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/renderer_next">
+                <img src="/img/article_icon.svg" alt="document"/>
+                New Renderer
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="aggregates.html"><img src="/img/previous.svg" alt="previous"/>Aggregates</a>
+  </div>
+  <div class="item">
+      <a href="functions.html">Functions<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="expressions" class="header-link anchor" href="#expressions">
+          Expressions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Expressions in Malloy are much like expressions in any other language; they can have variables and operators and function calls in
+the same syntax users are familiar with. However, Malloy also introduces several other kinds of expressions useful for the task of data analysis and transformation.</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+
+<th>Examples</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#identifiers">Identifiers</a><br/>Fields referenced by name</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">origin</span><span style="color: #000000">.</span><span style="color: #001080">city</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">`year`</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#mathematical-operators">Mathematical operations</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span><span style="color: #000000"> * </span><span style="color: #098658">100</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">-</span><span style="color: #001080">cost</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">(</span><span style="color: #001080">a</span><span style="color: #000000"> + </span><span style="color: #001080">b</span><span style="color: #000000">) / </span><span style="color: #001080">c</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#comparison-operators">Comparison operators</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span><span style="color: #000000"> &gt; </span><span style="color: #098658">200</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">state</span><span style="color: #000000"> != </span><span style="color: #0000FF">null</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#boolean-operators">Boolean operators</a><br/>Logically combine booleans</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">height</span><span style="color: #000000"> &gt; </span><span style="color: #098658">10</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">height</span><span style="color: #000000"> &lt; </span><span style="color: #098658">100</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">is_cancelled</span><span style="color: #000000"> </span><span style="color: #0000FF">or</span><span style="color: #000000"> </span><span style="color: #001080">is_delayed</span></span></code></br><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span><span style="color: #000000"> </span><span style="color: #001080">is_commercial_flight</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#functions">Functions</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">floor</span><span style="color: #000000">(</span><span style="color: #098658">10.35</span><span style="color: #000000">)</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">concat</span><span style="color: #000000">(</span><span style="color: #001080">first_name</span><span style="color: #000000">, </span><span style="color: #A31515">&#39; &#39;</span><span style="color: #000000">, </span><span style="color: #001080">last_name</span><span style="color: #000000">)</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">cbrt</span><span style="color: #000000">!(</span><span style="color: #001080">x</span><span style="color: #000000">)</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">timestamp_seconds</span><span style="color: #000000">!</span><span style="color: #267F99">timestamp</span><span style="color: #000000">(</span><span style="color: #001080">val</span><span style="color: #000000">)</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#aggregation">Aggregation</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">distance</span><span style="color: #000000">)</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #001080">seats</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="ungrouped-aggregates">Aggregation Control / Subtotals</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">all</span><span style="color: #000000">(</span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">distance</span><span style="color: #000000">))</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">all</span><span style="color: #000000">(</span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #795E26">count</span><span style="color: #000000">(), </span><span style="color: #001080">destination_code</span><span style="color: #000000">)</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">exclude</span><span style="color: #000000">(</span><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #001080">seats</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">(), </span><span style="color: #001080">carrier</span><span style="color: #000000">.</span><span style="color: #001080">nickname</span><span style="color: #000000">)</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#filtered-expressions">Filtered expressions</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">avg</span><span style="color: #000000">(</span><span style="color: #001080">age</span><span style="color: #000000">) { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">state</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> }</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">flight_count</span><span style="color: #000000"> { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">origin</span><span style="color: #000000">.</span><span style="color: #001080">county</span><span style="color: #000000"> != </span><span style="color: #0000FF">null</span><span style="color: #000000"> }</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#type-cast">Type cast</a></td>
+
+<td><ul><li><a href="#type-cast">Standard</a> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_distance</span><span style="color: #000000">::</span><span style="color: #267F99">string</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">some_date</span><span style="color: #000000">::</span><span style="color: #267F99">timestamp</span></span></code></li><li><a href="#safe-type-cast">Safe type cast</a> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">birth_year</span><span style="color: #000000">::</span><span style="color: #267F99">number</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">start_time_string</span><span style="color: #000000">::</span><span style="color: #267F99">timestamp</span></span></code></li><li><a href="#casting-to-specific-database-types">Database native types</a> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">name</span><span style="color: #000000">::</span><span style="color: #A31515">&quot;VARCHAR(32)&quot;</span></span></code></li></ul></td>
+</tr>
+
+<tr>
+<td><a href="#safe-type-cast">Safe type cast</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">birth_year</span><span style="color: #000000">::</span><span style="color: #267F99">number</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">start_time_string</span><span style="color: #000000">::</span><span style="color: #267F99">timestamp</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#pick-expressions">Pick expressions</a><br/>Malloy's take on <code>CASE</code> statements</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;S&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #001080">size</span><span style="color: #000000"> &lt; </span><span style="color: #098658">3</span><span style="color: #000000"> </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;L&#39;</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">kind</span><span style="color: #000000"> ? </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;other&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #0000FF">null</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#time-ranges">Time ranges</a><br/>Ranges with start and end or duration</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">start_time</span><span style="color: #000000"> </span><span style="color: #0000FF">for</span><span style="color: #000000"> </span><span style="color: #098658">3</span><span style="color: #000000"> </span><span style="color: #0000FF">hours</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #098658">@2003</span><span style="color: #000000"> </span><span style="color: #0000FF">for</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> </span><span style="color: #0000FF">months</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #098658">@2003</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #098658">@2005</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#numeric-ranges">Numeric ranges</a><br/>Numeric ranges with start and end</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #098658">10</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #098658">20</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#time-truncation">Time truncation</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">event_time</span><span style="color: #000000">.</span><span style="color: #0000FF">quarter</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">now</span><span style="color: #000000">.</span><span style="color: #0000FF">year</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#time-extraction">Time extraction</a><br/>Extract one part of a time value</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">day_of_year</span><span style="color: #000000">(</span><span style="color: #001080">event_time</span><span style="color: #000000">)</span></span></code> <br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">minute</span><span style="color: #000000">(</span><span style="color: #001080">now</span><span style="color: #000000">)</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#interval-extraction">Interval extraction</a><br/>Extract the interval between two times</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">days</span><span style="color: #000000">(</span><span style="color: #001080">created_at</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #001080">shipped_at</span><span style="color: #000000">)</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#time-literals">Time literals</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #098658">@2003-04-19</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #098658">@2020-Q4</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #098658">@2021-10-24 10:00:00</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#partial-comparison">Partial comparison</a><br/>Reusable conditions</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt; </span><span style="color: #098658">42</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!= </span><span style="color: #0000FF">null</span></span></code><br/><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">~ </span><span style="color: #811F3F">r&#39;C.*&#39;</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#alternation">Alternation</a><br/>Logically combine conditions</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt; </span><span style="color: #098658">5</span><span style="color: #000000"> &amp; &lt; </span><span style="color: #098658">10</span></span></code></br> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&#39;red&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;blue&#39;</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#application">Application</a><br/>Apply conditions to values</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">state</span><span style="color: #000000"> ? </span><span style="color: #A31515">&#39;CA&#39;</span></span></code><br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">weight</span><span style="color: #000000"> ? &gt; </span><span style="color: #098658">100</span><span style="color: #000000"> &amp; &lt; </span><span style="color: #098658">1000</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#null-operations">Null Operations</a><br/>Expressions relating to NULL values</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">eventStatus</span><span style="color: #000000"> != </span><span style="color: #0000FF">null</span></span></code><br/> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">eventStatus</span><span style="color: #000000"> ?? </span><span style="color: #A31515">&#39;unknown&#39;</span></span></code></td>
+</tr>
+
+<tr>
+<td><a href="#operator-precedence">Operator Precedence</a></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">a</span><span style="color: #000000"> + </span><span style="color: #001080">b</span><span style="color: #000000"> * </span><span style="color: #001080">c</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">d</span><span style="color: #000000"> ?? </span><span style="color: #001080">e</span><span style="color: #000000"> &gt; </span><span style="color: #001080">f</span></span></code></td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="identifiers" class="header-link anchor" href="#identifiers">
+          Identifiers
+        </a>
+      </h2>
+    <!-- * `` `year` `` --><p>Fields may be referenced by name, and fields in joins or nested structures can be accessed using a period (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span></span></code>) as in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">item</span><span style="color: #000000">.</span><span style="color: #001080">item_property</span></span></code></p>
+
+      <h3>
+        <a id="escaping-reserved-keywords" class="header-link anchor" href="#escaping-reserved-keywords">
+          Escaping reserved keywords
+        </a>
+      </h3>
+    <p>If a column name in a table conflicts with a keyword in Malloy, use backquotes to quote the keyword. Back-quoted identifiers can also
+contain spaces and any special characters the database supports in field names; <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span></span></code>s in back-quoted identifiers are not currently supported.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">year_plus_one</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">`year`</span><span style="color: #000000"> + </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">`name with spaces`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #000000; font-style: italic">some value</span></span></pre></div><div class="code-wrapper"><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="eefeb1ed-c9d6-4164-adb8-b3d058d413bb">
+        <table style="vertical-align: top; border-collapse: collapse; width: 100%;"><thead><tr><th style="padding: 8px; text-align: left;">county</th></tr></thead><tbody><tr><td style="padding: 8px; vertical-align: top;"><span>CUYAHOGA</span></td></tr><tr><td style="padding: 8px; vertical-align: top;"><span>FRANKLIN</span></td></tr><tr><td style="padding: 8px; vertical-align: top;"><span>MONTGOMERY</span></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;county&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CUYAHOGA&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;county&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;FRANKLIN&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;county&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MONTGOMERY&quot;</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    origin_0.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      origin_0.</span><span style="color: #A31515">&quot;county&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;county__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count__1&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/airports.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> origin_0</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">ON</span><span style="color: #000000"> origin_0.</span><span style="color: #A31515">&quot;code&quot;</span><span style="color: #000000">=base.</span><span style="color: #A31515">&quot;origin&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> origin_0.</span><span style="color: #A31515">&quot;county&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">IS</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">NULL</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">, __stage1 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;state__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;county&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;county__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;flight_count__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;flight_count__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;by_county&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   by_county_0.</span><span style="color: #A31515">&quot;county&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;county&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage1 </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(base.</span><span style="color: #A31515">&quot;by_county&quot;</span><span style="color: #000000">), </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> ignoreme) </span><span style="color: #0000FF">as</span><span style="color: #000000"> by_county_0_outer(by_county_0,ignoreme) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> by_county_0_outer.ignoreme=</span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">LIMIT</span><span style="color: #000000"> </span><span style="color: #098658">3</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div><p>Identifiers that share a name with a keyword in Malloy must be enclosed in back ticks <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">`</span></span></code>, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">`year`</span></span></code>.</p>
+
+      <h2>
+        <a id="mathematical-operators" class="header-link anchor" href="#mathematical-operators">
+          Mathematical Operators
+        </a>
+      </h2>
+    <!-- * `x * 100` --><!-- * `-cost` --><!-- * `(a + b) / c` --><p>Typical mathematical operators <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">+</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">-</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">*</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">/</span></span></code>, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">%</span></span></code> (modulo) work as expected, and parentheses may be used to override precedence, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">six</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> * (</span><span style="color: #098658">3</span><span style="color: #000000"> - </span><span style="color: #098658">2</span><span style="color: #000000">) / </span><span style="color: #098658">2</span><span style="color: #000000"> + </span><span style="color: #098658">1</span></span></code>.</p>
+<p>The unary minus / negation operator is also allowed, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">value</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> -</span><span style="color: #001080">cost</span></span></code>.</p>
+
+      <h2>
+        <a id="logical-operators" class="header-link anchor" href="#logical-operators">
+          Logical Operators
+        </a>
+      </h2>
+    
+      <h3>
+        <a id="comparison-operators" class="header-link anchor" href="#comparison-operators">
+          Comparison Operators
+        </a>
+      </h3>
+    <!-- * `distance > 1000` --><!-- * `state = 'CA'` --><!-- * `name != null` --><!-- TODO discuss null checking and how it uses `!=` not `is not` --><p>Standard comparison operators <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;=</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;=</span></span></code>, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">=</span></span></code> are available in Malloy. "Not equals" is expressed using the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!=</span></span></code> operator.</p>
+
+      <h3>
+        <a id="boolean-operators" class="header-link anchor" href="#boolean-operators">
+          Boolean Operators
+        </a>
+      </h3>
+    <!-- * `is_x and is_y` --><!-- * `is_a or is_b` --><!-- * `not is_c` --><p>Malloy includes the basic binary boolean operators <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">and</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">or</span></span></code>, as well as the unary <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span></span></code> operator.</p>
+
+      <h2>
+        <a id="functions" class="header-link anchor" href="#functions">
+          Functions
+        </a>
+      </h2>
+    <!-- * `floor(10.35)` --><!-- * `concat(first_name, ' ', last_name)` --><!-- * `sqrt(x)` --><p>Many functions available in SQL are available unchanged in Malloy. Malloy provides some compatibility transformations for known functions. Unknown functions may be called like <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">cbrt</span><span style="color: #000000">!(</span><span style="color: #001080">x</span><span style="color: #000000">)</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">timestamp_seconds</span><span style="color: #000000">!</span><span style="color: #795E26">timestap</span><span style="color: #000000">(</span><span style="color: #001080">value</span><span style="color: #000000">)</span></span></code> to specify a return type. For detailed information, as well as a full list of all available functions, see the <a href="./functions">Functions</a> section.</p>
+
+      <h2>
+        <a id="aggregation" class="header-link anchor" href="#aggregation">
+          Aggregation
+        </a>
+      </h2>
+    <p>Aggregations may included in an expression to create <a href="fields#measures">measures</a>, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">count</span><span style="color: #000000">()</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">distance</span><span style="color: #000000">)</span></span></code>, or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #001080">seats</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span></code>. For detailed information, see the <a href="aggregates">Aggregates</a> section.</p>
+<!-- TODO more info on symmetric aggregates -->
+      <h2>
+        <a id="filtered-expressions" class="header-link anchor" href="#filtered-expressions">
+          Filtered Expressions
+        </a>
+      </h2>
+    <!-- * `avg(age) : [state: 'CA']` --><!-- * `flight_count : [origin.county != null]` --><p>Aggregate expressions may be filtered, using the <a href="filters">usual filter syntax</a>.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/expressions.malloynb#C4" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">distance_2003</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">distance</span><span style="color: #000000">) { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">dep_time</span><span style="color: #000000"> ? </span><span style="color: #098658">@2003</span><span style="color: #000000"> }</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">ca_flights</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">() { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">origin</span><span style="color: #000000">.</span><span style="color: #001080">state</span><span style="color: #000000"> ? </span><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> }</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="05b9cc84-6c0a-4285-b9c9-edef83c8a625">
+        <table style="vertical-align: top; border-collapse: collapse; width: 100%;"><thead><tr><th style="padding: 8px; text-align: right;">distance_​2003</th><th style="padding: 8px; text-align: right;">ca_​flights</th></tr></thead><tbody><tr><td style="padding: 8px; vertical-align: top; text-align: right;"><span>42,545,813</span></td><td style="padding: 8px; vertical-align: top; text-align: right;"><span>40,670</span></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;distance_2003&quot;</span><span style="color: #000000">: </span><span style="color: #098658">42545813</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;ca_flights&quot;</span><span style="color: #000000">: </span><span style="color: #098658">40670</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> (base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&gt;=</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2003-01-01 00:00:00&#39;</span><span style="color: #000000">)</span><span style="color: #0000FF">and</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&lt;</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2004-01-01 00:00:00&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;distance&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;distance_2003&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> origin_0.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">=</span><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;ca_flights&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/airports.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> origin_0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">ON</span><span style="color: #000000"> origin_0.</span><span style="color: #A31515">&quot;code&quot;</span><span style="color: #000000">=base.</span><span style="color: #A31515">&quot;origin&quot;</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="type-cast" class="header-link anchor" href="#type-cast">
+          Type Cast
+        </a>
+      </h2>
+    <p>Type cast may be accomplished with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">::</span></span></code> operator.</p>
+<!-- * `total_distance::string` --><!-- * `some_date::timestamp` --><p>Type casting may be accomplished with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">::</span><span style="color: #001080">type</span></span></code> syntax.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/expressions.malloynb#C6" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">distance_summary</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">concat</span><span style="color: #000000">(</span><span style="color: #001080">total_distance</span><span style="color: #000000">::</span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #A31515">&#39; miles&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="db3515bd-141b-43de-8b2a-8f64fc35cf4e">
+        <table style="vertical-align: top; border-collapse: collapse; width: 100%;"><thead><tr><th style="padding: 8px; text-align: left;">distance_​summary</th></tr></thead><tbody><tr><td style="padding: 8px; vertical-align: top;"><span>255337195 miles</span></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;distance_summary&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;255337195 miles&quot;</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">CONCAT</span><span style="color: #000000">(</span><span style="color: #795E26">CAST</span><span style="color: #000000">((</span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;distance&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">)) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> </span><span style="color: #0000FF">varchar</span><span style="color: #000000">),</span><span style="color: #A31515">&#39; miles&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;distance_summary&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="safe-type-cast" class="header-link anchor" href="#safe-type-cast">
+          Safe Type Cast
+        </a>
+      </h2>
+    <p>Safe Type cast may be accomplished with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">:::</span></span></code> operator.  A safe type cast will return <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code>
+if an error occurs during the cast operation. Safe Type Cast is particularly useful in loading data. Not all databases support safe type cast.</p>
+<!-- * `total_distance:::string` --><!-- * `some_date:::timestamp` --><p>Type casting may be accomplished with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">:::</span><span style="color: #001080">type</span></span></code> syntax.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/expressions.malloynb#C8" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">distance_summary</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">concat</span><span style="color: #000000">(</span><span style="color: #001080">total_distance</span><span style="color: #000000">:::</span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #A31515">&#39; miles&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="619a7d7e-7abb-4dc5-b001-dada2264a586">
+        <table style="vertical-align: top; border-collapse: collapse; width: 100%;"><thead><tr><th style="padding: 8px; text-align: left;">distance_​summary</th></tr></thead><tbody><tr><td style="padding: 8px; vertical-align: top;"><span>255337195 miles</span></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;distance_summary&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;255337195 miles&quot;</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">CONCAT</span><span style="color: #000000">(</span><span style="color: #795E26">TRY_CAST</span><span style="color: #000000">((</span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;distance&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">)) </span><span style="color: #0000FF">AS</span><span style="color: #000000"> </span><span style="color: #0000FF">varchar</span><span style="color: #000000">),</span><span style="color: #A31515">&#39; miles&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;distance_summary&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="casting-to-specific-database-types" class="header-link anchor" href="#casting-to-specific-database-types">
+          Casting to specific database types
+        </a>
+      </h2>
+    <p>Malloy has its own type system. A database engine needs to know for how each piece of data is stored, but Malloy only needs to worry about the underlying type (like string or numeric) of a piece of data. Sometimes, when writing a data transformation, it is important torefelct back to the SQL engine a particular datatype. Quoting the destination type will tell Malloy to use that specific type for the result.</p>
+<p>Note: If you cast an expression to an <a href="datatypes#unsupported-sql-native-data">unsupported data type, there is a very limited set of operations in Malloy which can use that value</a></p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/expressions.malloynb#C10" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">select</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #001080">dest</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">destination_code</span><span style="color: #000000">::</span><span style="color: #A31515">&quot;VARCHAR(3)&quot;</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #001080">dist</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">distance</span><span style="color: #000000">::</span><span style="color: #A31515">&quot;smallint&quot;</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="c00fe5ee-cadb-4026-86a6-d4c5f9e5b704">
+        <table style="vertical-align: top; border-collapse: collapse; width: 100%;"><thead><tr><th style="padding: 8px; text-align: left;">dest</th><th style="padding: 8px; text-align: right;">dist</th></tr></thead><tbody><tr><td style="padding: 8px; vertical-align: top;"><span>ABE</span></td><td style="padding: 8px; vertical-align: top; text-align: right;"><span>55</span></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dest&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ABE&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dist&quot;</span><span style="color: #000000">: </span><span style="color: #098658">55</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">CAST</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;destination&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> </span><span style="color: #0000FF">VARCHAR</span><span style="color: #000000">(</span><span style="color: #098658">3</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;dest&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">CAST</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;distance&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> </span><span style="color: #0000FF">smallint</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;dist&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">LIMIT</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="pick-expressions" class="header-link anchor" href="#pick-expressions">
+          Pick Expressions
+        </a>
+      </h2>
+    <p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">pick</span></span></code> construction in Malloy is similar to <code>CASE</code> statements in SQL.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;small&#39;</span><span style="color: #000000">  </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #001080">size</span><span style="color: #000000"> &lt; </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;medium&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #001080">size</span><span style="color: #000000"> &lt; </span><span style="color: #098658">20</span></span>
+<span class="line"><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;large&#39;</span></span></pre></div><p>Pick expressions are also compatible with the <a href="#application">apply operator</a> and partial comparisons.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">size</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;small&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &lt; </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;medium&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &lt; </span><span style="color: #098658">20</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;large&#39;</span></span></pre></div><p>Pick can be used to "clean" data, combining similar dirty values into one clean value. In the following example, the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">pick</span></span></code> statement collects all the "this actually
+shipped" statuses, and because there is no <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">else</span></span></code>, leaves the other
+status values alone.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">shipping_status</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;shipped&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;will call&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;shipped&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;ignore&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;bad1&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;bad2&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;testing&#39;</span></span></pre></div><p>Another common kind of cleaning is to have a small set you want to group
+by and all other values are compressed into <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code>. A <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">pick</span></span></code> clause with no value
+picks an applied value when the condition is met.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">status</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;good&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;ok&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;fine&#39;</span><span style="color: #000000"> </span><span style="color: #008000">// leave these alone</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #0000FF">null</span><span style="color: #000000">                        </span><span style="color: #008000">// ignore the rest</span></span></pre></div><p>If you need to match on multiple fields and conditions, use a dimension.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">Facility_Type_State</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Cali Heli&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #001080">state</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">fac_type</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;HELIPORT&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Seaplane at SeaTac&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #001080">state</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;WA&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">city</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;SEATTLE&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">fac_type</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;SEAPLANE BASE&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Phoenix Ultra&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #001080">state</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;AZ&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">fac_type</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;ULTRALIGHT&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">city</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;PHOENIX&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Not Needed&#39;</span></span></pre></div>
+      <h2>
+        <a id="time-expressions" class="header-link anchor" href="#time-expressions">
+          Time Expressions
+        </a>
+      </h2>
+    <p>Malloy has built in constructs to simplify many time-related operations, which are described here.</p>
+
+      <h3>
+        <a id="time-ranges" class="header-link anchor" href="#time-ranges">
+          Time Ranges
+        </a>
+      </h3>
+    <p>A time value can be compared to a range. If you <a href="#application">apply</a> a time to a range, (for example, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">event_time</span><span style="color: #000000"> ? </span><span style="color: #098658">@2003</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #098658">@2004</span></span></code>) that will check if the value is within the range. You can also use <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">=</span></span></code> to see if a time is with a range, or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;</span></span></code> to test for before the range it will be <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;</span></span></code>, or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;</span></span></code> for after the range.</p>
+<p>See <a href="time-ranges">Time Ranges</a> for more details.</p>
+
+      <h3>
+        <a id="time-truncation" class="header-link anchor" href="#time-truncation">
+          Time Truncation
+        </a>
+      </h3>
+    <p>To truncate a time value to a given timeframe, use the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span></span></code> operator followed by the timeframe, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">event_time</span><span style="color: #000000">.</span><span style="color: #0000FF">quarter</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">now</span><span style="color: #000000">.</span><span style="color: #0000FF">year</span></span></code>. See <a href="timestamp-operations#truncation">Timestamp Truncation</a> for details.</p>
+<p>A truncation made this way can also function as a range. The range begins
+at the moment of truncation and the duration is the timeframe unit
+used to specify the truncation, so for example <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">time</span><span style="color: #000000">.</span><span style="color: #0000FF">year</span></span></code>
+would be a range covering the entire year which contains <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">time</span></span></code>.</p>
+<p>This is extremely useful with the <a href="#application">apply operator</a>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">?</span></span></code>. To see if two events happen in the same calendar year, for example, the boolean expression in Malloy is <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">one_time</span><span style="color: #000000"> ? </span><span style="color: #001080">other_time</span><span style="color: #000000">.</span><span style="color: #0000FF">year</span></span></code>.</p>
+
+      <h3>
+        <a id="time-extraction" class="header-link anchor" href="#time-extraction">
+          Time Extraction
+        </a>
+      </h3>
+    <p>Another very common grouping for time related data is by particular components, and this extraction of a single component as an integer. In Malloy this gesture looks like <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">hour</span><span style="color: #000000">(</span><span style="color: #001080">event_time</span><span style="color: #000000">)</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">minute</span><span style="color: #000000">(</span><span style="color: #001080">event_time</span><span style="color: #000000">)</span></span></code>. See <a href="timestamp-operations#extraction">Timestamp extraction</a> for more details.</p>
+
+      <h3>
+        <a id="interval-extraction" class="header-link anchor" href="#interval-extraction">
+          Interval extraction
+        </a>
+      </h3>
+    <p>To measure the difference between two times, pass a range expression to
+one of the extraction functions.</p>
+<p>For more details see <a href="time-ranges#interval-measurement">Interval Measurement</a></p>
+
+      <h3>
+        <a id="time-literals" class="header-link anchor" href="#time-literals">
+          Time Literals
+        </a>
+      </h3>
+    <p>Time literals are specified in Malloy with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">@</span></span></code> character. A literal
+specified this way has an implied duration which means a literal
+can act like a range. See <a href="datatypes#timestamp-literals">Timestamp literals</a> and <a href="datatypes#date-literals">Date literals</a> for more details.</p>
+<p>In addition the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">@</span></span></code> based literal syntax, Malloy also has one built in time constant, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">now</span></span></code>, representing the current time.</p>
+
+      <h2>
+        <a id="numeric-ranges" class="header-link anchor" href="#numeric-ranges">
+          Numeric Ranges
+        </a>
+      </h2>
+    <p>A numeric value can be compared to a range. If you <a href="#application">apply</a> a number to a range, (for example, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">distance</span><span style="color: #000000"> ? </span><span style="color: #098658">10</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #098658">20</span></span></code>) that will check if the value is within the range (left inclusive, right exclusive).</p>
+
+      <h2>
+        <a id="special-filter-expression-syntax" class="header-link anchor" href="#special-filter-expression-syntax">
+          Special Filter Expression Syntax
+        </a>
+      </h2>
+    <p>As filtering is an incredibly common operation in data analysis, Malloy has special syntax to make filter expressions succinct and powerful. In addition to regular comparison and boolean operators, Malloy includes <em>partial comparisons</em>, <em>alternation</em>, and <em>application</em>, as described below.</p>
+
+      <h3>
+        <a id="partial-comparison" class="header-link anchor" href="#partial-comparison">
+          Partial Comparison
+        </a>
+      </h3>
+    <!-- * `> 42` --><!-- * `!= null` --><!-- * `~ r'C.*'` --><p>Partial comparisons, or "partials" are written with a binary comparison operator followed by a value, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt; </span><span style="color: #098658">42</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!= </span><span style="color: #0000FF">null</span></span></code>. These can be thought of as conditions-as-values, or as functions that return a boolean.</p>
+
+      <h3>
+        <a id="alternation" class="header-link anchor" href="#alternation">
+          Alternation
+        </a>
+      </h3>
+    <!-- * `> 5 & < 10` --><!-- * `'CA' | 'NY'` --><p>Conditions can be logically combined with the two alternation operators, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&amp;</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">|</span></span></code>. These are different from <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">and</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">or</span></span></code> in that they operate on conditions which return boolean values, rather than boolean values directly.</p>
+<p>The <em>union alternation</em> operator <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">|</span></span></code> represents the logical union of two conditions. An expression like <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span><span style="color: #000000"> | </span><span style="color: #001080">y</span></span></code> can be read "if either <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">y</span></span></code>." For example <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">= </span><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> | = </span><span style="color: #A31515">&#39;NY&#39;</span></span></code> represents the condition "is either CA or NY".</p>
+<p>The <em>conjunction alternation</em> operator <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&amp;</span></span></code> represents the logical conjunction of two conditions. An expression like <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span><span style="color: #000000"> &amp; </span><span style="color: #001080">y</span></span></code> can be read "if both <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">y</span></span></code>." For example, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt; </span><span style="color: #098658">5</span><span style="color: #000000"> &amp; &lt; </span><span style="color: #098658">10</span></span></code> represents the condition "is greater than 5 and less than 10".</p>
+<p>Values can be used directly with the alternation operators, in which case the operator is assumed to be <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">=</span></span></code>. For example, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#39;NY&#39;</span></span></code> is equivalent to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">= </span><span style="color: #A31515">&#39;CA&#39;</span><span style="color: #000000"> | = </span><span style="color: #A31515">&#39;NY&#39;</span></span></code>.</p>
+
+      <h3>
+        <a id="application" class="header-link anchor" href="#application">
+          Application
+        </a>
+      </h3>
+    <!-- * `state ? 'CA'` --><!-- * `weight ? > 100 & < 1000` --><!-- * `kind ? pick 'other' when null` --><p>The apply operator <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">?</span></span></code> "applies" a value to another value, condition, or computation. This is most often used with partial comparisons or alternations.</p>
+<p>Applying a value to a condition is like filling in the condition with the given value. For example, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">height</span><span style="color: #000000"> ? &gt; </span><span style="color: #098658">5</span><span style="color: #000000"> &amp; &lt; </span><span style="color: #098658">10</span></span></code> is equivalent to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">height</span><span style="color: #000000"> &gt; </span><span style="color: #098658">5</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">height</span><span style="color: #000000"> &lt; </span><span style="color: #098658">10</span></span></code>.</p>
+<p>Applying a value to another value applies a default comparison on the two values:</p>
+<table>
+<thead>
+<tr>
+<th>Left</th>
+
+<th>Right</th>
+
+<th>Example</th>
+
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">number</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">number</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">size</span><span style="color: #000000"> ? </span><span style="color: #098658">10</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">size</span><span style="color: #000000"> = </span><span style="color: #098658">10</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">string</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">string</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">state</span><span style="color: #000000"> ? </span><span style="color: #A31515">&#39;CA&#39;</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">state</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;CA&#39;</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">string</span></span></code></td>
+
+<td>regular expression</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">name</span><span style="color: #000000"> ? </span><span style="color: #811F3F">r&#39;Z$&#39;</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">name</span><span style="color: #000000"> ~ </span><span style="color: #811F3F">r&#39;Z$&#39;</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">boolean</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">boolean</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">is_cool</span><span style="color: #000000"> ? </span><span style="color: #0000FF">true</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">is_cool</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">number</span></span></code></td>
+
+<td>numeric range</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span><span style="color: #000000"> ? </span><span style="color: #098658">10</span><span style="color: #000000"> </span><span style="color: #0000FF">to</span><span style="color: #000000"> </span><span style="color: #098658">20</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">x</span><span style="color: #000000"> &gt;= </span><span style="color: #098658">10</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> &lt; </span><span style="color: #098658">20</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">date</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">date</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">time</span><span style="color: #000000"> ? </span><span style="color: #098658">@2003</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">time</span></span></code> is during 2003</td>
+</tr>
+</tbody></table>
+<p>Values can be applied to <a href="#pick-expressions">pick expressions</a> to make them more succinct.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">size</span><span style="color: #000000"> ?</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;small&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &lt; </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;medium&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> &lt; </span><span style="color: #098658">20</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;large&#39;</span></span></pre></div>
+      <h3>
+        <a id="null-operations" class="header-link anchor" href="#null-operations">
+          Null Operations
+        </a>
+      </h3>
+    <p>Malloy has the keyword <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code> to represent the null value.</p>
+<p>To check to see if a value is null, simply compare it to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code>, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">name_not_present</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">name</span><span style="color: #000000"> = </span><span style="color: #0000FF">null</span></span>
+<span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">name_present</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">name</span><span style="color: #000000"> != </span><span style="color: #0000FF">null</span></span></pre></div><p>Malloy also has the operator <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">??</span></span></code>, which in other languages is sometimes called the "Nullish Coalescing" operator, for providing a value to use in case an expression is null.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">name_cleaned</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">name</span><span style="color: #000000"> ?? </span><span style="color: #A31515">&#39;(No Name Provided)&#39;</span></span></pre></div>
+      <h3>
+        <a id="operator-precedence" class="header-link anchor" href="#operator-precedence">
+          Operator Precedence
+        </a>
+      </h3>
+    <p>From highest to lowest precedence, here are the Malloy operators</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+
+<th>Function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ </span><span style="color: #AF00DB">where</span><span style="color: #000000">: }</span></span></code></td>
+
+<td>Aggregate filtering</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">::</span></span></code></td>
+
+<td>Type cast</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">-</span></span></code></td>
+
+<td>Unary negation</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">* / %</span></span></code></td>
+
+<td>Multiply, Divide, Modulo</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">+ -</span></span></code></td>
+
+<td>Addition, Subtraction</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">to</span></span></code></td>
+
+<td>Range with endpoints</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">for</span><span style="color: #000000"> </span><span style="color: #001080">N</span><span style="color: #000000"> </span><span style="color: #001080">XXX</span></span></code></td>
+
+<td>Range with duration</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&amp;</span></span></code></td>
+
+<td>Alternation with and</td>
+</tr>
+
+<tr>
+<td><code>|</code></td>
+
+<td>Alternation with or</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">?</span></span></code></td>
+
+<td>Apply</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span></span></code></td>
+
+<td>Unary boolean not</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">and</span></span></code></td>
+
+<td>Bolean and</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">or</span></span></code></td>
+
+<td>Bolean or</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">??</span></span></code></td>
+
+<td>Null coalesce</td>
+</tr>
+</tbody></table>
+</div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.162.js"></script>
+  </body>
+</html>
