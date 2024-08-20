@@ -106,13 +106,13 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     const templatedMarkdown = template({
       ...DEFAULT_CONTEXT
     });
-    const { 
-      renderedDocument, 
-      errors, 
-      searchSegments, 
-      frontmatter, 
-      links, 
-      hashes 
+    const {
+      renderedDocument,
+      errors,
+      searchSegments,
+      frontmatter,
+      links,
+      hashes
     } = await renderDoc(
       templatedMarkdown,
       shortPath
@@ -187,11 +187,11 @@ let BLOG_POSTS: BlogPostInfo[] = [];
 
 function buildBlogIndex() {
   const blogPostsRaw = JSON.parse(fs.readFileSync(BLOG_LIST_PATH, "utf8")) as BlogPostInfoRaw[];
-  BLOG_POSTS = blogPostsRaw.map(post => ({ 
-    ...post, 
+  BLOG_POSTS = blogPostsRaw.map(post => ({
+    ...post,
     published: new Date(
-      parseInt(post.published.slice(0, 4)), 
-      parseInt(post.published.slice(5, 7)) - 1, 
+      parseInt(post.published.slice(0, 4)),
+      parseInt(post.published.slice(5, 7)) - 1,
       parseInt(post.published.slice(8, 10))
     )
   }));
@@ -333,8 +333,8 @@ function handleStaticFile(file: string) {
 }
 
 function validateLinks(
-  links: Record<string, {link: string, style: "md" | "html", position: Position}[]>, 
-  docs: string[], 
+  links: Record<string, {link: string, style: "md" | "html", position: Position}[]>,
+  docs: string[],
   hashes?: Record<string, string[]>
 ): DocsError[] {
   const linkErrors: DocsError[] = [];
@@ -361,20 +361,20 @@ function validateLinks(
     const exists = existsNB;
     const linkWithExtension = linkWithoutExtension + ".malloynb";
     if (!exists) {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `Link '${originalLink}' is invalid.`,
         position,
       });
     } else if (linkHasExtension && style === 'html') {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `HTML Link '${originalLink}' should not end with file extension.`,
         position
       });
     } else if (style === 'md' && !linkWithoutHash.endsWith(".malloynb")) {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `Markdown Link '${originalLink}' should end with .malloynb`,
         position
       });
@@ -392,8 +392,8 @@ function validateLinks(
       }
       if (link.link.startsWith("/")) {
         if(!ABSOLUTE_LINK_EXCEPTIONS.includes(link.link)) {
-          linkErrors.push({ 
-            path: file.substring(DOCS_ROOT_PATH.length), 
+          linkErrors.push({
+            path: file.substring(DOCS_ROOT_PATH.length),
             message: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`,
             position: link.position
           });
@@ -420,7 +420,7 @@ function nextPost(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
   if (current !== -1 && current - 1 >= 0) {
     return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
-  } 
+  }
 }
 
 function blogTitle(blogShortPath: string) {
@@ -441,7 +441,7 @@ function previoustPost(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
   if (current !== -1 && current + 1 < BLOG_POSTS.length) {
     return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current + 1].path}`;
-  } 
+  }
 }
 
 (async () => {
@@ -484,7 +484,7 @@ function previoustPost(blogShortPath: string) {
         if (fs.existsSync(fullPath)) {
           handleStaticFile(fullPath);
           log(`Static file ${file} updated.`);
-        } else {
+        } else if (fs.existsSync(path.join(OUT_PATH, file))) {
           fs.unlinkSync(path.join(OUT_PATH, file));
           log(`Static file ${file} deleted. Removed.`);
         }

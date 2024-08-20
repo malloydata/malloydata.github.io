@@ -1,5 +1,12 @@
 [
   {
+    "title": "Introducing Parameters",
+    "path": "/2024-08-20-introducing-parameters",
+    "subtitle": "One Step Closer to Malloy as an \"API to Data\"",
+    "author": "Christopher Swenson",
+    "published": "2024-08-20"
+  },
+  {
     "title": "Dataviz is Hierarchical",
     "path": "/2024-02-29-hierarchical-viz",
     "subtitle": "If only our data tools agreed",
