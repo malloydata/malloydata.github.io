@@ -134,12 +134,11 @@ run: flights -> {
       from_oak_flight_count
     limit: 10
   }
-  # bar_chart { x=hour_of_day y=['from_sfo_flight_count', 'from_oak_flight_count'] }
+  # bar_chart
   nest: by_hour_of_day is  {
     group_by: hour_of_day is hour(dep_time)
     aggregate:
-      from_sfo_flight_count
-      from_oak_flight_count
+      flight_count
   }
 }
 >>>markdown
