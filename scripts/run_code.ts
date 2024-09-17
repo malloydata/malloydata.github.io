@@ -116,9 +116,9 @@ class DocsURLReader implements URLReader {
   private dataStyles: DataStyles = {};
 
   constructor(
-    private readonly documentPath: string, 
+    private readonly documentPath: string,
     private readonly inMemoryURLs: Map<string, string>
-  ) { }
+  ) {}
 
   async readURL(url: URL): Promise<string> {
     const inMemoryURL = this.inMemoryURLs.get(url.toString());
@@ -151,9 +151,14 @@ class ConnectionManager {
     if (existing) {
       return existing;
     }
-    const connection = new DuckDBConnection("duckdb", undefined, fullDirectory, {
-      rowLimit: 5,
-    });
+    const connection = new DuckDBConnection(
+      "duckdb",
+      undefined,
+      fullDirectory,
+      {
+        rowLimit: 5,
+      }
+    );
     this.connections.set(fullDirectory, connection);
     return connection;
   }
@@ -252,10 +257,10 @@ export async function runCode(
 async function renderResult(
   queryResult: Result,
   dataStyles: DataStyles,
-  options: RunOptions,
+  options: RunOptions
 ): Promise<string> {
   const showAs = options.showAs || "html";
-  const isNextRenderer = queryResult.modelTag.has("renderer_next");
+  const isNextRenderer = !queryResult.modelTag.has("renderer_legacy");
   const resultContainerId = crypto.randomUUID();
   let htmlResult = "";
   if (isNextRenderer) {
@@ -322,14 +327,20 @@ export async function runNotebookCode(
   showCode: string,
   documentPath: string,
   options: RunOptions,
-  modelDef: ModelDef,
-): Promise<{ rendered: string, newModel: ModelDef; isHidden: boolean }> {
+  modelDef: ModelDef
+): Promise<{ rendered: string; newModel: ModelDef; isHidden: boolean }> {
   const fakeURL = new URL("file://" + path.join(DOCS_ROOT_PATH, documentPath));
-  const urlReader = new DocsURLReader(documentPath, new Map([[fakeURL.toString(), code]]));
+  const urlReader = new DocsURLReader(
+    documentPath,
+    new Map([[fakeURL.toString(), code]])
+  );
   const connection = CONNECTIONS.getConnection(documentPath);
   const runtime = new Runtime(urlReader, connection);
 
-  const querySummary = `"${showCode.split("\n").join(" ").substring(0, 50)}..."`;
+  const querySummary = `"${showCode
+    .split("\n")
+    .join(" ")
+    .substring(0, 50)}..."`;
   log(`  >> Running (notebook) query ${querySummary}`);
   const runStartTime = performance.now();
   const newModel = runtime
@@ -339,9 +350,12 @@ export async function runNotebookCode(
   // TODO this is a quick hack to make each snippet only use its own
   // tags and not those from other cells, unsure if this is the right approach
   // long term, but it prevents `##(docs) hidden` from affecting subsequent cells
-  const modelTagParse = Tag.annotationToTag({
-    notes: model._modelDef?.annotation?.notes
-  }, { prefix: DOCS_M_TAG_PREFIX });
+  const modelTagParse = Tag.annotationToTag(
+    {
+      notes: model._modelDef?.annotation?.notes,
+    },
+    { prefix: DOCS_M_TAG_PREFIX }
+  );
   const modelTags = modelTagParse.tag;
   const newModelDef = model._modelDef;
   let hasQuery = false;
@@ -350,7 +364,7 @@ export async function runNotebookCode(
     model.preparedQuery;
     hasQuery = true;
   } catch {}
-  options.isHidden = modelTags.has('hidden');
+  options.isHidden = modelTags.has("hidden");
 
   if (hasQuery) {
     const runnable = newModel.loadFinalQuery();
@@ -358,35 +372,40 @@ export async function runNotebookCode(
     const tags = query.tagParse({ prefix: DOCS_Q_TAG_PREFIX }).tag;
     options.pageSize = tags.numeric("limit");
     options.size = tags.text("size");
-    options.showAs = tags.has("html") ? "html" : tags.has("sql") ? 'sql' : tags.has("json") ? 'json' : 'html';
+    options.showAs = tags.has("html")
+      ? "html"
+      : tags.has("sql")
+      ? "sql"
+      : tags.has("json")
+      ? "json"
+      : "html";
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
     });
-  
+
     log(
       `  >> Finished running query ${querySummary} in ${timeString(
         runStartTime,
         performance.now()
       )}`
     );
-  
+
     const dataStyles = {
       ...options.dataStyles,
       ...urlReader.getHackyAccumulatedDataStyles(),
     };
-  
+
     const rendered = await renderResult(queryResult, dataStyles, options);
     return {
       rendered,
       newModel: newModelDef,
-      isHidden: options.isHidden
-    }
-  }
-  else {
+      isHidden: options.isHidden,
+    };
+  } else {
     return {
       rendered: "",
       newModel: newModelDef,
-      isHidden: options.isHidden
+      isHidden: options.isHidden,
     };
   }
 }
