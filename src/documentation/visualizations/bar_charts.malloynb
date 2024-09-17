@@ -1,7 +1,7 @@
 >>>markdown
 # Bar Charts
 
-There are two types of bar charts. _Two measure bar charts_ (gradient bar charts) and _Two Dimension Bar_ Charts (stacked bar charts).
+Malloy can create simple bar charts and bar charts with series breakdowns, either stacked or grouped.
 
 The examples below all use the following semantic model.
 >>>malloy
