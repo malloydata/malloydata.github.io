@@ -5,7 +5,9 @@ A new renderer is currently being developed for Malloy; however, some functional
 
 You will need to revert back to the legacy renderer if you are using:
 - Export to HTML in VS Code
-- ...
+- Drilling
+- Pivoting
+- Transpose
 >>>malloy
 ## renderer_legacy
 source: airports is duckdb.table('../data/airports.parquet') extend {
