@@ -119,7 +119,7 @@ run: flights -> {
 >>>markdown
 
 ## Nested Bar Charts
-Barcharts can be used inside of nested queries:
+Bar charts can be used inside of nested queries:
 >>>malloy
 #(docs) size=large limit=5000
 run: flights -> {
