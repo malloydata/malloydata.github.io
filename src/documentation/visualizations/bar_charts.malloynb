@@ -15,12 +15,31 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 >>>markdown
 
 ## Simple Bar Chart
-A basic bar chart takes a table where the first column is a string and the second is a number.
+Basic bar charts use the first dimension as the X-axis, and the first aggregate as the Y-axis.
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
 run: flights -> {
   group_by: carriers.nickname
+  aggregate: flight_count
+}
+>>>markdown
+## Bar Chart with Breakdown
+Adding a second dimension to the query in the `group_by:` clause creates a bar chart with a breakdown along that second dimension.
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: carriers.nickname, destination
+  aggregate: flight_count
+}
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: destination, carriers.nickname
   aggregate: flight_count
 }
 >>>markdown

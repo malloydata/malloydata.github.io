@@ -1,0 +1,33 @@
+>>>markdown
+# Legacy Renderer
+
+A new renderer is currently being developed for Malloy; however, some functionality is not yet fully implemented. To revert back to the legacy renderer, use the model tag `## renderer_legacy`.
+
+You will need to revert back to the legacy renderer if you are using:
+- Export to HTML in VS Code
+- ...
+>>>malloy
+## renderer_legacy
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  dimension: name is concat(code, ' - ', full_name)
+  measure: airport_count is count()
+}
+>>>markdown
+
+## An example table
+>>>malloy
+#(docs) size=medium limit=5000
+run: airports -> {
+  group_by: fac_type
+  aggregate: 
+    airport_count
+    major_count is airport_count { where: major = 'Y' }
+    average_elevation is elevation.avg()
+  nest: top_states is {
+    group_by: state
+    aggregate:
+      airport_count
+      average_elevation is elevation.avg()
+    limit: 3
+  }
+}
