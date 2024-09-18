@@ -1,7 +1,7 @@
 >>>markdown
 # Bar Charts
 
-There are two types of bar charts. _Two measure bar charts_ (gradient bar charts) and _Two Dimension Bar_ Charts (stacked bar charts).
+Malloy can create simple bar charts and bar charts with series breakdowns, either stacked or grouped.
 
 The examples below all use the following semantic model.
 >>>malloy
@@ -10,12 +10,17 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
     on carrier = carriers.code
   measure: 
     flight_count is count()
+    to_sfo_flight_count is flight_count { where: destination = 'SFO' }
+    to_oak_flight_count is flight_count { where: destination = 'OAK' }
+    from_sfo_flight_count is flight_count { where: origin = 'SFO' }
+    from_oak_flight_count is flight_count { where: origin = 'OAK' }
+
     aircraft_count is count(tail_num)
 }
 >>>markdown
 
 ## Simple Bar Chart
-A basic bar chart takes a table where the first column is a string and the second is a number.
+Basic bar charts use the first dimension as the X-axis, and the first aggregate as the Y-axis:
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
@@ -24,66 +29,116 @@ run: flights -> {
   aggregate: flight_count
 }
 >>>markdown
-
-## Two Measures
-
-This chart looks at flights and counts the number of aircraft owned by each carrier.  It also, using a gradient,
-shows the number of flights made per plane.
->>>malloy
-#(docs) size=large limit=5000
-# bar_chart
-run: flights -> {
-  group_by: carriers.nickname
-  aggregate: aircraft_count
-  aggregate: flights_per_aircraft is flight_count / aircraft_count
-}
->>>markdown
-
-
-## Two Dimensions
-In this case we are going to look at carriers by flight count and stack the destination.  We are only going to look at flights
-with the destination SFO, OAK or SJC.
+## Bar Chart with Breakdown
+Adding a second dimension to the query in the `group_by:` clause creates a bar chart with a breakdown along that second dimension:
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
 run: flights -> {
   where: destination ? 'SFO' | 'OAK' | 'SJC'
-  group_by: carriers.nickname
+  group_by: carriers.nickname, destination
   aggregate: flight_count
-  group_by: destination
 }
->>>markdown
-
-
-We could flip the dimensions around and look at the airports' flights by carrier.
 >>>malloy
 #(docs) size=large limit=5000
 # bar_chart
 run: flights -> {
   where: destination ? 'SFO' | 'OAK' | 'SJC'
-  group_by: destination
-  aggregate: flight_count 
-  group_by: carriers.nickname
+  group_by: destination, carriers.nickname
+  aggregate: flight_count
+}
+>>>markdown
+To stack bars instead of grouping them, add the `stack` tag:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart.stack
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: carriers.nickname, destination
+  aggregate: flight_count
 }
 >>>markdown
 
-## Nested bar Charts
-Barcharts can be used in nested queries
+## Controlling Behavior with Tag Parameters
+
+You can explicitly set any of the parameters in the `bar_chart` tag. The following parameters are supported:
+- x
+- y
+- series
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart { x=nickname series=destination y=flight_count }
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: destination, carriers.nickname
+  aggregate: flight_count
+}
+>>>markdown
+
+## Breakdown Chart with Multiple Measures
+To create a breakdown chart with multiple measures as the series, provide y as an array of field names.
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart { x=nickname y=['to_sfo_flight_count', 'to_oak_flight_count'] }
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: 
+    to_sfo_flight_count
+    to_oak_flight_count
+}
+>>>markdown
+## Embedded Parameters
+Parameters can also be embedded directly in a query by tagging fields:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: 
+    # series
+    destination
+    # x
+    carriers.nickname
+  aggregate:
+    # y
+    flight_count
+    aircraft_count
+}
+>>>markdown
+For measure series, tag multiple aggregates as `y` by placing the tag above the `aggregate:` keyword:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart
+run: flights -> {
+  group_by: carriers.nickname
+  # y
+  aggregate: 
+    to_sfo_flight_count
+    to_oak_flight_count
+}
+>>>markdown
+
+## Nested Bar Charts
+Bar charts can be used inside of nested queries:
 >>>malloy
 #(docs) size=large limit=5000
 run: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count 
-  # bar_chart
+  # bar_chart.stack
   nest: top_destinations is  {
     group_by: destination
-    aggregate: flight_count
+    # y
+    aggregate:
+      from_sfo_flight_count
+      from_oak_flight_count
     limit: 10
   }
   # bar_chart
   nest: by_hour_of_day is  {
     group_by: hour_of_day is hour(dep_time)
-    aggregate: flight_count
+    aggregate:
+      flight_count
   }
 }
 >>>markdown

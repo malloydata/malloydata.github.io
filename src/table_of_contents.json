@@ -233,8 +233,8 @@
           "link": "/visualizations/segment_maps.malloynb"
         },
         {
-          "title": "New Renderer",
-          "link": "/visualizations/renderer_next.malloynb"
+          "title": "Legacy Renderer",
+          "link": "/visualizations/legacy_renderer.malloynb"
         }
       ]
     },
