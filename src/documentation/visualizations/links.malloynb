@@ -46,7 +46,7 @@ run: flights -> {
 In the example below we want to show the Carrier's nickname with a link using the carriers code.  We can do this by including the code in the query, hiding it with a `#hidden` tag and referencing it using `key_column` in the `# link` tag.
 >>>malloy
 run: flights -> {
-    # link {url_template='https://www.flightsfrom.com/$$' key_column=carrier}
+    # link {url_template='https://www.flightsfrom.com/$$' field=carrier}
     group_by: 
       carriers.nickname
       # hidden
