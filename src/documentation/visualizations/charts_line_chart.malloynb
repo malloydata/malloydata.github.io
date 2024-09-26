@@ -30,6 +30,8 @@ run: flights -> {
 
 ## Multi line line_chart
 
+There are two modes to generate mulitple lines in a chart.  You can group by an additional parameter (that shows the results as lines) or you can explicitly tag the y-axis parameters.
+
 The third parameter in a line chart adds a line for each dimension found.  
 >>>malloy
 #(docs) size=large limit=50000
@@ -38,6 +40,21 @@ run: flights -> {
   group_by: departure_month is dep_time.month
   aggregate: flight_count
   group_by: carriers.nickname
+}
+>>>markdown
+Explicitly tagging the x and y axis.
+>>>malloy
+#(docs) size=large limit=50000
+# line_chart
+run: flights -> {
+  group_by: 
+    # x
+    departure_month is dep_time.month
+  aggregate: 
+    # y
+    south_west is flight_count {where: carriers.nickname = 'Southwest'}
+    # y
+    american is flight_count {where: carriers.nickname = 'American'}
 }
 >>>markdown
 
