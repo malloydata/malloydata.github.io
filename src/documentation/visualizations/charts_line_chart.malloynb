@@ -3,7 +3,9 @@
 
 The examples below all use the following semantic model.
 >>>malloy
+## renderer_next
 source: flights is duckdb.table('../data/flights.parquet') extend {
+  where: dep_time = @2001
   join_one: carriers is duckdb.table('../data/carriers.parquet') 
     on carrier = carriers.code
   measure: 
@@ -25,10 +27,13 @@ Line charts take two or three parameters.
 run: flights -> {
   group_by: departure_month is dep_time.month
   aggregate: flight_count
+  order_by: departure_month
 }
 >>>markdown
 
 ## Multi line line_chart
+
+There are two modes to generate mulitple lines in a chart.  You can group by an additional parameter (that shows the results as lines) or you can explicitly tag the y-axis parameters.
 
 The third parameter in a line chart adds a line for each dimension found.  
 >>>malloy
@@ -38,6 +43,23 @@ run: flights -> {
   group_by: departure_month is dep_time.month
   aggregate: flight_count
   group_by: carriers.nickname
+  order_by: departure_month
+}
+>>>markdown
+Explicitly tagging the x and y axis.
+>>>malloy
+#(docs) size=large limit=50000
+# line_chart
+run: flights -> {
+  group_by: 
+    # x
+    departure_month is dep_time.month
+  aggregate: 
+    # y
+    south_west is flight_count {where: carriers.nickname = 'Southwest'}
+    # y
+    american is flight_count {where: carriers.nickname = 'American'}
+  order_by: departure_month
 }
 >>>markdown
 
@@ -54,6 +76,7 @@ run: flights -> {
     group_by: departure_month is dep_time.month
     aggregate: flight_count
     group_by: carriers.nickname
+    order_by: departure_month
   }
   limit: 5
 }
