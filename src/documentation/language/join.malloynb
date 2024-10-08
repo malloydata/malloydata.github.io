@@ -63,7 +63,7 @@ This is simply a shortcut, when joining based on the primary key of a joined sou
 >>>markdown
 ```malloy
 source: order_items is duckdb.table('../data/order_items.parquet') extend {
-  join_one: users on order_items.user_id = users.id
+  join_one: users on user_id = users.id
 }
 ```
 >>>markdown
