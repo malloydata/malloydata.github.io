@@ -110,22 +110,22 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 
 One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
 
-In the example below, we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
+In the example below, first we create a *source* object named `airports` and add a `dimension` calculation for `county_and_state` and `measure` calculation for `airport_count`. We then query the `airports` source, grouping by the `county_and_state` dimension and aggregating with the `airport_count` measure.
+Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
   measure: airport_count is count()
   measure: average_elevation is avg(elevation)
 }
->>>markdown
->>>malloy
+
 run: airports -> { 
   group_by: county_and_state
   aggregate: airport_count
 }
 >>>markdown
 
-Sources that are defined in one file can be imported into another using `import "path/to/some/file.malloy"`. For example, if the `airports` source above were defined in a file called `flights.malloy`, you could create a new file that imports it and immediately start using the `airports` source:
+Sources that are defined in one file can be imported into another using `import "path/to/some/file.malloy"`. For example, if the `airports` source above were defined in a file called `airports.malloy`, you could create a new file that imports it and immediately start using the `airports` source:
 >>>markdown
 ```malloy
 import "airports.malloy" 
