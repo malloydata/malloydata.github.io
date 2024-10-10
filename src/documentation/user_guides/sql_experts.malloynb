@@ -1,0 +1,67 @@
+>>>markdown
+# Malloy for SQL Experts
+
+This document is an attemt to move you quickly into the Malloy language by showing how different queries translate SQL into Malloy.
+
+We will start with some basic queries and move our way up to more the more complex.
+
+## SQL queries can be directly translated into Malloy
+>>>sql
+-- connection: duckdb
+SELECT 
+  flights.origin as "Origin Code",
+  orig.city,
+  orig.full_name as "airport name",
+  count(*) as flight_count,
+  count(distinct tail_num) as aircraft_count,
+  avg(distance) as avg_distance
+FROM '../data/flights.parquet' as flights
+LEFT JOIN '../data/airports.parquet' as orig ON flights.origin = orig.code
+WHERE destination = 'SFO'
+GROUP BY 1,2,3
+ORDER BY count(*) desc
+LIMIT 10
+>>>markdown
+## The Malloy Literal Query
+Let's look at the query and 
+>>>malloy
+run: duckdb.table('../data/flights.parquet') -> {
+  extend: {join_one: orig is duckdb.table('../data/airports.parquet') on origin = orig.code}
+  where: destination = 'SFO'
+  group_by:
+    `Origin Code` is origin
+    orig.city
+    `Airport Name` is orig.full_name
+  aggregate:
+    flight_count is count()
+    aircraft_count is count(tail_num)
+    avg_distance is distance.avg()
+  order_by: flight_count desc
+  limit: 10    
+}
+>>>markdown
+Let's take this apart. 
+
+* Malloy queries are structured instead of divided by structured by clauses and keywords.  The order of the clauses doesn't matter.
+
+* Malloy queries start with the thing you are querying FROM.  
+
+```
+run: <source> -> {
+   <query_clause>: <expression>
+}
+```
+
+* To reference a table in malloy,  you use the 'table' function on a connection.  In this case we are using the `duckdb` connection and asking it for the parquet file `../data/flights.parquet` 
+```
+run: duckdb.table('../data/flights.parquet) -> {
+   ...
+}
+```
+
+*  `is` vs `as`.  For the most part, in SQL anyplace you would write `as`, you write `is` and the order is reversed.  The important thing is the concept, not the expression
+
+```
+flight_count is count()
+```
+>>>markdown
