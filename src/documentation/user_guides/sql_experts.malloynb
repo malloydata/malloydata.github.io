@@ -38,7 +38,7 @@ run: duckdb.table('../data/flights.parquet') -> {
     flight_count is count()             -- (6) Mostly the same as count(*) 
     aircraft_count is count(tail_num)   -- (7) exactly the same as count(distinct tail_num) 
     avg_distance is distance.avg()      -- (8) aggregate locality
-  order_by: flight_count desc           -- (9) uses the output name instead of expression
+  order_by: flight_count desc           -- (9) uses the output name instead of expression or column ordinal
   limit: 10    
 }
 >>>markdown
