@@ -45,7 +45,7 @@ There are actually better ways to write this, but let's look at a query that has
   limit: 10    
 }
 >>>markdown
-* (1) Malloy [queries](../language/query.malloynb) start with query [source](../language.source.malloynb) (in this case a tabe *table*) as the first thing. The `->`operator says run a transformation.  
+* (1) Malloy [queries](../language/query.malloynb) start with query [source](../language/source.malloynb) (in this case a tabe *table*) as the first thing. The `->`operator says run a transformation.  
 * (2) Queries can have an `extend:` block where you can add declaration for resuable calculations and joins.
 * (3)[Joins](../language/join.malloynb) need an additional piece of information. Malloy guarentees that aggregate calculations won't be affected by by joins.  In order to make this promise, when joining you have to tell Malloy if that data will fan out.  Use `join_one:` if there won't be an increase in the number of rows after the join.  `join_many:` if the join could cause there to me more rows.
 * (4) Malloy proritizes readability.  In most places where SQL would use 'AS' malloy uses 'is' and reverses the declaration order.
