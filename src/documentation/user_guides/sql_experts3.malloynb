@@ -23,7 +23,7 @@ Functions that are _not_ built in may be called in the same way, but with an `!`
 ### Arbitrary SQL Expressions in Dimensions.
 *Write coorelated subqueries against arrays, array mapping functions and more* 
 
-You can use arbitrary [SQL in expressions using](../experiments/sql_expression.malloynb) the `sql_XXX` functions.  The mechanism is helpful for coorelated, array mapping functions and more.
+You can use arbitrary [SQL in expressions using](../experiments/sql_expressions.malloynb) the `sql_XXX` functions.  The mechanism is helpful for coorelated, array mapping functions and more.
 
 `group_by: foo_count is sql_number("""SELECT COUNT(*) FROM UNNEST${TABLE}.foo """)`
 >>>malloy
