@@ -1,0 +1,61 @@
+>>>markdown
+# Malloy for SQL Experts
+
+This document is an attemt to move you quickly into the Malloy language by showing how different queries translate SQL into Malloy.
+
+We will start with some basic queries and move our way up to more the more complex.
+
+## SQL queries can be directly translated into Malloy
+>>>sql
+-- connection: duckdb
+SELECT 
+  flights.origin as "Origin Code",
+  orig.city,
+  orig.full_name as "airport name",
+  count(*) as flight_count,
+  count(distinct tail_num) as aircraft_count,
+  avg(distance) as avg_distance
+FROM '../data/flights.parquet' as flights
+LEFT JOIN '../data/airports.parquet' as orig ON flights.origin = orig.code
+WHERE destination = 'SFO'
+GROUP BY 1,2,3
+ORDER BY count(*) desc
+LIMIT 10
+>>>markdown
+## The Malloy Literal Query
+There are actually better ways to write this, but let's look at a query that has been literally translated into Malloy.
+>>>malloy
+ run: duckdb.table('../data/flights.parquet') -> { -- (1) FROM is first
+  extend: { -- (2) `extend:` adds  reusable declarations
+    join_one: orig is         -- (3) joins need 'one' or 'many'
+      duckdb.table('../data/airports.parquet') 
+      on origin = orig.code
+  }
+  where: destination = 'SFO'
+  group_by:
+    `Origin Code` is origin             --  (4) 'is' vs 'as' 
+                                        --  (5) the root table has no alias 
+    orig.city                   --  Output column name is 'city', like SQL.
+    `Airport Name` is orig.full_name    -- (6) Backtick to quote names 
+  aggregate:
+    flight_count is count()             -- (7) Mostly the same as count(*) 
+    aircraft_count is count(tail_num)   -- (8) exactly the same as count(distinct tail_num) 
+    avg_distance is distance.avg()      -- (9) aggregate locality
+  order_by: flight_count desc           -- (10) uses the output name instead of expression or column ordinal
+  limit: 10    
+}
+>>>markdown
+* (1) Malloy [queries](../language/query.malloynb) start with query [source](../language.source.malloynb) (in this case a tabe *table*) as the first thing. The `->`operator says run a transformation.  
+* (2) Queries can have an `extend:` block where you can add declaration for resuable calculations and joins.
+* (3)[Joins](../language/join.malloynb) need an additional piece of information. Malloy guarentees that aggregate calculations won't be affected by by joins.  In order to make this promise, when joining you have to tell Malloy if that data will fan out.  Use `join_one:` if there won't be an increase in the number of rows after the join.  `join_many:` if the join could cause there to me more rows.
+* (4) Malloy proritizes readability.  In most places where SQL would use 'AS' malloy uses 'is' and reverses the declaration order.
+* (5) Aliases in Malloy work as a heirachy as opposed to a flat namespacein SQL.  In SQL every table has an alias.  In Malloy, the root table has no alias (it does, but it is always called `source`).  Joins in Malloy can be nested to create heirachies.  In Malloy `orders.users.address` is how you might chase throuh join aliases.
+* (6) You can use arbitraray characters including spaces in identifier names.  Available characters vary by SQL engine.
+* (7) `count()` works a lot like `count(*)` does in SQL.  it will always return the number of rows in the root table that match, even if the data fans out.  The difference is that you can count on any alias.
+* (8) `count(tail_num)` is a `count(distinct)` and exactly like SQL.
+* (9) In Malloy you can peform a sum or average anyplace in the join heiracty.  
+* (10) In a SQL order by, you have to either specify the expression for a column or the oridinal number of the column.  In Malloy you write the order_by: using the name of the column as it will appear in the output.
+
+      
+>>>markdown
+## Next: [CTEs and Refactoring for Reusability](sql_experts2.malloynb)

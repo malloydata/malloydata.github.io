@@ -1,0 +1,29 @@
+>>>markdown
+## SQL Experts: Malloy things you should know.
+>>>markdown
+### Types,  Cast and Safe Cast
+* *In Malloy `::` is the cast operator.*
+* *Malloy types are `number`, `string`, `boolean`, `date`, `timestamp`*
+* *Malloy Booleans are two state, true and false, never NULL
+* *`:::` is the safe cast operator if the SQL dialect supports the operation.*  
+* *You can cast to any native SQL type by placing the type name in quotes.*
+
+    `foo::"BIGINT"`
+
+### Malloy has its own standard function library.
+*Builtin functions work the same across SQL Dialects*
+
+In order for Malloy code to execute the same on many SQL engines, Malloy has a [set of functions](../language/functions.malloynb) that works the same on all SQL Engines.
+
+### Raw SQL Functions
+*Call any SQL function or UDF.*
+
+Functions that are _not_ built in may be called in the same way, but with an `!` in between the function name and argument list: `sinh!(x)`. In this case, Malloy assumes the return type of the function is the same as that of the first argument (or `number` if there are no arguments). When this is not correct, the return type can be specified after the `!`, e.g. `hash!number(username)`.
+
+### Arbitrary SQL Expressions in Dimensions.
+*Write coorelated subqueries against arrays, array mapping functions and more* 
+
+You can use arbitrary [SQL in expressions using](../experiments/sql_expression.malloynb) the `sql_XXX` functions.  The mechanism is helpful for coorelated, array mapping functions and more.
+
+`group_by: foo_count is sql_number("""SELECT COUNT(*) FROM UNNEST${TABLE}.foo """)`
+>>>malloy

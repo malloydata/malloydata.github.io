@@ -1,0 +1,129 @@
+>>>markdown
+## SQL Experts: CTE and Refactoring for Reusibility.
+
+Malloy has the notion of `query:`s and `source:`es. It can be a little confusing when to use one or the others.
+
+A query is a transformation that returns a table.  If you are doing a transfomation of data to be joined in another query or source, make a `query:`
+ 
+A `source` is datasource, like a table with added declarations that can be used against the data it contains.
+
+A `source` can also be joined with sources and queries to be a network of data that you can query.
+>>>sql
+-- conneciton: duckdb
+WITH orig_facts as (    -- (1) CTE computes a rollup of flights 
+    SELECT 
+      origin as code,
+      COUNT(*) as total_flights
+    FROM '../data/flights.parquet' as flights
+    GROUP BY 1
+)
+SELECT
+  orig.code, 
+  orig.city,
+  orig_facts.total_flights as total_flights_to_origin,
+  carriers.nickname,
+  count(*) as flight_count,
+  count(*)/(orig_facts.total_flights*1.0) as percent_of_flights_to_origin   -- (2) division is integer by default
+FROM '../data/flights.parquet' as flights
+LEFT JOIN '../data/airports.parquet' as orig ON flights.origin = orig.code
+LEFT JOIN orig_facts ON flights.origin = orig_facts.code
+LEFT JOIN '../data/carriers.parquet' as carriers ON flights.carrier = carriers.code
+GROUP BY 1,2,3,4
+ORDER BY 5 DESC
+LIMIT 10
+>>>markdown
+## Translate the structure of the query.
+
+ 1) For each table in the query, make a `source:` and add relevent calculations.  Aggregate calculations are declared as `measure:`s.  Scalar calculations are declared as `dimension:`s.  These calculations can be used in queries, but simply naming them.  We make sources for the flights, airports and carriers tables.
+
+2) For each CTE, declare a `query:`.   In SQL, each CTE stage produces a table that is used in subsequent stages in the query.  It works the same in malloy.  CTEs are declared and named in a `query:` block.  They usually use one of the previously defined `source:`s as a base.  These queries are usually result in `fact` tables as they show up at some level of granularity.  We declare `origin_facts`.
+
+3) Finally, declare the `source:` that you are going base your complex queries o `flights_explore`.  `flights_explore` inherits from `flights` and adds joins to the above tables.
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend { -- (1)
+  measure: 
+    flight_count is count()
+    total_distance is distance.sum()        -- add some measures
+    avg_distance is distance.avg()
+  rename: 
+    origin_code is origin
+    destination_code is destination
+} 
+source: airports is duckdb.table('../data/airports.parquet') extend {
+   dimension:
+      name is concat(code, '-', city)
+   measure: 
+    airport_count is count()
+    avg_elevation is elevation.avg()
+}
+source: carriers is  duckdb.table('../data/carriers.parquet') extend {
+  measure: carrier_count is count()
+}
+query: origin_facts is flights -> { -- (2) CTEs become fact queries
+  group_by: code is origin_code
+  aggregate: total_flights is flight_count
+}
+
+source: flights_explore is flights extend {  -- (3), (4)
+  join_one: carriers on carrier = carriers.code
+  join_one: origin is airports on origin_code = origin.code
+  join_one: origin_facts on origin_code = origin_facts.code
+}
+>>>markdown
+1) For each table in the query, make a `source:`.  If there are aggregate calculations that are relevent to the source declare them measures or dimensions. 
+
+2) For each CTE, declare a `query:`.  Usually these are 'fact' tables of some kind.
+
+3) Declare a new source that extends the root table in the query, that joins eveything together into a network.  
+
+4) `extend:` lets you inhert from an exising source.
+>>>malloy
+### Writing the query is easy.  Becomes easy.
+>>>malloy
+run: flights_explore -> {
+  group_by:
+    origin.code
+    origin.city
+    total_flights_to_origin is  origin_facts.total_flights
+    carriers.nickname
+  aggregate:
+    flight_count
+     percent_of_flights_to_origin is flight_count/origin_facts.total_flights
+  limit: 10
+}
+>>>markdown
+## This semantic model can be used to generate lots of interesting queries.
+See [Querying a semantic model](https://docs.malloydata.dev/blog/)
+>>>malloy
+run: flights_explore -> {
+  group_by: origin.name
+  aggregate: flight_count, carriers.carrier_count
+  limit: 10
+  # list_detail                       -- (1)
+  nest: carriers is {                 -- (2)
+    group_by: carriers.nickname 
+    aggregate: flight_count
+  }
+}
+>>>markdown
+
+* (2) [Language/Nesting Queries](../language/nesting.malloynb)
+* (1) [See Visualizations/Lists](../visualizations/lists.malloynb)
+>>>markdown
+## And another query.
+>>>malloy
+run: flights_explore ->  {
+  group_by: carrier is carriers.nickname
+  aggregate: flight_count
+  # list_detail
+  nest: by_origin is {
+    group_by: origin.name 
+    aggregate: flight_count 
+    limit: 10
+  }
+  # line_chart
+  nest: by_month is {
+    group_by: dep_year is dep_time.year
+    aggregate: flight_count
+  }
+}
