@@ -1,6 +1,36 @@
 >>>markdown
 ## SQL Experts: Malloy things you should know.
 >>>markdown
+## There are two types of block, query blocks and declaration blocks
+
+## Query Block
+A query block alwyas follows a `->` operator and is used to transform data.  Components of a query block include `group_by:`, `agggregate:`, `select:`, `order_by:`, `limit:`, `calculate:`, `where:`, `having:` and `index:`.  The query blocks can be chained in a pipeline, for example.
+
+```
+  run: duckdb.table(airports.parquet) -> {
+     group_by: state, fac_type
+     aggregate: airport_count is count()
+  } -> {
+    aggregte: total_airports is airport_count.sum()
+  }
+```
+
+## Declaration Block
+A declaration block adds calculations to an existing source, like a table.  The declaration make reusable calculations that can be used in query block or in the source block.  Source blocks follow an 'extend' in the language and can contain `measure:` (aggregate cacluation), `dimension:` (scalar calculation), `where:` (a filter to always apply to a source), `primary_key:`, `view:` (a predefined query), `join_xxx:` (declares relationship to another source).
+
+```
+source: airports is duckdb.table(airports.parquet) extend {
+  primay_key: code
+  dimension: city_state is concat(state,',',city)
+  measure:
+    airport_count is count()
+    average_elevation is elevation.avg()
+}
+```
+
+## Expressions
+Expression and malloy are pretty similar to SQL.  Where we've change the language, we've done it to make it more readable, modern or consistent and composable.  If you write the SQL expression, generally, the compiler will tell you how to write the Malloy expression.
+
 ### Types,  Cast and Safe Cast
 * *In Malloy `::` is the cast operator.*
 * *Malloy types are `number`, `string`, `boolean`, `date`, `timestamp`*
