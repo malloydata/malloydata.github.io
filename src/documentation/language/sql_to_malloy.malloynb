@@ -43,6 +43,7 @@ HAVING <aggregate_filter_expression> AND <aggregate_filter_expression> AND ...
 ORDER BY <group_by> | <aggregate>
 LIMIT <limit>
 ``` -->
+>>>markdown
 
 ## Components of a Query
 
@@ -61,6 +62,7 @@ LIMIT <limit>
 | <pre><code>FROM (...) AS user_facts</code></pre> | <pre> `query: user_facts is duckdb.sql("""SELECT ...""")` </pre> | **Subqueries**: Can be written into [SQL Blocks](../language/sql_blocks.malloynb). Example below. |
 
 <!-- TODO fix up the SQL subqueries example above -->
+>>>markdown
 
 ## Expressions
 Many SQL functions supported by the database can simply be used unchanged in Malloy. In certain cases, we have implemented what we feel are improvements and simplifications of certain SQL functions. This is intended to serve as a quick reference, more complete documentation can be found [here](../language/expressions.malloynb).
@@ -72,6 +74,7 @@ Many SQL functions supported by the database can simply be used unchanged in Mal
 | <pre> <code>COUNT(CASE WHEN status = 'Returned' THEN 1 END),</code> <code>AVG(CASE WHEN brand = 'Levi\'s' THEN price END)</code> </pre> | <pre> `count() { where: status = 'Returned' }` `avg_price { where: brand = 'Levi\'s' }` </pre> | Aggregates may be filtered using filter expressions. [Doc](../language/expressions.malloynb#filtered-expressions) |
 | <pre> <code>CAST(distance AS string),</code> <code>distance::string</code> </pre> | <pre>`distance::string`</pre> | [Type Cast](../language/expressions.malloynb#safe-type-cast). Also worth reviewing [Types](../language/datatypes.malloynb) doc. |
 
+>>>markdown
 
 ### Working with Time
 The [Time Expressions](../language/expressions.malloynb#time-expressions) reference contains substantially more detail and examples.
@@ -86,17 +89,16 @@ The [Time Expressions](../language/expressions.malloynb#time-expressions) refere
 
 ### Window Functions
 
-Feature requests are tracked using [Issues on Github](https://github.com/malloydata/malloy/issues).
+| SQL | Malloy | Docs |
+|---|---|---|
+| <pre><code>FIRST_VALUE(product_brand) OVER (PARTITION BY user_id ORDER BY created_at ASC) </code></pre> |<pre>` calculate: first_value(product_brand) {partition_by: user_id order_by: created_at asc} `</pre> | Names of fields in `parition_by:` are from the output space|
+
+### Coorelated Subqueries and Arrays, and arbitrarly complex sql expressions.
+Malloy doesn't handle arrays directly today (but is coming soon).  
 
 | SQL | Malloy | Docs |
 |---|---|---|
-| <pre><code>FIRST_VALUE(product_brand) OVER (PARTITION BY user_id ORDER BY created_at ASC) </code></pre> |<pre><code> calculate: first_value(product_brand) {partition_by: user_id order_by: created_at asc} </code></pre> | Names of fields in `parition_by:` are from the output space|
-
-### Coorelated Subqueries and Arrays
-
-| SQL | Malloy | Docs |
-|---|---|---|
-| <pre><code> SELECT (SELECT count(*) FROM UNNEST(a)) as a_len FROM ... </code></pre> | <pre><code> group_by: a_len is sql_number("""SELECT count(*) FROM UNNEST(${TABLE}.a)""")</code></pre> | `sql_number` allows you to use arbitrary SQL expressions as a dimensional value"
+| <pre><code> SELECT (SELECT count(*) FROM UNNEST(a)) as a_len FROM ... </code></pre> | <pre>` group_by: a_len is sql_number("""SELECT count(*) FROM UNNEST(${TABLE}.a)""")`</pre> | `sql_number` allows you to use arbitrary SQL expressions in dimensional expressions.  The `"""` is another form of string quoting in Malloy.  ${TABLE} refers to the current source's alias.
 
 
 
