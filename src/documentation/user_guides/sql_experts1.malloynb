@@ -210,7 +210,7 @@ In Malloy can can call native database functions or write arbitrary SQL expressi
 |---|---|
 | <pre> `sinh!number(x)` </pre> | Call, the 'native `sinh()` function it returns a number |
 | <pre> `sinh!(x)` </pre> | Call, the 'native `sinh()` function it returns a number because `x` is of type number |
-| <pre> `json_extract(j, '$.x):::string` </pre> | Call the native `json_extract` function and safe cast the results to a string |
+| <pre> `json_extract(j, '$.x'):::string` </pre> | Call the native `json_extract` function and safe cast the results to a string |
 >>>markdown
 ### Arbitrary SQL Expressions in Dimensions.
 
@@ -236,10 +236,3 @@ The [Time Expressions](../language/expressions.malloynb#time-expressions) refere
 | SQL | Malloy | Docs |
 |---|---|---|
 | <pre><code>FIRST_VALUE(product_brand) OVER (PARTITION BY user_id ORDER BY created_at ASC) </code></pre> |<pre>` calculate: first_value(product_brand) {partition_by: user_id order_by: created_at asc} `</pre> | Names of fields in `parition_by:` are from the output space|
-
-### Coorelated Subqueries and Arrays, and arbitrarly complex sql expressions.
-Malloy doesn't handle arrays directly today (but is coming soon).  
-
-| SQL | Malloy | Docs |
-|---|---|---|
-| <pre><code> SELECT (SELECT count(*) FROM UNNEST(a)) as a_len FROM ... </code></pre> | <pre>` group_by: a_len is sql_number("""SELECT count(*) FROM UNNEST(${TABLE}.a)""")`</pre> | `sql_number` allows you to use arbitrary SQL expressions in dimensional expressions.  The `"""` is another form of string quoting in Malloy.  ${TABLE} refers to the current source's alias.
