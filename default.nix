@@ -1,7 +1,7 @@
 with import <nixpkgs> { }; stdenv.mkDerivation {
   name = "malloy";
   buildInputs = [
-    nodejs-18_x
+    nodejs_20
     google-cloud-sdk
     git
     cacert
