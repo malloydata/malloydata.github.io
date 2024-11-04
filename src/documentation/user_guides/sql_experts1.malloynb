@@ -24,59 +24,64 @@ GROUP BY 1,2,3
 ORDER BY count(*) desc
 LIMIT 10
 >>>markdown
-## Direct translation of SQL into Malloy
+## Translation of SQL into Malloy
 
-You probably won't write it this way, but it is helpful to see how a SQL query is directly translated into Malloy.  
+In converting from SQL to Malloy, we refactor the query into two parts.  The resuable components go into a `source:` block,  The transformation goes into a query block.
 >>>markdown
 ```malloy
- run: duckdb.table('../data/flights.parquet') -> { -- (1) FROM is first
-  extend: { -- (2) `extend:` adds  reusable declarations
-    join_one: orig is         -- (3) joins need 'one' or 'many'
+ source: flights is                     -- (1) refactor the reusable parts 
+    duckdb.table('../data/flights.parquet') -- (2) get schema
+  extend {                              -- (3) add definitions
+    join_one: orig is                   -- (3) joins need 'one' or 'many'
       duckdb.table('../data/airports.parquet') 
         on origin = orig.code
-      dimension: 
-         is_delayed is dep_delay > 30   -- (4) reusable scalcar calculation 
-      measure:                          -- (5) aggregate definition
-        flight_count is count()         -- (6) Mostly the same as count(*) 
-        delayed_flight_count is 
-          flight_count {where: is_delayed}  -- (7) filtered aggregates
-        # percent                       -- (8) tell the renderer to show the result as a percent
-        percent_delayed is              
-          delayed_flight_count / flight_count  -- ** reuse calculations
-  }
+    dimension: 
+        is_delayed is dep_delay > 30    -- (4) reusable scalcar calculation 
+    measure:                            -- (5) aggregate definition
+      flight_count is count()           -- (6) Mostly the same as count(*) 
+      delayed_flight_count is 
+        flight_count {where: is_delayed}  -- (7) filtered aggregates
+      # percent                         -- (8) tell the renderer to show the result as a percent
+      percent_delayed is              
+        delayed_flight_count / flight_count  -- ** reuse calculations
+}
+ 
+ run: flights -> {                      -- (9) FROM is first
+  extend: 
   where: destination = 'SFO'
   group_by:
-    `Origin Code` is origin             --  (9) 'is' vs 'as' 
-                                        --  (10) the root table has no alias 
+    `Origin Code` is origin             --  (10) 'is' vs 'as' 
+                                        --  (11) the root table has no alias 
     orig.city                   --  Output column name is 'city', like SQL.
-    `Airport Name` is orig.full_name    -- (11) Backtick to quote names 
+    `Airport Name` is orig.full_name    -- (12) Backtick to quote names 
   aggregate:
     flight_count            
-    aircraft_count is count(tail_num)   -- (12) exactly the same as count(distinct tail_num) 
-    avg_distance is distance.avg()      -- (13) aggregate locality
+    aircraft_count is count(tail_num)   -- (13) exactly the same as count(distinct tail_num) 
+    avg_distance is distance.avg()      -- (14) aggregate locality
     delayed_flight_count
     percent_delayed
-  order_by: flight_count desc           -- (14) uses the output name instead of expression or column ordinal
+  order_by: flight_count desc           -- (15) uses the output name instead of expression or column ordinal
   limit: 10    
 }
 ```
 >>>markdown
 |  | Concept | Description |
 |---|---|---|
-| (1) | FROM is first | Malloy [queries](../language/query.malloynb) start with query [source](../language/source.malloynb) (in this case a tabe *table*) as the first thing. The `->`operator says run a transformation.|
-| (2) | Resuable Declarations | Queries can have an `extend:` block where you can add declaration for resuable calculations and joins.|
+| (1) | Reusable Components | The `source:` object containts the reusable parts of the query.  In a query, joins and aggregate expressions and scalar calculations are often resuable between queries.|
+| (2) | Get Schema | Malloy is strongly typed.  Malloy reads the schema definition from tables during the compilation process|
 | (3) | Joins need more info | [Joins](../language/join.malloynb) need an additional piece of information. Malloy guarentees that aggregate calculations won't be affected by by joins.  In order to make this promise, when joining you have to tell Malloy if that data will fan out.  Use `join_one:` if there won't be an increase in the number of rows after the join.  `join_many:` if the join could cause there to me more rows.|
 | (4) | `dimension:`  | Dimensions are reusable scalar expressions that are written in terms of other definitions in the source.  In this case we're making boolean `is_delayed` that can be used like a column in the flights table|
 | (5) | `measure:` | Measures are reusable aggregate calculations.|
 | (6) | count() rationalized | `count()` works a lot like `count(*)` does in conceptually SQL. `count()` it will return the number of rows in the root table that match, even if the data fans out. `alias.count()` will return the number of rows in a joined alias, again regardless of the fan out pattern.|
 | (7) | Filtered Aggregates | All Aggregregate expressions can be simply filtered |
 | (8) | Annotations | Any named object in Malloy can be annotated.  Annotations come back as part of the compilation process.  In this case we are annotation to tell the [Malloy renderer](../visualizations/numbers.malloynb) to show the result as a percentage.
-| (9) | 'is' vs 'AS' | Malloy proritizes readiblity.  Placing the name of the thing being declared makes the code easier to read. In most places where SQL would use 'AS' malloy uses 'is' and reverses the declaration order. |
-| (10) | Aliases are Heirachial |  Aliases in Malloy work as a heirachy as opposed to a flat namespacein SQL.  In SQL every table has an alias.  In Malloy, the root table has no alias (it does, but it is always called `source`).  Joins in Malloy can be nested to create heirachies.  In Malloy `orders.users.address` is how you might chase throuh join aliases.|
-| (11) | Human identifiers |  You can use arbitraray characters including spaces in identifier names.  Available characters vary by SQL engine.|
-| (12) | count distinct | `count(tail_num)` is a `count(distinct)` and exactly like SQL.  SQL's `count(foo)` can be written as `count() {where: foo != null}` |
-| (13) | [Relation aware agggregates](../language/aggregates.malloynb) | In Malloy you can peform a sum or average anyplace in the join heiracty.|  
-| (14) | Order By uses output names |  In a SQL order by, you have to either specify the expression for a column or the oridinal number of the column.  In Malloy you write the order_by: using the name of the column as it will appear in the output.|
+| (9) | FROM is first | The order of declarations in Malloy flows in an more logical in that the from starts first. Malloy often looks like from -> {where: group_by:, aggregate: order_by: limit:}|
+| (10) | 'is' vs 'AS' | Malloy proritizes readiblity.  Placing the name of the thing being declared makes the code easier to read. In most places where SQL would use 'AS' malloy uses 'is' and reverses the declaration order. |
+| (11) | Aliases are Heirachial |  Aliases in Malloy work as a heirachy as opposed to a flat namespacein SQL.  In SQL every table has an alias.  In Malloy, the root table has no alias (it does, but it is always called `source`).  Joins in Malloy can be nested to create heirachies.  In Malloy `orders.users.address` is how you might chase throuh join aliases.|
+| (12) | Human identifiers |  You can use arbitraray characters including spaces in identifier names.  Available characters vary by SQL engine.|
+| (13) | count distinct | `count(tail_num)` is a `count(distinct)` and exactly like SQL.  SQL's `count(foo)` can be written as `count() {where: foo != null}` |
+| (14) | [Relation aware agggregates](../language/aggregates.malloynb) | In SQL aggregate are against the resulting joined matrix.  In Malloy aggregate are computed against the table they are joined from. In Malloy you can peform a sum or average anyplace in the join heiracty.|  
+| (15) | Order By uses output names |  In a SQL order by, you have to either specify the expression for a column or the oridinal number of the column.  In Malloy you write the order_by: using the name of the column as it will appear in the output.|
 
       
 >>>markdown
