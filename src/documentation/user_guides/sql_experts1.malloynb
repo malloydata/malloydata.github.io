@@ -128,7 +128,7 @@ Once a source is declared, queries are represented more simply.  Calculations ca
 | <pre>             Malloy             </pre> | <pre>          SQL          </pre> | Notes | 
 |----------|--------------|---|
 | <pre><code>run: airports -> {<br> aggregate: airport_count<br>}</code></pre> | <pre><code>SELECT<br>  count( * ) as airport_count<br>FROM airports.parquet</code></pre>|The calculation `airport_count` comes from the declaration in the source.|
-| <pre><code>run: airports -> {<br>  group_by: city_state<br> aggregate: airport_count<br>}</code></pre> | <pre><code>SELECT<br>  concat(state,',',city) as city_state<br>  count( * ) as airport_count<br>FROM airports.parquet<br>GROUP BY 1<br>ORDER BY count(*) desc</code></pre>|Malloy has resonable defaults for [ordering queries](.../language.order_by/malloynb).|
+| <pre><code>run: airports -> {<br>  group_by: city_state<br> aggregate: airport_count<br>}</code></pre> | <pre><code>SELECT<br>  concat(state,',',city) as city_state<br>  count( * ) as airport_count<br>FROM airports.parquet<br>GROUP BY 1<br>ORDER BY count(*) desc</code></pre>|Malloy has resonable defaults for [ordering queries](../language/order_by.malloynb).|
 >>>markdown
 ## Joins are declarations.
 In Malloy, joins usually happen in sources (though they can appear in queries also).  A join in a `source:` is only invoked in a query if some member of element of the join is referenced.  In order to accuratly compute aggregate calculations in joined sources, Malloy needs to know if a join fans out  the data (potentially produces more rows after the join is invoked).
@@ -171,7 +171,6 @@ This is intended to serve as a quick reference, more complete documentation can 
 | <pre> <code>CASE</code> <code>  WHEN size_n < 3 THEN 'S'</code> <code>  WHEN size_n <5 THEN 'M'</code> <code>ELSE 'L' END</code> </pre> | <pre> `size_n ?` `  pick 'S' when < 3` `  pick 'M' when <5` `  else 'L' ` </pre> | [Pick](../language/expressions.malloynb#pick-expressions) is Malloy’s improvement of SQL’s <code>CASE</code> statement. This example also introduces the `?` [Apply](../language/expressions.malloynb#application) operator, which  "applies" a value to another value, condition, or computation. This is most often used with [partial](../language/expressions.malloynb#partial-comparison) comparisons or [alternations](../language/expressions.malloynb#alternation). |
 | <pre> <code>COUNT(CASE WHEN status = 'Returned' THEN 1 END),</code> <code>AVG(CASE WHEN brand = 'Levi\'s' THEN price END)</code> </pre> | <pre> `count() { where: status = 'Returned' }` `avg_price { where: brand = 'Levi\'s' }` </pre> | Aggregates may be filtered using filter expressions. [Doc](../language/expressions.malloynb#filtered-expressions) |
 | <pre> <code>CAST(distance AS string),</code> <code>distance::string</code> </pre> | <pre>`distance::string`</pre> | [Type Cast](../language/expressions.malloynb#safe-type-cast). Also worth reviewing [Types](../language/datatypes.malloynb) doc. |
-
 >>>markdown
 
 ### Malloy has its own standard function library.
