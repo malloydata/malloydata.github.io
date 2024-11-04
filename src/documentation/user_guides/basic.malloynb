@@ -118,7 +118,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   measure: average_elevation is avg(elevation)
 }
 >>>markdown
->>>malloy
+\>>>malloy
 run: airports -> { 
   group_by: county_and_state
   aggregate: airport_count
@@ -505,7 +505,6 @@ This was a whirlwind tour of the syntax and features of Malloy. To continue on y
 
 - Explore sample analyses and data models built in Malloy in our [Patterns Github repo](https://github.com/malloydata/patterns).
 - Learn how to [connect Malloy to your own database](../setup/connection_instructions.malloynb).
-- Take a look at our [guide for translating SQL to Malloy](../language/sql_to_malloy.malloynb).
 - Join the [Malloy community Slack channel](/slack)!
 
 <!-- ## Joins are between primary and foreign keys.

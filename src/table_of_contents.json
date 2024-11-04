@@ -42,8 +42,8 @@
           "link": "/user_guides/malloy_by_example.malloynb"
         },
         {
-          "title": "SQL to Malloy",
-          "link": "/language/sql_to_malloy.malloynb"
+          "title": "Malloy for SQL Folks",
+          "link": "/user_guides/sql_experts1.malloynb"
         }
       ]
     },
