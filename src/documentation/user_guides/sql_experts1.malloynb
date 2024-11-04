@@ -23,8 +23,6 @@ WHERE destination = 'SFO'
 GROUP BY 1,2,3
 ORDER BY count(*) desc
 LIMIT 10
->>>malloy
-source: flights is  duckdb.table('../data/flights.parquet') 
 >>>markdown
 ## Direct translation of SQL into Malloy
 
@@ -40,9 +38,11 @@ You probably won't write it this way, but it is helpful to see how a SQL query i
          is_delayed is dep_delay > 30   -- (4) reusable scalcar calculation 
       measure:                          -- (5) aggregate definition
         flight_count is count()         -- (6) Mostly the same as count(*) 
-        delayed_flight_count is flight_count {where: is_delayed}  -- (7) filtered aggregates
+        delayed_flight_count is 
+          flight_count {where: is_delayed}  -- (7) filtered aggregates
         # percent                       -- (8) tell the renderer to show the result as a percent
-        percent_delayed is delayed_flight_count / flight_count
+        percent_delayed is              
+          delayed_flight_count / flight_count  -- ** reuse calculations
   }
   where: destination = 'SFO'
   group_by:
@@ -212,6 +212,14 @@ In Malloy can can call native database functions or write arbitrary SQL expressi
 | <pre> `sinh!(x)` </pre> | Call, the 'native `sinh()` function it returns a number because `x` is of type number |
 | <pre> `json_extract(j, '$.x):::string` </pre> | Call the native `json_extract` function and safe cast the results to a string |
 >>>markdown
+### Arbitrary SQL Expressions in Dimensions.
+
+You can use arbitrary [SQL in expressions using](../experiments/sql_expressions.malloynb) the `sql_XXX` functions.  The mechanism is helpful for coorelated, array mapping functions and more. `sql_number` writes an expression that returns a numeric scalar.  The `"""` is another form of string quoting in Malloy.  `${TABLE}` is substituted with the current source's table alias in SQL.
+| Code | Use |
+|---|---|
+|<pre>`foo_count is sql_number("""(SELECT COUNT(*) FROM UNNEST${TABLE}.foo)""")`</per> | Coorelaed subquery |
+|<pre>`input_tables_string is sql_string("""ARRAY_JOIN(TRANSFORM(${TABLE}.inputs, (x) -> (x.table_name)),',')""")`<pre> | Presto Lambda |
+>>>markdown
 ### Working with Time
 The [Time Expressions](../language/expressions.malloynb#time-expressions) reference contains substantially more detail and examples.
 
@@ -235,11 +243,3 @@ Malloy doesn't handle arrays directly today (but is coming soon).
 | SQL | Malloy | Docs |
 |---|---|---|
 | <pre><code> SELECT (SELECT count(*) FROM UNNEST(a)) as a_len FROM ... </code></pre> | <pre>` group_by: a_len is sql_number("""SELECT count(*) FROM UNNEST(${TABLE}.a)""")`</pre> | `sql_number` allows you to use arbitrary SQL expressions in dimensional expressions.  The `"""` is another form of string quoting in Malloy.  ${TABLE} refers to the current source's alias.
->>>markdown
-
-### Arbitrary SQL Expressions in Dimensions.
-*Write coorelated subqueries against arrays, array mapping functions and more* 
-
-You can use arbitrary [SQL in expressions using](../experiments/sql_expressions.malloynb) the `sql_XXX` functions.  The mechanism is helpful for coorelated, array mapping functions and more.
-
-`group_by: foo_count is sql_number("""SELECT COUNT(*) FROM UNNEST${TABLE}.foo """)`
