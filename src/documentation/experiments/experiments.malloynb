@@ -12,3 +12,4 @@ Below is a list of currently running experiements and how to turn them on.
 * `##! experimental { function_order_by partition_by aggregate_limit }` - [ordering and partitioning in calculations](window.malloynb)
 * `##! experimental.sql_functions` - [Write expression in SQL](sql_expressions.malloynb)
 * `##! experimental.parameters` - [Declare sources with parameters](parameters.malloynb)
+* `##! experimental.composite_sources` - [Create virtual sources backed by multiple cube tables or source definitions](composite_sources.malloynb)

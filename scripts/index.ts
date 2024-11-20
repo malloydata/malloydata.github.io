@@ -497,7 +497,7 @@ function previoustPost(blogShortPath: string) {
         if (fs.existsSync(fullPath)) {
           handleStaticFile(fullPath);
           log(`Static file ${file} updated.`);
-        } else {
+        } else if (fs.existsSync(path.join(OUT_PATH, file))) {
           fs.unlinkSync(path.join(OUT_PATH, file));
           log(`Static file ${file} deleted. Removed.`);
         }

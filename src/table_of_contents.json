@@ -291,6 +291,10 @@
         {
           "title": "Parameters",
           "link": "/experiments/parameters.malloynb"
+        },
+        {
+          "title": "Composite \"Cube\" Sources",
+          "link": "/experiments/composite_sources.malloynb"
         }
       ]
     }
