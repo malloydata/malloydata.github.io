@@ -1,0 +1,206 @@
+>>>markdown
+# Introducing Parameters 
+
+One Step Closer to Malloy as an "API to Data"
+
+_August 20, 2024 by Christopher Swenson_
+
+One useful way of thinking about a Malloy model is to treat it as an _API to data_—that is, an abstraction layer that provides a curated collection of ways of interacting with an underlying data set. Since the early days of Malloy, the language has had features that enable this kind of abstraction. With the introduction of source parameters, we're taking a step closer to a fully-realized vision of Malloy as a comprehensive tool for creating APIs to data.
+
+One early bundle of features for model curation is the field limiting and renaming syntax: `accept:`, `except:`, and `rename:`. These allow a model creator to hide fields that are distracting or irrelevant and clarify confusing field names in order to create a clean, well-curated source.
+
+Let's look at the raw `flights` table from the point of view of a model creator interested in empowering analysis of flights involving some basic characteristics like flight distance and number of flights, measured against carrier and location, over time.
+>>>malloy
+source: flights_raw is duckdb.table('../../documentation/data/flights.parquet')
+>>>markdown
+![flights_raw schema](./flights_raw.png)
+
+The signal-to-noise ratio here is not great for most kinds of analysis. Let's use `accept:`, `except:`, and `rename:` to improve this.
+>>>malloy
+source: flights_cleaned is flights_raw extend {
+  except: 
+    taxi_in, taxi_out, flight_time, diverted, arr_time,
+    arr_delay, dep_delay, cancelled, tail_num, flight_num
+
+  rename:
+    origin_airport_code is origin
+    destination_airport_code is destination
+    flight_id is id2
+    departure_time is dep_time
+    distance_miles is distance
+} 
+>>>markdown
+![flights_cleaned schema](./flights_cleaned.png)
+
+This is a little bit more manageable. Now we add new dimensions, measures, and views to extend the capabilities of our API.
+>>>malloy
+source: flights_base is flights_cleaned extend {
+  dimension: distance_miles_bucket is round(distance_miles, -3)
+
+  measure: flight_count is count()
+  measure: total_distance_miles is distance_miles.sum()
+
+  view: by_distance_bucket is distance_miles_bucket + flight_count
+  view: by_carrier is carrier + flight_count
+  view: by_origin_airport_code is origin_airport_code + flight_count
+
+  # line_chart
+  view: over_time is { group_by: departure_time.month } + flight_count
+  view: carriers_over_time is carrier + flight_count + { nest: over_time }
+}
+>>>markdown
+![flights_base schema](./flights_base.png)
+
+This is starting to look like a comprehensive API for the kinds of analysis we're interested in.
+>>>malloy
+#(docs) size=large
+run: flights_base -> carriers_over_time
+>>>markdown
+With a data model like this, we can do all kinds of useful analysis, but it's all fairly static. The API is missing some things that are important for complex, dynamic, exploratory analysis. For one, it's missing filtering capabilities. Of course you can add filters on a case-by-case basis to individual queries, but the API itself lacks any form of standard way of filtering the data.
+
+Let's suppose it's common practice to perform different kinds of analysis on flights of different tiers according to their distance. 
+>>>malloy
+source: flights_dist is flights_base extend {
+  dimension: distance_category is distance_miles ?
+    pick "short" when < 500
+    pick "medium" when < 1000
+    else "long"
+}
+>>>markdown
+In order to perform our normal analysis for different distance tiers, we might write the following:
+
+```malloy
+run: flights_dist extend { 
+  where: distance_category = "short" 
+} -> over_time
+
+run: flights_dist extend { 
+  where: distance_category = "medium" 
+} -> over_time
+```
+
+This, however, is cumbersome, and moreover it is not clear to a user of the `flights_dist` source that this is an imporant part of the intended style of analysis.
+
+This is where parameters start to shine. Here, we define the `flights` source to have a parameter called `distance`, which should be "short", "medium", or "long," and automatically sets up a starting point for analysis that takes into account the intent to include only flights in that distance category.
+
+*Note that because parameters are still experimental, the `##! experimental.parameters` compiler flag is required to enable the feature, and the syntax and behavior is subject to change.*
+>>>malloy
+##! experimental.parameters
+
+source: flights(distance::string) is flights_dist extend {
+  where: distance_category = distance
+}
+
+run: flights(distance is "short") -> over_time
+#(docs) size=large
+run: flights(distance is "long") -> over_time
+>>>markdown
+This kind of "filtering as part of the API" behavior is especially important when filters need to be pushed down into joins in order to maintain query efficiency. 
+
+Parameters are in the early stage of their development, so they just scratch the surface of their full potential. For a thorough description of their current capabilities, see the [Parameter Experiemnt documentation](../../documentation/experiments/parameters.malloynb).
+
+## What's Next
+
+Here are things we are imagining for the future of parameters. We'd love your feedback, which you can send our way via [Slack](https://docs.malloydata.dev/slack) or [the dedicated GitHub discussion](https://github.com/malloydata/malloy/discussions/1409).
+
+### Parameters Everywhere
+
+Today only sources can have parameters, but we plan to support a fully parameterized Malloy, with dimensions, measures, views, and queries being parameterizable as well.
+
+```malloy
+source: my_source(param::string) is ... {
+  dimension: my_dimension(param::number) is ...
+  measure: my_measure(param::number) is ...
+  view: my_view(param::boolean) is ...
+}
+query: my_query(param::date) is ...
+```
+
+### Dimensions, Measures, and Views as Parameter Arguments
+
+Today, parameter arguments can only have constant values, but we see a lot of potential for more complex analytical patterns if we support passing in dimensions, measures, and views as well.
+
+```malloy
+source: flights is ... {
+  view: group_and_aggregate(
+    grp::dimension<string>,
+    agg::measure<number>
+  ) is {
+    group_by: grp
+    aggregate: agg
+  }
+
+  view: by_carrier(metrics::view) is carrier + metrics 
+}
+
+run: flights -> group_and_aggregate(
+  grp is carrier
+  agg is flight_count
+)
+
+run: flights -> by_carrier(metrics is {
+  aggregate: flight_count
+  aggregate: total_distance_miles
+})
+```
+
+### Abstract Dimensions, Measures, and Views
+
+Many kinds of computation are applicable to many different sources in many different instances. "Abstract" dimensions, measures, and views would allow to define such computations outside of a source so they could be used in any source.
+
+```malloy
+view: top_10(
+  value::dimension<number>
+  by::measure<number>
+) is {
+  group_by: value
+  aggregate: by
+  order_by: by desc
+  limit: 10
+}
+
+run: flights -> top_10(value is carrier, by is flight_count)
+```
+
+### Malloy Runtime API Integration
+
+To enable graphically-driven interactions with parameterized sources (and eventually queries and views), we intend to expand the Malloy Runtime API to allow parameterized queries to be instantiated with constant values safely without risk of SQL (or Malloy) injection. The exact API for this has not been determined, but something like the following is expected.
+
+```ts
+const runtime = new Runtime(...);
+const query = runtime.loadModel(`
+  source: my_source is ... extend {
+    view: my_view(param::string) is ...
+  }
+`)
+  .loadExploreByName("my_source")
+  .loadQueryByName("my_view")
+  .runWithParameters({
+    "param": "Parameter Value"
+  })
+```
+
+### SQL-Native-Typed Parameters
+
+We plan for parameters to be allowed to have SQL-native types.
+
+```malloy
+source: my_source(uuid::"uuid") is ...
+run: my_source(uuid is "3f2b8d3b-c12c-417d-b7a0-f14e5d52a275"::"uuid")
+```
+
+### Annotation Support
+
+We plan for parameters (and their arguments) to be annotatable, like other definitions in Malloy.
+
+```malloy
+source: flights(
+  # unit=miles
+  distance::number
+) is ...
+
+run: flights(
+  # precision=10
+  distance::number
+) -> { ... }
+```
