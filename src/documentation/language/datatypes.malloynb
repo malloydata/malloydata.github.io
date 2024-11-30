@@ -107,11 +107,63 @@ Date literals are specified in Malloy with the <code>@</code> character. A liter
 * Year: `@2001`
 
 
+## Arrays
+
+A column in a table, or a dimension, or a measure, can be an array of values. In Malloy every element of an array is the same type, you cannot, for example, have an array which contains both a number and a string.
+
+### Array access
+
+Data in an array is accessed as if the array was a table joined into the query with a a field called `each` which contains the value of the array. This treatment of arrays like joins is different than the typical way of handling arrays, providing suite of functions to operatate on arrays which mimic the operations available to operate on tables. While you can still pass arrays as arguments to functions, the "Malloy Way" of computing with data in arrays is to treat them like a nested table.
+
+```malloy
+    measure:
+      total_value is arrayName.each.sum()
+      avg_value is arrayName.each.avg()
+      min_value is arrayName.each.min()
+```
+
+### Array Literal
+
+An array literal is written as a comma separated list of values between a `[` and a `]`
+
+* `dimension: west_coast is ['CA', 'OR', 'WA']`
+* `dimension: even_digits is [2, 4, 6, 8]`
+
+## Records and Repeated Records
+
+These data types have various names in SQL dialects, "Object", and "Structure" are two common words. A record in malloy is a set of key value pairs.
+
+### Record Literal
+
+* `dimension: owner is {first_name is 'Marl', last_name 'Sobyn', birthday is @1994-05-17}`
+
+### Record Access
+
+Data in a record is accesed with the dot (`.`) operator.
+
+* `dimension: bigLastName is upper(person.last_name)`
+
+### Repeated Record Literal
+
+A repeated record is written as an array of records
+
+```malloy
+dimension: pets is [
+  {name is 'Rover', type is 'dog'},
+  {name is 'Mister Stare', type is 'cat'},
+  {name is 'Swimmy McSwimmerson', type is 'fish'}
+]
+```
+
+### Repeated record access
+
+Though the literal form of a repeated record looks like an array, the contents of a repeated record are accessed directly, (not using `.each` as you would in an array). Accessing a field of a repeated record will unnest that record and join it into the query.
+
 ## Unsupported SQL native data
 
 Malloy may not have a corresponding data type for every data type which the SQL engine supports.
 
-Columns in sources which Malloy does not have a datatype for are considered "unsupported." The following operations are legal on unsupported SQL native types
+Columns in sources which Malloy does not have a datatype for are considered "unsupported." The following operations are legal on unsupported SQL native types and should allow data sets which contains data in these unknown types to still be useful in Malloy even if Malloy doesn't understand the data.
 
 * Two expressions of the same type can be compared
 * An unsupported SQL native type can be compared to `NULL`
@@ -171,3 +223,5 @@ Alternations and partials may be used in conjunction with the [apply operator](a
 ## Nullability
 
 Today, all Malloy types include the value `null`.
+
+>>>markdown
