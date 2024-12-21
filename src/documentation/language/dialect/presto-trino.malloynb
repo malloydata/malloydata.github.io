@@ -18,9 +18,8 @@ Malloy supports Presto and Trino databases with two dialects which are closely r
 
 ## Database Functions
 
-
-Malloy code written for these dialects can, in addition to the [Malloy Standard Functions](../functions), reference
-any of the listed functions here without needing to use [Raw SQL Functions](../functions#raw-sql-functions).
+Malloy code written for these dialects can, in addition to the [Malloy Standard Functions](../functions.malloynb), reference
+any of the listed functions here without needing to use [Raw SQL Functions](../functions.malloynb#raw-sql-functions).
 
 Refer to the appropriate database documentaion for information on individual functions.
 
