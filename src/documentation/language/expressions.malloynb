@@ -27,7 +27,7 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
 | [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
 | [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != null`<br/> `eventStatus ?? 'unknown'` |
-| [Operator Precedence](#operator-precedence) | `a + b * c and d ?? e > f`
+| [Operator Precedence](#operator-precedence) | `a + b * c and d ?? e > f` |
 
 ## Identifiers
 
