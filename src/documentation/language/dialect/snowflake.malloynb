@@ -1,0 +1,21 @@
+>>>markdown
+# Snowflake
+
+# Functions
+
+## Useful Functions not in the database function library
+
+    string_agg_distinct
+    string_agg
+
+## Database Functions
+
+Malloy code can, in addition to the [Malloy Standard Functions](../functions), reference
+any of the listed functions here without needing to use [Raw SQL Functions](../functions#raw-sql-functions).
+
+    repeat
+    reverse
+
+# External Resources
+
+* [Snowflake Documentation](https://docs.snowflake.com/)

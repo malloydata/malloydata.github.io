@@ -1,0 +1,23 @@
+>>>markdown
+# Google Standard SQL (BigQuery)
+
+# Functions
+
+## Useful Functions not in the database function library
+
+    string_agg_distinct
+    count_approx
+
+## Database Functions
+
+Malloy code can, in addition to the [Malloy Standard Functions](../functions), reference
+any of the listed functions here without needing to use [Raw SQL Functions](../functions#raw-sql-functions).
+
+    date_from_unix_date
+    string_agg
+    repeat
+    reverse
+
+# External Resources
+
+* [BigQuery SQL Reference](https://cloud.google.com/bigquery/docs/introduction-sql)

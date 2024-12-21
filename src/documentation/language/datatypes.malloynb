@@ -136,6 +136,9 @@ These data types have various names in SQL dialects, "Object", and "Structure" a
 ### Record Literal
 
 * `dimension: owner is {first_name is 'Marl', last_name 'Sobyn', birthday is @1994-05-17}`
+* The "_name_ `is`" part of a record field can be left out if the value of the field is a dotted path, for example, these two record literals are identical
+  * `{first_name is first_name, last_name is parent_join.last_name}`
+  * `{first_name, parent_join.last_name}`
 
 ### Record Access
 
@@ -155,6 +158,17 @@ dimension: pets is [
 ]
 ```
 
+The names of each field can be omitted after the first record, for example, here is that same declaration written slightly more concisely:
+
+```malloy
+dimension: pets is [
+  {name is 'Rover', type is 'dog'},
+  {'Mister Stare', 'cat'},
+  {'Swimmy McSwimmerson', 'fish'}
+]
+```
+
+There are a 
 ### Repeated record access
 
 Though the literal form of a repeated record looks like an array, the contents of a repeated record are accessed directly, (not using `.each` as you would in an array). Accessing a field of a repeated record will unnest that record and join it into the query.
@@ -223,5 +237,4 @@ Alternations and partials may be used in conjunction with the [apply operator](a
 ## Nullability
 
 Today, all Malloy types include the value `null`.
-
 >>>markdown
