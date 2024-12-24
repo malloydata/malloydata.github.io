@@ -1,0 +1,24 @@
+>>>markdown
+
+# HyperLogLog Algorithm Overview
+
+The HyperLogLog algorithm is a probabilistic cardinality estimator used to approximate the number of distinct elements in a multiset. It is particularly useful for large data sets where exact cardinality calculation is impractical due to memory constraints.
+
+## Key Features and Operations
+
+* Memory Efficiency: HyperLogLog uses significantly less memory than exact cardinality calculation methods, making it suitable for large data sets.
+* Accuracy: The algorithm provides a typical accuracy (standard error) of 2% for cardinalities over 10^9 using only 1.5 kB of memory.
+* Functions:
+* * hll_accumulate (add): Add new elements to the set.
+* * hll_estimate (count): Obtain the cardinality of the set.
+* * hll_combine (merge): Obtain the union of two sets.
+* * hll_export: Export the HLL Sketch to a persistent, dialect-specific format.
+* * hll_import: Import an HLL Sketch from a persistent, dialect-specific format.
+
+## Data Structure
+The HyperLogLog algorithm uses an array M of m counters (or "registers") initialized to 0. This array is called the HyperLogLog sketch of the multiset S.
+
+## Using HyperLogLog in Malloy Schemas and Queries
+
+In Malloy, you can use the HyperLogLog algorithm to efficiently estimate the cardinality of large data sets. By incorporating HyperLogLog into your schemas and queries, you can gain insights into the distinct elements of your data without sacrificing performance or memory.
+
