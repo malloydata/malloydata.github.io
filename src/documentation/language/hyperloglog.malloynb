@@ -1,0 +1,93 @@
+>>>markdown
+# HyperLogLog Algorithm Overview
+
+The HyperLogLog algorithm is a probabilistic cardinality estimator used to approximate the number of distinct elements in a multiset. It is particularly useful for large data sets where exact cardinality calculation is impractical due to memory constraints.
+
+## Key Features and Operations
+
+* Memory Efficiency: HyperLogLog uses significantly less memory than exact cardinality calculation methods, making it suitable for large data sets.
+* Accuracy: The algorithm provides a typical accuracy (standard error) of 2% for cardinalities over 10^9 using only 1.5 kB of memory.
+* Functions:
+  * <a href="#hll_accumulate">hll_accumulate</a> (add): Add new elements to the set.  Initializes the counter.
+  * <a href="#hll_estimate">hll_estimate</a> (count): Obtain the cardinality of the set.
+  * <a href="#hll_combine">hll_combine</a> (merge): Obtain the union of two sets.
+  * <a href="#hll_export">hll_export</a>: Export the HLL Sketch to a persistent, dialect-specific format.
+  * <a href="#hll_import">hll_import</a>: Import an HLL Sketch from a persistent, dialect-specific format.
+
+## Data Structure
+The HyperLogLog algorithm uses an array M of m counters (or "registers") initialized to 0. This array is called the HyperLogLog sketch of the multiset S.  See the [Wikipedia article](https://en.wikipedia.org/wiki/HyperLogLog) for further details.
+
+## Using HyperLogLog in Malloy Schemas and Queries
+
+In Malloy, you can use the HyperLogLog algorithm to efficiently estimate the cardinality of large data sets. By incorporating HyperLogLog into your schemas and queries, you can gain insights into the distinct elements of your data without sacrificing performance or memory.
+
+### Supported Databases
+
+Malloy HyperLogLog functions can be used with the following databases:
+
+**Trino** [Trino HyperLogLog documentation](https://trino.io/docs/current/functions/hyperloglog.html)
+
+**BigQuery** [BigQuery HyperLogLog documentation](https://cloud.google.com/bigquery/docs/reference/standard-sql/hll_functions)
+
+**Snowflake** [Snowflake HyperLogLog documentation](https://docs.snowflake.com/en/user-guide/querying-approximate-cardinality)
+
+
+## Functions
+
+### hll_accumulate
+
+```malloy
+run: state_facts -> {
+    group_by: state
+    aggregate: hll_sketch is hll_accumulate(popular_name)
+} -> {
+    aggregate: name_count is hll_estimate(hll_sketch)
+}
+```
+
+Add new elements to the set.  Initializes the counter.
+
+### hll_estimate
+
+```malloy
+run: state_facts -> {
+    group_by: state
+    aggregate: hll_sketch is hll_accumulate(popular_name)
+} -> {
+    aggregate: name_count is hll_estimate(hll_sketch)
+}
+```
+
+Returns an estimate of the number of distinct elements in the data set.
+
+### hll_combine
+
+Merges HLL++ sketches of the same underlying type into a new sketch.  
+
+*Example:* A distributed database with multiple nodes, each maintaining an HLL sketch for the number of unique users. The HLL sketches are merged to get an accurate estimate of the total number of unique users across all nodes.
+
+### hll_export
+
+```malloy
+run: state_facts -> {
+    group_by: state
+    aggregate: hll_sketch_persist is hll_export(hll_accumulate(popular_name))
+} -> {
+    aggregate: name_count is hll_estimate(hll_import(hll_sketch_persist))
+}
+```
+
+Exports the HLL Sketch to a persistent format.  The output type is database-specific.
+
+### hll_import
+
+```malloy
+run: state_facts -> {
+    group_by: state
+    aggregate: hll_sketch_persist is hll_export(hll_accumulate(popular_name))
+} -> {
+    aggregate: name_count is hll_estimate(hll_import(hll_sketch_persist))
+}
+```
+
+Imports an HLL Sketch from a persistent, dialect-specific format.
