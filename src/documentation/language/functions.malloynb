@@ -1,5 +1,4 @@
 >>>markdown
-
 # Functions
 
 Malloy has a standard set of functions available at all times. These include scalar functions (e.g. `concat`), aggregate functions (e.g. `stddev`), and analytic (or "window") functions (e.g. `lag`).
@@ -10,7 +9,6 @@ For quick function lookup, see the [alphebetized table of all available function
 
 Note: the behavior of functions changed in v0.0.39. For more information, see [a description of that change](./new_functions.malloynb).
 >>>malloy
-
 ##(docs) hidden
 import "flights.malloy"
 
@@ -18,7 +16,6 @@ source: empty is duckdb.sql("""
     SELECT 1
   """) extend {}
 >>>markdown
-
 
 
 ## Syntax
