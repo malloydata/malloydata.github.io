@@ -1110,17 +1110,21 @@ run: empty extend { dimension: t is @2023-12-31 23:59:59 } -> {
   <tr>
     <td><a href="#greatest">greatest</a></td>
     <td><a href="#least">least</a></td>
+    <td><a href="#coalesce">coalesce</a></td>
   </tr>
   <tr>
     <td><a href="#ifnull">ifnull</a></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
     <td><a href="#nullif">nullif</a></td>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><a href="#coalesce">coalesce</a></td>
+    <td><a href="./hyperloglog#hll_accumulate">hll_accumulate</a></td>
+    <td><a href="./hyperloglog#hll_estimate">hll_estimate</a></td>
+    <td><a href="./hyperloglog#hll_combine">hll_combine</a></td>
+  </tr>
+  <tr>
+    <td><a href="./hyperloglog#hll_export">hll_export</a></td>
+    <td><a href="./hyperloglog#hll_import">hll_import</a></td>
     <td>&nbsp;</td>
   </tr>
 </table>
