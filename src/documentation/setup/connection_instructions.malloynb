@@ -115,3 +115,16 @@ PRESTO_CATALOG=..
 PRESTO_SCHEMA=...
 ```
  The default name for a Trino connection is `presto`
+
+ ## MySQL
+
+MySQL connections are configured through the environment. Currently, there is no way to configure directly in VSCode.  Set envirnment variables.
+
+```
+MYSQL_PASSWORD=...
+MYSQL_HOST=http://<host>
+MYSQL_PORT=NNNN
+PRESTO_USER=...
+MYSQL_DATABASE=..
+```
+ The default name for a Trino connection is `mysql`
