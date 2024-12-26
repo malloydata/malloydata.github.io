@@ -1,7 +1,9 @@
 >>>markdown
 # HyperLogLog Algorithm Overview
 
-The HyperLogLog algorithm is a probabilistic cardinality estimator used to approximate the number of distinct elements in a multiset. It is particularly useful for large data sets where exact cardinality calculation is impractical due to memory constraints.
+The HyperLogLog algorithm is a probabilistic cardinality estimator used to approximate the number
+of distinct elements in a multiset. It is particularly useful for large data sets where counting the
+exact cardinality is impractical due to memory constraints.
 
 ## Key Features and Operations
 
@@ -25,14 +27,16 @@ In Malloy, you can use the HyperLogLog algorithm to efficiently estimate the car
 
 Malloy HyperLogLog functions can be used with the following databases:
 
-**Trino** [Trino HyperLogLog documentation](https://trino.io/docs/current/functions/hyperloglog.html)
+* **Trino** [documentation](https://trino.io/docs/current/functions/hyperloglog.html)
 
-**BigQuery** [BigQuery HyperLogLog documentation](https://cloud.google.com/bigquery/docs/reference/standard-sql/hll_functions)
+* **BigQuery** [documentation](https://cloud.google.com/bigquery/docs/reference/standard-sql/hll_functions)
 
-**Snowflake** [Snowflake HyperLogLog documentation](https://docs.snowflake.com/en/user-guide/querying-approximate-cardinality)
+* **Snowflake** [documentation](https://docs.snowflake.com/en/user-guide/querying-approximate-cardinality)
 
 
-## Functions
+## HLL Functions
+
+The Malloy language supports the following HyperLogLog functions.
 
 ### hll_accumulate
 
@@ -90,4 +94,4 @@ run: state_facts -> {
 }
 ```
 
-Imports an HLL Sketch from a persistent, dialect-specific format.
+Imports an HLL Sketch from a persistent, database-specific format.
