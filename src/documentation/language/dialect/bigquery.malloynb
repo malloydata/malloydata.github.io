@@ -18,6 +18,13 @@ any of the listed functions here without needing to use [Raw SQL Functions](../f
     repeat
     reverse
 
+## HyperLogLog Functions
+
+In addition to the [Malloy Standard HLL Functions](../hyperloglog.malloynb), BigQuery supports
+`HLL_COUNT.MERGE`, which both merges sketches and estimates cardinality.
+
+See the [BigQuery HyperLogLog Documentation](https://cloud.google.com/bigquery/docs/reference/standard-sql/hll_functions).
+
 # External Resources
 
 * [BigQuery SQL Reference](https://cloud.google.com/bigquery/docs/introduction-sql)

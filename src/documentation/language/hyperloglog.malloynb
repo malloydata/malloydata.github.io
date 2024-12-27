@@ -25,13 +25,13 @@ In Malloy, you can use the HyperLogLog algorithm to efficiently estimate the car
 
 ### Supported Databases
 
-Malloy HyperLogLog functions can be used with the following databases:
+Malloy HyperLogLog functions *can only be used with the following databases*:
 
-* **Trino** [documentation](https://trino.io/docs/current/functions/hyperloglog.html)
+* **Presto-Trino** See the [Malloy Presto-Trino Page](dialect/presto-trino.malloynb).
 
-* **BigQuery** [documentation](https://cloud.google.com/bigquery/docs/reference/standard-sql/hll_functions)
+* **BigQuery**.  See the [Malloy BigQuery Page](dialect/bigquery.malloynb).
 
-* **Snowflake** [documentation](https://docs.snowflake.com/en/user-guide/querying-approximate-cardinality)
+* **Snowflake**.  See the [Malloy Snowflake Page](dialect/snowflake.malloynb).
 
 
 ## HLL Functions
