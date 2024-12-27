@@ -1118,13 +1118,13 @@ run: empty extend { dimension: t is @2023-12-31 23:59:59 } -> {
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><a href="./hyperloglog.malloynb#hll_accumulate">hll_accumulate</a></td>
-    <td><a href="./hyperloglog.malloynb#hll_estimate">hll_estimate</a></td>
-    <td><a href="./hyperloglog.malloynb#hll_combine">hll_combine</a></td>
+    <td><a href="./hyperloglog#hll_accumulate">hll_accumulate</a></td>
+    <td><a href="./hyperloglog#hll_estimate">hll_estimate</a></td>
+    <td><a href="./hyperloglog#hll_combine">hll_combine</a></td>
   </tr>
   <tr>
-    <td><a href="./hyperloglog.malloynb#hll_export">hll_export</a></td>
-    <td><a href="./hyperloglog.malloynb#hll_import">hll_import</a></td>
+    <td><a href="./hyperloglog#hll_export">hll_export</a></td>
+    <td><a href="./hyperloglog#hll_import">hll_import</a></td>
     <td>&nbsp;</td>
   </tr>
 </table>
