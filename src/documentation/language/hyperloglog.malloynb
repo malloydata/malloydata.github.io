@@ -40,7 +40,7 @@ The Malloy language supports the following HyperLogLog functions.
 
 ### hll_accumulate
 
-```malloy
+```
 run: flights -> {
     group_by:
         dep_date is dep_time::date
@@ -69,7 +69,7 @@ Merges HLL++ sketches of the same underlying type into a new sketch.  See the pr
 
 ### hll_export
 
-```malloy
+```
 run: flights -> {
     group_by:
         dep_date is dep_time::date
