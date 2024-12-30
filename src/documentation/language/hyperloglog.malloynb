@@ -41,11 +41,19 @@ The Malloy language supports the following HyperLogLog functions.
 ### hll_accumulate
 
 ```malloy
-run: state_facts -> {
-    group_by: state
-    aggregate: hll_sketch is hll_accumulate(popular_name)
+run: flights -> {
+    group_by:
+        dep_date is dep_time::date
+        carrier, origin, destination
+    aggregate:
+        flight_count is count()
+        aircraft_count_hll is hll_accumulate(tail_num)
 } -> {
-    aggregate: name_count is hll_estimate(hll_sketch)
+    group_by:
+        dep_date
+    aggregate:
+        flight_count is flight_count.sum()
+        aircraft_count is hll_estimate(hll_combine(aircraft_count_hll))
 }
 ```
 
@@ -53,31 +61,28 @@ Add new elements to the set.  Initializes the counter.
 
 ### hll_estimate
 
-```malloy
-run: state_facts -> {
-    group_by: state
-    aggregate: hll_sketch is hll_accumulate(popular_name)
-} -> {
-    aggregate: name_count is hll_estimate(hll_sketch)
-}
-```
-
-Returns an estimate of the number of distinct elements in the data set.
+Returns an estimate of the number of distinct elements in the data set.  See the previous example.
 
 ### hll_combine
 
-Merges HLL++ sketches of the same underlying type into a new sketch.  
-
-*Example:* A distributed database with multiple nodes, each maintaining an HLL sketch for the number of unique users. The HLL sketches are merged to get an accurate estimate of the total number of unique users across all nodes.
+Merges HLL++ sketches of the same underlying type into a new sketch.  See the previous example.
 
 ### hll_export
 
 ```malloy
-run: state_facts -> {
-    group_by: state
-    aggregate: hll_sketch_persist is hll_export(hll_accumulate(popular_name))
+run: flights -> {
+    group_by:
+        dep_date is dep_time::date
+        carrier, origin, destination
+    aggregate:
+        flight_count is count()
+        aircraft_count_hll_persist is hll_export(hll_accumulate(tail_num))
 } -> {
-    aggregate: name_count is hll_estimate(hll_import(hll_sketch_persist))
+    group_by:
+        dep_date
+    aggregate:
+        flight_count is flight_count.sum()
+        aircraft_count is hll_estimate(hll_combine(hll_import(aircraft_count_hll_persist)))
 }
 ```
 
@@ -85,13 +90,4 @@ Exports the HLL Sketch to a persistent format.  The output type is database-spec
 
 ### hll_import
 
-```malloy
-run: state_facts -> {
-    group_by: state
-    aggregate: hll_sketch_persist is hll_export(hll_accumulate(popular_name))
-} -> {
-    aggregate: name_count is hll_estimate(hll_import(hll_sketch_persist))
-}
-```
-
-Imports an HLL Sketch from a persistent, database-specific format.
+Imports an HLL Sketch from a persistent, database-specific format.  See the previous example.
