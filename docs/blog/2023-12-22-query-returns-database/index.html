@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Queries that return databases instead of tables</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="queries-that-return-databases-instead-of-tables" class="header-link anchor" href="#queries-that-return-databases-instead-of-tables">
+          Queries that return databases instead of tables
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><em>Reading data is expensive.</em></p>
+<p>lloyd tabb, 2023-12-22</p>
+<p><a href="https://bigdata.uni-saarland.de/people/nix.php">Joris Nix</a> recently published a paper <em><a href="https://arxiv.org/pdf/2312.00638.pdf">What if an SQL Statement Returned a Database?</a></em>.  The title of this paper ask a fascinating and important question. In data transformation, we often read the same data over and over producing multiple copies of the data at various granularities.  If we could read the data only once and produce multiple tables in a database, the efficiency gain is obvious.  It could also radically simplify data pipelines.</p>
+<p>In their article, Joris goes on to explain how it might be implemented in SQL.</p>
+<p>In this article, I'm going to give a couple more reasons why this question and idea is really important. I'll will show, how in Malloy, with Malloy's nesting, you can already achieve some of what Joris asks.  The real benefit will only happen if underlying databases choose to do something here.</p>
+
+      <h2>
+        <a id="reading-data-from-storage" class="header-link anchor" href="#reading-data-from-storage">
+          Reading data from storage
+        </a>
+      </h2>
+    <p>Reading data from storage the most expensive thing when querying data. The cost of computation is often incidental relative to the cost of reading data. In traditional data warehousing, the unit of reusability is a <em>fact table</em>.  A fact table is the data at some level of dimensional granularity.  Most data pipelines are built to produce fact tables.</p>
+
+      <h2>
+        <a id="streaming-data" class="header-link anchor" href="#streaming-data">
+          Streaming data
+        </a>
+      </h2>
+    <p>When working with streaming data, you sometimes only get a <strong>single look at the data</strong> as it streams by.  If you can look at the data only once and produce multiple reuslts you have a chance of being much more efficient and closer to real time in your transformation.</p>
+
+      <h2>
+        <a id="malloy-is-mostly-there-already-" class="header-link anchor" href="#malloy-is-mostly-there-already-">
+          Malloy is mostly there already.
+        </a>
+      </h2>
+    <p>In Joris's paper, the SQL required to perfom the multiple results is difficult to understand.  Malloy makes creating multiple results from a single query relatively easy.</p>
+<p>Malloy queries <em>always</em> execute as a single SQL query so these concepts map nicely.</p>
+
+      <h3>
+        <a id="let-s-use-joris-s-data-" class="header-link anchor" href="#let-s-use-joris-s-data-">
+          Let's use Joris's data.
+        </a>
+      </h3>
+    <p>We have a list of sections (lectures being given my mulitple professors) in CSV format.</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">name, age,lecture,difficulty</span></span>
+<span class="line"><span style="color: #000000">Prof A,30,Computer Science,low</span></span>
+<span class="line"><span style="color: #000000">Prof A,30,Databases,low</span></span>
+<span class="line"><span style="color: #000000">Prof B,40,Computer Science,low</span></span>
+<span class="line"><span style="color: #000000">Prof B,40,Artificial Intellegence,high</span></span>
+<span class="line"><span style="color: #000000">Prof C,50,Data Structures,high</span></span>
+<span class="line"><span style="color: #000000">Prof C,50,Computer Science,low</span></span></pre></div><p>We're going to make a Malloy <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">:</span></span></code> that adds some definitions.  These are just common calculations associated with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sections</span></span></code> data.  A source can be queried like a table, but since these definitions are part of the source, we don't have to repeat ourselves when writing queries.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C2" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">sections</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;lectures.csv&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">section_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">lecture_id</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">md5</span><span style="color: #000000">!(</span><span style="color: #001080">lecture</span><span style="color: #000000">)  </span><span style="color: #008000">// define a primary key for lecture</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">professor_id</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">md5</span><span style="color: #000000">!(</span><span style="color: #001080">name</span><span style="color: #000000">)  </span><span style="color: #008000">// define a promary key for professor</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>For ANY of the the queries below:</p>
+<p>Click on 'JSON' to see the output in JSON</p>
+<p>Click on 'SQL' to Query in SQL generated for the Malloy Query.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C4" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">sections</span><span style="color: #000000"> -&gt; {</span><span style="color: #AF00DB">select</span><span style="color: #000000">: *}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="de8c8ab4-8be4-469c-bc04-bd6e4a4db7fc">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"}}};
+      const queryResult = {"lastStageName":"__stage0","malloy":"","sql":"SELECT \n   base.\"age\" as \"age\",\n   base.\"difficulty\" as \"difficulty\",\n   base.\"lecture\" as \"lecture\",\n   md5(base.\"lecture\") as \"lecture_id\",\n   base.\"name\" as \"name\",\n   md5(base.\"name\") as \"professor_id\"\nFROM lectures.csv as base\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage0","fields":[{"name":"age","numberType":"integer","type":"number","resultMetadata":{"sourceField":"age","sourceClasses":["age"],"referenceId":"e208d00a-14c1-4609-b05f-70058dda11fe","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"difficulty","type":"string","resultMetadata":{"sourceField":"difficulty","sourceClasses":["difficulty"],"referenceId":"8e20b2a5-2151-4c7c-ad7e-775928d37d29","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"lecture","type":"string","resultMetadata":{"sourceField":"lecture","sourceClasses":["lecture"],"referenceId":"e5c39fc4-3719-48c8-8714-e40b104af928","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"lecture_id","type":"string","resultMetadata":{"sourceField":"lecture_id","sourceExpression":"md5!(lecture)","sourceClasses":["lecture_id"],"referenceId":"7bd51902-34b2-4d58-bf2a-005d0b34d708","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}}},{"name":"name","type":"string","resultMetadata":{"sourceField":"name","sourceClasses":["name"],"referenceId":"98e0beeb-15e7-4ee5-9e22-9e1cfc1f1ab7","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"professor_id","type":"string","resultMetadata":{"sourceField":"professor_id","sourceExpression":"md5!(name)","sourceClasses":["professor_id"],"referenceId":"3112cef1-19a9-49af-8aad-1a5dfa35be57","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"sections","connectionName":"duckdb","result":[{"age":30,"difficulty":"low","lecture":"Computer Science","lecture_id":"8329f5105520a1b72d062628c077ddfa","name":"Prof A","professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a"},{"age":30,"difficulty":"low","lecture":"Databases","lecture_id":"ea2ef9b0d095bf991f4973633b485340","name":"Prof A","professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a"},{"age":40,"difficulty":"low","lecture":"Computer Science","lecture_id":"8329f5105520a1b72d062628c077ddfa","name":"Prof B","professor_id":"9aa3351834cd8de84eafd711dbd3e1d9"},{"age":40,"difficulty":"high","lecture":"Artificial Intellegence","lecture_id":"7ccd622f92e98e5474d720bf66673398","name":"Prof B","professor_id":"9aa3351834cd8de84eafd711dbd3e1d9"},{"age":50,"difficulty":"high","lecture":"Data Structures","lecture_id":"49110ba9c7e157360ed1b72f643bc1a3","name":"Prof C","professor_id":"fb6561c76605336b6b166432e9f84740"}],"totalRows":5};
+      const element = document.getElementById("de8c8ab4-8be4-469c-bc04-bd6e4a4db7fc");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">30</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">30</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Databases&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ea2ef9b0d095bf991f4973633b485340&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">40</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">40</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Artificial Intellegence&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;7ccd622f92e98e5474d720bf66673398&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">50</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Data Structures&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;49110ba9c7e157360ed1b72f643bc1a3&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof C&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;age&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;age&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;difficulty&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;difficulty&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   md5(base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   md5(base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professor_id&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> lectures.csv </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="first-let-s-write-the-queries-for-each-individual-table-" class="header-link anchor" href="#first-let-s-write-the-queries-for-each-individual-table-">
+          First let's write the queries for each individual table.
+        </a>
+      </h2>
+    <p>In Joris's document, there are three tables that are produced in results.  Let's first take a look at the equivalent Malloy queries to produce these tables. Click SQL to see the equivalent SQL.  You will see that the translation from the Malloy query to the equivalent SQL is relatively straight forward.</p>
+
+      <h2>
+        <a id="query-to-produce-the-professors-table-" class="header-link anchor" href="#query-to-produce-the-professors-table-">
+          Query to produce the professors table.
+        </a>
+      </h2>
+    <p>The query below reads the sections table an produces a professors table.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C6" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">sections</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">professor_id</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">name</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">age</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">section_count</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="f57087a6-1dd7-495c-af2f-5ce4d8b70c4a">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"}}};
+      const queryResult = {"lastStageName":"__stage0","malloy":"","sql":"SELECT \n   md5(base.\"name\") as \"professor_id\",\n   base.\"name\" as \"name\",\n   base.\"age\" as \"age\",\n   COUNT(1) as \"section_count\"\nFROM lectures.csv as base\nGROUP BY 1,2,3\nORDER BY 4 desc NULLS LAST\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage0","fields":[{"name":"professor_id","type":"string","resultMetadata":{"sourceField":"professor_id","sourceExpression":"md5!(name)","sourceClasses":["professor_id"],"referenceId":"32c91781-5ab5-4a05-b404-fe9921cc03db","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}}},{"name":"name","type":"string","resultMetadata":{"sourceField":"name","sourceClasses":["name"],"referenceId":"2a4ac414-03aa-4401-a302-348f8c3eb557","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"age","numberType":"integer","type":"number","resultMetadata":{"sourceField":"age","sourceClasses":["age"],"referenceId":"1665a36b-0633-4e48-92b0-abc7987d8555","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"section_count","type":"number","resultMetadata":{"sourceField":"section_count","sourceExpression":"count()","sourceClasses":["section_count"],"referenceId":"08d2a273-73b4-49e2-b197-7d981c2f9db7","filterList":[],"fieldKind":"measure"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"sections","connectionName":"duckdb","result":[{"professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a","name":"Prof A","age":30,"section_count":2},{"professor_id":"fb6561c76605336b6b166432e9f84740","name":"Prof C","age":50,"section_count":2},{"professor_id":"9aa3351834cd8de84eafd711dbd3e1d9","name":"Prof B","age":40,"section_count":2}],"totalRows":3};
+      const element = document.getElementById("f57087a6-1dd7-495c-af2f-5ce4d8b70c4a");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">30</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof C&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">50</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">40</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   md5(base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;age&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;age&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;section_count&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> lectures.csv </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">4</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="query-to-produce-the-lectures-table-" class="header-link anchor" href="#query-to-produce-the-lectures-table-">
+          Query to produce the lectures table.
+        </a>
+      </h2>
+    <p>We'd have to read the data once more to produce the lectures table.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C8" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">sections</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">lecture_id</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">lecture</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">difficulty</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">section_count</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="c18dc6c7-9f17-40fd-a762-b08c974b28f8">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"}}};
+      const queryResult = {"lastStageName":"__stage0","malloy":"","sql":"SELECT \n   md5(base.\"lecture\") as \"lecture_id\",\n   base.\"lecture\" as \"lecture\",\n   base.\"difficulty\" as \"difficulty\",\n   COUNT(1) as \"section_count\"\nFROM lectures.csv as base\nGROUP BY 1,2,3\nORDER BY 4 desc NULLS LAST\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage0","fields":[{"name":"lecture_id","type":"string","resultMetadata":{"sourceField":"lecture_id","sourceExpression":"md5!(lecture)","sourceClasses":["lecture_id"],"referenceId":"3d2536df-47bd-46ea-8ad7-45e4c9732132","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}}},{"name":"lecture","type":"string","resultMetadata":{"sourceField":"lecture","sourceClasses":["lecture"],"referenceId":"42cb3e7b-6327-4a94-a583-e70106aabe68","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"difficulty","type":"string","resultMetadata":{"sourceField":"difficulty","sourceClasses":["difficulty"],"referenceId":"b70f762f-bd8a-4712-a679-f516842ab3ec","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"section_count","type":"number","resultMetadata":{"sourceField":"section_count","sourceExpression":"count()","sourceClasses":["section_count"],"referenceId":"21208c29-7521-4eaf-9539-6951d5009971","filterList":[],"fieldKind":"measure"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"sections","connectionName":"duckdb","result":[{"lecture_id":"8329f5105520a1b72d062628c077ddfa","lecture":"Computer Science","difficulty":"low","section_count":3},{"lecture_id":"49110ba9c7e157360ed1b72f643bc1a3","lecture":"Data Structures","difficulty":"high","section_count":1},{"lecture_id":"7ccd622f92e98e5474d720bf66673398","lecture":"Artificial Intellegence","difficulty":"high","section_count":1},{"lecture_id":"ea2ef9b0d095bf991f4973633b485340","lecture":"Databases","difficulty":"low","section_count":1}],"totalRows":4};
+      const element = document.getElementById("c18dc6c7-9f17-40fd-a762-b08c974b28f8");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;49110ba9c7e157360ed1b72f643bc1a3&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Data Structures&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;7ccd622f92e98e5474d720bf66673398&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Artificial Intellegence&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ea2ef9b0d095bf991f4973633b485340&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Databases&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;section_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   md5(base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;difficulty&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;difficulty&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;section_count&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> lectures.csv </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">4</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="query-for-the-gives-table-" class="header-link anchor" href="#query-for-the-gives-table-">
+          Query for the gives table.
+        </a>
+      </h2>
+    <div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C10" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">sections</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">lecture_id</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">professor_id</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="0d3d068a-a859-4886-ac6b-1d3085e5cd19">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"}}};
+      const queryResult = {"lastStageName":"__stage0","malloy":"","sql":"SELECT \n   md5(base.\"lecture\") as \"lecture_id\",\n   md5(base.\"name\") as \"professor_id\"\nFROM lectures.csv as base\nGROUP BY 1,2\nORDER BY 1 asc NULLS LAST\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage0","fields":[{"name":"lecture_id","type":"string","resultMetadata":{"sourceField":"lecture_id","sourceExpression":"md5!(lecture)","sourceClasses":["lecture_id"],"referenceId":"122e889c-6b1a-4c77-9d23-428c0341d2bc","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}}},{"name":"professor_id","type":"string","resultMetadata":{"sourceField":"professor_id","sourceExpression":"md5!(name)","sourceClasses":["professor_id"],"referenceId":"4f5cd932-9a41-4611-9b8a-2b9ac50d803f","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"sections","connectionName":"duckdb","result":[{"lecture_id":"49110ba9c7e157360ed1b72f643bc1a3","professor_id":"fb6561c76605336b6b166432e9f84740"},{"lecture_id":"7ccd622f92e98e5474d720bf66673398","professor_id":"9aa3351834cd8de84eafd711dbd3e1d9"},{"lecture_id":"8329f5105520a1b72d062628c077ddfa","professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a"},{"lecture_id":"8329f5105520a1b72d062628c077ddfa","professor_id":"9aa3351834cd8de84eafd711dbd3e1d9"},{"lecture_id":"8329f5105520a1b72d062628c077ddfa","professor_id":"fb6561c76605336b6b166432e9f84740"}],"totalRows":5};
+      const element = document.getElementById("0d3d068a-a859-4886-ac6b-1d3085e5cd19");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;49110ba9c7e157360ed1b72f643bc1a3&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;7ccd622f92e98e5474d720bf66673398&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   md5(base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   md5(base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professor_id&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> lectures.csv </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">asc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="returning-multiple-reuslts-with-nesting" class="header-link anchor" href="#returning-multiple-reuslts-with-nesting">
+          Returning multiple reuslts with nesting
+        </a>
+      </h2>
+    <p>Malloy's nesting produces subtables on each row.  In this case we have a table with a single row and the subtables <em>professors</em>, <em>lectures</em> and <em>gives</em>. (the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#dashboard</span></span></code> shows the data in dashboard form instead of a table).</p>
+<p>Look at the SQL tab in the results to see the SQL generated for this query.</p>
+<p>Look at the JSON tab to see the resulting nested tables in JSON.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C12" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5"># dashboard</span></span>
+<span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">sections</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">professors</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">professor_id</span><span style="color: #000000">, </span><span style="color: #001080">name</span><span style="color: #000000">, </span><span style="color: #001080">age</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">total_sections</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">section_count</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">lectures</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">lecture_id</span><span style="color: #000000">, </span><span style="color: #001080">lecture</span><span style="color: #000000">, </span><span style="color: #001080">difficulty</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">total_sections</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">section_count</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">gives</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">lecture_id</span><span style="color: #000000">, </span><span style="color: #001080">professor_id</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer large">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="6241deac-a756-497d-93ed-4884e02c5ea6">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"}}};
+      const queryResult = {"lastStageName":"__stage1","malloy":"","sql":"WITH __stage0 AS (\n  SELECT\n    group_set,\n    CASE WHEN group_set=1 THEN\n      md5(base.\"name\")\n      END as \"professor_id__1\",\n    CASE WHEN group_set=1 THEN\n      base.\"name\"\n      END as \"name__1\",\n    CASE WHEN group_set=1 THEN\n      base.\"age\"\n      END as \"age__1\",\n    (CASE WHEN group_set=1 THEN\n      COUNT(1)\n      END) as \"total_sections__1\",\n    CASE WHEN group_set=2 THEN\n      md5(base.\"lecture\")\n      END as \"lecture_id__2\",\n    CASE WHEN group_set=2 THEN\n      base.\"lecture\"\n      END as \"lecture__2\",\n    CASE WHEN group_set=2 THEN\n      base.\"difficulty\"\n      END as \"difficulty__2\",\n    (CASE WHEN group_set=2 THEN\n      COUNT(1)\n      END) as \"total_sections__2\",\n    CASE WHEN group_set=3 THEN\n      md5(base.\"lecture\")\n      END as \"lecture_id__3\",\n    CASE WHEN group_set=3 THEN\n      md5(base.\"name\")\n      END as \"professor_id__3\"\n  FROM lectures.csv as base\n  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,3,1)) as group_set  ) as group_set\n  GROUP BY 1,2,3,4,6,7,8,10,11\n)\nSELECT\n  COALESCE(LIST({\n    \"professor_id\": \"professor_id__1\", \n    \"name\": \"name__1\", \n    \"age\": \"age__1\", \n    \"total_sections\": \"total_sections__1\"}  ORDER BY  \"total_sections__1\" desc NULLS LAST) FILTER (WHERE group_set=1),[]) as \"professors\",\n  COALESCE(LIST({\n    \"lecture_id\": \"lecture_id__2\", \n    \"lecture\": \"lecture__2\", \n    \"difficulty\": \"difficulty__2\", \n    \"total_sections\": \"total_sections__2\"}  ORDER BY  \"total_sections__2\" desc NULLS LAST) FILTER (WHERE group_set=2),[]) as \"lectures\",\n  COALESCE(LIST({\n    \"lecture_id\": \"lecture_id__3\", \n    \"professor_id\": \"professor_id__3\"}  ORDER BY  \"lecture_id__3\" asc NULLS LAST) FILTER (WHERE group_set=3),[]) as \"gives\"\nFROM __stage0\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage1","fields":[{"type":"array","name":"professors","fields":[{"name":"professor_id","type":"string","resultMetadata":{"sourceField":"professor_id","sourceExpression":"md5!(name)","sourceClasses":["professor_id"],"referenceId":"20603772-2148-4802-ad94-6c14f5eb688b","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}}},{"name":"name","type":"string","resultMetadata":{"sourceField":"name","sourceClasses":["name"],"referenceId":"aaa0e41d-8267-4f23-a7e5-f450420ab3e3","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"age","numberType":"integer","type":"number","resultMetadata":{"sourceField":"age","sourceClasses":["age"],"referenceId":"613eb22c-ad65-4bf5-ab46-d035a5f3e572","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"total_sections","type":"number","resultMetadata":{"sourceField":"total_sections","sourceExpression":"section_count","sourceClasses":["total_sections"],"referenceId":"f724cb03-1b6f-4135-b8c2-353bdcfe1799","filterList":[],"fieldKind":"measure"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":15},"end":{"line":5,"character":46}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"professors","filterList":[],"sourceClasses":["professors"],"fieldKind":"struct"},"annotation":{},"elementTypeDef":{"type":"record_element"},"join":"many"},{"type":"array","name":"lectures","fields":[{"name":"lecture_id","type":"string","resultMetadata":{"sourceField":"lecture_id","sourceExpression":"md5!(lecture)","sourceClasses":["lecture_id"],"referenceId":"bea2d537-c0e8-4723-b232-1dcf4013169c","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}}},{"name":"lecture","type":"string","resultMetadata":{"sourceField":"lecture","sourceClasses":["lecture"],"referenceId":"ac2a5564-de8e-4c24-a203-f75c84607918","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"difficulty","type":"string","resultMetadata":{"sourceField":"difficulty","sourceClasses":["difficulty"],"referenceId":"3f898a1c-3469-4131-bbff-039f56dd371d","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"name":"total_sections","type":"number","resultMetadata":{"sourceField":"total_sections","sourceExpression":"section_count","sourceClasses":["total_sections"],"referenceId":"46fec42f-afdd-4464-9b43-2725692387fd","filterList":[],"fieldKind":"measure"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":9,"character":15},"end":{"line":9,"character":46}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"lectures","filterList":[],"sourceClasses":["lectures"],"fieldKind":"struct"},"annotation":{},"elementTypeDef":{"type":"record_element"},"join":"many"},{"type":"array","name":"gives","fields":[{"name":"lecture_id","type":"string","resultMetadata":{"sourceField":"lecture_id","sourceExpression":"md5!(lecture)","sourceClasses":["lecture_id"],"referenceId":"bea2d537-c0e8-4723-b232-1dcf4013169c","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}}},{"name":"professor_id","type":"string","resultMetadata":{"sourceField":"professor_id","sourceExpression":"md5!(name)","sourceClasses":["professor_id"],"referenceId":"20603772-2148-4802-ad94-6c14f5eb688b","fieldKind":"dimension"},"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"gives","filterList":[],"sourceClasses":["gives"],"fieldKind":"struct"},"annotation":{},"elementTypeDef":{"type":"record_element"},"join":"many"}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"sections","connectionName":"duckdb","annotation":{"notes":[],"blockNotes":[{"text":"#(docs) size=large\n","at":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":0},"end":{"line":1,"character":12}}}},{"text":"# dashboard\n","at":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":0},"end":{"line":1,"character":12}}}}]},"result":[{"professors":[{"professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a","name":"Prof A","age":30,"total_sections":2},{"professor_id":"fb6561c76605336b6b166432e9f84740","name":"Prof C","age":50,"total_sections":2},{"professor_id":"9aa3351834cd8de84eafd711dbd3e1d9","name":"Prof B","age":40,"total_sections":2}],"lectures":[{"lecture_id":"8329f5105520a1b72d062628c077ddfa","lecture":"Computer Science","difficulty":"low","total_sections":3},{"lecture_id":"49110ba9c7e157360ed1b72f643bc1a3","lecture":"Data Structures","difficulty":"high","total_sections":1},{"lecture_id":"ea2ef9b0d095bf991f4973633b485340","lecture":"Databases","difficulty":"low","total_sections":1},{"lecture_id":"7ccd622f92e98e5474d720bf66673398","lecture":"Artificial Intellegence","difficulty":"high","total_sections":1}],"gives":[{"lecture_id":"49110ba9c7e157360ed1b72f643bc1a3","professor_id":"fb6561c76605336b6b166432e9f84740"},{"lecture_id":"7ccd622f92e98e5474d720bf66673398","professor_id":"9aa3351834cd8de84eafd711dbd3e1d9"},{"lecture_id":"8329f5105520a1b72d062628c077ddfa","professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a"},{"lecture_id":"8329f5105520a1b72d062628c077ddfa","professor_id":"9aa3351834cd8de84eafd711dbd3e1d9"},{"lecture_id":"8329f5105520a1b72d062628c077ddfa","professor_id":"fb6561c76605336b6b166432e9f84740"},{"lecture_id":"ea2ef9b0d095bf991f4973633b485340","professor_id":"0b6a03d81e7b137f3a6bc238d3802d9a"}]}],"totalRows":1};
+      const element = document.getElementById("6241deac-a756-497d-93ed-4884e02c5ea6");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professors&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">30</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof C&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">50</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">40</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ],</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lectures&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;49110ba9c7e157360ed1b72f643bc1a3&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Data Structures&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ea2ef9b0d095bf991f4973633b485340&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Databases&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;7ccd622f92e98e5474d720bf66673398&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Artificial Intellegence&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ],</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;gives&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;49110ba9c7e157360ed1b72f643bc1a3&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;7ccd622f92e98e5474d720bf66673398&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;8329f5105520a1b72d062628c077ddfa&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ea2ef9b0d095bf991f4973633b485340&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professor_id__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;name&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;name__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;age&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;age__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    (</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_sections__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture_id__2&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;lecture&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture__2&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;difficulty&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;difficulty__2&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    (</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_sections__2&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">3</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(base.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture_id__3&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">3</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(base.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professor_id__3&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> lectures.csv </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">3</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">3</span><span style="color: #000000">,</span><span style="color: #098658">4</span><span style="color: #000000">,</span><span style="color: #098658">6</span><span style="color: #000000">,</span><span style="color: #098658">7</span><span style="color: #000000">,</span><span style="color: #098658">8</span><span style="color: #000000">,</span><span style="color: #098658">10</span><span style="color: #000000">,</span><span style="color: #098658">11</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;professor_id__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;name__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;age__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;total_sections__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;total_sections__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professors&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;lecture_id__2&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;lecture__2&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;difficulty__2&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;total_sections&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;total_sections__2&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;total_sections__2&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lectures&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;lecture_id__3&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;professor_id__3&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;lecture_id__3&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">asc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">3</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;gives&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="querying-the-resulting-json-" class="header-link anchor" href="#querying-the-resulting-json-">
+          Querying the resulting JSON.
+        </a>
+      </h2>
+    <p>We've taken the json output from the query above and placed it into a JSON file.  We could have just as also placed it in a <em>parquet</em> file or in BigQuery as it supports nested structures.</p>
+<p>Below we define a Malloy source 'db' based on this data.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C14" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">db</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;db.json&#39;</span><span style="color: #000000">)</span></span></pre></div><img src='db_schema.png'><p>We can see from the schema above that the we have three nested tables in the above source.</p>
+<p>We can query the individual tables, for example professors.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C16" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">db</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">select</span><span style="color: #000000">: </span><span style="color: #001080">professors</span><span style="color: #000000">.</span><span style="color: #001080">professor_id</span><span style="color: #000000">, </span><span style="color: #001080">professors</span><span style="color: #000000">.</span><span style="color: #001080">name</span><span style="color: #000000">, </span><span style="color: #001080">professors</span><span style="color: #000000">.</span><span style="color: #001080">age</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="d38b8d8f-2008-4b56-aa26-54abb696357a">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections","db"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"},"db":{"type":"table","name":"duckdb:db.json","dialect":"duckdb","tablePath":"db.json","connection":"duckdb","fields":[{"type":"array","elementTypeDef":{"type":"record_element"},"join":"many","name":"professors","dialect":"duckdb","fields":[{"type":"sql native","rawType":"uuid","name":"professor_id"},{"type":"string","name":"name"},{"type":"number","numberType":"integer","name":"age"},{"type":"number","numberType":"integer","name":"total_sections"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":14},"end":{"line":0,"character":37}}}},{"type":"array","elementTypeDef":{"type":"record_element"},"join":"many","name":"lectures","dialect":"duckdb","fields":[{"type":"sql native","rawType":"uuid","name":"lecture_id"},{"type":"string","name":"lecture"},{"type":"string","name":"difficulty"},{"type":"number","numberType":"integer","name":"total_sections"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":14},"end":{"line":0,"character":37}}}},{"type":"array","elementTypeDef":{"type":"record_element"},"join":"many","name":"gives","dialect":"duckdb","fields":[{"type":"sql native","rawType":"uuid","name":"lecture_id"},{"type":"sql native","rawType":"uuid","name":"professor_id"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":14},"end":{"line":0,"character":37}}}}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":0,"character":37}}},"parameters":{},"as":"db"}}};
+      const queryResult = {"lastStageName":"__stage0","malloy":"","sql":"SELECT \n   professors_0.\"professor_id\" as \"professor_id\",\n   professors_0.\"name\" as \"name\",\n   professors_0.\"age\" as \"age\"\nFROM db.json as base\nLEFT JOIN LATERAL (SELECT UNNEST(base.\"professors\"), 1 as ignoreme) as professors_0_outer(professors_0,ignoreme) ON professors_0_outer.ignoreme=1\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage0","fields":[{"type":"sql native","rawType":"uuid","name":"professor_id","resultMetadata":{"sourceField":"professors.professor_id","sourceClasses":["professors.professor_id"],"referenceId":"9793a033-bbc0-4708-8bd7-08e5b47ea544","fieldKind":"dimension"}},{"name":"name","type":"string","resultMetadata":{"sourceField":"professors.name","sourceClasses":["professors.name"],"referenceId":"ad3f2a1a-26a7-4dc4-8da6-902b318bf93b","fieldKind":"dimension"}},{"name":"age","numberType":"integer","type":"number","resultMetadata":{"sourceField":"professors.age","sourceClasses":["professors.age"],"referenceId":"63ce30ba-afa3-4eb0-b678-335f9501dcc6","fieldKind":"dimension"}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"db","connectionName":"duckdb","result":[{"professor_id":"0b6a03d8-1e7b-137f-3a6b-c238d3802d9a","name":"Prof A","age":30},{"professor_id":"9aa33518-34cd-8de8-4eaf-d711dbd3e1d9","name":"Prof B","age":40},{"professor_id":"fb6561c7-6605-336b-6b16-6432e9f84740","name":"Prof C","age":50}],"totalRows":3};
+      const element = document.getElementById("d38b8d8f-2008-4b56-aa26-54abb696357a");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;0b6a03d8-1e7b-137f-3a6b-c238d3802d9a&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">30</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;9aa33518-34cd-8de8-4eaf-d711dbd3e1d9&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">40</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;professor_id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;fb6561c7-6605-336b-6b16-6432e9f84740&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof C&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;age&quot;</span><span style="color: #000000">: </span><span style="color: #098658">50</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   professors_0.</span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   professors_0.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   professors_0.</span><span style="color: #A31515">&quot;age&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;age&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> db.json </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(base.</span><span style="color: #A31515">&quot;professors&quot;</span><span style="color: #000000">), </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> ignoreme) </span><span style="color: #0000FF">as</span><span style="color: #000000"> professors_0_outer(professors_0,ignoreme) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> professors_0_outer.ignoreme=</span><span style="color: #098658">1</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div><p>When working with nested data, accessing results from mulitple nested sources the results in a cross join, so we'll write some where clauses.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-12-22-query-returns-database/index.malloynb#C18" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">db</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #001080">gives</span><span style="color: #000000">.</span><span style="color: #001080">professor_id</span><span style="color: #000000"> = </span><span style="color: #001080">professors</span><span style="color: #000000">.</span><span style="color: #001080">professor_id</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">gives</span><span style="color: #000000">.</span><span style="color: #001080">lecture_id</span><span style="color: #000000"> = </span><span style="color: #001080">lectures</span><span style="color: #000000">.</span><span style="color: #001080">lecture_id</span><span style="color: #000000">    </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">select</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">professors</span><span style="color: #000000">.</span><span style="color: #001080">name</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">lectures</span><span style="color: #000000">.</span><span style="color: #001080">lecture</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">lectures</span><span style="color: #000000">.</span><span style="color: #001080">difficulty</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="d1e8ec16-2bb0-4078-b61d-733a8a8edab4">
+        <script>
+    (function() {
+      const modelDef = {"name":"","exports":["sections","db"],"contents":{"sections":{"type":"table","name":"duckdb:lectures.csv","dialect":"duckdb","tablePath":"lectures.csv","connection":"duckdb","fields":[{"type":"string","name":"name","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","numberType":"integer","name":"age","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"lecture","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"string","name":"difficulty","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":20},"end":{"line":0,"character":48}}}},{"type":"number","name":"section_count","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":2,"character":4},"end":{"line":2,"character":28}}},"e":{"node":"aggregate","function":"count","e":{"node":""}},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"aggregate","code":"count()"},{"type":"string","name":"lecture_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":4,"character":4},"end":{"line":4,"character":31}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["lecture"],"sql":"base.\"lecture\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(lecture)"},{"type":"string","name":"professor_id","location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":30}}},"e":{"node":"genericSQLExpr","kids":{"args":[{"node":"field","path":["name"],"sql":"base.\"name\""}]},"src":["md5(",")"]},"compositeFieldUsage":{"fields":[],"joinedUsage":{}},"expressionType":"scalar","code":"md5!(name)"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":5,"character":71}}},"parameters":{},"as":"sections"},"db":{"type":"table","name":"duckdb:db.json","dialect":"duckdb","tablePath":"db.json","connection":"duckdb","fields":[{"type":"array","elementTypeDef":{"type":"record_element"},"join":"many","name":"professors","dialect":"duckdb","fields":[{"type":"sql native","rawType":"uuid","name":"professor_id"},{"type":"string","name":"name"},{"type":"number","numberType":"integer","name":"age"},{"type":"number","numberType":"integer","name":"total_sections"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":14},"end":{"line":0,"character":37}}}},{"type":"array","elementTypeDef":{"type":"record_element"},"join":"many","name":"lectures","dialect":"duckdb","fields":[{"type":"sql native","rawType":"uuid","name":"lecture_id"},{"type":"string","name":"lecture"},{"type":"string","name":"difficulty"},{"type":"number","numberType":"integer","name":"total_sections"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":14},"end":{"line":0,"character":37}}}},{"type":"array","elementTypeDef":{"type":"record_element"},"join":"many","name":"gives","dialect":"duckdb","fields":[{"type":"sql native","rawType":"uuid","name":"lecture_id"},{"type":"sql native","rawType":"uuid","name":"professor_id"}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":14},"end":{"line":0,"character":37}}}}],"location":{"url":"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/blog/2023-12-22-query-returns-database/index.malloynb","range":{"start":{"line":0,"character":8},"end":{"line":0,"character":37}}},"parameters":{},"as":"db"}}};
+      const queryResult = {"lastStageName":"__stage0","malloy":"","sql":"SELECT \n   professors_0.\"name\" as \"name\",\n   lectures_0.\"lecture\" as \"lecture\",\n   lectures_0.\"difficulty\" as \"difficulty\"\nFROM db.json as base\nLEFT JOIN LATERAL (SELECT UNNEST(base.\"gives\"), 1 as ignoreme) as gives_0_outer(gives_0,ignoreme) ON gives_0_outer.ignoreme=1\nLEFT JOIN LATERAL (SELECT UNNEST(base.\"professors\"), 1 as ignoreme) as professors_0_outer(professors_0,ignoreme) ON professors_0_outer.ignoreme=1\nLEFT JOIN LATERAL (SELECT UNNEST(base.\"lectures\"), 1 as ignoreme) as lectures_0_outer(lectures_0,ignoreme) ON lectures_0_outer.ignoreme=1\nWHERE (gives_0.\"professor_id\"=professors_0.\"professor_id\") and (gives_0.\"lecture_id\"=lectures_0.\"lecture_id\")\n","dependenciesToMaterialize":{},"structs":[{"type":"query_result","name":"__stage0","fields":[{"name":"name","type":"string","resultMetadata":{"sourceField":"professors.name","sourceClasses":["professors.name"],"referenceId":"6c7f23bd-138c-4d66-9ade-e1ec9a1fdebf","fieldKind":"dimension"}},{"name":"lecture","type":"string","resultMetadata":{"sourceField":"lectures.lecture","sourceClasses":["lectures.lecture"],"referenceId":"73988e43-48d6-4829-ade0-a3a716927e34","fieldKind":"dimension"}},{"name":"difficulty","type":"string","resultMetadata":{"sourceField":"lectures.difficulty","sourceClasses":["lectures.difficulty"],"referenceId":"dc9ee065-0af8-4019-be52-b2dab091e20d","fieldKind":"dimension"}}],"dialect":"duckdb","connection":"duckdb","resultMetadata":{"sourceField":"ignoreme","filterList":[{"node":"filterCondition","code":"gives.professor_id = professors.professor_id\n   and gives.lecture_id = lectures.lecture_id","e":{"node":"and","kids":{"left":{"node":"=","kids":{"left":{"node":"field","path":["gives","professor_id"],"sql":"gives_0.\"professor_id\""},"right":{"node":"field","path":["professors","professor_id"],"sql":"professors_0.\"professor_id\""}},"sql":"(gives_0.\"professor_id\"=professors_0.\"professor_id\")"},"right":{"node":"=","kids":{"left":{"node":"field","path":["gives","lecture_id"],"sql":"gives_0.\"lecture_id\""},"right":{"node":"field","path":["lectures","lecture_id"],"sql":"lectures_0.\"lecture_id\""}},"sql":"(gives_0.\"lecture_id\"=lectures_0.\"lecture_id\")"}}},"expressionType":"scalar","compositeFieldUsage":{"fields":[],"joinedUsage":{"gives":{"fields":[],"joinedUsage":{}},"professors":{"fields":[],"joinedUsage":{}},"lectures":{"fields":[],"joinedUsage":{}}}}}],"sourceClasses":["ignoreme"],"fieldKind":"struct"}}],"sourceExplore":"db","connectionName":"duckdb","result":[{"name":"Prof B","lecture":"Computer Science","difficulty":"low"},{"name":"Prof B","lecture":"Artificial Intellegence","difficulty":"high"},{"name":"Prof C","lecture":"Computer Science","difficulty":"low"},{"name":"Prof A","lecture":"Computer Science","difficulty":"low"},{"name":"Prof A","lecture":"Databases","difficulty":"low"}],"totalRows":5};
+      const element = document.getElementById("d1e8ec16-2bb0-4078-b61d-733a8a8edab4");
+      const malloyRender = document.createElement("malloy-render");
+      malloyRender.modelDef = modelDef;
+      malloyRender.queryResult = queryResult;
+      element.appendChild(malloyRender);
+    })();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof B&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Artificial Intellegence&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;high&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof C&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Computer Science&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Prof A&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;lecture&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Databases&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;difficulty&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;low&quot;</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   professors_0.</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   lectures_0.</span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lecture&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   lectures_0.</span><span style="color: #A31515">&quot;difficulty&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;difficulty&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> db.json </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(base.</span><span style="color: #A31515">&quot;gives&quot;</span><span style="color: #000000">), </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> ignoreme) </span><span style="color: #0000FF">as</span><span style="color: #000000"> gives_0_outer(gives_0,ignoreme) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> gives_0_outer.ignoreme=</span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(base.</span><span style="color: #A31515">&quot;professors&quot;</span><span style="color: #000000">), </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> ignoreme) </span><span style="color: #0000FF">as</span><span style="color: #000000"> professors_0_outer(professors_0,ignoreme) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> professors_0_outer.ignoreme=</span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(base.</span><span style="color: #A31515">&quot;lectures&quot;</span><span style="color: #000000">), </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> ignoreme) </span><span style="color: #0000FF">as</span><span style="color: #000000"> lectures_0_outer(lectures_0,ignoreme) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> lectures_0_outer.ignoreme=</span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">WHERE</span><span style="color: #000000"> (gives_0.</span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000">=professors_0.</span><span style="color: #A31515">&quot;professor_id&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">and</span><span style="color: #000000"> (gives_0.</span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">=lectures_0.</span><span style="color: #A31515">&quot;lecture_id&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="conclusion-sql-syntax-" class="header-link anchor" href="#conclusion-sql-syntax-">
+          Conclusion: SQL syntax?
+        </a>
+      </h2>
+    <p>If there were SQL syntax to create multiple tables, we can envision creating a syntax like <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">nest</span></span></code> to create an additional output table as part of a single SQL query.  The effiency here is obvious in that the data would only be read from storage once.</p>
+
+      <h2>
+        <a id="appendix-the-nesting-query-and-results" class="header-link anchor" href="#appendix-the-nesting-query-and-results">
+          Appendix: The nesting query and results
+        </a>
+      </h2>
+    <p>Below is SQL query generated by Malloy to produce the nested data.</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">WITH __stage0 AS (</span></span>
+<span class="line"><span style="color: #000000">  SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=1 THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(sections.&quot;name&quot;)</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;professor_id__1&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=1 THEN</span></span>
+<span class="line"><span style="color: #000000">      sections.&quot;name&quot;</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;name__1&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=1 THEN</span></span>
+<span class="line"><span style="color: #000000">      sections.&quot;age&quot;</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;age__1&quot;,</span></span>
+<span class="line"><span style="color: #000000">    (CASE WHEN group_set=1 THEN</span></span>
+<span class="line"><span style="color: #000000">      COUNT( 1)</span></span>
+<span class="line"><span style="color: #000000">      END) as &quot;total_sections__1&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=2 THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(sections.&quot;lecture&quot;)</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;lecture_id__2&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=2 THEN</span></span>
+<span class="line"><span style="color: #000000">      sections.&quot;lecture&quot;</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;lecture__2&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=2 THEN</span></span>
+<span class="line"><span style="color: #000000">      sections.&quot;difficulty&quot;</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;difficulty__2&quot;,</span></span>
+<span class="line"><span style="color: #000000">    (CASE WHEN group_set=2 THEN</span></span>
+<span class="line"><span style="color: #000000">      COUNT( 1)</span></span>
+<span class="line"><span style="color: #000000">      END) as &quot;total_sections__2&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=3 THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(sections.&quot;lecture&quot;)</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;lecture_id__3&quot;,</span></span>
+<span class="line"><span style="color: #000000">    CASE WHEN group_set=3 THEN</span></span>
+<span class="line"><span style="color: #000000">      md5(sections.&quot;name&quot;)</span></span>
+<span class="line"><span style="color: #000000">      END as &quot;professor_id__3&quot;</span></span>
+<span class="line"><span style="color: #000000">  FROM lectures.csv as sections</span></span>
+<span class="line"><span style="color: #000000">  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,3,1)) as group_set  ) as group_set</span></span>
+<span class="line"><span style="color: #000000">  GROUP BY 1,2,3,4,6,7,8,10,11</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">SELECT</span></span>
+<span class="line"><span style="color: #000000">  COALESCE(LIST({</span></span>
+<span class="line"><span style="color: #000000">    &quot;professor_id&quot;: &quot;professor_id__1&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;name&quot;: &quot;name__1&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;age&quot;: &quot;age__1&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;total_sections&quot;: &quot;total_sections__1&quot;}  ORDER BY  &quot;total_sections__1&quot; desc NULLS LAST) FILTER (WHERE group_set=1),[]) as &quot;professors&quot;,</span></span>
+<span class="line"><span style="color: #000000">  COALESCE(LIST({</span></span>
+<span class="line"><span style="color: #000000">    &quot;lecture_id&quot;: &quot;lecture_id__2&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;lecture&quot;: &quot;lecture__2&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;difficulty&quot;: &quot;difficulty__2&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;total_sections&quot;: &quot;total_sections__2&quot;}  ORDER BY  &quot;total_sections__2&quot; desc NULLS LAST) FILTER (WHERE group_set=2),[]) as &quot;lectures&quot;,</span></span>
+<span class="line"><span style="color: #000000">  COALESCE(LIST({</span></span>
+<span class="line"><span style="color: #000000">    &quot;lecture_id&quot;: &quot;lecture_id__3&quot;, </span></span>
+<span class="line"><span style="color: #000000">    &quot;professor_id&quot;: &quot;professor_id__3&quot;}  ORDER BY  &quot;lecture_id__3&quot; asc NULLS LAST) FILTER (WHERE group_set=3),[]) as &quot;gives&quot;</span></span>
+<span class="line"><span style="color: #000000">FROM __stage0</span></span></pre></div><p>And the data produced, in JSON</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    &quot;professors&quot;: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;name&quot;: &quot;Prof A&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;age&quot;: 30,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;name&quot;: &quot;Prof B&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;age&quot;: 40,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;fb6561c76605336b6b166432e9f84740&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;name&quot;: &quot;Prof C&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;age&quot;: 50,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 2</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ],</span></span>
+<span class="line"><span style="color: #000000">    &quot;lectures&quot;: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;8329f5105520a1b72d062628c077ddfa&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture&quot;: &quot;Computer Science&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;difficulty&quot;: &quot;low&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 3</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;ea2ef9b0d095bf991f4973633b485340&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture&quot;: &quot;Databases&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;difficulty&quot;: &quot;low&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;7ccd622f92e98e5474d720bf66673398&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture&quot;: &quot;Artificial Intellegence&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;difficulty&quot;: &quot;high&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;49110ba9c7e157360ed1b72f643bc1a3&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture&quot;: &quot;Data Structures&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;difficulty&quot;: &quot;high&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;total_sections&quot;: 1</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ],</span></span>
+<span class="line"><span style="color: #000000">    &quot;gives&quot;: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;49110ba9c7e157360ed1b72f643bc1a3&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;7ccd622f92e98e5474d720bf66673398&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;8329f5105520a1b72d062628c077ddfa&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;8329f5105520a1b72d062628c077ddfa&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;9aa3351834cd8de84eafd711dbd3e1d9&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;8329f5105520a1b72d062628c077ddfa&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;fb6561c76605336b6b166432e9f84740&quot;</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        &quot;lecture_id&quot;: &quot;ea2ef9b0d095bf991f4973633b485340&quot;,</span></span>
+<span class="line"><span style="color: #000000">        &quot;professor_id&quot;: &quot;0b6a03d81e7b137f3a6bc238d3802d9a&quot;</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></div></div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-11-13-querying-a-semantic-model"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2024-01-09-whats-next-in-2024"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.217.js"></script>
+  </body>
+</html>
