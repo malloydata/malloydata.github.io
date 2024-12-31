@@ -16,6 +16,13 @@ any of the listed functions here without needing to use [Raw SQL Functions](../f
     repeat
     reverse
 
+## HyperLogLog Functions
+
+In addition to the [Malloy Standard HLL Functions](../hyperloglog.malloynb), Snowflake supports
+`HLL`, which both initializes a new HLL sketch, and estimates cardinality.
+
+See the [Snowflake HyperLogLog Documentation](https://docs.snowflake.com/en/user-guide/querying-approximate-cardinality).
+
 # External Resources
 
 * [Snowflake Documentation](https://docs.snowflake.com/)

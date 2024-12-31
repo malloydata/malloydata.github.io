@@ -98,3 +98,4 @@ The following functions are only available on Presto connections
 
 * [Presto Documentation](https://prestodb.io/docs/current/)
 * [Trino Documentation](https://trino.io/docs/current/index.html)
+* [Trino HyperLogLog Documentation](https://trino.io/docs/current/functions/hyperloglog.html)
