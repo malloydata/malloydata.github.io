@@ -57,7 +57,7 @@ class Renderer {
   }[] = [];
   private cellNumber = 0;
   private mode: "markdown" | "malloy" | undefined = undefined;
-  private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}};
+  private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}, queryList: [], dependencies: {}};
 
   constructor(path: string) {
     this.path = path;
@@ -124,7 +124,7 @@ class Renderer {
     // HTML parsing with Regex lol
     const linkRegex = /<a\s+href=["']([^"']*)["']/g;
     let match: RegExpExecArray;
-    while ((match = linkRegex.exec(html)) is not null) {
+    while ((match = linkRegex.exec(html)) != null) {
       const before = html.slice(0, match.index);
       const beforeLines = before.split("\n");
       const linkPosition: Position = {
