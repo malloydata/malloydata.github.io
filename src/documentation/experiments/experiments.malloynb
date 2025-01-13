@@ -13,3 +13,4 @@ Below is a list of currently running experiements and how to turn them on.
 * `##! experimental.sql_functions` - [Write expression in SQL](sql_expressions.malloynb)
 * `##! experimental.parameters` - [Declare sources with parameters](parameters.malloynb)
 * `##! experimental.composite_sources` - [Create virtual sources backed by multiple cube tables or source definitions](composite_sources.malloynb)
+* `##! experimental.access_modifiers` - [Limit access to fields in a source](include.malloynb)

@@ -306,6 +306,10 @@
         {
           "title": "Composite \"Cube\" Sources",
           "link": "/experiments/composite_sources.malloynb"
+        },
+        {
+          "title": "Access Modifiers",
+          "link": "/experiments/include.malloynb"
         }
       ]
     }
