@@ -321,7 +321,7 @@ size ?
 
 Malloy has the keyword `null` to represent the null value.
 
-To check to see if a value is null, Malloy usesd the same <code>IS NULL</code> and <code>IS NOT NULL</code> operators as SQL.
+To check to see if a value is null, Malloy usess the same <code>IS NULL</code> and <code>IS NOT NULL</code> operators as SQL.
 >>>markdown
 ```malloy
 dimension: name_not_present is name is null
