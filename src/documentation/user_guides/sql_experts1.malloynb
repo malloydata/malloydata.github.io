@@ -78,7 +78,7 @@ run: flights -> {                      -- (9) FROM is first
 | (10) | 'is' vs 'AS' | Malloy proritizes readiblity.  Placing the name of the thing being declared makes the code easier to read. In most places where SQL would use 'AS' malloy uses 'is' and reverses the declaration order. |
 | (11) | Aliases are Heirachial |  Aliases in Malloy work as a heirachy as opposed to a flat namespacein SQL.  In SQL every table has an alias.  In Malloy, the root table has no alias (it does, but it is always called `source`).  Joins in Malloy can be nested to create heirachies.  In Malloy `orders.users.address` is how you might chase throuh join aliases.|
 | (12) | Human identifiers |  You can use arbitraray characters including spaces in identifier names.  Available characters vary by SQL engine.|
-| (13) | count distinct | `count(tail_num)` is a `count(distinct)` and exactly like SQL.  SQL's `count(foo)` can be written as `count() {where: foo != null}` |
+| (13) | count distinct | `count(tail_num)` is a `count(distinct)` and exactly like SQL.  SQL's `count(foo)` can be written as `count() {where: foo is not null}` |
 | (14) | [Relation aware agggregates](../language/aggregates.malloynb) | In SQL aggregate are against the resulting joined matrix.  In Malloy aggregate are computed against the table they are joined from. In Malloy you can peform a sum or average anyplace in the join heiracty.|  
 | (15) | Order By uses output names |  In a SQL order by, you have to either specify the expression for a column or the oridinal number of the column.  In Malloy you write the order_by: using the name of the column as it will appear in the output.|
 

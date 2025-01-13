@@ -49,7 +49,7 @@ dimension:
 ##(docs) hidden
 import "flights.malloy"
 run: flights -> { 
-  where: origin.county != null
+  where: origin.county is not null
   group_by: origin.state
   nest: by_county is  {
     group_by: origin.county
@@ -321,11 +321,11 @@ size ?
 
 Malloy has the keyword `null` to represent the null value.
 
-To check to see if a value is null, simply compare it to `null`, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.
+To check to see if a value is null, Malloy usess the same <code>IS NULL</code> and <code>IS NOT NULL</code> operators as SQL.
 >>>markdown
 ```malloy
-dimension: name_not_present is name = null
-dimension: name_present is name != null
+dimension: name_not_present is name is null
+dimension: name_present is name is not null
 ```
 >>>markdown
 
