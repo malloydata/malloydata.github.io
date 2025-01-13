@@ -174,7 +174,7 @@ Inner join are essentially left joins with an additional condition that the pare
 >>>malloy
 source: users4 is duckdb.table('../data/users.parquet') extend {
   join_many: orders is duckdb.table('../data/order_items.parquet') on id = orders.user_id
-  where: orders.user_id != null
+  where: orders.user_id is not null
 }
 >>>markdown
 ## Joins from Queries

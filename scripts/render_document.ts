@@ -124,7 +124,7 @@ class Renderer {
     // HTML parsing with Regex lol
     const linkRegex = /<a\s+href=["']([^"']*)["']/g;
     let match: RegExpExecArray;
-    while ((match = linkRegex.exec(html)) != null) {
+    while ((match = linkRegex.exec(html)) is not null) {
       const before = html.slice(0, match.index);
       const beforeLines = before.split("\n");
       const linkPosition: Position = {

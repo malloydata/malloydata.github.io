@@ -109,7 +109,7 @@ To check to see if a value is `null`, simply compare it to `null`, there is no <
 
   ```malloy
   dimension: name_not_present is name = null
-  dimension: name_present is name != null
+  dimension: name_present is name is not null
   ```
 
 ## Common Patterns in Filters

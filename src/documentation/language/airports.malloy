@@ -24,7 +24,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   }
 
   view: by_state is {
-    where: state != null
+    where: state is not null
     group_by: state
     aggregate: airport_count
   }
@@ -42,7 +42,7 @@ source: airports is duckdb.table('../data/airports.parquet') extend {
   }
 
   view: airports_by_region_dashboard is by_region + {
-    where: faa_region != null
+    where: faa_region is not null
     nest:
       # shape_map
       by_state
