@@ -87,7 +87,7 @@ run: sections -> {
     professor_id
 }
 >>>markdown
-## Returning multiple reuslts with nesting
+## Returning multiple results with nesting
 Malloy's nesting produces subtables on each row.  In this case we have a table with a single row and the subtables *professors*, *lectures* and *gives*. (the `#dashboard` shows the data in dashboard form instead of a table).  
 
 Look at the SQL tab in the results to see the SQL generated for this query.
