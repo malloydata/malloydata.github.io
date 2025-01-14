@@ -1,0 +1,50 @@
+>>>markdown
+# Expressions Involving NULL
+
+Malloy and SQL use a "NULL tainting" approoach to null values in computation. Any computation which includes a `null` always results in a `null`.
+
+## Malloy and NULL
+
+For most operations, missing or null-valued data can still be used in a computation
+and the "NULL tainting", along with treating `null` as a "false-ish" value, mostly works. For example `x = y` results in `null` if either value is null, and the "false-ish"
+treatment of NULL means that comparison is meaningful, even if some of the values are `null`.
+
+However, the boolean output of a negated boolean operation, when null tainted,
+is not useful, and SQL programmers have to protect any use of `NOT` or `!=`
+in order for the result to be correct.
+
+### Boolean NOT
+
+| `x` | SQL `NOT x` | Acts like |
+| --- | ---- | --- |
+| `false` | `true` |`true`|
+| `true` | `false` | `false` |
+| `null` | `null` | `false` |
+
+Malloy avoids this by coalescing the output of `NOT` to produce the much more useful truth table ...
+
+|   `x`   | Malloy `NOT x` |
+| ------- | -------------- |
+| `false` |    `true`      |
+| `true`  |    `false`     | 
+| `null`  |    `true`      |
+
+
+### Inequality
+
+Similarly for `!=` the negated equality produces a nonsensical result when some of the values are null.
+
+|   `x`  |   `y`  | SQL `x != y` | Acts Like |
+| ------ | ------ | ------------ | --------- |
+|   1    |   2    |    `true`    |   `true`  |
+| `null` |   2    |    `null`    |   `false` |
+| `null` | `null` |    `null`    |   `false` |
+
+Malloy also protect the inequality comparison with a coalesce, to give the much more useful truth table ...
+
+|   `x`  |   `y`  | Malloy `x != y` |
+| ------ | ------ | --------------- |
+|   1    |   2    |      `true`     |
+| `null` |   2    |      `true`     |
+| `null` | `null` |      `true`     |
+>>>markdown

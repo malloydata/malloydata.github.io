@@ -8,22 +8,22 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | ---------| ----- |
 | [Identifiers](#identifiers)<br/>Fields referenced by name | `origin.city`<br/>`` `year` `` |
 | [Mathematical operations](#mathematical-operators) | `x * 100`<br/>`-cost`<br/>`(a + b) / c` |
-| [Comparison operators](#comparison-operators) | `x > 200`<br/>`state != null` |
+| [Comparison operators](#comparison-operators) | `x > 200`<br/>`state != 'cancelled` |
 | [Boolean operators](#boolean-operators)<br/>Logically combine booleans | `height > 10 and height < 100`<br/>`is_cancelled or is_delayed`</br>`not is_commercial_flight` |
 | [Functions](#functions) | `floor(10.35)`<br/>`concat(first_name, ' ', last_name)`<br/>`cbrt!(x)`<br/>`timestamp_seconds!timestamp(val)` |
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
 | [Aggregation Control / Subtotals](ungrouped-aggregates.malloynb) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
-| [Filtered expressions](#filtered-expressions) | `avg(age) { where: state = 'CA' }`<br/>`flight_count { where: origin.county != null }` |
+| [Filtered expressions](#filtered-expressions) | `avg(age) { where: state = 'CA' }`<br/>`flight_count { where: origin.county is not null }` |
 | [Type cast](#type-cast) | <ul><li>[Standard](#type-cast) `total_distance::string`<br/>`some_date::timestamp`</li><li>[Safe type cast](#safe-type-cast) `birth_year::number`<br/>`start_time_string::timestamp`</li><li>[Database native types](#casting-to-specific-database-types) `name::"VARCHAR(32)"`</li></ul> |
 | [Safe type cast](#safe-type-cast) | `birth_year::number`<br/>`start_time_string::timestamp` |
-| [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/>`kind ? pick 'other' when null` |
+| [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/> |
 | [Time ranges](#time-ranges)<br/>Ranges with start and end or duration |  `start_time for 3 hours`<br/>`@2003 for 10 months` <br/> `@2003 to @2005` |
 | [Numeric ranges](#numeric-ranges)<br/>Numeric ranges with start and end | `10 to 20` |
 | [Time truncation](#time-truncation) | `event_time.quarter` <br/> `now.year` |
 | [Time extraction](#time-extraction)<br/>Extract one part of a time value | `day_of_year(event_time)` <br/> `minute(now)` |
 | [Interval extraction](#interval-extraction)<br/>Extract the interval between two times  | `days(created_at to shipped_at)` |
 | [Time literals](#time-literals) | `@2003-04-19`<br/>`@2020-Q4`<br/>`@2021-10-24 10:00:00`
-| [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`!= null`<br/>`~ r'C.*'` |
+| [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`is not null`<br/>`~ r'C.*'` |
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
 | [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
 | [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != null`<br/> `eventStatus ?? 'unknown'` |
@@ -321,7 +321,7 @@ size ?
 
 Malloy has the keyword `null` to represent the null value.
 
-To check to see if a value is null, Malloy usess the same <code>IS NULL</code> and <code>IS NOT NULL</code> operators as SQL.
+To check to see if a value is null, Malloy uses the same <code>IS NULL</code> and <code>IS NOT NULL</code> operators as SQL.
 >>>markdown
 ```malloy
 dimension: name_not_present is name is null
@@ -334,6 +334,8 @@ Malloy also has the operator `??`, which in other languages is sometimes called 
 ```malloy
 dimension: name_cleaned is name ?? '(No Name Provided)'
 ```
+>>>markdown
+Malloy also protects the `NOT`, `!=` and `~!` opertators, for more information refer to [Expressions Involving NULL](null-handling.malloynb)
 >>>markdown
 
 ### Operator Precedence
