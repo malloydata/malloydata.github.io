@@ -1,0 +1,87 @@
+>>>markdown
+# Access Modifiers Experiment
+
+When developing Malloy models, it is fairly common to have a table which has more fields than you need, or fields which are useful for intermediary computation but should not be part of the external interface of the modeled source. To enable better curation of sources, we've added a new experiment for specifying access modifiers on fields, as well as modifiying access when extending a source.
+
+Enable the access modifiers experiment with:
+
+```malloy
+##! experimental.access_modifiers
+```
+
+## Access Levels
+
+This experiment adds three access levels to Malloy:
+* `public` - A field which may be used in queries against the source
+* `internal` - A field which may not be used in queries, but can be used in definitions in extensions of the source
+* `private` - A field which may not be used in queries or definitions in extensions of the source
+
+## Specifying Access Level
+
+Any definition inside a source may be prefixed with an access modifier label (`public`, `internal`, or `private`):
+
+```malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  private dimension: only_in_flights is ...
+
+  // Can reference private dimensions in the original source
+  public dimension: exposed is only_in_flights
+}
+
+source: flights_ext is flights extend {
+  // Error: `only_in_flights` is private, so it cannot be used in an extension
+  public dimension: exposed_2 is only_in_flights
+}
+
+// Error: `only_in_flights` is private, so it cannot be used in a query
+run: flights -> { group_by: only_in_flights }
+```
+
+## Changing Access When Extending Sources
+
+When extending a source, you can change the access of fields by using the `include` operator before the `extend`, with the following rules:
+* `public` fields may be narrowed to `internal` or `private`
+* `internal` fields may be narrowed to `private` or expanded to `public`
+* `private` fields may not be expanded to either `internal` or `public`
+
+The `include` operator allows you to specify a series of fields, optionally with new labels. The wildcard `*` may be used to reference all fields not specified in another rule.
+
+Any field not listed in the include (unless `*` is used) will _not_ be included in the resulting source. Fields can be explicitly called out to be excluded by using `except: field_1, field_2, ...`.
+
+Note that in an `extend` immediately following an `include`, fields made private in the include block are available for use in that extend block (but not subsequent ones).
+
+```malloy
+source: flights is duckdb.table('../data/flights.parquet') include {
+  private: *
+  public: distance, origin, destination
+} extend {
+  // This is allowed
+  dimension: carrier_copy is carrier
+}
+```
+
+### Examples
+
+|Include Rules|Meaning|
+|--|--|
+|`include { *; private: a }`| Include all fields, making `a` private |
+|`include { a, b, c }`| Only include `a`, `b`, and `c` |
+|`include { except: a, b }` | Include all fields except `a` and `b` |
+|`include { private: *; public: a, b }` | Include all fields, making them private, except `a` and `b` (which remain public) |
+
+## Changing Access Without Extending
+
+You can also limit access to a source (thus defining a new source) without `extend`ing:
+
+```malloy
+source: flights is duckdb.table('../data/flights.parquet') include {
+  *
+  private: distance
+}
+```
+
+### Interaction with Composite Sources
+
+* `private` fields are not included in composite sources. If all input sources have a field which is `private`, that field will not be part of the composite source's interface. If the field is only private in some input sources, then use of that field in the composite source will disqualify those input sources from being chosen during composite source resolution.
+* If any instance of a field in any input source is `internal`, that field will be `internal` in the composite source.
+
