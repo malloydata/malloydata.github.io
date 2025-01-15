@@ -19,8 +19,8 @@ treatment of NULL means that comparison is meaningful, even if some of the value
 </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>1</CODE></TD>    <TD>true</TD>  <TD>true</TD> </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>false</TD> <TD>false</TD> </TR>
-<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>null</CODE></TD> <TD>true</TD>  <TD><EM>false</EM></TD> </TR>
-<TR> <TD><CODE>null</CODE></TD> <TD><CODE>null</CODE></TD> <TD>true</TD>  <TD><EM>false</EM></TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+<TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
 </TABLE>
 
 However, the boolean output of a negated boolean operation, when null tainted,
@@ -66,8 +66,8 @@ Similarly `!=` equality produces a nonsensical result when some of the values ar
 </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>1</CODE></TD>    <TD>false</TD>  <TD>false</TD> </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>true</TD> <TD>true</TD> </TR>
-<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>null</CODE></TD> <TD>true</TD>  <TD><EM>false</EM></TD> </TR>
-<TR> <TD><CODE>null</CODE></TD> <TD><CODE>null</CODE></TD> <TD>true</TD>  <TD><EM>false</EM></TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+<TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
 </TABLE>
 
 Malloy also protects the inequality comparison with a coalesce, to give the much more useful truth table ...
@@ -81,6 +81,6 @@ Malloy also protects the inequality comparison with a coalesce, to give the much
 </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>1</CODE></TD>    <TD>false</TD>  </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>true</TD> </TR>
-<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>null</CODE></TD> <TD><STRONG>true</STRONG></TD>  </TR>
-<TR> <TD><CODE>null</CODE></TD> <TD><CODE>null</CODE></TD> <TD><STRONG>true</STRONG></TD>  </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><STRONG>true</STRONG></TD>  </TR>
+<TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><STRONG>true</STRONG></TD>  </TR>
 </TABLE>
