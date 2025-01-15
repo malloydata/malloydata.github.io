@@ -9,7 +9,7 @@ For most operations, missing or null-valued data can still be used in a computat
 and the "NULL tainting", along with treating `null` as a "false-ish" value, mostly works. For example `x = y` results in `null` if either value is null, and the "false-ish"
 treatment of NULL means that comparison is meaningful, even if some of the values are `null`.
 
-<TABLE style='width: auto'>
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
 <TR><TH COLSPAN=4 style="font-size: 1.1em;">SQL = with NULLs</TH></TR>
 <TR>
   <TH><CODE>x</CODE></TH>
@@ -21,13 +21,13 @@ treatment of NULL means that comparison is meaningful, even if some of the value
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>false</TD> <TD>false</TD> </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
 <TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
-</TABLE>
+</TABLE></DIV>
 
 However, the boolean output of a negated boolean operation, when null tainted,
 is not useful, and SQL programmers have to protect any use of `NOT` or `!=`
 in order for the result to be correct.
 
-<TABLE style='width: auto'>
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
 <TR><TH COLSPAN=4 style="font-size: 1.1em;">SQL NOT with NULLs</TH></TR>
 <TR>
   <TH><CODE>x</CODE></TH>
@@ -37,11 +37,11 @@ in order for the result to be correct.
 <TR> <TD><CODE>true</CODE></TD>   <TD>false</TD>          <TD>false</TD> </TR>
 <TR> <TD><CODE>false</CODE></TD>  <TD>true</TD>           <TD>true</TD> </TR>
 <TR> <TD><EM>null</EM></TD>       <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
-</TABLE>
+</TABLE></DIV>
 
 Malloy avoids this by coalescing the output of `NOT` to produce the much more useful truth table ...
 
-<TABLE style='width: auto'>
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
 <TR><TH COLSPAN=4 style="font-size: 1.1em;">Malloy NOT with NULLs</TH></TR>
 <TR>
   <TH><CODE>x</CODE></TH>
@@ -50,12 +50,13 @@ Malloy avoids this by coalescing the output of `NOT` to produce the much more us
 <TR> <TD><CODE>true</CODE></TD>   <TD>false</TD>          </TR>
 <TR> <TD><CODE>false</CODE></TD>  <TD>true</TD>           </TR>
 <TR> <TD><EM>null</EM></TD>       <TD><STRONG>true</STRONG></TD>  </TR>
-</TABLE>
+</TABLE></DIV>
 
 ### Inequality
 
 Similarly `!=` equality produces a nonsensical result when some of the values are null.
 
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
 <TABLE style='width: auto'>
 <TR><TH COLSPAN=4 style="font-size: 1.1em;">SQL != with NULLs</TH></TR>
 <TR>
@@ -68,11 +69,11 @@ Similarly `!=` equality produces a nonsensical result when some of the values ar
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>true</TD> <TD>true</TD> </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
 <TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
-</TABLE>
+</TABLE></DIV>
 
 Malloy also protects the inequality comparison with a coalesce, to give the much more useful truth table ...
 
-<TABLE style='width: auto'>
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
 <TR><TH COLSPAN="3" style="font-size: 1.1em;">Malloy != with NULLs</TH></TR>
 <TR>
   <TH><CODE>x</CODE></TH>
@@ -83,4 +84,4 @@ Malloy also protects the inequality comparison with a coalesce, to give the much
 <TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>true</TD> </TR>
 <TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><STRONG>true</STRONG></TD>  </TR>
 <TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><STRONG>true</STRONG></TD>  </TR>
-</TABLE>
+</TABLE></DIV>
