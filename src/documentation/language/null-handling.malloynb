@@ -1,7 +1,7 @@
 >>>markdown
 # Expressions Involving NULL
 
-Malloy and SQL use a "NULL tainting" approoach to null values in computation. Any computation which includes a `null` always results in a `null`.
+Malloy and SQL use a "NULL tainting" approoach to null values in computation. Many computation which include a `null` produce a `null` result.
 
 ## Malloy and NULL
 
