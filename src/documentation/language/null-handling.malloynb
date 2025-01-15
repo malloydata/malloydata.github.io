@@ -1,7 +1,7 @@
 >>>markdown
 # Expressions Involving NULL
 
-Malloy and SQL use a "NULL tainting" approoach to null values in computation. Any computation which includes a `null` always results in a `null`.
+Malloy and SQL use a "NULL tainting" approoach to null values in computation. Many computation which include a `null` produce a `null` result.
 
 ## Malloy and NULL
 
@@ -9,42 +9,79 @@ For most operations, missing or null-valued data can still be used in a computat
 and the "NULL tainting", along with treating `null` as a "false-ish" value, mostly works. For example `x = y` results in `null` if either value is null, and the "false-ish"
 treatment of NULL means that comparison is meaningful, even if some of the values are `null`.
 
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
+<TR><TH COLSPAN=4 style="font-size: 1.1em;">SQL = with NULLs</TH></TR>
+<TR>
+  <TH><CODE>x</CODE></TH>
+  <TH><CODE>y</CODE></TH>
+  <TH>SQL <CODE>x = y</CODE></TH>
+  <TH>Acts Like</TH>
+</TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>1</CODE></TD>    <TD>true</TD>  <TD>true</TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>false</TD> <TD>false</TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+<TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+</TABLE></DIV>
+
 However, the boolean output of a negated boolean operation, when null tainted,
 is not useful, and SQL programmers have to protect any use of `NOT` or `!=`
 in order for the result to be correct.
 
-### Boolean NOT
-
-| `x` | SQL `NOT x` | Acts like |
-| --- | ---- | --- |
-| `false` | `true` |`true`|
-| `true` | `false` | `false` |
-| `null` | `null` | `false` |
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
+<TR><TH COLSPAN=4 style="font-size: 1.1em;">SQL NOT with NULLs</TH></TR>
+<TR>
+  <TH><CODE>x</CODE></TH>
+  <TH>SQL <CODE>NOT x</CODE></TH>
+  <TH>Acts Like</TH>
+</TR>
+<TR> <TD><CODE>true</CODE></TD>   <TD>false</TD>          <TD>false</TD> </TR>
+<TR> <TD><CODE>false</CODE></TD>  <TD>true</TD>           <TD>true</TD> </TR>
+<TR> <TD><EM>null</EM></TD>       <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+</TABLE></DIV>
 
 Malloy avoids this by coalescing the output of `NOT` to produce the much more useful truth table ...
 
-|   `x`   | Malloy `NOT x` |
-| ------- | -------------- |
-| `false` |    `true`      |
-| `true`  |    `false`     | 
-| `null`  |    `true`      |
-
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
+<TR><TH COLSPAN=4 style="font-size: 1.1em;">Malloy NOT with NULLs</TH></TR>
+<TR>
+  <TH><CODE>x</CODE></TH>
+  <TH>Malloy <CODE>NOT x</CODE></TH>
+</TR>
+<TR> <TD><CODE>true</CODE></TD>   <TD>false</TD>          </TR>
+<TR> <TD><CODE>false</CODE></TD>  <TD>true</TD>           </TR>
+<TR> <TD><EM>null</EM></TD>       <TD><STRONG>true</STRONG></TD>  </TR>
+</TABLE></DIV>
 
 ### Inequality
 
-Similarly for `!=` the negated equality produces a nonsensical result when some of the values are null.
+Similarly `!=` equality produces a nonsensical result when some of the values are null.
 
-|   `x`  |   `y`  | SQL `x != y` | Acts Like |
-| ------ | ------ | ------------ | --------- |
-|   1    |   2    |    `true`    |   `true`  |
-| `null` |   2    |    `null`    |   `false` |
-| `null` | `null` |    `null`    |   `false` |
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
+<TABLE style='width: auto'>
+<TR><TH COLSPAN=4 style="font-size: 1.1em;">SQL != with NULLs</TH></TR>
+<TR>
+  <TH><CODE>x</CODE></TH>
+  <TH><CODE>y</CODE></TH>
+  <TH>SQL <CODE>x != y</CODE></TH>
+  <TH>Acts Like</TH>
+</TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>1</CODE></TD>    <TD>false</TD>  <TD>false</TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>true</TD> <TD>true</TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+<TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD>  <TD><EM>false</EM></TD> </TR>
+</TABLE></DIV>
 
-Malloy also protect the inequality comparison with a coalesce, to give the much more useful truth table ...
+Malloy also protects the inequality comparison with a coalesce, to give the much more useful truth table ...
 
-|   `x`  |   `y`  | Malloy `x != y` |
-| ------ | ------ | --------------- |
-|   1    |   2    |      `true`     |
-| `null` |   2    |      `true`     |
-| `null` | `null` |      `true`     |
->>>markdown
+<DIV style="margin-left: 4em"><TABLE style='width: auto'>
+<TR><TH COLSPAN="3" style="font-size: 1.1em;">Malloy != with NULLs</TH></TR>
+<TR>
+  <TH><CODE>x</CODE></TH>
+  <TH><CODE>y</CODE></TH>
+  <TH>Malloy <CODE>x != y</CODE></TH>
+</TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>1</CODE></TD>    <TD>false</TD>  </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><CODE>2</CODE></TD>    <TD>true</TD> </TR>
+<TR> <TD><CODE>1</CODE></TD>    <TD><EM>null</EM></TD> <TD><STRONG>true</STRONG></TD>  </TR>
+<TR> <TD><EM>null</EM></TD> <TD><EM>null</EM></TD> <TD><STRONG>true</STRONG></TD>  </TR>
+</TABLE></DIV>
