@@ -51,7 +51,7 @@ Field names generally must start with a letter or underscore, and can only conta
 
 ## Kinds of Fields
 
-Malloy includes three different kinds of fields: _dimensions_, _measures_, _views_, and _calculations_.
+Malloy has four different kinds of fields: _dimensions_, _measures_, _views_, and _calculations_.
 
 ### Dimensions
 
@@ -84,22 +84,24 @@ run: users2 -> {
 
 ### Measures
 
-Measures are fields representing aggregated data over
-multiple records.
-
-Measures may not be used in projections (`select:` views). However, any measures that appear in a reduction are "dimensionalized" as part of the query, and are therefore usable as dimensions in subsequent stages.
+Measures are fields representing aggregated data over multiple records. Measures may not be used in projections (i.e., `select:` queries), they can only be used in "group by" or "aggregating" queries.
 >>>malloy
-run: flights -> {
+source: flights2 is duckdb.table('../data/flights.parquet') extend {
+  measure:
+    -- define the measure in the source:
+    total_flight_time is sum(flight_time)
+}
+
+run: flights2 -> {
   group_by: carrier
-  aggregate: flight_count is count()
-} -> {
-  select: flight_count
+  -- use the previously defined measure in a query:
+  aggregate: total_flight_time
 }
 >>>markdown
 
 ### Views
 
-A view represents a pipelined data transformation of one or more stages. 
+A view is a query that has been saved to the semantic model. By adding a view to a Source, you are indicating that this is an important query for the dataset.
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
@@ -110,8 +112,7 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 }
 ```
 >>>markdown
-
-A view can always begin with another view from the same source.
+A view can always begin with another view from the same source. In the following example, `top_carriers` is a view that starts with the `by_carrier` view, selects only the `carrier` column, and sets a limit of 5 rows.
 >>>markdown
 ```malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
@@ -126,6 +127,14 @@ source: flights is duckdb.table('../data/flights.parquet') extend {
 
 <!-- TODO this does not seem to work in a query stage, but it does work in an source or model -->
 
+Views are composable building blocks, which you can use for complex analysis. The following query nests two different views: the `by_carrier` view computes `flight_count` and `destination_count` for each airline in the dataset. Nesting the `by_manufacturer` view shows the aircraft count, broken out by manufacturer within each of the airlines.
+>>>malloy
+run: flights -> by_carrier + {
+  limit: 5
+  
+  nest: by_manufacturer
+}
+>>>markdown
 See the [Nesting](nesting.malloynb) section for more details about nested views.
 
 ### Calculations (Window Functions)
