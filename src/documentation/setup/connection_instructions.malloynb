@@ -14,7 +14,7 @@ _**NOTE:**  DuckDB is natively supported, allowing you to skip these initial ste
 
 4. Hit "Save," then dive into writing Malloy! We recommend starting with one of our Samples, which can be found [here](https://github.com/malloydata/malloy-samples/)
 
-If you've given your connection a name, that name must be used when referencing a table in your database. If you have not named your connection, the default name `bigquery`, `duckdb`, `md`, `snowflake`, `trinoe` or `postgres`, depending on which database you're connecting to; e.g., `bigquery.table('project-id.dataset-id.tablename')`.
+If you've given your connection a name, that name must be used when referencing a table in your database. If you have not named your connection, the default name `bigquery`, `duckdb`, `md`, `snowflake`, `trino`, `presto` or `postgres`, depending on which database you're connecting to; e.g., `bigquery.table('project-id.dataset-id.tablename')`.
 
 
 ## DuckDB Parquet and CSV Files (via DuckDB)
@@ -91,32 +91,17 @@ schema="..."
 
 ## Trino
 
-Trino connections are configured through the environment. Currently, there is no way to configure directly in VSCode.  Set envirnment variables.
+Trino connections are configured through the VS Code 'Edit Connections' panel.
 
-```
-TRINO_PASSWORD=...
-TRINO_SERVER=http://<host>:<port>
-TRINO_USER=...
-TRINO_CATALOG=..
-TRINO_SCHEMA=...
-```
- The default name for a Trino connection is `trino`
+The default name for a Trino connection is `trino`
 
 ## Presto
 
-Presto connections are configured through the environment. Currently, there is no way to configure directly in VSCode.  Set envirnment variables.
+Presto connections are configured through the VS Code 'Edit Connections' panel.
 
-```
-PRESTO_PASSWORD=...
-PRESTO_HOST=http://<host>
-PRESTO_PORT=NNNN
-PRESTO_USER=...
-PRESTO_CATALOG=..
-PRESTO_SCHEMA=...
-```
- The default name for a Trino connection is `presto`
+The default name for a Presto connection is `presto`
 
- ## MySQL
+## MySQL
 
 MySQL connections are configured through the environment. Currently, there is no way to configure directly in VSCode.  Set envirnment variables.
 
@@ -127,4 +112,4 @@ MYSQL_PORT=NNNN
 PRESTO_USER=...
 MYSQL_DATABASE=..
 ```
- The default name for a Trino connection is `mysql`
+The default name for a MySQL connection is `mysql`
