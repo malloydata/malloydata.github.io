@@ -32,7 +32,6 @@ import {
   Runtime,
   URLReader,
   QueryMaterializer,
-  SQLBlockMaterializer,
   Result,
   ModelDef,
   Tag,

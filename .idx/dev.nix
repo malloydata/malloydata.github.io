@@ -5,7 +5,7 @@
 
   # Use https://search.nixos.org/packages to  find packages
   packages = [
-    pkgs.nodejs_18
+    pkgs.nodejs_20
     pkgs.google-cloud-sdk
     pkgs.duckdb
     pkgs.cacert 
