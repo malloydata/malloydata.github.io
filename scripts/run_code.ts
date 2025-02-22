@@ -33,8 +33,6 @@ import {
   URLReader,
   QueryMaterializer,
   SQLBlockMaterializer,
-  FixedConnectionMap,
-  Connection,
   Result,
   ModelDef,
   Tag,
@@ -81,7 +79,6 @@ interface RunOptions {
   dataStyles: DataStyles;
   showAs?: "html" | "json" | "sql";
   queryName?: string;
-  sqlBlockName?: string;
   exploreName?: string;
   isHidden?: boolean;
 }
@@ -194,7 +191,7 @@ export async function runCode(
     mapKeys(inlineModels, resolveSourcePath)
   );
   const connection = CONNECTIONS.getConnection(documentPath);
-  const runtime = new Runtime(urlReader, connection);
+  const runtime = new Runtime({ urlReader, connection });
 
   // Here, we assume that docs queries that reference a model only care about
   // things _exported_ from that model. In other words, a query with
@@ -220,12 +217,8 @@ export async function runCode(
   // imports don't work. It shouldn't be necessary to show relative imports
   // in runnable docs. If this changes, the `urlReader` will need to be able to
   // handle reading a fake URL for the query as well as real URLs for local files.
-  let runnable: SQLBlockMaterializer | QueryMaterializer;
-  if (options.sqlBlockName) {
-    runnable = runtime
-      .loadModel(fullCode)
-      .loadSQLBlockByName(options.sqlBlockName);
-  } else if (options.queryName && options.exploreName) {
+  let runnable: QueryMaterializer;
+  if (options.queryName && options.exploreName) {
     runnable = runtime
       .loadModel(fullCode)
       .loadExploreByName(options.exploreName)
@@ -335,7 +328,7 @@ export async function runNotebookCode(
     new Map([[fakeURL.toString(), code]])
   );
   const connection = CONNECTIONS.getConnection(documentPath);
-  const runtime = new Runtime(urlReader, connection);
+  const runtime = new Runtime({ urlReader, connection });
 
   const querySummary = `"${showCode
     .split("\n")
