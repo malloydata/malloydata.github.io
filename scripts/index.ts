@@ -25,7 +25,7 @@ import path from "path";
 import fs from "fs";
 import { performance } from "perf_hooks";
 import { renderDoc } from "./render_document.js";
-import { renderFooter, renderSidebar, Section } from "./page.js";
+import { renderFooter, renderSidebar, Section, SectionItem } from "./page.js";
 import {
   convertDocPathToHTML,
   isMalloyNB,
@@ -78,7 +78,11 @@ const WATCH_ENABLED = process.argv.includes("--watch");
 const prefixArg = process.argv.indexOf("--only");
 const PATH_PREFIX = prefixArg !== -1 ? process.argv[prefixArg + 1] : undefined;
 
-async function compileDoc(file: string, footers: Record<string, string>): Promise<{
+async function compileDoc(
+  file: string,
+  pathToTitleMap: Map<string, string>,
+  footers: Record<string, string>
+): Promise<{
   errors: DocsError[];
   searchSegments: {
     path: string;
@@ -106,12 +110,12 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     const templatedMarkdown = template({
       ...DEFAULT_CONTEXT
     });
-    const { 
-      renderedDocument, 
-      errors, 
-      searchSegments, 
-      frontmatter, 
-      links, 
+    const {
+      renderedDocument,
+      errors,
+      searchSegments,
+      frontmatter,
+      links,
       hashes 
     } = await renderDoc(
       templatedMarkdown,
@@ -122,6 +126,9 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     const nextBlog = nextPost(shortPath);
     const prevBlog = previoustPost(shortPath);
     const previewImage = getPreviewImage(shortPath);
+    const title = isBlog
+      ? blogTitle(shortPath)
+      : sectionTitle(pathToTitleMap, shortPath);
 
     // TODO validate that layout exists and log an error if not.
     const compiledPage = LAYOUTS[layoutName]({
@@ -130,13 +137,13 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         ...frontmatter,
         url: shortOutPath,
         source: shortPath,
-        title: isBlog ? blogTitle(shortPath) : "Malloy Documentation" ,
+        title: title,
         content: renderedDocument,
         footer: isBlog ? undefined : footers[shortPath],
         nextPost: nextBlog,
         previousPost: prevBlog,
-        previewImage: previewImage
-      }
+        previewImage: previewImage,
+      },
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
     log(
@@ -188,10 +195,10 @@ let BLOG_POSTS: BlogPostInfo[] = [];
 function buildBlogIndex() {
   const blogPostsRaw = JSON.parse(fs.readFileSync(BLOG_LIST_PATH, "utf8")) as BlogPostInfoRaw[];
   BLOG_POSTS = blogPostsRaw.map(post => ({ 
-    ...post, 
+    ...post,
     published: new Date(
-      parseInt(post.published.slice(0, 4)), 
-      parseInt(post.published.slice(5, 7)) - 1, 
+      parseInt(post.published.slice(0, 4)),
+      parseInt(post.published.slice(5, 7)) - 1,
       parseInt(post.published.slice(8, 10))
     )
   }));
@@ -232,8 +239,7 @@ function matchesPrefix(file: string) {
 
 function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, string> } {
   try {
-    const tableOfContents = JSON.parse(fs.readFileSync(CONTENTS_PATH, "utf8"))
-      .contents as Section[];
+    const tableOfContents = readTableOfContents();
 
     const renderedSidebar = renderSidebar(tableOfContents);
     Handlebars.registerPartial("toc.html", renderedSidebar);
@@ -346,7 +352,7 @@ function handleStaticFile(file: string) {
 
 function validateLinks(
   links: Record<string, {link: string, style: "md" | "html", position: Position}[]>, 
-  docs: string[], 
+  docs: string[],
   hashes?: Record<string, string[]>
 ): DocsError[] {
   const linkErrors: DocsError[] = [];
@@ -373,20 +379,20 @@ function validateLinks(
     const exists = existsNB;
     const linkWithExtension = linkWithoutExtension + ".malloynb";
     if (!exists) {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `Link '${originalLink}' is invalid.`,
         position,
       });
     } else if (linkHasExtension && style === 'html') {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `HTML Link '${originalLink}' should not end with file extension.`,
         position
       });
     } else if (style === 'md' && !linkWithoutHash.endsWith(".malloynb")) {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `Markdown Link '${originalLink}' should end with .malloynb`,
         position
       });
@@ -404,8 +410,8 @@ function validateLinks(
       }
       if (link.link.startsWith("/")) {
         if(!ABSOLUTE_LINK_EXCEPTIONS.includes(link.link)) {
-          linkErrors.push({ 
-            path: file.substring(DOCS_ROOT_PATH.length), 
+          linkErrors.push({
+            path: file.substring(DOCS_ROOT_PATH.length),
             message: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`,
             position: link.position
           });
@@ -432,12 +438,26 @@ function nextPost(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
   if (current !== -1 && current - 1 >= 0) {
     return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
-  } 
+  }
 }
 
 function blogTitle(blogShortPath: string) {
   const title = BLOG_POSTS.find(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length))?.title;
   return title ? title : "Malloy Blog";
+}
+
+function sectionTitle(pathToTitleMap: Map<string, string>, path: string) {
+  // The table of contents paths do not include /documentation, but the input often does.
+  if (path.startsWith("/documentation")) {
+    path = path.replace("/documentation", "");
+  }
+  const maybeTitle = pathToTitleMap.has(path) ? pathToTitleMap.get(path) : null;
+  let title = "Malloy Documentation";
+  if (maybeTitle) {
+    title = maybeTitle + " | " + title;
+  }
+
+  return title;
 }
 
 function getPreviewImage(blogShortPath: string) {
@@ -453,12 +473,39 @@ function previoustPost(blogShortPath: string) {
   const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
   if (current !== -1 && current + 1 < BLOG_POSTS.length) {
     return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current + 1].path}`;
-  } 
+  }
+}
+
+// Recursively walk the table of contents hierarchy to build a map
+// of link URL to page title.
+function buildPathToTitleMap(
+  toc: (Section | SectionItem)[],
+  map?: Map<string, string>
+): Map<string, string> {
+  if (!map) {
+    map = new Map<string, string>();
+  }
+  for (let section of toc) {
+    if ((section as Section).items) {
+      buildPathToTitleMap((section as Section).items, map);
+    } else if ((section as SectionItem).link) {
+      map[(section as SectionItem).link] = section.title;
+    }
+  }
+
+  return map;
+}
+
+function readTableOfContents() {
+  return JSON.parse(fs.readFileSync(CONTENTS_PATH, "utf8"))
+    .contents as Section[];
 }
 
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMalloyNB).filter(matchesPrefix);;
+  const allDocs = allFiles.filter(isMalloyNB).filter(matchesPrefix);
+  const tableOfContents = readTableOfContents();
+  const pathToTitleMap = buildPathToTitleMap(tableOfContents);
   const staticFiles = allFiles.filter((file) => !isMalloyNB(file));
   let { footers } = rebuildSidebarAndFooters();
   buildBlogIndex();
@@ -467,13 +514,14 @@ function previoustPost(blogShortPath: string) {
   }
   const startTime = performance.now();
   const results = await Promise.all(allDocs.map(async f => {
-    const result = await compileDoc(f, footers);
+    const result = await compileDoc(f, pathToTitleMap, footers);
     const linkErrors = validateLinks({ [f]: result.links}, allDocs);
-    for (const error of linkErrors) {
-      logError(error);
-    }
-    return result;
-  }));
+      for (const error of linkErrors) {
+        logError(error);
+      }
+      return result;
+    })
+  );
   const snippetErrors = results.map(({ errors }) => errors).flat();
   const allLinks = Object.fromEntries(results.map(({ links, file }) => [file, links]));
   const allHashes = Object.fromEntries(results.map(({ file, hashes }) => [file, hashes]));
@@ -492,7 +540,7 @@ function previoustPost(blogShortPath: string) {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
       if (isMalloyNB(file)) {
         log(`Documentation file ${file} ${type}d. Recompiling...`);
-        compileDoc(fullPath, footers);
+        compileDoc(fullPath, pathToTitleMap, footers);
       } else {
         if (fs.existsSync(fullPath)) {
           handleStaticFile(fullPath);
@@ -507,7 +555,7 @@ function previoustPost(blogShortPath: string) {
       log(`Model file ${file} ${type}d. Recompiling dependent documents...`);
       for (const doc of DEPENDENCIES.get(file) || []) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
-        compileDoc(fullPath, footers);
+        compileDoc(fullPath, pathToTitleMap, footers);
       }
     });
     watchDebounced(BLOG_LIST_PATH, (type) => {
