@@ -25,7 +25,7 @@ import path from "path";
 import fs from "fs";
 import { performance } from "perf_hooks";
 import { renderDoc } from "./render_document.js";
-import { renderFooter, renderSidebar, Section } from "./page.js";
+import { renderFooter, renderSidebar, Section, SectionItem } from "./page.js";
 import {
   convertDocPathToHTML,
   isMalloyNB,
@@ -69,8 +69,8 @@ for (const file of fs.readdirSync(LAYOUTS_PATH)) {
   }
 }
 
-Handlebars.registerHelper('ifeq', function(arg1, arg2, options) {
-  return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+Handlebars.registerHelper("ifeq", function (arg1, arg2, options) {
+  return arg1 == arg2 ? options.fn(this) : options.inverse(this);
 });
 
 const WATCH_ENABLED = process.argv.includes("--watch");
@@ -78,7 +78,11 @@ const WATCH_ENABLED = process.argv.includes("--watch");
 const prefixArg = process.argv.indexOf("--only");
 const PATH_PREFIX = prefixArg !== -1 ? process.argv[prefixArg + 1] : undefined;
 
-async function compileDoc(file: string, footers: Record<string, string>): Promise<{
+async function compileDoc(
+  file: string,
+  pathToTitleMap: Map<string, string>,
+  footers: Record<string, string>
+): Promise<{
   errors: DocsError[];
   searchSegments: {
     path: string;
@@ -88,7 +92,7 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       | { type: "code"; text: string }
     )[];
   }[];
-  links: {link: string, style: "md" | "html", position: Position}[];
+  links: { link: string; style: "md" | "html"; position: Position }[];
   file: string;
   hashes: string[];
   renderedDocument: string;
@@ -104,24 +108,25 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
     const markdown = fs.readFileSync(file, "utf8");
     const template = Handlebars.compile(markdown);
     const templatedMarkdown = template({
-      ...DEFAULT_CONTEXT
+      ...DEFAULT_CONTEXT,
     });
-    const { 
-      renderedDocument, 
-      errors, 
-      searchSegments, 
-      frontmatter, 
-      links, 
-      hashes 
-    } = await renderDoc(
-      templatedMarkdown,
-      shortPath
-    );
-    const isBlog = shortPath.startsWith('/blog/');
-    const layoutName = frontmatter.layout ?? isBlog ? "blog.html" : "documentation.html";
+    const {
+      renderedDocument,
+      errors,
+      searchSegments,
+      frontmatter,
+      links,
+      hashes,
+    } = await renderDoc(templatedMarkdown, shortPath);
+    const isBlog = shortPath.startsWith("/blog/");
+    const layoutName =
+      frontmatter.layout ?? isBlog ? "blog.html" : "documentation.html";
     const nextBlog = nextPost(shortPath);
     const prevBlog = previoustPost(shortPath);
     const previewImage = getPreviewImage(shortPath);
+    const title = isBlog
+      ? blogTitle(shortPath)
+      : sectionTitle(pathToTitleMap, shortPath);
 
     // TODO validate that layout exists and log an error if not.
     const compiledPage = LAYOUTS[layoutName]({
@@ -130,13 +135,13 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
         ...frontmatter,
         url: shortOutPath,
         source: shortPath,
-        title: isBlog ? blogTitle(shortPath) : "Malloy Documentation" ,
+        title: title,
         content: renderedDocument,
         footer: isBlog ? undefined : footers[shortPath],
         nextPost: nextBlog,
         previousPost: prevBlog,
-        previewImage: previewImage
-      }
+        previewImage: previewImage,
+      },
     });
     fs.writeFileSync(path.join(OUT_PATH, shortOutPath), compiledPage);
     log(
@@ -157,11 +162,11 @@ async function compileDoc(file: string, footers: Record<string, string>): Promis
       links,
       file,
       hashes,
-      renderedDocument
+      renderedDocument,
     };
-  } catch(e) {
-    log("Error compiling:", 'error')
-    log(e)
+  } catch (e) {
+    log("Error compiling:", "error");
+    log(e);
   }
 }
 
@@ -186,28 +191,32 @@ interface BlogPostInfo {
 let BLOG_POSTS: BlogPostInfo[] = [];
 
 function buildBlogIndex() {
-  const blogPostsRaw = JSON.parse(fs.readFileSync(BLOG_LIST_PATH, "utf8")) as BlogPostInfoRaw[];
-  BLOG_POSTS = blogPostsRaw.map(post => ({ 
-    ...post, 
+  const blogPostsRaw = JSON.parse(
+    fs.readFileSync(BLOG_LIST_PATH, "utf8")
+  ) as BlogPostInfoRaw[];
+  BLOG_POSTS = blogPostsRaw.map((post) => ({
+    ...post,
     published: new Date(
-      parseInt(post.published.slice(0, 4)), 
-      parseInt(post.published.slice(5, 7)) - 1, 
+      parseInt(post.published.slice(0, 4)),
+      parseInt(post.published.slice(5, 7)) - 1,
       parseInt(post.published.slice(8, 10))
-    )
+    ),
   }));
 
   BLOG_POSTS.sort((a, b) => b.published.getTime() - a.published.getTime());
 
-  const list = BLOG_POSTS.map(post => {
-    return `<a class="blog-post-link" href="${DEFAULT_CONTEXT.site.baseurl}/blog${post.path}">
+  const list = BLOG_POSTS.map((post) => {
+    return `<a class="blog-post-link" href="${
+      DEFAULT_CONTEXT.site.baseurl
+    }/blog${post.path}">
       <h1>${post.title}</h1>
-      ${post.subtitle ? `<div class="subtitle">${post.subtitle}</div>` : ''}
+      ${post.subtitle ? `<div class="subtitle">${post.subtitle}</div>` : ""}
       <div><i>${post.published.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
       })} by ${post.author}</i></div>
-    </a>`
+    </a>`;
   }).join("\n");
   const content = `<div class="document">${list}</div>`;
 
@@ -218,22 +227,27 @@ function buildBlogIndex() {
       content,
       title: "Malloy Blog",
       isBlogIndex: true,
-    }
+    },
   });
 
   fs.mkdirSync(path.join(OUT_PATH, "blog"), { recursive: true });
   fs.writeFileSync(path.join(OUT_PATH, "blog", "index.html"), compiledFile);
-  log("wrote /blog/index.html", 'info');
+  log("wrote /blog/index.html", "info");
 }
 
 function matchesPrefix(file: string) {
-  return !PATH_PREFIX || file.substring(DOCS_ROOT_PATH.length).startsWith(PATH_PREFIX);
+  return (
+    !PATH_PREFIX ||
+    file.substring(DOCS_ROOT_PATH.length).startsWith(PATH_PREFIX)
+  );
 }
 
-function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, string> } {
+function rebuildSidebarAndFooters(): {
+  toc: string;
+  footers: Record<string, string>;
+} {
   try {
-    const tableOfContents = JSON.parse(fs.readFileSync(CONTENTS_PATH, "utf8"))
-      .contents as Section[];
+    const tableOfContents = readTableOfContents();
 
     const renderedSidebar = renderSidebar(tableOfContents);
     Handlebars.registerPartial("toc.html", renderedSidebar);
@@ -251,10 +265,10 @@ function rebuildSidebarAndFooters(): { toc: string; footers: Record<string, stri
     }
     log(`Files _includes/footers/** written.`);
     return { toc: renderedSidebar, footers };
-  } catch(e) {
-    log(`Error parsing JSON`, 'error');
-    log(e, 'error');
-    return { toc: "", footers: {}};
+  } catch (e) {
+    log(`Error parsing JSON`, "error");
+    log(e, "error");
+    return { toc: "", footers: {} };
   }
 }
 
@@ -296,9 +310,9 @@ function extractFrontmatter(contents: string) {
     const endFrontmatter = afterFirstLine.indexOf("\n---\n");
     const frontmatterRaw = afterFirstLine.slice(0, endFrontmatter + 1);
     const rest = afterFirstLine.slice(endFrontmatter + 4);
-    return {frontmatterRaw, rest};
+    return { frontmatterRaw, rest };
   } else {
-    return {frontmatterRaw: "", rest: contents};
+    return { frontmatterRaw: "", rest: contents };
   }
 }
 
@@ -310,7 +324,7 @@ function compileOtherFile(contents: string): string {
     ...DEFAULT_CONTEXT,
     page: {
       ...frontmatter,
-    }
+    },
   });
   if (frontmatter?.layout) {
     const template = LAYOUTS[frontmatter.layout];
@@ -319,7 +333,7 @@ function compileOtherFile(contents: string): string {
       page: {
         content: compiledContents,
         ...frontmatter,
-      }
+      },
     });
     return compiledFile;
   } else {
@@ -333,10 +347,8 @@ function handleStaticFile(file: string) {
     file.substring(DOCS_ROOT_PATH.length)
   );
   fs.mkdirSync(path.join(destination, ".."), { recursive: true });
-  if (
-    ["html", "js", "css"].some(ext => file.endsWith("." + ext))
-  ) {
-    const contents = fs.readFileSync(file, 'utf-8');
+  if (["html", "js", "css"].some((ext) => file.endsWith("." + ext))) {
+    const contents = fs.readFileSync(file, "utf-8");
     const compiledContents = compileOtherFile(contents);
     fs.writeFileSync(destination, compiledContents);
   } else {
@@ -345,53 +357,82 @@ function handleStaticFile(file: string) {
 }
 
 function validateLinks(
-  links: Record<string, {link: string, style: "md" | "html", position: Position}[]>, 
-  docs: string[], 
+  links: Record<
+    string,
+    { link: string; style: "md" | "html"; position: Position }[]
+  >,
+  docs: string[],
   hashes?: Record<string, string[]>
 ): DocsError[] {
   const linkErrors: DocsError[] = [];
-  const docsRootedPaths = docs.map(f => f.substring(DOCS_ROOT_PATH.length));
-  function validateHash(origFile: string, origLink: string, file: string, hash: string, position: Position) {
+  const docsRootedPaths = docs.map((f) => f.substring(DOCS_ROOT_PATH.length));
+  function validateHash(
+    origFile: string,
+    origLink: string,
+    file: string,
+    hash: string,
+    position: Position
+  ) {
     if (hashes === undefined) return;
     const hashesForFile = hashes[file];
     if (!hashesForFile || !hashesForFile.includes(hash.slice(1))) {
       linkErrors.push({
         path: origFile.substring(DOCS_ROOT_PATH.length),
-        message: `Link ${origLink} is invalid: hash ${hash} doesn't exist in doc ${file.substring(DOCS_ROOT_PATH.length)}`,
+        message: `Link ${origLink} is invalid: hash ${hash} doesn't exist in doc ${file.substring(
+          DOCS_ROOT_PATH.length
+        )}`,
         position,
       });
     }
   }
-  function checkLink(file: string, originalLink: string, style: "md" | "html", rootedLink: string, position: Position) {
-    const linkWithoutHash = rootedLink.replace(/#.*$/, '');
+  function checkLink(
+    file: string,
+    originalLink: string,
+    style: "md" | "html",
+    rootedLink: string,
+    position: Position
+  ) {
+    const linkWithoutHash = rootedLink.replace(/#.*$/, "");
     const hashMatch = rootedLink.match(/#.*$/);
     const hash = hashMatch ? hashMatch[0] : undefined;
-    const linkHasExtension = linkWithoutHash.endsWith(".html") || linkWithoutHash.endsWith(".malloynb");
-    const linkGuessNB = linkHasExtension ? linkWithoutHash : (linkWithoutHash + ".malloynb");
-    const linkWithoutExtension = linkWithoutHash.replace(/\.html$/, "").replace(/\.malloynb$/, "");
+    const linkHasExtension =
+      linkWithoutHash.endsWith(".html") ||
+      linkWithoutHash.endsWith(".malloynb");
+    const linkGuessNB = linkHasExtension
+      ? linkWithoutHash
+      : linkWithoutHash + ".malloynb";
+    const linkWithoutExtension = linkWithoutHash
+      .replace(/\.html$/, "")
+      .replace(/\.malloynb$/, "");
     const existsNB = docsRootedPaths.includes(linkGuessNB);
     const exists = existsNB;
     const linkWithExtension = linkWithoutExtension + ".malloynb";
     if (!exists) {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `Link '${originalLink}' is invalid.`,
         position,
       });
-    } else if (linkHasExtension && style === 'html') {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+    } else if (linkHasExtension && style === "html") {
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `HTML Link '${originalLink}' should not end with file extension.`,
-        position
+        position,
       });
-    } else if (style === 'md' && !linkWithoutHash.endsWith(".malloynb")) {
-      linkErrors.push({ 
-        path: file.substring(DOCS_ROOT_PATH.length), 
+    } else if (style === "md" && !linkWithoutHash.endsWith(".malloynb")) {
+      linkErrors.push({
+        path: file.substring(DOCS_ROOT_PATH.length),
         message: `Markdown Link '${originalLink}' should end with .malloynb`,
-        position
+        position,
       });
     } else if (hash && hashes) {
-      validateHash(file, originalLink, path.join(DOCS_ROOT_PATH, linkWithExtension), hash, position);
+      validateHash(
+        file,
+        originalLink,
+        path.join(DOCS_ROOT_PATH, linkWithExtension),
+        hash,
+        position
+      );
     }
 
     // TODO check in section info
@@ -403,11 +444,11 @@ function validateLinks(
         continue;
       }
       if (link.link.startsWith("/")) {
-        if(!ABSOLUTE_LINK_EXCEPTIONS.includes(link.link)) {
-          linkErrors.push({ 
-            path: file.substring(DOCS_ROOT_PATH.length), 
+        if (!ABSOLUTE_LINK_EXCEPTIONS.includes(link.link)) {
+          linkErrors.push({
+            path: file.substring(DOCS_ROOT_PATH.length),
             message: `HTML Link '${link.link}' is invalid (absolute links can't be followed in dev environments)`,
-            position: link.position
+            position: link.position,
           });
         }
       } else if (link.link.startsWith("#")) {
@@ -415,7 +456,7 @@ function validateLinks(
           validateHash(file, link.link, file, link.link, link.position);
         }
       } else {
-        const resolvedLink = path.resolve(file, '..', link.link);
+        const resolvedLink = path.resolve(file, "..", link.link);
         const rootedLink = resolvedLink.substring(DOCS_ROOT_PATH.length);
         checkLink(file, link.link, link.style, rootedLink, link.position);
       }
@@ -425,40 +466,100 @@ function validateLinks(
 }
 
 function logError(error: DocsError) {
-  log(`Error in file ${error.path}:${error.position.start.line}:${error.position.start.column}: ${error.message}`, 'error');
+  log(
+    `Error in file ${error.path}:${error.position.start.line}:${error.position.start.column}: ${error.message}`,
+    "error"
+  );
 }
 
 function nextPost(blogShortPath: string) {
-  const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
+  const current = BLOG_POSTS.findIndex(
+    (post) =>
+      post.path + "/index.malloynb" === blogShortPath.slice("/blog".length)
+  );
   if (current !== -1 && current - 1 >= 0) {
-    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current - 1].path}`;
-  } 
+    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${
+      BLOG_POSTS[current - 1].path
+    }`;
+  }
 }
 
 function blogTitle(blogShortPath: string) {
-  const title = BLOG_POSTS.find(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length))?.title;
+  const title = BLOG_POSTS.find(
+    (post) =>
+      post.path + "/index.malloynb" === blogShortPath.slice("/blog".length)
+  )?.title;
   return title ? title : "Malloy Blog";
 }
 
+function sectionTitle(pathToTitleMap: Map<string, string>, path: string) {
+  // The table of contents paths do not include /documentation, but the input often does.
+  if (path.startsWith("/documentation")) {
+    path = path.replace("/documentation", "");
+  }
+  const maybeTitle = pathToTitleMap.has(path) ? pathToTitleMap.get(path) : null;
+  let title = "Malloy Documentation";
+  if (maybeTitle) {
+    title = maybeTitle + " | " + title;
+  }
+
+  return title;
+}
+
 function getPreviewImage(blogShortPath: string) {
-  const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
+  const current = BLOG_POSTS.findIndex(
+    (post) =>
+      post.path + "/index.malloynb" === blogShortPath.slice("/blog".length)
+  );
 
   if (current !== -1 && BLOG_POSTS[current].previewImage) {
-    const post_path = `${DEFAULT_CONTEXT.site.baseurl}/blog${BLOG_POSTS[current].path}`
-    return `${post_path}/${BLOG_POSTS[current].previewImage}`
+    const post_path = `${DEFAULT_CONTEXT.site.baseurl}/blog${BLOG_POSTS[current].path}`;
+    return `${post_path}/${BLOG_POSTS[current].previewImage}`;
   }
 }
 
 function previoustPost(blogShortPath: string) {
-  const current = BLOG_POSTS.findIndex(post => post.path + "/index.malloynb" === blogShortPath.slice("/blog".length));
+  const current = BLOG_POSTS.findIndex(
+    (post) =>
+      post.path + "/index.malloynb" === blogShortPath.slice("/blog".length)
+  );
   if (current !== -1 && current + 1 < BLOG_POSTS.length) {
-    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${BLOG_POSTS[current + 1].path}`;
-  } 
+    return `${DEFAULT_CONTEXT.site.baseurl}/blog/${
+      BLOG_POSTS[current + 1].path
+    }`;
+  }
+}
+
+// Recursively walk the table of contents hierarchy to build a map
+// of link URL to page title.
+function buildPathToTitleMap(
+  toc: (Section | SectionItem)[],
+  map?: Map<string, string>
+): Map<string, string> {
+  if (!map) {
+    map = new Map<string, string>();
+  }
+  for (let section of toc) {
+    if ((section as Section).items) {
+      buildPathToTitleMap((section as Section).items, map);
+    } else if ((section as SectionItem).link) {
+      map.set((section as SectionItem).link, section.title);
+    }
+  }
+
+  return map;
+}
+
+function readTableOfContents() {
+  return JSON.parse(fs.readFileSync(CONTENTS_PATH, "utf8"))
+    .contents as Section[];
 }
 
 (async () => {
   const allFiles = readDirRecursive(DOCS_ROOT_PATH);
-  const allDocs = allFiles.filter(isMalloyNB).filter(matchesPrefix);;
+  const allDocs = allFiles.filter(isMalloyNB).filter(matchesPrefix);
+  const tableOfContents = readTableOfContents();
+  const pathToTitleMap = buildPathToTitleMap(tableOfContents);
   const staticFiles = allFiles.filter((file) => !isMalloyNB(file));
   let { footers } = rebuildSidebarAndFooters();
   buildBlogIndex();
@@ -466,17 +567,23 @@ function previoustPost(blogShortPath: string) {
     handleStaticFile(file);
   }
   const startTime = performance.now();
-  const results = await Promise.all(allDocs.map(async f => {
-    const result = await compileDoc(f, footers);
-    const linkErrors = validateLinks({ [f]: result.links}, allDocs);
-    for (const error of linkErrors) {
-      logError(error);
-    }
-    return result;
-  }));
+  const results = await Promise.all(
+    allDocs.map(async (f) => {
+      const result = await compileDoc(f, pathToTitleMap, footers);
+      const linkErrors = validateLinks({ [f]: result.links }, allDocs);
+      for (const error of linkErrors) {
+        logError(error);
+      }
+      return result;
+    })
+  );
   const snippetErrors = results.map(({ errors }) => errors).flat();
-  const allLinks = Object.fromEntries(results.map(({ links, file }) => [file, links]));
-  const allHashes = Object.fromEntries(results.map(({ file, hashes }) => [file, hashes]));
+  const allLinks = Object.fromEntries(
+    results.map(({ links, file }) => [file, links])
+  );
+  const allHashes = Object.fromEntries(
+    results.map(({ file, hashes }) => [file, hashes])
+  );
   const linkErrors = validateLinks(allLinks, allDocs, allHashes);
   const allSegments = results
     .map(({ searchSegments }) => searchSegments)
@@ -485,14 +592,17 @@ function previoustPost(blogShortPath: string) {
   // TODO make this update in watch mode
   outputSearchSegmentsFile(allSegments);
   outputMalloyRender();
-  log(`All docs compiled in ${timeString(startTime, performance.now())}`, 'success');
+  log(
+    `All docs compiled in ${timeString(startTime, performance.now())}`,
+    "success"
+  );
   if (WATCH_ENABLED) {
     log(`\nWatching /documentation and /models for changes...`);
     watchDebouncedRecursive(DOCS_ROOT_PATH, (type, file) => {
       const fullPath = path.join(DOCS_ROOT_PATH, file);
       if (isMalloyNB(file)) {
         log(`Documentation file ${file} ${type}d. Recompiling...`);
-        compileDoc(fullPath, footers);
+        compileDoc(fullPath, pathToTitleMap, footers);
       } else {
         if (fs.existsSync(fullPath)) {
           handleStaticFile(fullPath);
@@ -507,7 +617,7 @@ function previoustPost(blogShortPath: string) {
       log(`Model file ${file} ${type}d. Recompiling dependent documents...`);
       for (const doc of DEPENDENCIES.get(file) || []) {
         const fullPath = path.join(DOCS_ROOT_PATH, doc);
-        compileDoc(fullPath, footers);
+        compileDoc(fullPath, pathToTitleMap, footers);
       }
     });
     watchDebounced(BLOG_LIST_PATH, (type) => {
