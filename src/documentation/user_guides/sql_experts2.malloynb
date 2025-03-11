@@ -1,13 +1,20 @@
 >>>markdown
-## SQL Experts: CTE and Refactoring for Reusibility.
+# More Guidance for SQL Users
 
-Malloy has the notion of `query:`s and `source:`es. It can be a little confusing when to use one or the others.
+This guide expands on information shared in [Malloy for SQL Folks](https://docs.malloydata.dev/documentation/user_guides/sql_experts1).
 
-A query is a transformation that returns a table.  If you are doing a transfomation of data to be joined in another query or source, make a `query:`
+## CTE and Refactoring for Reusability.
+
+Malloy has the notion of `query`s and `source`s. It can be a little confusing when to use one or the others.
+
+A `query` is a transformation that returns a table.  If you are doing a transfomation of data to be joined in another query or source, make a `query`.
  
 A `source` is datasource, like a table with added declarations that can be used against the data it contains.
 
 A `source` can also be joined with sources and queries to be a network of data that you can query.
+
+## Example SQL
+This SQL block should be used as a reference when reading the section below it.
 >>>sql
 -- conneciton: duckdb
 WITH orig_facts as (    -- (1) CTE computes a rollup of flights 
@@ -77,8 +84,8 @@ source: flights_explore is flights extend {  -- (3), (4)
 3) Declare a new source that extends the root table in the query, that joins eveything together into a network.  
 
 4) `extend:` lets you inhert from an exising source.
->>>malloy
-### Writing the query is easy.  Becomes easy.
+>>>markdown
+## Writing the query becomes easy.
 >>>malloy
 run: flights_explore -> {
   group_by:
@@ -110,7 +117,7 @@ run: flights_explore -> {
 * (2) [Language/Nesting Queries](../language/nesting.malloynb)
 * (1) [See Visualizations/Lists](../visualizations/lists.malloynb)
 >>>markdown
-## And another query.
+## Another example query
 >>>malloy
 run: flights_explore ->  {
   group_by: carrier is carriers.nickname

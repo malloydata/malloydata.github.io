@@ -46,7 +46,7 @@ In converting from SQL to Malloy, we refactor the query into two parts.  The res
         delayed_flight_count / flight_count  -- ** reuse calculations
 }
  
-run: flights -> {                      -- (9) FROM is first
+run: flights -> {                       -- (9) FROM is first
   where: destination = 'SFO'
   group_by:
     `Origin Code` is origin             --  (10) 'is' vs 'as' 
