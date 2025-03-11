@@ -44,6 +44,10 @@
         {
           "title": "Malloy for SQL Folks",
           "link": "/user_guides/sql_experts1.malloynb"
+        },
+        {
+          "title": "More Guidance for SQL Users",
+          "link": "/user_guides/sql_experts2.malloynb"
         }
       ]
     },
