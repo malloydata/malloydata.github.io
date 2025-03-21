@@ -65,11 +65,12 @@ Functions that are _not_ built in may be called in the same way, but with an `!`
   <tr>
     <td><a href="#replace">replace</a></td>
     <td><a href="#repeat">repeat</a></td>
+    <td><a href="#reverse">repeat</a></td>
     <td><a href="#rtrim">rtrim</a></td>
     <td><a href="#starts_with">starts_with</a></td>
-    <td><a href="#strpos">strpos</a></td>
   </tr>
   <tr>
+    <td><a href="#strpos">strpos</a></td>
     <td><a href="#substr">substr</a></td>
     <td><a href="#trim">trim</a></td>
     <td><a href="#unicode">unicode</a></td>
@@ -1185,7 +1186,7 @@ run: empty -> {
 ### coalesce
 
 ```malloy
-ifnull(value, ...)
+coalesce(value, ...)
 ```
 
 Return the first `value` which is not `null`, or `null` if all `value`s are `null`. Essentially the same as `ifnull` but allowing more than two arguments.
