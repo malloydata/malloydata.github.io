@@ -48,6 +48,10 @@
         {
           "title": "More Guidance for SQL Users",
           "link": "/user_guides/sql_experts2.malloynb"
+        },
+        {
+          "title": "Quick Reference",
+          "link": "/user_guides/quick_reference.html"
         }
       ]
     },
@@ -289,7 +293,7 @@
       "items": [
         {
           "title": "Experiments",
-          "link": "/experiments/experiments.malloynb" 
+          "link": "/experiments/experiments.malloynb"
         },
         {
           "title": "Join INNER/RIGHT/FULL",

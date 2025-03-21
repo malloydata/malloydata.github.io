@@ -8,6 +8,7 @@
     "build-script": "ts-node scripts/build",
     "build": "npm run build-script && node dist/build --baseurl ''",
     "build-watch": "npm run build-script && node dist/build --watch --baseurl ''",
+    "build-debug": "node --inspect-wait dist/build --baseurl ''",
     "start-server": "http-server docs -p 4000",
     "build-prod": "npm run build-script && node dist/build --baseurl ''",
     "serve": "concurrently --kill-others 'npm run build-watch' 'npm run start-server'",
