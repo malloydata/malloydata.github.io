@@ -106,7 +106,6 @@ run: flights ->
   + {limit: 10}
 ```
 
-In the query above, the refienment operator `+` combines the parameters of a query so the query can be built from parts.  Measure, dimension and views declared in the source can also be used.  Referencing dimension `carrier` expands to a partial of `{group_by: x}`. Referencing measure `flight_count` expands to a partial query of `{aggregate: flight_count}`
-
+In the query above, the refinement operator `+` combines the parameters of a query so the query can be built from parts.  Measure, dimension and views declared in the source can also be used.  Referencing dimension `carrier` expands to a partial of `{group_by: x}`. Referencing measure `flight_count` expands to a partial query of `{aggregate: flight_count}`
 >>>markdown
 For more information about defining, reusing, nesting, and refining views, see the [Views](views.malloynb) section.
