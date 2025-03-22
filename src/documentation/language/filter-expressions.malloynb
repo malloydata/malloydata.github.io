@@ -11,9 +11,9 @@ A filter expression is applied to a value with the `~` or `!~` operators. The re
 dimension:
   is_primary_color is color ~ f'red,green,blue'
   one_digit is numVal ~ f'(1,9)'
-  voted_against is vote ~ f'false'
+  did_not_happen is havePictures ~ f'false'
   happened_this_week is eventAt ~ f'this week'
-  total_this_quearter is val.sum { where: order_date ~ f'this quarter' }
+  total_this_quearter is val.sum() { where: order_date ~ f'this quarter' }
 ```
 
 # String Filter Expressions
@@ -23,7 +23,6 @@ dimension:
 | **String Filter Expression** | **Meaning** |
 | ----- | ----- |
 | <code>correct</code> | Is the string `correct` |
-| <code>-mistake</code> | Is not the string `mistake`
 | <code>happy%</code> | Starts with `happy` |
 | <code>%joy</code> | Ends with `joy` |
 | <code>%love%</code> | Contains `love` |
@@ -39,8 +38,9 @@ dimension:
 
 | **Negated Expression** | **Meaning** |
 | ----- | ----- |
+| <code>-mistake</code> | Is not the string `mistake`
 | <code>-empty</code> | Is not an empty string |
-| <code>-anger%</code> | Does not start with `anger` |
+| <code>-%anger</code> | Does not end with `anger` |
 | <code>-null</code> | Is not a `NULL` value |
 
 * A <code>-</code> before a string expression means "not"
@@ -58,11 +58,13 @@ A string of clauses seperated by <code>,</code> will have all the positive match
 | <code>red \| blue \| green</code> | Is one of the primary colors |
 | <code>joy%,-%sadness% | Starts with `joy` and does not contains `sadness` |
 | <code>joy% ; -%sadness% | Starts with `joy` and does not contains `sadness` |
+| <code>\ % , %\\_</code> | Starts with space or ends with `_` |
 
-* White space at the beginning or end if a clause is ignored
+* White space at the beginning or end of a clause is ignored
 * You will need to use <code>\\</code> (backslash) to escape
-  * Spaces at the begging or end of a match
+  * Spaces at the beginning or end of a match
   * Any of <code>,</code> <code>|</code> <code>;</code> </code>\\</code> <code>(</code> <code>)</code>
+  * The match charcacters <code>%</code> and <code>_</code>
   * `\null` or `\empty`
 
 # Number Filter Expressions
