@@ -1,0 +1,75 @@
+>>>markdown
+# Malloy Filter Expressions
+
+Malloy includes specialized sub-languages for filtering [string](#string-filter-expressions), [number](#number-filter-expressions), [date](#temporal-filter-expressions), [timestamp](#temporal-filter-expressions) or [boolean](#boolean-filter-expressions) data. There is a specialized language for each data type design to specify concise, powerful, and readable data filters.
+
+A filter expression is a special ["f-string"](#more-about-f-strings), starting with <code>f'</code> and ending with <code>'</code>
+
+A filter expression is applied to a value with the `~` or `!~` operators. The result of a filter expression comparison will be a boolean value.  Here are examples of a filter expressions in Malloy for each data type.
+
+```malloy
+dimension:
+  is_primary_color is color ~ f'red,green,blue'
+  one_digit is numVal ~ f'(1,9)'
+  voted_against is vote ~ f'false'
+  happened_this_week is eventAt ~ f'this week'
+  total_this_quearter is val.sum { where: order_date ~ f'this quarter' }
+```
+
+# String Filter Expressions
+
+## Examples of String Filter Expressions
+
+| **String Filter Expression** | **Meaning** |
+| ----- | ----- |
+| <code>correct</code> | Is the string `correct` |
+| <code>-mistake</code> | Is not the string `mistake`
+| <code>happy%</code> | Starts with `happy` |
+| <code>%joy</code> | Ends with `joy` |
+| <code>%love%</code> | Contains `love` |
+| <code>abc_</code> | `abc` followed by any character |
+| <code>null</code> | Is a `NULL` value |
+| <code>\null</code> | Is the string `null` |
+| <code>ten\%</code> | Is the string `ten%` |
+| <code>empty</code> | Is the empty string or is `NULL` |
+
+* The <code>\\</code> character is used to escape any special meaning
+
+## Negation in String Filter Expressions
+
+| **Negated Expression** | **Meaning** |
+| ----- | ----- |
+| <code>-empty</code> | Is not an empty string |
+| <code>-anger%</code> | Does not start with `anger` |
+| <code>-null</code> | Is not a `NULL` value |
+
+* A <code>-</code> before a string expression means "not"
+
+## Combining String Filter Expressions
+
+There are three seperators that can be used to combine string filter expressions: <code>,</code> (the comma operator), <code>;</code> (the 'and' operator), <code>|</code> (the 'or' operator)
+Also groups of string clauses can use <code>(</code> and <code>)</code> for grouping.
+
+A string of clauses seperated by <code>,</code> will have all the positive matches or'd together (included), and all the negative matches anded (excluded)
+
+| **Combined Expression** | **Meaning** |
+| ----- | ----- |
+| <code>red,blue,green</code> | Is one of the primary colors |
+| <code>red \| blue \| green</code> | Is one of the primary colors |
+| <code>joy%,-%sadness% | Starts with `joy` and does not contains `sadness` |
+| <code>joy% ; -%sadness% | Starts with `joy` and does not contains `sadness` |
+
+* White space at the beginning or end if a clause is ignored
+* You will need to use <code>\\</code> (backslash) to escape
+  * Spaces at the begging or end of a match
+  * Any of <code>,</code> <code>|</code> <code>;</code> </code>\\</code> <code>(</code> <code>)</code>
+  * `\null` or `\empty`
+
+# Number Filter Expressions
+
+# Boolean Filter Expressions
+
+# Temporal Filter Expressions
+
+# More About F-Strings
+>>>markdown
