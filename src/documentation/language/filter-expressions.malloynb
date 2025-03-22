@@ -3,6 +3,7 @@
 
 Malloy includes specialized sub-languages for filtering [string](#string-filter-expressions), [number](#numeric-filter-expressions), [date](#temporal-filter-expressions), [timestamp](#temporal-filter-expressions) or [boolean](#boolean-filter-expressions) data. There is a specialized language for each data type designed to create concise, powerful, and readable data filters.
 
+
 A filter expression is a special ["f-string"](#more-about-f-strings), starting with <code>f'</code> and ending with <code>'</code>
 
 A filter expression is applied to a value with the `~` or `!~` operators. The result of a filter expression comparison will be a boolean value.  Here are examples of a filter expressions in Malloy for each data type.
@@ -78,6 +79,7 @@ A string of clauses seperated by <code>,</code> will have all the positive match
 | <code>(1 to 5)</code> | 1, 2, 3, 4, or 5 |
 | <code>[1 to 5]</code> | 2, 3, or 4 |
 | <code>null</code> | The `NULL` value |
+
 
 * In <code>to</code> ranges the <code>()</code> characters indicate inclusion of the endpoints, and <code>[]</code> indicate exclusion.
 
