@@ -1,7 +1,7 @@
 >>>markdown
 # Malloy Filter Expressions
 
-Malloy includes specialized sub-languages for filtering [string](#string-filter-expressions), [number](#number-filter-expressions), [date](#temporal-filter-expressions), [timestamp](#temporal-filter-expressions) or [boolean](#boolean-filter-expressions) data. There is a specialized language for each data type design to specify concise, powerful, and readable data filters.
+Malloy includes specialized sub-languages for filtering [string](#string-filter-expressions), [number](#numeric-filter-expressions), [date](#temporal-filter-expressions), [timestamp](#temporal-filter-expressions) or [boolean](#boolean-filter-expressions) data. There is a specialized language for each data type design to specify concise, powerful, and readable data filters.
 
 A filter expression is a special ["f-string"](#more-about-f-strings), starting with <code>f'</code> and ending with <code>'</code>
 
@@ -10,10 +10,10 @@ A filter expression is applied to a value with the `~` or `!~` operators. The re
 ```malloy
 dimension:
   is_primary_color is color ~ f'red,green,blue'
-  one_digit is numVal ~ f'(1,9)'
-  did_not_happen is havePictures ~ f'false'
-  happened_this_week is eventAt ~ f'this week'
-  total_this_quearter is val.sum() { where: order_date ~ f'this quarter' }
+  one_digit is num_val ~ f'(1,9)'
+  did_not_happen is have_pictures ~ f'false'
+  happened_this_week is event_timestamp ~ f'this week'
+  total_this_quarter is num_val.sum() { where: order_date ~ f'this quarter' }
 ```
 
 # String Filter Expressions
@@ -67,11 +67,106 @@ A string of clauses seperated by <code>,</code> will have all the positive match
   * The match charcacters <code>%</code> and <code>_</code>
   * `\null` or `\empty`
 
-# Number Filter Expressions
+# Numeric Filter Expressions
 
-# Boolean Filter Expressions
+| **Numeric Filter Expression** | **Meaning** |
+| ----- | ----- |
+| <code>42</code> | Equals 42 |
+| <code>= 42</code> | Equals 42 |
+| <code>!= 42</code> | Not Equal 42 |
+| <code>> 42</code> | Could also be <code>\<<code> <code>\<=</code> <code>>=</code> |
+| <code>(1 to 5)</code> | 1, 2, 3, 4, or 5 |
+| <code>[1 to 5]</code> | 2, 3, or 4 |
+| <code>null</code> | The `NULL` value |
+
+## Negation in Numeric Filter Expressions
+
+| **Negated Expression** | **Meaning** |
+| ----- | ----- |
+| <code>not 21</code> | Does not equal 21 |
+| <code>not (1,2,3)</code> | Less than 1 or greater than 3 |
+| <code>not null</code> | Is not a `NULL` value |
+
+## Combining Numeric Filter Expressions
+
+Numeric filters can be combined with <code>and</code> and <code>or</code> operators and grouped with <code>(</code> and <code>)</code>
+
+Filters using <code>=</code> and <code>!=</code> can have a list of values separated by <code>,</code>
+
+| **Combined Expression** | **Meaning** |
+| ----- | ----- |
+| <code>= 2,4,6,8</code> | Equals one of 2,4,6 or 8 |
+| <code>2,4,6,8</code> | Equals one of 2,4,6 or 8 |
+| <code>!= 1,3,5,7</code> | Does not equal any of 1,3,5,7 |
+| <code>> 10 and != 15</code> | Greater than 10 and not equal 15 |
+| <code>(0 to 4) or (5 to 9)</code> | Exclude between for and 5 |
+
 
 # Temporal Filter Expressions
 
+## Temporal Units
+
+Malloy has a temporal filter language for operation on `date` and `timestamp` data. The first type of temporal filters are filters which describe a unit of time.
+Expressions which take a time extent can use <code>year</code>, <code>quarter</code>, <code>month</code>, <code>week</code>, <code>day</code>, <code>hour</code>, or <code>minute</code>, and any of those can have an `s` (as in `years` or `days`)
+
+| **Temporal Unit Expression** | **Meaning** |
+| ----- | ----- |
+| <code>now</code> | The current time |
+| <code>last week</code> | The sunday week which ended before the current day |
+| <code>next month</code> | The next month |
+| <code>this quarter</code> | The quarter containing the current day |
+| <code>today</code> | The current day |
+| <code>yesterday</code> | The day before the current day |
+| <code>tomorrow</code> | The day after the current day |
+| <code>2 days ago</code> | The day before yesterday |
+| <code>1 week from now</code> | The seven days starting
+| <code>monday</code> | The most recently passed monday |
+| <code>last monday</code> | The most recently passed monday |
+| <code>next friday</code> | The first friday in the future |
+
+## Temporal Ranges
+
+For all temporal units except <code>now</code>, the unit describes a range of time.
+There are a other ways to describe a range, many of which start with a temporal unit
+
+| **Temporal Range Expression** | **Meaning** |
+| ----- | ----- |
+| <code>before tuesday</code> | Before any temporal unit |
+| <code>after next month</code> | After any temporal unit |
+| <code>last monday to next friday</code> | Using two units to specify a range |
+| <code>2 weeks ago for 2 days</code> | Can combine a unit and a duration |
+| <code>last 3 days</code<>> | 3 days of data, does not include today |
+| <code>next 2 weeks</code<>> | 2 weeks of data, does not include today |
+| <code>2 days</code<>> | 2 days of data, yesterday and today |
+| <code>null</code> | The `NULL` value |
+
+## Combining Temporal Filter Expressions
+
+Temporal filter expressions can be combined with <code>and</code> and <code>or</code> operators and grouped with <code>(</code> and <code>)</code>
+
+# Boolean Filter Expressions
+
+Because a boolean value might equal NULL, there are the following boolean filters.
+
+| **Boolean Filter Expression** | **Meaning** |
+| ----- | ----- |
+| <code>true</code> | Value is `true` |
+| <code>false</code> | Value is `false` or `NULL` (the inverse of `true`)|
+| <code>=false</code> | Value is `false` |
+| <code>null</code> | Value is `NULL` |
+
+Boolean filters are negated with `not`. There are no combination or grouping operators.
+
+
 # More About F-Strings
->>>markdown
+
+Escaping is different inside of a f-string than it is inside of a normal string. The backslash character does escape, but it will also be part of the resulting string. In most other strings, in order for the string to contain a backlash you must write two backslashes.
+This will only matter for [string filter expressions](#string-filter-expressions) which use <code>\\</code>.
+
+F-strings can also be written <code>f"..."</code> or <code>f\`...\`</code> if one of those quotation choices produces an easier to read expression
+
+There are also tripled versions of each f-string, <code>f'''...'''</code>, <code>f"""..."""</code> and <code>f\`\`\`...\`\`\`</code>
+
+* <code>f"Don't need to quote the apostrophe"</code>
+* <code>f\`Don't need to quote the " either\`</code>
+* <code>f'''Or here, can use ` ' and " without quoting them'''</code>
