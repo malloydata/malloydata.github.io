@@ -8,8 +8,9 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | ---------| ----- |
 | [Identifiers](#identifiers)<br/>Fields referenced by name | `origin.city`<br/>`` `year` `` |
 | [Mathematical operations](#mathematical-operators) | `x * 100`<br/>`-cost`<br/>`(a + b) / c` |
-| [Comparison operators](#comparison-operators) | `x > 200`<br/>`state != 'cancelled` |
+| [Comparison operators](#comparison-operators) | `x > 200``<br/>`state != 'cancelled` |
 | [Boolean operators](#boolean-operators)<br/>Logically combine booleans | `height > 10 and height < 100`<br/>`is_cancelled or is_delayed`</br>`not is_commercial_flight` |
+| [Filter Expressions](filter-expressions.malloynb) | `color ~ f'red,green.blue'`<br />`eventAt ~ f'last tuesday` |
 | [Functions](#functions) | `floor(10.35)`<br/>`concat(first_name, ' ', last_name)`<br/>`cbrt!(x)`<br/>`timestamp_seconds!timestamp(val)` |
 | [Aggregation](#aggregation) | `sum(distance)` <br/> `aircraft.count()` <br/> `aircraft_models.seats.avg()` |
 | [Aggregation Control / Subtotals](ungrouped-aggregates.malloynb) | `all(sum(distance))` <br/> `all(aircraft.count(), destination_code)` <br/> `exclude(aircraft_models.seats.avg(), carrier.nickname)` |
