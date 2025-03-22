@@ -1,7 +1,8 @@
 >>>markdown
 # Malloy Filter Expressions
 
-Malloy includes specialized sub-languages for filtering [string](#string-filter-expressions), [number](#numeric-filter-expressions), [date](#temporal-filter-expressions), [timestamp](#temporal-filter-expressions) or [boolean](#boolean-filter-expressions) data. There is a specialized language for each data type design to specify concise, powerful, and readable data filters.
+Malloy includes specialized sub-languages for filtering [string](#string-filter-expressions), [number](#numeric-filter-expressions), [date](#temporal-filter-expressions), [timestamp](#temporal-filter-expressions) or [boolean](#boolean-filter-expressions) data. There is a specialized language for each data type designed to create concise, powerful, and readable data filters.
+
 
 A filter expression is a special ["f-string"](#more-about-f-strings), starting with <code>f'</code> and ending with <code>'</code>
 
@@ -29,7 +30,7 @@ dimension:
 | <code>abc_</code> | `abc` followed by any character |
 | <code>null</code> | Is a `NULL` value |
 | <code>\null</code> | Is the string `null` |
-| <code>ten\%</code> | Is the string `ten%` |
+| <code>ten\\%</code> | Is the string `ten%` |
 | <code>empty</code> | Is the empty string or is `NULL` |
 
 * The <code>\\</code> character is used to escape any special meaning
@@ -61,7 +62,7 @@ A string of clauses seperated by <code>,</code> will have all the positive match
 | <code>\ % , %\\_</code> | Starts with space or ends with `_` |
 
 * White space at the beginning or end of a clause is ignored
-* You will need to use <code>\\</code> (backslash) to escape
+* You will need to use <code>\\</code> (backslash) to escape ...
   * Spaces at the beginning or end of a match
   * Any of <code>,</code> <code>|</code> <code>;</code> </code>\\</code> <code>(</code> <code>)</code>
   * The match charcacters <code>%</code> and <code>_</code>
@@ -74,10 +75,13 @@ A string of clauses seperated by <code>,</code> will have all the positive match
 | <code>42</code> | Equals 42 |
 | <code>= 42</code> | Equals 42 |
 | <code>!= 42</code> | Not Equal 42 |
-| <code>> 42</code> | Could also be <code>\<<code> <code>\<=</code> <code>>=</code> |
+| <code>> 42</code> | Could also be <code>\<</code> <code>\<=</code> <code>>=</code> |
 | <code>(1 to 5)</code> | 1, 2, 3, 4, or 5 |
 | <code>[1 to 5]</code> | 2, 3, or 4 |
 | <code>null</code> | The `NULL` value |
+
+
+* In <code>to</code> ranges the <code>()</code> characters indicate inclusion of the endpoints, and <code>[]</code> indicate exclusion.
 
 ## Negation in Numeric Filter Expressions
 
@@ -119,7 +123,7 @@ Expressions which take a time extent can use <code>year</code>, <code>quarter</c
 | <code>yesterday</code> | The day before the current day |
 | <code>tomorrow</code> | The day after the current day |
 | <code>2 days ago</code> | The day before yesterday |
-| <code>1 week from now</code> | The seven days starting
+| <code>1 week from now</code> | Same as seven days from now |
 | <code>monday</code> | The most recently passed monday |
 | <code>last monday</code> | The most recently passed monday |
 | <code>next friday</code> | The first friday in the future |
@@ -135,9 +139,9 @@ There are a other ways to describe a range, many of which start with a temporal 
 | <code>after next month</code> | After any temporal unit |
 | <code>last monday to next friday</code> | Using two units to specify a range |
 | <code>2 weeks ago for 2 days</code> | Can combine a unit and a duration |
-| <code>last 3 days</code<>> | 3 days of data, does not include today |
-| <code>next 2 weeks</code<>> | 2 weeks of data, does not include today |
-| <code>2 days</code<>> | 2 days of data, yesterday and today |
+| <code>last 3 days</code> | 3 days of data, does not include today |
+| <code>next 2 weeks</code> | 2 weeks of data, does not include today |
+| <code>2 days</code> | 2 days of data, yesterday and today |
 | <code>null</code> | The `NULL` value |
 
 ## Combining Temporal Filter Expressions
