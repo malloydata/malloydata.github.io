@@ -27,7 +27,7 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Partial comparison](#partial-comparison)<br/>Reusable conditions | `> 42`<br/>`is not null`<br/>`~ r'C.*'` |
 | [Alternation](#alternation)<br/>Logically combine conditions | `> 5 & < 10`</br> `'red' \| 'blue'`  |
 | [Application](#application)<br/>Apply conditions to values | `state ? 'CA'`<br/> `weight ? > 100 & < 1000` |
-| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus != null`<br/> `eventStatus ?? 'unknown'` |
+| [Null Operations](#null-operations)<br/>Expressions relating to NULL values | `eventStatus is not null`<br/> `eventStatus ?? 'unknown'` |
 | [Operator Precedence](#operator-precedence) | `a + b * c and d ?? e > f` |
 
 ## Identifiers
@@ -80,7 +80,7 @@ The unary minus / negation operator is also allowed, e.g. `value is -cost`.
 
 <!-- * `distance > 1000` -->
 <!-- * `state = 'CA'` -->
-<!-- * `name != null` -->
+<!-- * `name is not null` -->
 
 <!-- TODO discuss null checking and how it uses `!=` not `is not` -->
 
@@ -110,7 +110,7 @@ Aggregations may included in an expression to create [measures](fields.malloynb#
 
 ## Filtered Expressions
 <!-- * `avg(age) : [state: 'CA']` -->
-<!-- * `flight_count : [origin.county != null]` -->
+<!-- * `flight_count : [origin.county is not null]` -->
 
 Aggregate expressions may be filtered, using the [usual filter syntax](filters.malloynb).
 >>>malloy
@@ -272,7 +272,7 @@ As filtering is an incredibly common operation in data analysis, Malloy has spec
 <!-- * `!= null` -->
 <!-- * `~ r'C.*'` -->
 
-Partial comparisons, or "partials" are written with a binary comparison operator followed by a value, e.g. `> 42` or `!= null`. These can be thought of as conditions-as-values, or as functions that return a boolean.
+Partial comparisons, or "partials" are written with a binary comparison operator followed by a value, e.g. `> 42` or `is not null`. These can be thought of as conditions-as-values, or as functions that return a boolean.
 
 ### Alternation
 

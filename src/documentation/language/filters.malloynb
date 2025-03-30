@@ -103,9 +103,7 @@ run: my_flights2 -> {
 >>>markdown
 ## Filtering null values
 
-Malloy has the keyword `null` to represent the null value.
-
-To check to see if a value is `null`, simply compare it to `null`, there is no <code>IS NULL</code> or <code>IS NOT NULL</code> operator in Malloy.
+To check to see if a value is `null`, use <code>IS NULL</code> or <code>IS NOT NULL</code>.
 
   ```malloy
   dimension: name_not_present is name is null
