@@ -48,10 +48,6 @@
         {
           "title": "More Guidance for SQL Users",
           "link": "/user_guides/sql_experts2.malloynb"
-        },
-        {
-          "title": "Quick Reference",
-          "link": "/user_guides/quick_reference.html"
         }
       ]
     },
@@ -131,18 +127,34 @@
           "link": "/language/tags.malloynb"
         },
         {
+          "title": "Quick Reference",
+          "link": "/language/quick_reference.html"
+        },
+        {
           "title": "Change Log",
           "link": "/language/changelog.malloynb"
         },
         {
           "title": "Dialects",
           "items": [
-            {"title": "BigQuery", "link": "/language/dialect/bigquery.malloynb"},
-            {"title": "Presto / Trino", "link": "/language/dialect/presto-trino.malloynb"},
-            {"title": "Snowflake", "link": "/language/dialect/snowflake.malloynb"},
-            {"title": "MySQL", "link": "/language/dialect/mysql.malloynb"},
-            {"title": "DuckDB", "link": "/language/dialect/duckdb.malloynb"},
-            {"title": "PostgreSQL", "link": "/language/dialect/postgres.malloynb"}
+            {
+              "title": "BigQuery",
+              "link": "/language/dialect/bigquery.malloynb"
+            },
+            {
+              "title": "Presto / Trino",
+              "link": "/language/dialect/presto-trino.malloynb"
+            },
+            {
+              "title": "Snowflake",
+              "link": "/language/dialect/snowflake.malloynb"
+            },
+            { "title": "MySQL", "link": "/language/dialect/mysql.malloynb" },
+            { "title": "DuckDB", "link": "/language/dialect/duckdb.malloynb" },
+            {
+              "title": "PostgreSQL",
+              "link": "/language/dialect/postgres.malloynb"
+            }
           ]
         }
       ]
