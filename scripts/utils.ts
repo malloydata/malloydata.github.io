@@ -25,7 +25,7 @@ import fs from "fs";
 import path from "path";
 
 export function isMalloyNB(file: string): boolean {
-  return file.endsWith(".malloysql") || file.endsWith(".malloynb");
+  return file.endsWith(".malloysql") || file.endsWith(".malloynb") || file.endsWith("quick_reference.html");
 }
 
 export function convertDocPathToHTML(file: string): string {

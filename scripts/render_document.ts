@@ -32,7 +32,10 @@ import { highlight } from "./highlighter.js";
 import yaml from "yaml";
 import { DEFAULT_CONTEXT } from "./context.js";
 import { hashForHeading, isMalloyNB } from "./utils.js";
-import {MalloySQLParser, MalloySQLStatementType} from '@malloydata/malloy-sql';
+import {
+  MalloySQLParser,
+  MalloySQLStatementType,
+} from "@malloydata/malloy-sql";
 import { DocumentPosition, DocumentRange, ModelDef } from "@malloydata/malloy";
 import { DocsError } from "./errors.js";
 
@@ -46,7 +49,11 @@ class Renderer {
   private models: Map<string, string>;
   private _errors: DocsError[] = [];
   private readonly titleStack: { level: number; title: string }[] = [];
-  public readonly links: { link: string; style: "md" | "html", position: Position }[] = [];
+  public readonly links: {
+    link: string;
+    style: "md" | "html";
+    position: Position;
+  }[] = [];
   public readonly hashes: string[] = [];
   public readonly searchSegments: {
     titles: string[];
@@ -57,7 +64,13 @@ class Renderer {
   }[] = [];
   private cellNumber = 0;
   private mode: "markdown" | "malloy" | undefined = undefined;
-  private modelDef: ModelDef = {name: "notebook", exports: [], contents: {}, queryList: [], dependencies: {}};
+  private modelDef: ModelDef = {
+    name: "notebook",
+    exports: [],
+    contents: {},
+    queryList: [],
+    dependencies: {},
+  };
 
   constructor(path: string) {
     this.path = path;
@@ -72,7 +85,7 @@ class Renderer {
     code: string,
     infostring: string | undefined,
     _escaped: boolean,
-    position: Position,
+    position: Position
   ) {
     let lang = (infostring || "txt").trim();
     let showCode = code;
@@ -83,16 +96,29 @@ class Renderer {
     if (lang === "malloy-x") {
       showCode = removeDocsTags(code);
       try {
-        const { rendered, newModel, isHidden } = await runNotebookCode(code, showCode, this.path, { dataStyles: {} }, this.modelDef);
+        const { rendered, newModel, isHidden } = await runNotebookCode(
+          code,
+          showCode,
+          this.path,
+          { dataStyles: {} },
+          this.modelDef
+        );
         result = rendered;
         hidden = isHidden;
         this.modelDef = newModel;
         const githubDevURL = `https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C${this.cellNumber}`;
         prefix = `<a href="${githubDevURL}" target="_blank" class="open_notebook"><img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>`;
       } catch (error) {
-        log(`Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`, 'error');
+        log(
+          `Error in file ${this.path}:${position.start.line}:${position.start.column}: ${error.message}`,
+          "error"
+        );
         result = `<div class="error">Error: ${error.toString()}</div>`;
-        this._errors.push({ position, message: `${error.message}\n\`\`\`\n${code}\n\`\`\``, path: this.path });
+        this._errors.push({
+          position,
+          message: `${error.message}\n\`\`\`\n${code}\n\`\`\``,
+          path: this.path,
+        });
       }
       highlightedCode = await highlight(showCode, "malloy");
     } else {
@@ -104,15 +130,17 @@ class Renderer {
       segment.paragraphs.push({ type: "code", text: highlightedCode });
     }
 
-    if (showCode.startsWith('\n') || showCode.endsWith("\n\n")) {
-      this._errors.push({ 
-        position, 
-        message: `Code snippets should not have leading or trailing newlines`, 
-        path: this.path 
+    if (showCode.startsWith("\n") || showCode.endsWith("\n\n")) {
+      this._errors.push({
+        position,
+        message: `Code snippets should not have leading or trailing newlines`,
+        path: this.path,
       });
     }
 
-    return `<div class="code-wrapper">${hidden ? "" : prefix + highlightedCode}${result ?? ""}</div>`;
+    return `<div class="code-wrapper">${
+      hidden ? "" : prefix + highlightedCode
+    }${result ?? ""}</div>`;
   }
 
   protected async blockquote(content: Markdown[]) {
@@ -130,16 +158,27 @@ class Renderer {
       const linkPosition: Position = {
         start: {
           line: position.start.line + beforeLines.length - 1,
-          column: beforeLines.length > 1 ? beforeLines[beforeLines.length - 1].length : beforeLines[beforeLines.length - 1].length + position.start.column,
-          offset: position.start.offset + before.length
+          column:
+            beforeLines.length > 1
+              ? beforeLines[beforeLines.length - 1].length
+              : beforeLines[beforeLines.length - 1].length +
+                position.start.column,
+          offset: position.start.offset + before.length,
         },
         end: {
           line: position.start.line + beforeLines.length - 1,
-          column: beforeLines.length > 1 ? match[0].length : position.start.column + match[0].length,
-          offset: position.start.offset + before.length + match[0].length
-        }
-      }
-      this.links.push({ link: match[1], style: "html", position: linkPosition });
+          column:
+            beforeLines.length > 1
+              ? match[0].length
+              : position.start.column + match[0].length,
+          offset: position.start.offset + before.length + match[0].length,
+        },
+      };
+      this.links.push({
+        link: match[1],
+        style: "html",
+        position: linkPosition,
+      });
     }
     return html;
   }
@@ -179,7 +218,7 @@ class Renderer {
         ${heading}
         <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src${this.path}#C1">VSCode <img src="${DEFAULT_CONTEXT.site.baseurl}/img/open_notebook.svg" alt="document"/></a>
         </div>
-      `
+      `;
     } else {
       return heading;
     }
@@ -318,7 +357,7 @@ class Renderer {
     href: string | null,
     title: string | null,
     content: Markdown[],
-    position: Position,
+    position: Position
   ) {
     const text = await this.children(content);
     if (href === null) {
@@ -364,7 +403,6 @@ class Renderer {
       result += await this.render(child);
     }
     return result;
-
 
     // return (
     //   await Promise.all(children.map((child) => this.render(child)))
@@ -435,70 +473,75 @@ function parseMarkdown(text: string): Root {
   const ast = unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkFrontmatter, ['yaml'])
+    .use(remarkFrontmatter, ["yaml"])
     .parse(text);
   return ast as unknown as Root;
 }
 
-function convertPosition(text: string, documentPosition: DocumentPosition): { line: number, column: number, offset: number} {
+function convertPosition(
+  text: string,
+  documentPosition: DocumentPosition
+): { line: number; column: number; offset: number } {
   const lines = text.split("\n");
   return {
     line: documentPosition.line,
     column: documentPosition.character,
-    offset: documentPosition.character + lines.slice(documentPosition.line).join("\n").length,
+    offset:
+      documentPosition.character +
+      lines.slice(documentPosition.line).join("\n").length,
   };
 }
 
 function convertRange(text: string, documentRange: DocumentRange): Position {
   return {
     start: convertPosition(text, documentRange.start),
-    end: convertPosition(text, documentRange.end)
+    end: convertPosition(text, documentRange.end),
   };
-} 
+}
 
 function parseMalloyNB(text: string, path: string): Root {
   const parse = MalloySQLParser.parse(text, path);
-  const children: Markdown[] = parse.statements.flatMap(stmt => {
+  const children: Markdown[] = parse.statements.flatMap((stmt) => {
     const position = convertRange(text, stmt.range);
     if (stmt.type === MalloySQLStatementType.MALLOY) {
-      return [{
-        type: 'code',
-        lang: 'malloy-x',
-        value: stmt.text,
-        meta: undefined,
-        position, 
-      }];
+      return [
+        {
+          type: "code",
+          lang: "malloy-x",
+          value: stmt.text,
+          meta: undefined,
+          position,
+        },
+      ];
     } else if (stmt.type === MalloySQLStatementType.SQL) {
-      return [{
-        type: 'code',
-        lang: 'sql',
-        value: stmt.text,
-        meta: undefined,
-        position,
-      }];
+      return [
+        {
+          type: "code",
+          lang: "sql",
+          value: stmt.text,
+          meta: undefined,
+          position,
+        },
+      ];
     } else {
       // TODO map positions...
       const markdown = parseMarkdown(stmt.text);
       return markdown.children;
     }
   });
-  return { 
-    type: "root", 
-    children, 
-    position: { 
-      start: { line: 0, column: 0, offset: 0 }, 
-      end: { line: 0, column: 0, offset: 0 }
-    }
+  return {
+    type: "root",
+    children,
+    position: {
+      start: { line: 0, column: 0, offset: 0 },
+      end: { line: 0, column: 0, offset: 0 },
+    },
   };
 }
-
-export async function renderDoc(
-  text: string,
-  path: string
-): Promise<{
+type RenderDocResult = {
   renderedDocument: string;
   errors: DocsError[];
-  links: {link: string, style: "md" | "html", position: Position}[];
+  links: { link: string; style: "md" | "html"; position: Position }[];
   searchSegments: {
     titles: string[];
     paragraphs: (
@@ -506,13 +549,18 @@ export async function renderDoc(
       | { type: "code"; text: string }
     )[];
   }[];
-  hashes: string[],
-  frontmatter: any,
-}> {
+  hashes: string[];
+  frontmatter: any;
+};
+
+export async function renderDoc(
+  text: string,
+  path: string
+): Promise<RenderDocResult> {
   const ast = parseMalloyNB(text, path);
   const renderer = new Renderer(path);
   let frontmatter: unknown = {};
-  if (ast.children[0]?.type === 'yaml') {
+  if (ast.children[0]?.type === "yaml") {
     const frontmatterRaw = ast.children[0].value;
     frontmatter = yaml.parse(frontmatterRaw);
     ast.children = ast.children.slice(1);
@@ -524,10 +572,27 @@ export async function renderDoc(
     searchSegments: renderer.searchSegments,
     frontmatter,
     hashes: renderer.hashes,
-    links: renderer.links
+    links: renderer.links,
+  };
+}
+
+// TODO: Do we use the returned link metadata for anything?
+export function getRenderDocResultForRenderedDoc(
+  content: string
+): RenderDocResult {
+  return {
+    renderedDocument: content,
+    errors: [],
+    links: [],
+    searchSegments: [],
+    hashes: [],
+    frontmatter: {},
   };
 }
 
 function removeDocsTags(code: string) {
-  return code.split("\n").filter(l => !l.match(/^#\(docs\) /)).join("\n");
+  return code
+    .split("\n")
+    .filter((l) => !l.match(/^#\(docs\) /))
+    .join("\n");
 }

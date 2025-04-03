@@ -24,7 +24,10 @@
 import path from "path";
 import fs from "fs";
 import { performance } from "perf_hooks";
-import { renderDoc } from "./render_document.js";
+import {
+  getRenderDocResultForRenderedDoc,
+  renderDoc,
+} from "./render_document.js";
 import { renderFooter, renderSidebar, Section, SectionItem } from "./page.js";
 import {
   convertDocPathToHTML,
@@ -98,6 +101,8 @@ async function compileDoc(
   renderedDocument: string;
 }> {
   try {
+    // An HTML source works a lot like a notebook source, except it doesn't need compiling.
+    const isHtmlSource = file.endsWith(".html");
     const startTime = performance.now();
     const shortPath = file.substring(DOCS_ROOT_PATH.length);
     const shortOutPath = convertDocPathToHTML(shortPath);
@@ -105,8 +110,8 @@ async function compileDoc(
     const outDirPath = path.join(outPath, "..");
     fs.mkdirSync(outDirPath, { recursive: true });
     fs.mkdirSync(path.join(OUT_PATH, shortOutPath, ".."), { recursive: true });
-    const markdown = fs.readFileSync(file, "utf8");
-    const template = Handlebars.compile(markdown);
+    const originalContent = fs.readFileSync(file, "utf8");
+    const template = Handlebars.compile(originalContent);
     const templatedMarkdown = template({
       ...DEFAULT_CONTEXT,
     });
@@ -117,7 +122,9 @@ async function compileDoc(
       frontmatter,
       links,
       hashes,
-    } = await renderDoc(templatedMarkdown, shortPath);
+    } = isHtmlSource
+      ? getRenderDocResultForRenderedDoc(templatedMarkdown)
+      : await renderDoc(templatedMarkdown, shortPath);
     const isBlog = shortPath.startsWith("/blog/");
     const layoutName =
       frontmatter.layout ?? isBlog ? "blog.html" : "documentation.html";
