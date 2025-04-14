@@ -16,6 +16,19 @@ any of the listed functions here without needing to use [Raw SQL Functions](../f
     repeat
     reverse
 
+# Errata
+
+## Boolean Filter Expressions
+
+Becase MySQL doesn't have a true boolean data type, a columns which contains boolean values
+will be read as numeric by Malloy. This will make it impossible to use boolean [filter expressions](../filter-expressions.malloynb) 
+without explicitly casting the value to type boolean
+
+```malloy
+dimension: presentAndNotAccountedFor is present::boolean ~ f'true' and accountedFor::boolean ~ f'false'
+```
+
 # External Resources
 
 * [MySQL Documentaion](https://dev.mysql.com/doc/)
+>>>markdown

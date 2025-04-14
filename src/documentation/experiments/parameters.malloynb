@@ -46,6 +46,9 @@ run: flights(min_distance is 2000) -> by_distance_bucket
   - A default value of null may be specified either by specifying a type and default value `null` or specifying a casted null
     - `source: my_source(param::string is null)`
     - `source: my_source(param is null::string)`
+- A [filter expression](../language/filter-expressions.malloynb) can also be a parameter, and the type of that parameter is specified `filter<T>` where `T` is one of th simple Malloy field types.
+  - Unlike `null` the type must be specified with the parameter declaration, not with the value ...
+  - `source: my_source(param::filter<timestamp> is f'last week for two days')`
 
 **Source usages may specify parameters:**
 - `run: my_source(param is 1) -> ...`
