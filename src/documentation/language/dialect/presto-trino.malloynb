@@ -67,7 +67,7 @@ Refer to the appropriate database documentaion for information on individual fun
     shuffle
     slice
     split
-    splot_part
+    split_part
     to_unixtime
     trim_array
     url_extract_fragment
