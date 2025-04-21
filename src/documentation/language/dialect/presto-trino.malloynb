@@ -60,12 +60,14 @@ Refer to the appropriate database documentaion for information on individual fun
     percent_rank
     regexp_like
     regexp_replace
+    regexp_extract
     repeat(STRING)
     reverse
     sequence
     shuffle
     slice
     split
+    split_part
     to_unixtime
     trim_array
     url_extract_fragment
