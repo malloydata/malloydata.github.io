@@ -499,8 +499,12 @@ div.result-middle[selected] {
   display: flex;
 }
 
-div.result-inner {
+div.result-middle[data-result-kind="html"] div.result-inner {
   height: 400px;
+}
+
+
+div.result-inner {
   overflow: auto;
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   flex-grow: 1;
