@@ -500,6 +500,7 @@ div.result-middle[selected] {
 }
 
 div.result-inner {
+  height: 400px;
   overflow: auto;
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   flex-grow: 1;
