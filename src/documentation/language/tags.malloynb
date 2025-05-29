@@ -3,32 +3,31 @@
 
 Annotations are text strings collected with objects as a file is compiled. Annotations are intended to be a generally useful method for connecting meta-data about a model with the source code for a model.
 
-Annotations are strings of text in the model beginning with the `#` character. Annotations which start `##` are collected with the file or "model" and annotations which only have one `#` are associated with the object being defined.
-An annotation starts at the `#` character and continues to the end of the line.
+Annotations are strings of text in the model beginning with either `#` or `##` and immediately followed by some character(s) which define the "space" of the annotation. 
+
+Annotations which start `##` are collected with the file or "model" and annotations which only have one `#` are associated with the object being defined. An annotation starts at the `#` character and continues to the end of the line.
 
 ```malloy
-## This is a model annotation
+// This is an annotation that applies to the entire model. The `!` prefix means it is a compiler annotation.
+##! experimental.parameters
 
-# This is an object annotation
+// This is an annotation on a single view.
+// The ` ` (space) prefix means it is a renderer annotation 
+# bar_chart
 view: how_many is things -> { aggregate: total_count is count() }
 ```
 
 An object annotation which happens before a definition list is distributed to each member of the list, but each member can also have their own unique annotations
 
 ```malloy
-# Every member of this list will have this annotation
+// Every measure in the list will render as a currency, but only 'pct' will render as a percent
+# currency
 measure:
   max_x is max(x)
-  # only min_x will have this annotation
+  # percent
+  pct is avg(x) / all(avg(x))
   min_x is min(x)
 ```
-
-The design of annotations is that the characters immediately following the `#` in an annotation will be available to applications to be able to add different types of annotations. Malloy itself uses the following annotation prefixes
-
-* `#-space` and `##-space` (e.g. `# hello` and `## hello`) The Malloy VSCode extension parses these as tags and uses these tags to render results
-* `##!` The malloy compiler uses these annotations as tags specifying compiler options
-*  `#"`  and `##"` Reserved for future documentation annotations
-* `#(docs)` and `##(docs)` Used by the malloy documentation site
 
 # Tags
 
@@ -36,13 +35,24 @@ The primary use of annotations in Malloy is for tags, which are simply a subset 
 
 Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
 
-Annotations which do not start with `#-space` or `##-space` are not parsed as tags by the renderer, though an application may decide to parse annotations with some other leading characters as as tags.
+## Tag Prefixes
+The design of annotations is that the characters immediately following the `#` in an annotation will be available to applications to be able to add different types of annotations. Malloy itself uses the following annotation prefixes
+
+* `# ` and `## ` with a space as a prefix (e.g. `# percent` and `## bar_chart.size=xl`) The Malloy VSCode extension parses these as tags and uses these tags to render results
+* `##!` The malloy compiler uses these annotations as tags specifying compiler options
+*  `#"`  and `##"` Reserved for future documentation annotations
+* `#(docs)` and `##(docs)` Used by the malloy documentation site
+
+## Renderer Tags
+Annotations which do not start with `# ` or `## ` are not parsed as renderer tags, though an application may decide to parse annotations with some other prefix as as tags.
 
 None of these are render tags, even though they use the tag property language.
 
-* `#bar_chart` without a space after the `#`, this is not a render tag
+* `#bar_chart` without a space after the `#` is not a render tag, it is a tag using an unrecognized `bar_chart` prefix
 * `##! disableWarnings` tags are parsed by the compiler and interpreted as compiler flags
 * `#(myApp) custom="application" values="here"` something like this could be used by an app to write custom tags
+
+For a thorough list of available Renderer Tags, refer to the [Render Tags Documentation](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/src/docs/render_tags_docs.md) in the Malloy GitHub project.
 
 ## Tag Property Language
 
