@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Data is Rectangular and other Limiting Misconceptions</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="data-is-rectangular-and-other-limiting-misconceptions" class="header-link anchor" href="#data-is-rectangular-and-other-limiting-misconceptions">
+          Data is Rectangular and other Limiting Misconceptions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Malloy breaks data's rectangular strangle hold.</p>
+<p><em>January 18, 2023 by lloyd tabb</em>
+<br/><br/><br/></p>
+<p>In software we express our ideas through tools.  In data, those tools think in rectangles.  From spreadsheets to the data warehouses, to do any analytical calculation, you must first go through a rectangle.  Forcing data through a rectangle shapes the way we solve problems (for example, dimensional fact tables, OLAP Cubes).</p>
+<p>But really, most data isn’t rectangular.  Most data exists in hierarchies (orders, items, products, users).  Most query results are better returned as a hierarchy (category, brand, product).  Can we escape the rectangle?</p>
+<p><a href="http://www.malloydata.dev/">Malloy</a> is a new experimental data programming language that, among other things, breaks the rectangle paradigm and several other long held misconceptions in the way we analyze data.</p>
+
+      <h2>
+        <a id="the-rectangle-back-to-basics" class="header-link anchor" href="#the-rectangle-back-to-basics">
+          The Rectangle - Back to Basics
+        </a>
+      </h2>
+    <p>This example is going to start off very simple, but as you will see, we will hit complexity as soon as we need to perform two simultaneous calculations. The problem is that to merge these calculations, we are going to need to take two rectangles and join them.</p>
+
+      <h2>
+        <a id="orders-and-items" class="header-link anchor" href="#orders-and-items">
+          Orders and Items
+        </a>
+      </h2>
+    <p>Lets assume two tables: first <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">orders</span></span></code>, which looks like the following:</p>
+<img src="orders.png"/><p>And next, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code>. Items have an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">item_id</span></span></code> (a unique reference to an item sold), and an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order_id</span></span></code> (the order in the above table they are part of), the name of the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">item</span></span></code> and the price the item sold for.</p>
+<img src="items.png"/><p>For the purposes of illustration we are interested in measuring two things from this data: our <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_shipping</span></span></code> costs and our <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_revenue</span></span></code> from sales. These calculations are pretty easy.</p>
+<p>To calculate total shipping with SQL we simply:</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">sum</span><span style="color: #000000">(shipping_cost) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_shipping</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span></span></pre></div><img src="total_shipping.webp"/><p>To calculate total revenue.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">sum</span><span style="color: #000000">(price) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_revenue</span></span>
+<span class="line"><span style="color: #0000FF">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;items.csv&#39;</span></span></pre></div><img src="total_revenue.webp"/>
+      <h2>
+        <a id="dimensionality-granularity" class="header-link anchor" href="#dimensionality-granularity">
+          Dimensionality / Granularity
+        </a>
+      </h2>
+    <p>To build understanding in data, we often look at aggregate calculations at some level of dimensionality (or granularity). In this example we might want to look at each of these calculations by date.</p>
+<p>To look at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_shipping</span></span></code> by date we can.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  order_date,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">sum</span><span style="color: #000000">(shipping_cost) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_shipping</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span></pre></div><img src="total_shipping_by_order.webp"/><p>To look at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_revenue</span></span></code> by date, we must join in the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code> table to the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">orders</span></span></code> table, where the knowledge of the order data is stored.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  order_date,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">sum</span><span style="color: #000000">(price) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_revenue</span></span>
+<span class="line"><span style="color: #0000FF">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> orders</span></span>
+<span class="line"><span style="color: #0000FF">join</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;items.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> items </span><span style="color: #0000FF">ON</span><span style="color: #000000"> orders.order_id = items.order_id</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span></pre></div><img src="total_revenue_by_order.webp"/>
+      <h2>
+        <a id="show-me-a-table-that-looks-like-" class="header-link anchor" href="#show-me-a-table-that-looks-like-">
+          Show me a table that looks like...
+        </a>
+      </h2>
+    <p>Here comes the tricky part. I'd like a table that looks like the one below. It is useful for all kinds of reasons. How does revenue relate to shipping?</p>
+<img src="both_by_order.webp"/><p>You might think you can simply add the shipping calculation to the query above to produce the desired result. Look what happens, the total_shipping calculations are wrong.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  orders.order_date,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">sum</span><span style="color: #000000">(items.price) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_revenue,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">sum</span><span style="color: #000000">(orders.shipping_cost) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_shipping</span></span>
+<span class="line"><span style="color: #0000FF">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> orders</span></span>
+<span class="line"><span style="color: #0000FF">join</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;items.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> items </span><span style="color: #0000FF">ON</span><span style="color: #000000"> orders.order_id = items.order_id</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span></pre></div><img src="wrong.webp"/><div class="title-row">
+        
+      <h1>
+        <a id="what-went-wrong-" class="header-link anchor" href="#what-went-wrong-">
+          What went wrong?
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>The problem is that the join interfered with the aggregate calculation. When we joined <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code> to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">orders</span></span></code>, new rows were produced and the shipping cost calculation overstates the shipping. In SQL you quickly learn that you can only perform an aggregate calculation in the correct rectangle. Joining <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code> to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">orders</span></span></code> turns the base calculation of the rectangle into an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code> rectangle. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">orders</span></span></code> appear more than once in the resulting joined rectangle. The one-to-many join caused a fan-out, duplicating rows from the orders table.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">select</span><span style="color: #000000"> *</span></span>
+<span class="line"><span style="color: #0000FF">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span><span style="color: #000000"> orders</span></span>
+<span class="line"><span style="color: #0000FF">left join</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;items.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> items </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">on</span><span style="color: #000000"> orders.order_id = items.order_id</span></span></pre></div><img src="joined.webp"/><div class="title-row">
+        
+      <h1>
+        <a id="solved-join-result-rectangles" class="header-link anchor" href="#solved-join-result-rectangles">
+          Solved, join result rectangles
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>In order to solve this, traditionally, you produce multiple rectangles of the same granularity (in this case, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">date</span></span></code>), and join them. We have our two queries from above — we can run them separately and then join the resulting rectangles.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">with</span><span style="color: #000000"> orders_date </span><span style="color: #0000FF">as</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">    order_date,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">sum</span><span style="color: #000000">(shipping_cost) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_shipping</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">group by</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">),</span></span>
+<span class="line"><span style="color: #000000">items_date </span><span style="color: #0000FF">as</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">select</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">    order_date,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">sum</span><span style="color: #000000">(price) </span><span style="color: #0000FF">as</span><span style="color: #000000"> total_revenue</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;orders.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> orders</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">join</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;items.csv&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> items </span><span style="color: #0000FF">ON</span><span style="color: #000000"> orders.order_id = items.order_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">group by</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  orders_date.order_date,</span></span>
+<span class="line"><span style="color: #000000">  total_revenue,</span></span>
+<span class="line"><span style="color: #000000">  total_shipping</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> orders_date</span></span>
+<span class="line"><span style="color: #0000FF">JOIN</span><span style="color: #000000"> items_date </span><span style="color: #0000FF">ON</span><span style="color: #000000"> orders_date.order_date = items_date.order_date</span></span></pre></div><img src="both_by_order.webp"/>
+      <h2>
+        <a id="what-just-happened-" class="header-link anchor" href="#what-just-happened-">
+          What just happened?
+        </a>
+      </h2>
+    <p>In traditional data warehousing, the unit of re-usability is a rectangle — some level of dimensionality and aggregate calculations. We produce tables with lots of different levels of granularity and join them. In the computation of each rectangle, we make a pass over the entire data to produce a rectangle. Rectangles are the basis of OLAP Cubes, and the basis of nearly all the ideas in <a href="https://www.wiley.com/en-us/Building+the+Data+Warehouse%2C+4th+Edition-p-9780764599446">traditional data warehousing</a>.</p>
+
+      <h2>
+        <a id="adding-stuff-adds-complexity" class="header-link anchor" href="#adding-stuff-adds-complexity">
+          Adding stuff adds complexity
+        </a>
+      </h2>
+    <p>This gets harder if we want to filter on a date range. The date filter will have to be applied to both queries. Filtering on orders containing a particular item will have to be applied to both underlying queries (though modern databases might optimize for this).</p>
+<p>If we want to change the dimension (to say user), we have to duplicate this entire chain of rectangles.</p>
+
+      <h2>
+        <a id="enter-malloy" class="header-link anchor" href="#enter-malloy">
+          Enter Malloy
+        </a>
+      </h2>
+    <p><a href="http://www.malloydata.dev/">Malloy</a> makes the promise that <a href="https://malloydata.github.io/documentation/language/aggregates.html#aggregate-locality">join relations won't effect aggregate calculations</a>.</p>
+<p>In Malloy, data is first described in a network. The network of joined rectangles is a <a href="https://malloydata.github.io/documentation/language/source.html">reusable object called a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span></span></code></a>. Then in a query operation, aggregate calculations are applied. The aggregate calculations can reference any ‘locality’ in the join network and will compute results correctly.</p>
+<p>Hopefully, the query below will be somewhat self explanatory.</p>
+<p>The query starts by building a source from <code>orders.csv</code> and adding a join to <code>items.csv</code>. The items table will have multiple <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">item</span></span></code>s per <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order</span></span></code> so <a href="https://malloydata.github.io/documentation/language/join.html">we use Malloy's <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">join_many</span></span></code></a>. The “fanout” relationship in a join is the one piece of data that Malloy needs to perform aggregate computation correctly in any joined table.</p>
+<p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">-&gt;</span></span></code> operator says “apply this query operation to the source”.</p>
+<p>The query operation groups by <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order_date</span></span></code></p>
+<p>Perform aggregate calculations for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_revenue</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">shipping_cost</span></span></code></p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders.csv&#39;</span><span style="color: #000000">) + {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_many</span><span style="color: #000000">: </span><span style="color: #001080">items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:items.csv&#39;</span><span style="color: #000000">) </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000"> = </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">order_id</span></span>
+<span class="line"><span style="color: #000000">} </span></span>
+<span class="line"><span style="color: #000000">-&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img src="both_by_order_malloy.webp"/><p>Notice that total_revenue is calculated as <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span></code>. There are still two source rectangles, orders (the main variables) and items (the nested data). <a href="https://malloydata.github.io/documentation/language/aggregates.html#aggregate-locality">Using a path</a> tells Malloy to calculate the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sum</span></span></code> in the items sub-table.</p>
+<p>The SQL code Malloy writes for this query is non-trivial but actually much more efficient than the multi rectangle queries in that the data is read only once. See Apendix: <a href="#safe-aggregation">SQL Safe Aggregation</a>.</p>
+<div class="title-row">
+        
+      <h1>
+        <a id="dimensional-freedom" class="header-link anchor" href="#dimensional-freedom">
+          Dimensional Freedom
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Once the network has been defined, you are free to produce results from anywhere in the join network. We can change our query to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">user_id</span></span></code> instead of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order_date</span></span></code>, for example and get an entirely different result. In SQL we would have had to rewrite underlying queries or persist intermediate results.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders.csv&#39;</span><span style="color: #000000">) + {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_many</span><span style="color: #000000">: </span><span style="color: #001080">items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:items.csv&#39;</span><span style="color: #000000">) </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000"> = </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">order_id</span></span>
+<span class="line"><span style="color: #000000">} </span></span>
+<span class="line"><span style="color: #000000">-&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">user_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img src="both_by_user_id.webp"/><div class="title-row">
+        
+      <h1>
+        <a id="source-the-basis-re-usability-in-a-semantic-data-model" class="header-link anchor" href="#source-the-basis-re-usability-in-a-semantic-data-model">
+          Source: the basis re-usability in a semantic data model
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>The <a href="https://malloydata.github.io/documentation/language/source.html">join network and calculations</a> can be defined once and used in multiple queries. Reusability is a large topic and we’ll save it for another blog post, but here is basically how it works.</p>
+<p>Define a source that contains the join network and common calculations.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">orders_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders.csv&#39;</span><span style="color: #000000">) + {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_many</span><span style="color: #000000">: </span><span style="color: #001080">items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:items.csv&#39;</span><span style="color: #000000">) </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000"> = </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">order_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">declare</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">} </span></span></pre></div><p>Use that source in other queries. The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order_date</span></span></code> query</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #001080">orders_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">total_revenue</span><span style="color: #000000">, </span><span style="color: #001080">total_shipping</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>and the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">user_id</span></span></code> query</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #001080">orders_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">user_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">total_revenue</span><span style="color: #000000">, </span><span style="color: #001080">total_shipping</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h2>
+        <a id="non-rectangular-tables" class="header-link anchor" href="#non-rectangular-tables">
+          Non-rectangular Tables
+        </a>
+      </h2>
+    <p>When you think about it, the whole idea that orders and items are two tables isn’t right. If you were building an in-memory data structure, you would have an order node that pointed to an items array. There exists no <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">item</span></span></code> without an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order</span></span></code>.</p>
+<p>In an object store, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">item</span></span></code>s would just repeated records within <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">order</span></span></code>s.</p>
+<p>The data exists in two tables, because our tool (SQL) thinks in rectangles so we have to map this into two tables with a foreign key relationship.</p>
+<p>A simple illustration of how the data might be nested is to see it in JSON. See <a href="#example-data-in-json">data in JSON</a> in the Appendix.</p>
+
+      <h2>
+        <a id="nested-repeated" class="header-link anchor" href="#nested-repeated">
+          Nested Repeated
+        </a>
+      </h2>
+    <p>Most modern SQL databases support the notion of nested repeated data within a single table. DuckDB, for example can read and write parquet files which support the notion of nested-repeated data. Notice that items has a sub-schema and is represented as an array of <code>STRUCT</code>s?</p>
+<img src="nested_repeated.webp"/>
+      <h2>
+        <a id="nested-data-in-sql-is-very-efficient-but-difficult-to-use" class="header-link anchor" href="#nested-data-in-sql-is-very-efficient-but-difficult-to-use">
+          Nested data in SQL is very efficient but difficult to use
+        </a>
+      </h2>
+    <p>Nested data in a database can be treated like a table in a <code>SELECT</code> clause. An <code>UNNEST</code> with a lateral join in a query to iterate over items like the one below. Each of the different databases have (very) different syntax for <code>UNNEST</code>ing data. BigQuery is probably simplest and shown below.</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">  orders.order_date </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">SUM</span><span style="color: #000000">(items.price) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_revenue&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> orders_items </span><span style="color: #0000FF">as</span><span style="color: #000000"> orders</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> UNNEST(items) </span><span style="color: #0000FF">as</span><span style="color: #000000"> items</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span></span></pre></div><p>Unnesting embedded data is still a join and doesn't solve the rectangle aggregate problem in SQL.</p>
+
+      <h2>
+        <a id="malloy-understands-nested-tables" class="header-link anchor" href="#malloy-understands-nested-tables">
+          Malloy understands nested tables
+        </a>
+      </h2>
+    <p>When Malloy reads a schema for a table, it automatically recognizes any nested data and treats it like a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">join_many</span></span></code>. You can simply reference the data as if it were pre-joined using the name of the nested structure (in this case, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code>). Using the parquet file above, we can re-write our original query. Malloy makes working with nested data much more simple and powerful.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders_items.parquet&#39;</span><span style="color: #000000">) -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img src="both_by_order_malloy.webp"/>
+      <h2>
+        <a id="nested-data-in-results" class="header-link anchor" href="#nested-data-in-results">
+          Nested Data In Results
+        </a>
+      </h2>
+    <p>Malloy also <a href="https://malloydata.github.io/documentation/language/nesting.html">writes nested data</a>. Data is not rectangular. Malloy can easily write hierarchical data as output. Hierarchies can be any depth. Malloy’s language is uniform, so any query operation can be placed in a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">nest</span><span style="color: #000000">:</span></span></code> block. Nested blocks can be as deep as you like. This is a big topic for another day.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders_items.parquet&#39;</span><span style="color: #000000">) -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">by_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">item</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img src="nesting.webp"/><p>From a SQL perspective, there is a lot going on here. We’re unnesting the parquet file, making sure we compute aggregates correctly. We’re also running several queries simultaneously inline to produce the nested result. The SQL for this is non-trivial but very efficient. It still only makes one read pass through the data. See <a href="#sql-query-for-nested-nested">SQL Nested/Nested</a> below.</p>
+
+      <h2>
+        <a id="malloy-lets-you-escape-the-rectangular-nature-of-most-data-tools" class="header-link anchor" href="#malloy-lets-you-escape-the-rectangular-nature-of-most-data-tools">
+          Malloy lets you escape the Rectangular nature of most data tools
+        </a>
+      </h2>
+    <p>The freedom to think about the data in the network in which it already exists without having to constantly translate through rectangles offers new ways to look at problems. The rectangle of a unit of re-usability causes a proliferation of tables and complexity. Malloy’s solution to this problem offers aggregate calculation unbound by dimensions. With Malloy, your data world becomes more simple and comprehensible. We think this is quite a big deal.</p>
+<div class="title-row">
+        
+      <h1>
+        <a id="appendix" class="header-link anchor" href="#appendix">
+          Appendix
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-18-data-is-rectangular/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      
+      <h2>
+        <a id="safe-aggregation" class="header-link anchor" href="#safe-aggregation">
+          Safe Aggregation
+        </a>
+      </h2>
+    <p>Malloy Query. Malloy computes aggregates safely regardless of join patterns.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders.csv&#39;</span><span style="color: #000000">) + {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_many</span><span style="color: #000000">: </span><span style="color: #001080">items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:items.csv&#39;</span><span style="color: #000000">) </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">on</span><span style="color: #000000"> </span><span style="color: #001080">order_id</span><span style="color: #000000"> = </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">order_id</span></span>
+<span class="line"><span style="color: #000000">} </span></span>
+<span class="line"><span style="color: #000000">-&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>SQL Query</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;order_date&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;order_date&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(items_0.</span><span style="color: #A31515">&quot;price&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_revenue&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">((</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span><span style="color: #795E26">sum</span><span style="color: #000000">(a.val) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #0000FF">value</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(list(</span><span style="color: #0000FF">distinct</span><span style="color: #000000"> {</span><span style="color: #0000FF">key</span><span style="color: #000000">:base.</span><span style="color: #A31515">&quot;__distinct_key&quot;</span><span style="color: #000000">, val: base.</span><span style="color: #A31515">&quot;shipping_cost&quot;</span><span style="color: #000000">})) a</span></span>
+<span class="line"><span style="color: #000000">        )</span></span>
+<span class="line"><span style="color: #000000">      ),</span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_shipping&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> GEN_RANDOM_UUID() </span><span style="color: #0000FF">as</span><span style="color: #000000"> __distinct_key, * </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> orders.csv </span><span style="color: #0000FF">as</span><span style="color: #000000"> x) </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> items.csv </span><span style="color: #0000FF">AS</span><span style="color: #000000"> items_0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">ON</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;order_id&quot;</span><span style="color: #000000">=items_0.</span><span style="color: #A31515">&quot;order_id&quot;</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span></pre></div>
+      <h2>
+        <a id="example-data-in-json" class="header-link anchor" href="#example-data-in-json">
+          Example data in JSON
+        </a>
+      </h2>
+    <p>Data as two tables represented as nested in JSON</p>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">orders</span></span></code></p>
+<img src="orders.png"/><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">items</span></span></code></p>
+<img src="items.png"/><p>Data as JSON</p>
+<div class="code-wrapper"><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2022-01-01&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;shipping_cost&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;user_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;items&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Chocolate&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Twizzler&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2022-01-01&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;shipping_cost&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;user_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;items&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Chocolate&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;M and M&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2022-01-02&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;shipping_cost&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;user_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;items&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Twizzler&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;order_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2022-01-02&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;shipping_cost&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;user_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;items&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Fudge&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;Skittles&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;price&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></div>
+      <h2>
+        <a id="sql-query-for-nested-nested" class="header-link anchor" href="#sql-query-for-nested-nested">
+          SQL Query for Nested/Nested
+        </a>
+      </h2>
+    <p>Malloy Query</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;duckdb:orders_items.parquet&#39;</span><span style="color: #000000">) -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_shipping</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">shipping_cost</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">by_items</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">item</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">items</span><span style="color: #000000">.</span><span style="color: #001080">price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>SQL Query</p>
+<div class="code-wrapper"><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;order_date&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;order_date__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(base.items[items_0.__row_id].</span><span style="color: #A31515">&quot;price&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_revenue__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">((</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span><span style="color: #795E26">sum</span><span style="color: #000000">(a.val) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #0000FF">value</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">            </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(list(</span><span style="color: #0000FF">distinct</span><span style="color: #000000"> {</span><span style="color: #0000FF">key</span><span style="color: #000000">:base.</span><span style="color: #A31515">&quot;__distinct_key&quot;</span><span style="color: #000000">, val: base.</span><span style="color: #A31515">&quot;shipping_cost&quot;</span><span style="color: #000000">})) a</span></span>
+<span class="line"><span style="color: #000000">          )</span></span>
+<span class="line"><span style="color: #000000">        ),</span><span style="color: #098658">0</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_shipping__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.items[items_0.__row_id].</span><span style="color: #A31515">&quot;item&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;item__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(base.items[items_0.__row_id].</span><span style="color: #A31515">&quot;price&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_revenue__1&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> GEN_RANDOM_UUID() </span><span style="color: #0000FF">as</span><span style="color: #000000"> __distinct_key, * </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> orders_items.parquet </span><span style="color: #0000FF">as</span><span style="color: #000000"> x) </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">select</span><span style="color: #000000"> UNNEST(generate_series(</span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #098658">100000</span><span style="color: #000000">, </span><span style="color: #008000">--</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #008000">-- (SELECT genres_length FROM movies limit 1),</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> __row_id) </span><span style="color: #0000FF">as</span><span style="color: #000000"> items_0 </span><span style="color: #0000FF">ON</span><span style="color: #000000">  items_0.__row_id &lt;= array_length(base.</span><span style="color: #A31515">&quot;items&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #A31515">&quot;order_date__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;order_date&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> total_revenue__0 </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_revenue&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> total_shipping__0 </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_shipping&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;item&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;item__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;total_revenue&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;total_revenue__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;total_revenue__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;by_items&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span></pre></div></div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2022-12-01-dimensional-flexibility"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-01-23-malloy-is-incomplete--turducken"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
