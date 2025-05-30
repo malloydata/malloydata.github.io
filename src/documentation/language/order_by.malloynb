@@ -52,6 +52,23 @@ run: flights -> {
   aggregate: flight_count is count()
 }
 >>>markdown
+Malloy also supports lists of items (using commas or line breaks) in the `order_by: ` clause. Malloy will sort by the first entry first, then by the second within the first, etc.
+
+You cannot have multiple `order_by:` clauses within a query. When an `order_by: ` is applied in a refinement, it will fully override whatever the previous ordering was.
+>>>malloy
+// This query will only be ordered by total_distance and carrier due to the refinement.
+run: flights -> {
+  group_by: flight_num, carrier
+  order_by:
+    flight_num desc
+    total_distance
+    flight_count desc
+  aggregate: flight_count is count()
+  aggregate: total_distance
+} + {
+    order_by: total_distance, carrier
+}
+>>>markdown
 
 ## Limiting
 
