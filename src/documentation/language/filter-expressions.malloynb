@@ -128,15 +128,33 @@ Expressions which take a time extent can use <code>year</code>, <code>quarter</c
 | <code>last monday</code> | The most recently passed monday |
 | <code>next friday</code> | The first friday in the future |
 
+### Temporal Literals
+
+A literal is also a temporal unit, describing a period of time with a beginning and an implied duration.
+
+| **Literal** | **Begins** | **Duration** |
+| ----- | ----- | ---- |
+| <code>2025</code> | <code>2025-01-01 00:00:00</code> | 1 year |
+| <code>2025-Q1</code> | <code>2025-01-01 00:00:00</code> | 3 months |
+| <code>2025-01</code> | <code>2025-01-01 00:00:00</code> | 1 month |
+| <code>2025-01-05-WK</code> | <code>2025-01-05 00:00:00</code> | 7 days |
+| <code>2025-01-01</code> | <code>2025-01-01 00:00:00</code> | 1 day |
+| <code>2025-01-01 10</code> | <code>2025-01-01 10:00:00</code> | 1 hour |
+| <code>2025-01-01 10:30</code> | <code>2025-01-01 10:30:00</code> | 1 minute |
+| <code>2025-01-01 10:30:05</code> | <code>2025-01-01 10:30:00:05</code> | _none_ |
+| <code>2025-01-01 10:30:05.33</code> | <code>2025-01-01 10:30:00:05.33</code> | _none_ |
+
 ## Temporal Ranges
 
-For all temporal units except <code>now</code>, the unit describes a range of time.
-There are a other ways to describe a range, many of which start with a temporal unit
+There are a other ways to describe a range, many of which start with a temporal unit. A range
+includes the beginning, and extends up to, but not including the end.
 
 | **Temporal Range Expression** | **Meaning** |
 | ----- | ----- |
-| <code>before tuesday</code> | Before any temporal unit |
-| <code>after next month</code> | After any temporal unit |
+| <code>before tuesday</code> | Before the beginning of a temporal unit |
+| <code>through 2025-Q1 </code> | "Before and during" any temporal unit |
+| <code>after next month</code> | After the end of any temporal unit |
+| <code>starting next week</code> | "On or after" any temporal unit |
 | <code>last monday to next friday</code> | Using two units to specify a range |
 | <code>2 weeks ago for 2 days</code> | Can combine a unit and a duration |
 | <code>last 3 days</code> | 3 days of data, does not include today |
