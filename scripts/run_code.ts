@@ -246,6 +246,21 @@ export async function runCode(
   return renderResult(queryResult, dataStyles, options);
 }
 
+// Simple check to prevent dropping sources named "location"
+const isLocation = (value: unknown) => {
+  return value && typeof value === "object" && "url" in value;
+};
+
+const stripLocation = (modelDef: ModelDef): ModelDef => {
+  return JSON.parse(JSON.stringify(modelDef), (key, value) => {
+    if (key === "location" && isLocation(value)) {
+      return undefined;
+    } else {
+      return value;
+    }
+  });
+};
+
 async function renderResult(
   queryResult: Result,
   dataStyles: DataStyles,
@@ -256,9 +271,9 @@ async function renderResult(
   const resultContainerId = crypto.randomUUID();
   let htmlResult = "";
   if (isNextRenderer) {
-    const script = `
+    const script = /* javascript */ `
     (function() {
-      const modelDef = ${JSON.stringify(queryResult._modelDef)};
+      const modelDef = ${JSON.stringify(stripLocation(queryResult._modelDef))};
       const queryResult = ${JSON.stringify(queryResult._queryResult)};
       const element = document.getElementById("${resultContainerId}");
       const malloyRender = document.createElement("malloy-render");
