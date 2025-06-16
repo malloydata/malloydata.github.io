@@ -152,7 +152,7 @@ source: foo is ...
 Here is some code which might be written to access the metadata
 on an object from the Malloy API which has annotations.
 
-```TypeScript
+```typescript
 function myTagsAndDocs(t: Taggable): { tags: Tag, docs: string[] } {
     const tagParse = t.tagParse({prefix: /^#\(myTags\)/});
     if (tagParse.log) {

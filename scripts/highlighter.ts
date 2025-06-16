@@ -69,6 +69,7 @@ const HIGHLIGHTER = shiki.getHighlighter({
   langs: [
     "sql",
     "json",
+    "typescript",
     {
       id: "malloy",
       scopeName: "source.malloy",
