@@ -49,11 +49,11 @@ their annotation prefixes:
 * **prefix:** <code>/^# /</code>
   * Instructions to the Malloy rendering library
   * Example: `# chart { type=bar variant=stacked }`
-  * Parsed by the renderer using the Malloy Tag Language
+  * Parsed by the renderer using the Malloy Tag Language (See the [Render Tag Documentaion](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/renderer_tags_overview.md))
 * **prefix:** <code>/^##!/</code>
   * Flags to control the Malloy to SQL translator
   * Example: `##! experimental { featureName1 }`
-  * Parsed by the Malloy translator, alsing using the Malloy Tag Language
+  * Parsed by the Malloy translator, alsing using the Malloy Tag Language (See [Experimental Features](https://docs.malloydata.dev/documentation/experiments/experiments))
 * **prefix**: <code>/^#"/</code>
   * Doc strings for describing objects
   * Example: `#" This source requires a date filter expression (fex)`
@@ -103,6 +103,7 @@ but Malloy also has its own language for writing simple property-value data stru
 More details on the tag language [are in the documentation](https://docs.malloydata.dev/documentation/language/tags#tag-property-language),
 but here is a quick overview to give a flavor of the language.
 
+
 ### Tag Values
 
 * A tag has a value which can be a string or an array of values
@@ -111,15 +112,15 @@ but here is a quick overview to give a flavor of the language.
 * There is no boolean value, while you can use the strings `true` and `false` as values, the intention
   is that true/false conditions are indicated by presence/absence of a tag
 
-```malloy
-# go_color=green
-# stop_color="red"
-# slow_colors=[yellow orange "yellowish orange"]
+```
+go_color=green
+stop_color="red"
+slow_colors=[yellow orange "yellowish orange"]
 
 // a boolean ..
-# slowdown
+slowdown
 // turning off a boolean
-# -slowdown
+-slowdown
 ```
 
 ### Tag Properties
@@ -129,10 +130,10 @@ This is unlike other property languages. A tag, in addition to values, can also 
 * Properties on a tag can be set using the familiar `.` (dot) gesture
 * `{}` can be used to specify a number of properties at once
 
-```malloy
-# currency=US_DOLLARS
-# currency.use_commas=false
-# currency { red_is_nagative font_size=13 }
+```
+slow_colors=[yellow orange "yellowish orange"]
+slow_colors.flashing
+slow_colors { blinks_per_minute=10 safetymode }
 ```
 
 ## Sample Code For Annotation Usage
