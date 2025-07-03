@@ -48,9 +48,9 @@ export type Markdown =
   | Yaml;
 
 export interface Position {
-  start: { line: number, column: number, offset: number },
-  end: { line: number, column: number, offset: number }
-};
+  start: { line: number; column: number; offset: number };
+  end: { line: number; column: number; offset: number };
+}
 
 export interface Node {
   position: Position;

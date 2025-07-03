@@ -63,7 +63,10 @@ function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
           const fullLink = path.join("/documentation", item.link);
           const compareLink = convertDocPathToHTML(fullLink);
           const htmlLinkRaw = fullLink.replace(/\.malloynb$/, "");
-          const htmlLink = htmlLinkRaw === "/documentation/index" ? "/documentation" : htmlLinkRaw;
+          const htmlLink =
+            htmlLinkRaw === "/documentation/index"
+              ? "/documentation"
+              : htmlLinkRaw;
           return { title: item.title, link: item.link, htmlLink, compareLink };
         } else {
           return enrichTableOfContents([item])[0];
@@ -141,7 +144,7 @@ const FOOTER_TEMPLATE_STRING = `
       <a href="{{ next.relative }}">{{ next.title }}<img src="{{ site.baseurl }}/img/next.svg" alt="next"/></a>
     {{/if }}
   </div>
-</div>`
+</div>`;
 const FOOTER_TEMPLATE = Handlebars.compile(FOOTER_TEMPLATE_STRING);
 
 export function renderFooter(
@@ -149,7 +152,8 @@ export function renderFooter(
   rootPath: string,
   docPath: string
 ): string {
-  const makeFullLink = (l: string) => path.join('/documentation', convertDocPathToHTML(l));
+  const makeFullLink = (l: string) =>
+    path.join("/documentation", convertDocPathToHTML(l));
   const items = extractItems(sections);
   const thisIndex = items.findIndex(
     (item) => makeFullLink(item.link) === docPath
@@ -175,13 +179,17 @@ export function renderFooter(
 
   return FOOTER_TEMPLATE({
     ...DEFAULT_CONTEXT,
-    next: next ? {
-      relative: nextRelative,
-      title: next.title
-    } : undefined,
-    previous: previous ? {
-      relative: previousRelative,
-      title: previous.title
-    } : undefined,
+    next: next
+      ? {
+          relative: nextRelative,
+          title: next.title,
+        }
+      : undefined,
+    previous: previous
+      ? {
+          relative: previousRelative,
+          title: previous.title,
+        }
+      : undefined,
   });
 }

@@ -25,7 +25,11 @@ import fs from "fs";
 import path from "path";
 
 export function isMalloyNB(file: string): boolean {
-  return file.endsWith(".malloysql") || file.endsWith(".malloynb") || file.endsWith("quick_reference.html");
+  return (
+    file.endsWith(".malloysql") ||
+    file.endsWith(".malloynb") ||
+    file.endsWith("quick_reference.html")
+  );
 }
 
 export function convertDocPathToHTML(file: string): string {
@@ -82,7 +86,7 @@ export function escape(html: string): string {
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#39;",
-      }[ch] || "")
+      })[ch] || ""
   );
 }
 
@@ -124,5 +128,5 @@ export function watchDebouncedRecursive(
 }
 
 export function hashForHeading(heading: string) {
-  return heading.toLowerCase().replace(/[^\w]+/g, "-");;
+  return heading.toLowerCase().replace(/[^\w]+/g, "-");
 }

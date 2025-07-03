@@ -253,7 +253,7 @@ const isLocation = (value: unknown) => {
 
 const stripLocation = (modelDef: ModelDef): ModelDef => {
   return JSON.parse(JSON.stringify(modelDef), (key, value) => {
-    if (key === "location" && isLocation(value)) {
+    if (["location", "at"].includes(key) && isLocation(value)) {
       return undefined;
     } else {
       return value;

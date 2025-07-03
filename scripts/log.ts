@@ -26,7 +26,10 @@ const YELLOW = "\x1b[33m";
 const GREEN = "\x1b[32m";
 const RESET = "\x1b[0m";
 
-export function log(message: string, style: "error" | "info" | "warning" | "success" = "info"): void {
+export function log(
+  message: string,
+  style: "error" | "info" | "warning" | "success" = "info"
+): void {
   const color = {
     error: RED,
     info: "",
