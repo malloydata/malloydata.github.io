@@ -38,7 +38,7 @@
     "@malloydata/syntax-highlight": "0.0.282",
     "@types/jsdom": "^20.0.0",
     "concurrently": "^6.2.1",
-    "esbuild": "^0.17.16",
+    "esbuild": "^0.25.0",
     "fs-extra": "^10.1.0",
     "http-server": "^14.1.1",
     "jsdom": "^19.0.0",
