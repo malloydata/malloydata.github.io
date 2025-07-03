@@ -22,7 +22,7 @@
  */
 import packageJson from "../package.json";
 const argIndex = process.argv.indexOf("--baseurl");
-const BASEURL =  argIndex != -1 ? process.argv[argIndex + 1] : undefined;
+const BASEURL = argIndex != -1 ? process.argv[argIndex + 1] : undefined;
 
 if (BASEURL === undefined) {
   throw new Error("--baseurl is required");
@@ -31,7 +31,7 @@ if (BASEURL === undefined) {
 export const DEFAULT_CONTEXT = {
   site: {
     baseurl: BASEURL,
-    ga_site_id: 'G-0M10W7C20Y',
+    ga_site_id: "G-0M10W7C20Y",
     malloyRenderVersion: packageJson.devDependencies["@malloydata/render"],
   },
-}
+};
