@@ -21,6 +21,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import Uglify from "uglify-js";
 import { DataStyles, HTMLView } from "@malloydata/render";
 import {
   Runtime,
@@ -34,15 +35,13 @@ import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
 import { promises as fs } from "fs";
 import { performance } from "perf_hooks";
-import { timeString } from "./utils.js";
-import { log } from "./log.js";
+import { timeString } from "./utils";
+import { log } from "./log";
 import { JSDOM } from "jsdom";
-import { highlight } from "./highlighter.js";
+import { highlight } from "./highlighter";
 
-const __dirname = path.resolve("./scripts/index.ts");
-
-const MODELS_PATH = path.join(__dirname, "../../models");
-const DOCS_ROOT_PATH = path.join(__dirname, "../../src");
+const MODELS_PATH = path.resolve("./models");
+const DOCS_ROOT_PATH = path.resolve("./src");
 
 export const DEPENDENCIES = new Map<string, string[]>();
 
@@ -236,7 +235,7 @@ async function renderResult(
       malloyRender.queryResult = queryResult;
       element.appendChild(malloyRender);
     })();`;
-    htmlResult = `<script>${script}</script>`;
+    htmlResult += `<script>${Uglify.minify(script).code}</script>`;
   } else {
     const document = new JSDOM().window.document;
     const element = await new HTMLView(document).render(queryResult, {
