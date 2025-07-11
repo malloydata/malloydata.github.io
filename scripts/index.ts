@@ -24,11 +24,8 @@
 import path from "path";
 import fs from "fs";
 import { performance } from "perf_hooks";
-import {
-  getRenderDocResultForRenderedDoc,
-  renderDoc,
-} from "./render_document.js";
-import { renderFooter, renderSidebar, Section, SectionItem } from "./page.js";
+import { getRenderDocResultForRenderedDoc, renderDoc } from "./render_document";
+import { renderFooter, renderSidebar, Section, SectionItem } from "./page";
 import {
   convertDocPathToHTML,
   isMalloyNB,
@@ -36,15 +33,15 @@ import {
   timeString,
   watchDebounced,
   watchDebouncedRecursive,
-} from "./utils.js";
-import { DEPENDENCIES } from "./run_code.js";
-import { log } from "./log.js";
+} from "./utils";
+import { DEPENDENCIES } from "./run_code";
+import { log } from "./log";
 import { exit } from "process";
 import Handlebars from "handlebars";
 import yaml from "yaml";
-import { DEFAULT_CONTEXT } from "./context.js";
-import { Position } from "./markdown_types.js";
-import { DocsError } from "./errors.js";
+import { DEFAULT_CONTEXT } from "./context";
+import { Position } from "./markdown_types";
+import { DocsError } from "./errors";
 
 const __dirname = path.resolve("./scripts/");
 
@@ -295,7 +292,7 @@ function outputSearchSegmentsFile(
     2
   )}`;
   fs.mkdirSync(JS_OUT_PATH, { recursive: true });
-  fs.writeFileSync(path.join(JS_OUT_PATH, "search_segments.js"), file);
+  fs.writeFileSync(path.join(JS_OUT_PATH, "search_segments"), file);
   log(`File js/generated/search_segments.js written.`);
 }
 

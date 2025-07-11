@@ -10,6 +10,7 @@ For quick function lookup, see the [alphebetized table of all available function
 Note: the behavior of functions changed in v0.0.39. For more information, see [a description of that change](./new_functions.malloynb).
 >>>malloy
 ##(docs) hidden
+## renderer_legacy
 import "flights.malloy"
 
 source: empty is duckdb.sql("""

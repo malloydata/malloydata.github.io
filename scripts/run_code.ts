@@ -21,12 +21,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/*
- * This stores model dependencies -- for some model file with path `modelFilePath`,
- * `DEPENDENCIES.get(modelFilePath)` should be an array of known documents
- * that depend on that model. If `--watch` is enabled, changes to a model file
- * will cause relevant documents to recompile.
- */
+import Uglify from "uglify-js";
 import { DataStyles, HTMLView } from "@malloydata/render";
 import {
   Runtime,
@@ -40,15 +35,13 @@ import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
 import { promises as fs } from "fs";
 import { performance } from "perf_hooks";
-import { timeString } from "./utils.js";
-import { log } from "./log.js";
+import { timeString } from "./utils";
+import { log } from "./log";
 import { JSDOM } from "jsdom";
-import { highlight } from "./highlighter.js";
+import { highlight } from "./highlighter";
 
-const __dirname = path.resolve("./scripts/index.ts");
-
-const MODELS_PATH = path.join(__dirname, "../../models");
-const DOCS_ROOT_PATH = path.join(__dirname, "../../src");
+const MODELS_PATH = path.resolve("./models");
+const DOCS_ROOT_PATH = path.resolve("./src");
 
 export const DEPENDENCIES = new Map<string, string[]>();
 
@@ -82,35 +75,11 @@ interface RunOptions {
   isHidden?: boolean;
 }
 
-export async function dataStylesForFile(
-  uri: string,
-  text: string
-): Promise<DataStyles> {
-  const PREFIX = "--! styles ";
-  let styles: DataStyles = {};
-  for (const line of text.split("\n")) {
-    if (line.startsWith(PREFIX)) {
-      const fileName = line.trimEnd().substring(PREFIX.length);
-      const stylesPath = path.join(
-        uri.replace(/^file:\/\//, ""),
-        "..",
-        fileName
-      );
-      const stylesText = await fetchFile(stylesPath);
-      styles = { ...styles, ...JSON.parse(stylesText) };
-    }
-  }
-
-  return styles;
-}
-
-async function fetchFile(uri: string) {
-  return fs.readFile(uri.replace(/^file:\/\//, ""), "utf8");
+async function fetchFile(url: URL) {
+  return fs.readFile(url, "utf8");
 }
 
 class DocsURLReader implements URLReader {
-  private dataStyles: DataStyles = {};
-
   constructor(
     private readonly documentPath: string,
     private readonly inMemoryURLs: Map<string, string>
@@ -121,19 +90,10 @@ class DocsURLReader implements URLReader {
     if (inMemoryURL !== undefined) {
       return inMemoryURL;
     }
-    const thePath = url.toString().replace(/^file:\/\//, "");
-    const contents = await fetchFile(thePath);
-    addDependency(thePath, this.documentPath);
-    this.dataStyles = {
-      ...this.dataStyles,
-      ...(await dataStylesForFile(url.toString(), contents)),
-    };
+    const contents = await fetchFile(url);
+    addDependency(url.toString(), this.documentPath);
 
     return contents;
-  }
-
-  getHackyAccumulatedDataStyles() {
-    return this.dataStyles;
   }
 }
 
@@ -238,12 +198,7 @@ export async function runCode(
     )}`
   );
 
-  const dataStyles = {
-    ...options.dataStyles,
-    ...urlReader.getHackyAccumulatedDataStyles(),
-  };
-
-  return renderResult(queryResult, dataStyles, options);
+  return renderResult(queryResult, options);
 }
 
 // Simple check to prevent dropping sources named "location"
@@ -263,7 +218,6 @@ const stripLocation = (modelDef: ModelDef): ModelDef => {
 
 async function renderResult(
   queryResult: Result,
-  dataStyles: DataStyles,
   options: RunOptions
 ): Promise<string> {
   const showAs = options.showAs || "html";
@@ -281,11 +235,11 @@ async function renderResult(
       malloyRender.queryResult = queryResult;
       element.appendChild(malloyRender);
     })();`;
-    htmlResult = `<script>${script}</script>`;
+    htmlResult += `<script>${Uglify.minify(script).code}</script>`;
   } else {
     const document = new JSDOM().window.document;
     const element = await new HTMLView(document).render(queryResult, {
-      dataStyles,
+      dataStyles: {},
     });
     htmlResult = element.outerHTML;
   }
@@ -397,12 +351,7 @@ export async function runNotebookCode(
       )}`
     );
 
-    const dataStyles = {
-      ...options.dataStyles,
-      ...urlReader.getHackyAccumulatedDataStyles(),
-    };
-
-    const rendered = await renderResult(queryResult, dataStyles, options);
+    const rendered = await renderResult(queryResult, options);
     return {
       rendered,
       newModel: newModelDef,
