@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy&#x27;s Near Term Roadmap</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-06-15-malloy-roadmap/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="malloy-s-near-term-roadmap" class="header-link anchor" href="#malloy-s-near-term-roadmap">
+          Malloy's Near Term Roadmap
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-06-15-malloy-roadmap/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>We've been kinda busy...</p>
+<p><em>June 15, 2023 by Lloyd Tabb and Carlin Eng</em>
+<br/><br/><br/></p>
+<p>There are a bunch of new features in <a href="http://www.malloydata.dev/">Malloy</a> that will be landing in the coming weeks. Some of these features have already partially landed. We're pre-announcing so if some of these features are interesting to you, we can get early feedback. Expect detailed blog posts about each of these in the coming weeks. <a href="/slack">Please join our slack and ask any question.</a></p>
+
+      <h2>
+        <a id="malloysql-transform-data-with-malloy" class="header-link anchor" href="#malloysql-transform-data-with-malloy">
+          MalloySQL - Transform data with Malloy
+        </a>
+      </h2>
+    <p><a href="http://www.malloydata.dev/">Malloy</a> aims to be syntactically the same no matter what database contains the data. Unfortunately, in different databases, the SQL DDL commands (<code>CREATE VIEW</code> for example) are all necessarily so different. Making something consistent for SQL DDL would also mean reducing power. We've are introduced a new file type <code>malloysql</code> that can contain both Malloy and SQL. MalloySQL allows you to import models and execute SQL commands. In SQL in place of <code>SELECT ... FROM</code>, you can use Malloy queries. We are pretty excited about this.</p>
+<p>As a simple example, let's take a look at the <a href="https://github.com/malloydata/malloy-samples/blob/main/duckdb/names/names.malloy">“Names” data model</a>, built from a dataset published by the Social Security Administration, containing counts of baby names in each state by gender. In the Names source, we model a few metrics of interest, such as total births, and births per 100k:</p>
+<img src="names.webp"/><p>Now, in a <code>malloysql</code> file, I can create views or materialize tables in the database containing different slices of the data, cut by different dimensions:</p>
+<img src="malloysql.webp"/><p>This creates two new views in my database, with different rollups of the metric of interest. The ability to persist artifacts from Malloy queries back into the database will unlock a new set of use cases, and we're excited to see what people build.</p>
+
+      <h2>
+        <a id="calculate-window-functions" class="header-link anchor" href="#calculate-window-functions">
+          Calculate: Window Functions
+        </a>
+      </h2>
+    <p>We are finally ready to talk about Window Functions + Malloy. Window functions in SQL are pretty hard to learn. We've simplified these calculations while retaining most of the power. Malloy introduces a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">calculate</span><span style="color: #000000">:</span></span></code> phase that operates against the produced columns in a query. Malloy has built in functions for ranking, rolling averages and all the other usual window functions. Importantly, this <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">calculate</span><span style="color: #000000">:</span></span></code> step can operate even when a query is nested.</p>
+<p>Using the same Names model from above, we can now use a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">lag</span></span></code> window function to look at the top names in the dataset, and their year-over-year change in popularity:</p>
+<img src="lag.webp"/><p>which gives the following results:</p>
+<img src="lag_results.webp"/>
+      <h2>
+        <a id="malloy-s-standard-data-function-library" class="header-link anchor" href="#malloy-s-standard-data-function-library">
+          Malloy's standard data function library
+        </a>
+      </h2>
+    <p>Many different SQL dialects implement functions differently. This often creates confusion. The built in Malloy functions operate the same regardless of the SQL engine you are running against. Malloy also has the ability to call any native function (or UDF) on any supported SQL engine so no power is lost in this effort.  If the function you need is not supported directly by Malloy, simply append <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!</span></span></code> to the function name, and Malloy treat the function name and its arguments as a direct pass-through to the underlying database.</p>
+<p>The full list of functions (including all scalar, aggregate, and analytic functions) will be available on our documentation page once the change arrives.</p>
+
+      <h2>
+        <a id="annotations-adding-semantics-to-your-result-set" class="header-link anchor" href="#annotations-adding-semantics-to-your-result-set">
+          Annotations - adding semantics to your result set
+        </a>
+      </h2>
+    <p>Queries against datasets serve all kinds of systems. Queries can be used in Business Intelligence, Machine learning (and other AI functions), data transformation and more. Often additional information is needed along with the result set to clue in the layer above what to do with the data. Other systems co-mingle this data for a specific purpose. Malloy has a generalized solution to this problem so the same data model/ query can serve multiple uses. Think of it as CSS (Cascading Style Sheets) for data.</p>
+<p>For example:</p>
+<ul>
+<li><p>Business intelligence: a query result might be rendered as a bar chart or a calculation might be rendered as us currency. Queries can be annotated as to how they should be visually represented. Individual columns can be styled.</p>
+</li>
+<li><p>Transformation: the results of the query should be written back to the database using certain columns as partitioning. An annotation on a query can indicate which output column to use as a partition when creating a table.</p>
+</li>
+<li><p>AI/Machine learning: Columns can be labeled for different uses in machine learning. Labels and synonyms can be written as annotations.</p>
+</li></ul>
+<p>For example, in the names query above, we calculate the year-over-year change in names over time. We can annotate the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">yoy_change</span></span></code> field with styling information. This metadata is returned alongside the results, and can serve as a clue to the rendering engine to display the data with the given style.</p>
+<p>We are still arguing over the syntax, so no example just yet. We will show you soon.</p>
+
+      <h2>
+        <a id="python-the-imperative-language-of-data-" class="header-link anchor" href="#python-the-imperative-language-of-data-">
+          Python: The imperative language of data.
+        </a>
+      </h2>
+    <p>Using Malloy with Python is now pretty easy. The <a href="https://pypi.org/project/malloy/">malloy-py</a> library allows you to interact with a Malloy runtime that can be used to either execute queries against your database, or serve as a query compiler. We're also working on tighter integration with the notebook ecosystem, and will soon have Jupyter magics available so you can write Malloy queries directly from a notebook. For example, the following query would issue a query to the database, retrieve the result, and return a Pandas dataframe.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">%%</span><span style="color: #001080">malloy</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #001080">names</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">name</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">population</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>Once the results are in the dataframe, they can be used as part of any typical machine learning workflow. It's often remarked that ML Engineering is 90% Data Engineering, and yet, the tools that ML Engineers use live in a parallel universe to much of the technology in the data warehousing and business intelligence space. This integration is a critical piece of the puzzle, marrying the safety and reusability of a semantic layer's metric definitions with the capabilities of Python for data science tasks like training ML models or time series forecasting.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-03-10-malloy-data-notebooks"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-08-25-malloy-cli"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
