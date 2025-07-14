@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Composing with Queries</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-11-25-composing-queries/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="composing-with-queries" class="header-link anchor" href="#composing-with-queries">
+          Composing with Queries
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-11-25-composing-queries/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Malloy's semantic modeling and querying enables an exciting new way to explore data.</p>
+<p><em>November 25, 2022 by lloyd tabb and Michael Toy</em>
+<br/><br/><br/></p>
+<p>Experienced data explorers know how to move through complex datasets. They operate vehicles which are well designed to move efficiently through data landscapes. <a href="http://www.malloydata.dev/">Malloy</a> allows people who know how to drive, to suddenly find themselves flying.</p>
+<p>While data is recorded or streamed in a two dimensional universe of columns and rows, it is comprehended in a hyper-dimensional network of contexts and vistas which <a href="http://www.malloydata.dev/">Malloy</a> is designed to discover and explore.</p>
+<p>As someone who already understands how to gain insight from data, you need to map your knowledge about navigating through data to the vocabulary of <a href="http://www.malloydata.dev/">Malloy</a>. Like a plane moving down a runway before it takes off, that movement is a precursor to the <a href="http://www.malloydata.dev/">Malloy</a> moment when you escape the limitations of two dimensions and begin seeing data in an entirely new way.</p>
+<p>Welcome to flight school, let’s get familiar with the controls. Please click the "Try it" links as we go along.</p>
+
+      <h2>
+        <a id="motion-begins-with-a-query" class="header-link anchor" href="#motion-begins-with-a-query">
+          Motion begins with a query
+        </a>
+      </h2>
+    <p>Data tools build queries. You start with a table, pick a column to group the data, then compute a measure/metric about that grouping of the data, possibly sorting the result or limiting the number of rows returned.</p>
+<p>A query is a useful entity. Adding or changing a filter on a query lets you move through data in different directions. The results of a query can be visualized to better understand what you are seeing at any point.</p>
+<p>A collection of these query results on a surface makes a dashboard, and by connecting all the queries on a dashboard to a common filter you can move move through data and see how the landscape changes as you steer.</p>
+
+      <h2>
+        <a id="semantic-data-models" class="header-link anchor" href="#semantic-data-models">
+          Semantic Data Models
+        </a>
+      </h2>
+    <p>A <em>Semantic Data Model</em> makes this process easier. With a semantic data model, you define data relationships (like joins of tables), dimensions and measures. In your data tool, these elements become available without having to redefine them. For example, if you create a measure for <em>revenue</em>. You can use revenue as a measure in any query you build.</p>
+<p>Malloy extends the semantic model by adding a modeled query as an entity in the model, opening up new dimensions where knowledge is gained and shared.</p>
+
+      <h2>
+        <a id="get-in-the-cockpit-exploring-the-imdb" class="header-link anchor" href="#get-in-the-cockpit-exploring-the-imdb">
+          Get in the cockpit, exploring the IMDb
+        </a>
+      </h2>
+    <p>We are going to use the IMDb (Internet Movie Database) as an example. The entities are <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">movies</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">principals</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">people</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">crew</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">ratings</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">genres</span></span></code>. Malloy lets us create a semantic data model in just a few lines of code. The important thing here is the dimensions and measures we declare will be the building blocks for our queries. The dimensions we most care about are <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">title</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">character</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">person</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">job</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">votes</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">genre</span></span></code>. The things we want to measure are <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">title_count</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">person_count</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_votes</span></span></code>.</p>
+<p>It turns out <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">total_votes</span></span></code> is our best proxy for an interesting movie. It shows the public’s interest in a particular film but not necessarily the quality.</p>
+<p>You can run any of the examples below by using our WASM based data explorer just click "<a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++group_by%3A+genre%0A++aggregate%3A+title_count%0A++nest%3A+%0A++++top_titles%0A++++by_year%0A++++top_people%0A%7D&styles=%7B%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%7D&run=true">Try It!</a>"</p>
+
+      <h2>
+        <a id="the-semantic-model" class="header-link anchor" href="#the-semantic-model">
+          The Semantic Model
+        </a>
+      </h2>
+    <p>The extract below shows our definitions for the measure and dimensions we are going to use in this example. The complete, <a href="https://github.com/lloydtabb/imdb_fiddle/blob/release/imdb-simple.malloy">75 line model can be found on github</a>.</p>
+<img src="semantic-model.jpg"/>
+      <h2>
+        <a id="building-queries" class="header-link anchor" href="#building-queries">
+          Building Queries
+        </a>
+      </h2>
+    <p>Building queries in Malloy Composer will feel familiar. The components are all there: dimensions, measures, filters and sorts. Queries can be built into the semantic model or built as you explore. You can also load a pre-built query from the model, the example below shows how to do both.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #001080">top_people</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">person</span><span style="color: #000000">, </span><span style="color: #001080">person_id</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_votes</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">title_count</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img src="first-query.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A%7D&run=true">Try it!</a></p>
+
+      <h2>
+        <a id="filtering-data" class="header-link anchor" href="#filtering-data">
+          Filtering Data
+        </a>
+      </h2>
+    <p>Malloy Composer can index all the dimensional values in the data set so you don’t have to think about how to create filters. Who played <a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+character+%3D+%27Batman%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true">Batman</a>, <a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+character+%3D+%27Dracula%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true">Dracula</a>, or <a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+character+%3D+%27Lois+Lane%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true">Lois Lane</a>? Who are the <a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A%0A++++job+%3D+%27director%27%2C%0A++++genre+%3D+%27Comedy%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true">top directors in comedy</a>? Who was involved in <a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A%0A++++job+%3D+%27director%27%2C%0A++++genre+%3D+%27Comedy%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true">The Shining</a>? (just click any of those links). To add a filter, just start typing in the search box, and select the dimension with the most interesting value. Adding filters can teach you a bunch about a dataset.</p>
+<img src="filtering-data.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++limit%3A+10%0A%7D&run=true">Try it!</a></p>
+
+      <h2>
+        <a id="take-off-composing-with-queries" class="header-link anchor" href="#take-off-composing-with-queries">
+          Take Off - Composing with Queries
+        </a>
+      </h2>
+    <p>Here is where things get really interesting. We’ve seen building queries and naming them. Malloy allows you to use queries as building blocks in other queries, not just dimensions and measures. The magic here is nest. A query that is nested essentially uses the row that it is on as filters. Let’s start with our people query and then look at the genre and jobs for each person.</p>
+<img src="composing-queries.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+%0A++++by_job%0A++++by_genre%0A++limit%3A+10%0A%7D&run=true">Try it!</a></p>
+
+      <h2>
+        <a id="drilling-into-detail" class="header-link anchor" href="#drilling-into-detail">
+          Drilling into detail
+        </a>
+      </h2>
+    <p>Once you see data this way, you will begin to notice interesting things, as you might as you fly over a city, and wonder what that is down below you. It turns out that finding these points of interest, isolating them with filters and then looking at the isolated data by some other query is one of the main tools in working with data.</p>
+<p>Malloy Composer makes this very easy. Next to each row of data is a button with a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">...</span></span></code>. Clicking the button sets are the relevant filters for the row, allowing you to load another query.</p>
+<p>It sounds more complex than it is. In the example below we notice that Leonardo DiCaprio has done 6 Biographies. Clicking the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">...</span></span></code> sets the filters for every dimension on the row. We can then load the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">top_titles</span></span></code> query and hit run.</p>
+<img src="drilling.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+%0A++++by_job%0A++++by_genre%0A++limit%3A+10%0A%7D&run=true">Try it!</a></p>
+
+      <h2>
+        <a id="getting-deep-with-nesting" class="header-link anchor" href="#getting-deep-with-nesting">
+          Getting Deep with Nesting
+        </a>
+      </h2>
+    <p>Nest can be as deep as you would like. Let’s look at the IMdB again, the directors top 3 genres and the top 4 movies in each genre.</p>
+<img src="nesting.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+top_people+is+movies+-%3E+%7B%0A++where%3A+job+%3D+%27director%27%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+by_genre+is+%7B%0A++++group_by%3A+genre%0A++++aggregate%3A+%0A++++++title_count%0A++++++total_votes%0A++++++percent_of_titles%0A++++nest%3A+top_titles+is+%7B%0A++++++group_by%3A+%0A++++++++title%0A++++++++startYear%0A++++++++votes%0A++++++limit%3A+4%0A++++++order_by%3A+3+desc%0A++++%7D%0A++++limit%3A+3%0A++%7D%0A++limit%3A+10%0A%7D&run=true">Try it!</a></p>
+
+      <h2>
+        <a id="nesting-flat-is-a-dashboard" class="header-link anchor" href="#nesting-flat-is-a-dashboard">
+          Nesting 'flat' is a dashboard
+        </a>
+      </h2>
+    <p>Nesting a more than one of query in the top query creates a dashboard. Any filter applied to this query will apply to all the queries. This operates like a traditional dashboard. Malloy’s single query approach to dashboarding is actually more efficient. Malloy reads the data from storage only once. We can look at an overall dashboard, movies with a <code>Batman</code> character and movies with <code>Lois Lane</code> character.</p>
+<p>While a Malloy nested query is like a dashboard, giving a view of a slice of information, with control over the slicing, it is also more than that. It leverages the queries you write to create a whole new custom vehicle for exploring the data in any dimension you can imagine.</p>
+<img src="dashboard.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++nest%3A+%0A++++top_titles%0A++++top_people%0A++++by_job%0A++++by_genre%0A++limit%3A+10%0A%7D&run=true">Try it!</a></p>
+
+      <h2>
+        <a id="style-simplified-chart-rendering" class="header-link anchor" href="#style-simplified-chart-rendering">
+          Style: Simplified Chart Rendering
+        </a>
+      </h2>
+    <p>In Composer, you can set the rendering style for a particular result and it will change how it is displayed. Complex results can be rendered as a <em>table</em> or <em>dashboard</em>, simple query results can be rendered as various chart types.</p>
+<img src="charts.gif"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++group_by%3A+%0A++++person%0A++++person_id%0A++aggregate%3A+%0A++++total_votes%0A++++title_count%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+%0A++++++++title_count%0A++++++++total_votes%0A++++++limit%3A+4%0A++++%7D%0A++++by_year%0A%7D&styles=%7B%22by_job%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%2C%22top_titles%22%3A%7B%22renderer%22%3A%22list%22%7D%2C%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%2C%22by_genre%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%7D">Try it!</a></p>
+
+      <h2>
+        <a id="curation-show-what-is-important" class="header-link anchor" href="#curation-show-what-is-important">
+          Curation: Show what is important
+        </a>
+      </h2>
+    <p>The data model above is a simplified version. We’ve created a more complete model. Malloy Composer allows you to curate a landing page for a dataset that has the most interesting and useful queries.</p>
+<img src="curation.gif"><p>Create a landing page for a dataset things that are interesting or commonly sought after can be found easily.</p>
+<p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=about&model=movies2&source=movies2">Try it!</a></p>
+
+      <h2>
+        <a id="more-datasets-more-features-" class="header-link anchor" href="#more-datasets-more-features-">
+          More datasets, more features!
+        </a>
+      </h2>
+    <p>This is just a taste of what Malloy and Malloy Composer can do. Explore more datasets to learn more.</p>
+<img src="datasets.png"><p><a href="https://malloydata.github.io/malloy-samples/wasm/">Try it!</a></p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2022-11-24-webserver-data"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2022-12-01-dimensional-flexibility"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

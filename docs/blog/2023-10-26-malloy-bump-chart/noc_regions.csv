@@ -1,0 +1,231 @@
+NOC,region,notes,CC2
+AFG,Afghanistan,,AF
+AHO,Curacao,Netherlands Antilles,CW
+ALB,Albania,,AL
+ALG,Algeria,,DZ
+AND,Andorra,,AD
+ANG,Angola,,AO
+ANT,Antigua,Antigua and Barbuda,AG
+ANZ,Australia,Australasia,AU
+ARG,Argentina,,AR
+ARM,Armenia,,AM
+ARU,Aruba,,AW
+ASA,American Samoa,,AS
+AUS,Australia,,AU
+AUT,Austria,,AT
+AZE,Azerbaijan,,AZ
+BAH,Bahamas,,BS
+BAN,Bangladesh,,BD
+BAR,Barbados,,BB
+BDI,Burundi,,BI
+BEL,Belgium,,BE
+BEN,Benin,,BJ
+BER,Bermuda,,BM
+BHU,Bhutan,,BT
+BIH,Bosnia and Herzegovina,,BA
+BIZ,Belize,,BZ
+BLR,Belarus,,BY
+BOH,Czech Republic,Bohemia,CZ
+BOL,Boliva,,BO
+BOT,Botswana,,BW
+BRA,Brazil,,BR
+BRN,Bahrain,,BH
+BRU,Brunei,,BN
+BUL,Bulgaria,,BG
+BUR,Burkina Faso,,BF
+CAF,Central African Republic,,CF
+CAM,Cambodia,,KH
+CAN,Canada,,CA
+CAY,Cayman Islands,,KY
+CGO,Republic of Congo,,CG
+CHA,Chad,,TD
+CHI,Chile,,CL
+CHN,China,,CN
+CIV,Ivory Coast,,CI
+CMR,Cameroon,,CM
+COD,Democratic Republic of the Congo,,CD
+COK,Cook Islands,,CK
+COL,Colombia,,CO
+COM,Comoros,,KM
+CPV,Cape Verde,,CV
+CRC,Costa Rica,,CR
+CRO,Croatia,,HR
+CRT,Greece,Crete,GR
+CUB,Cuba,,CU
+CYP,Cyprus,,CY
+CZE,Czech Republic,,CZ
+DEN,Denmark,,DK
+DJI,Djibouti,,DJ
+DMA,Dominica,,DM
+DOM,Dominican Republic,,DO
+ECU,Ecuador,,EC
+EGY,Egypt,,EG
+ERI,Eritrea,,ER
+ESA,El Salvador,,SV
+ESP,Spain,,ES
+EST,Estonia,,EE
+ETH,Ethiopia,,ET
+EUN,Russia,,RU
+FIJ,Fiji,,FJ
+FIN,Finland,,FI
+FRA,France,,FR
+FRG,Germany,,DE
+FSM,Micronesia,,FM
+GAB,Gabon,,GA
+GAM,Gambia,,GM
+GBR,UK,,GB
+GBS,Guinea-Bissau,,GW
+GDR,Germany,,DE
+GEO,Georgia,,GE
+GEQ,Equatorial Guinea,,GQ
+GER,Germany,,DE
+GHA,Ghana,,GH
+GRE,Greece,,GR
+GRN,Grenada,,GD
+GUA,Guatemala,,GT
+GUI,Guinea,,GN
+GUM,Guam,,GU
+GUY,Guyana,,GY
+HAI,Haiti,,HT
+HKG,China,Hong Kong,CN
+HON,Honduras,,HN
+HUN,Hungary,,HU
+INA,Indonesia,,ID
+IND,India,,IN
+IOA,Individual Olympic Athletes,Individual Olympic Athletes,NA
+IRI,Iran,,IR
+IRL,Ireland,,IE
+IRQ,Iraq,,IQ
+ISL,Iceland,,IS
+ISR,Israel,,IL
+ISV,"Virgin Islands, US",Virgin Islands,VI
+ITA,Italy,,IT
+IVB,"Virgin Islands, British",,VG
+JAM,Jamaica,,JM
+JOR,Jordan,,JO
+JPN,Japan,,JP
+KAZ,Kazakhstan,,KZ
+KEN,Kenya,,KE
+KGZ,Kyrgyzstan,,KG
+KIR,Kiribati,,KI
+KOR,South Korea,,KR
+KOS,Kosovo,,XK
+KSA,Saudi Arabia,,SA
+KUW,Kuwait,,KW
+LAO,Laos,,LA
+LAT,Latvia,,LV
+LBA,Libya,,LY
+LBR,Liberia,,LR
+LCA,Saint Lucia,,LC
+LES,Lesotho,,LS
+LIB,Lebanon,,LB
+LIE,Liechtenstein,,LI
+LTU,Lithuania,,LT
+LUX,Luxembourg,,LU
+MAD,Madagascar,,MG
+MAL,Malaysia,,MY
+MAR,Morocco,,MA
+MAS,Malaysia,,MY
+MAW,Malawi,,MW
+MDA,Moldova,,MD
+MDV,Maldives,,MV
+MEX,Mexico,,MX
+MGL,Mongolia,,MN
+MHL,Marshall Islands,,MH
+MKD,Macedonia,,MK
+MLI,Mali,,ML
+MLT,Malta,,MT
+MNE,Montenegro,,ME
+MON,Monaco,,MC
+MOZ,Mozambique,,MZ
+MRI,Mauritius,,MU
+MTN,Mauritania,,MR
+MYA,Myanmar,,MM
+NAM,Namibia,,NA
+NBO,Malaysia,North Borneo,MY
+NCA,Nicaragua,,NI
+NED,Netherlands,,NL
+NEP,Nepal,,NP
+NFL,Canada,Newfoundland,CA
+NGR,Nigeria,,NG
+NIG,Niger,,NE
+NOR,Norway,,NO
+NRU,Nauru,,NR
+NZL,New Zealand,,NZ
+OMA,Oman,,OM
+PAK,Pakistan,,PK
+PAN,Panama,,PA
+PAR,Paraguay,,PY
+PER,Peru,,PE
+PHI,Philippines,,PH
+PLE,Palestine,,PS
+PLW,Palau,,PW
+PNG,Papua New Guinea,,PG
+POL,Poland,,PL
+POR,Portugal,,PT
+PRK,North Korea,,KP
+PUR,Puerto Rico,,PR
+QAT,Qatar,,QA
+RHO,Zimbabwe,,ZW
+ROT,NA,Refugee Olympic Team,NA
+ROU,Romania,,RO
+RSA,South Africa,,ZA
+RUS,Russia,,RU
+RWA,Rwanda,,RW
+SAA,Germany,,DE
+SAM,Samoa,,WS
+SCG,Serbia,Serbia and Montenegro,RS
+SEN,Senegal,,SN
+SEY,Seychelles,,SC
+SIN,Singapore,,SG
+SKN,Saint Kitts,Turks and Caicos Islands,KN
+SLE,Sierra Leone,,SL
+SLO,Slovenia,,SI
+SMR,San Marino,,SM
+SOL,Solomon Islands,,SB
+SOM,Somalia,,SO
+SRB,Serbia,,RS
+SRI,Sri Lanka,,LK
+SSD,South Sudan,,SS
+STP,Sao Tome and Principe,,ST
+SUD,Sudan,,SD
+SUI,Switzerland,,CH
+SUR,Suriname,,SR
+SVK,Slovakia,,SK
+SWE,Sweden,,SE
+SWZ,Swaziland,,SZ
+SYR,Syria,,SY
+TAN,Tanzania,,TZ
+TCH,Czech Republic,,CZ
+TGA,Tonga,,TO
+THA,Thailand,,TH
+TJK,Tajikistan,,TJ
+TKM,Turkmenistan,,TM
+TLS,Timor-Leste,,TL
+TOG,Togo,,TG
+TPE,Taiwan,,TW
+TTO,Trinidad,Trinidad and Tobago,TT
+TUN,Tunisia,,TN
+TUR,Turkey,,TR
+TUV,NA,Tuvalu,TV
+UAE,United Arab Emirates,,AE
+UAR,Syria,United Arab Republic,SY
+UGA,Uganda,,UG
+UKR,Ukraine,,UA
+UNK,NA,Unknown,NA
+URS,Russia,,RU
+URU,Uruguay,,UY
+USA,United States of America,,US
+UZB,Uzbekistan,,UZ
+VAN,Vanuatu,,VU
+VEN,Venezuela,,VE
+VIE,Vietnam,,VN
+VIN,Saint Vincent,,VC
+VNM,Vietnam,,VN
+WIF,Trinidad,West Indies Federation,TT
+YAR,Yemen,North Yemen,YE
+YEM,Yemen,,YE
+YMD,Yemen,South Yemen,YE
+YUG,Serbia,Yugoslavia,RS
+ZAM,Zambia,,ZM
+ZIM,Zimbabwe,,ZW
