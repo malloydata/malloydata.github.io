@@ -292,7 +292,7 @@ function outputSearchSegmentsFile(
     2
   )}`;
   fs.mkdirSync(JS_OUT_PATH, { recursive: true });
-  fs.writeFileSync(path.join(JS_OUT_PATH, "search_segments"), file);
+  fs.writeFileSync(path.join(JS_OUT_PATH, "search_segments.js"), file);
   log(`File js/generated/search_segments.js written.`);
 }
 
