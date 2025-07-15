@@ -8,10 +8,15 @@ Malloy supports Presto and Trino databases with two dialects which are closely r
 ## Useful Functions not in the database function library
 
     hll_accumulate
+    hll_accumulate_moving
     hll_combine
+    hll_combine_moving
     hll_estimate
+    hll_estimate_moving
     hll_export
     hll_import
+    set_agg
+    set_union
     string_agg
     string_agg_distinct
     count_approx
