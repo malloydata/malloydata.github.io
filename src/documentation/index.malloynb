@@ -1,7 +1,7 @@
 >>>markdown
 # What Is Malloy
 
-Malloy is an experimental language for describing data relationships and transformations. It is an analytical language that runs on SQL databases. It provides the ability to define a semantic data model and query it. Malloy currently works with SQL databases BigQuery, Postgres, and querying Parquet and CSV via DuckDB.
+Malloy is a modern open source language for describing data relationships and transformations. It is an analytical language that runs on SQL databases. It provides the ability to define a semantic data model and query it. Malloy currently works with SQL databases BigQuery, Postgres, and querying Parquet and CSV via DuckDB.
 - Queries compile to SQL, optimized for your database.
 - Has both a semantic data model and a query language.  The semantic model contains reusable calculations and definitions, making queries short and readable.
 - Excels at reading and writing nested data sets.
