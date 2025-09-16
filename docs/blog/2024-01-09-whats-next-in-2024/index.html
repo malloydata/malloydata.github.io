@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      property="og:image"
+      content="https://malloydata.github.io/blog/2024-01-09-whats-next-in-2024/malloy_2024.png"
+    />
+    <title>What&#x27;s Next For Malloy in 2024</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2024-01-09-whats-next-in-2024/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><img src="malloy_2024.png" class="no-shadow"/><div class="title-row">
+        
+      <h1>
+        <a id="what-s-next-for-malloy-in-2024" class="header-link anchor" href="#what-s-next-for-malloy-in-2024">
+          What's Next for Malloy in 2024
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2024-01-09-whats-next-in-2024/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><em>January 9, 2024 by The Malloy Team</em>
+<br/><br/><br/></p>
+<p>Happy New Year from the Malloy Team! The end-of-year holiday break gave us all an opportunity to reflect on the accomplishments of the year and ponder what’s to come. To start the year, I’d like to give a quick rundown of what we’re excited about on our 2024 roadmap.</p>
+
+      <h2>
+        <a id="analytical-completeness" class="header-link anchor" href="#analytical-completeness">
+          Analytical Completeness
+        </a>
+      </h2>
+    <p>As the Malloy community grows, we have folks from all over the world testing the limits of the language with their use cases. Most of these folks are coming to us with an advanced knowledge of SQL, and their use cases often rely on sophisticated SQL features such as window partition clauses and sliding window frames that are not yet expressible in Malloy. At the start of the year, we’re making a concerted effort to close these gaps. While there are existing workarounds today with the <a href="https://docs.malloydata.dev/documentation/language/sql_blocks#embedding-malloy-queries-in-an-sql-block-turducken-">Turducken</a> (a clause that allows embedding SQL in Malloy and vice versa), we want to make this a rare bird. At the start of the year, we’ll be filling these gaps and implementing partition clauses, percentile functions, and a way for you to call any arbitrary aggregate or window function in the underlying database.</p>
+
+      <h2>
+        <a id="even-more-magical-rendering" class="header-link anchor" href="#even-more-magical-rendering">
+          Even More Magical Rendering
+        </a>
+      </h2>
+    <p>Existing data renderers only work well with tabular data, where the data is laid out in rows and columns. Building a renderer to natively handle nested data opens up some fascinating opportunities for visualization. Malloy breaks free from the standard rectangular paradigm of data, and we’re making major improvements to how these hyperdimensional result sets are presented. Nested queries allow you to inspect your dataset from multiple levels of granularity simultaneously, creating what are effectively entire dashboards with a single query. As a sneak preview, here’s an example screenshot showing a complex, nested result from a single Malloy query in our current renderer, versus how it will look in the improved renderer:</p>
+
+      <h3>
+        <a id="legacy-renderer" class="header-link anchor" href="#legacy-renderer">
+          Legacy renderer
+        </a>
+      </h3>
+    <img src="renderer_before.jpg" class="no-shadow" />
+      <h3>
+        <a id="improved-renderer" class="header-link anchor" href="#improved-renderer">
+          Improved renderer
+        </a>
+      </h3>
+    <img src="renderer_after.jpg" class="no-shadow" /><p>We’re making a ton of other improvements as well: fixed column headers, fine-grained control over how charts are shown, sparklines, interactivity, and more. If you’re building an application with Malloy, and want to take advantage of our renderer, it’s simple to include in your own codebase. Check out the <a href="https://github.com/malloydata/malloy-svelte-example">Svelte app example</a> on our Github repo.</p>
+
+      <h2>
+        <a id="parameters-reusability-composability-and-dynamic-filtering" class="header-link anchor" href="#parameters-reusability-composability-and-dynamic-filtering">
+          Parameters - Reusability, Composability, and Dynamic Filtering
+        </a>
+      </h2>
+    <p>Today, Malloy users enjoy a level of composability and reusability that is completely absent from SQL via our semantic modeling concepts. We want to push this even further by introducing parameters into the language. Parameters in Malloy will allow the same artifact to be used in many different contexts, such as different customers inside of a multi-tenant SaaS application. A large percentage of our most passionate users are engineers who are building analytics-focused applications, and this functionality allows them to write a single data model and re-use it across different environments. Parameters will unlock powerful functionality for analysts and data scientists as well, such as the ability to build dashboards with dynamic time ranges and filters. You can read more about the proposal for implementing parameters and contribute to the discussion <a href="https://github.com/malloydata/whatsnext/blob/main/wns/WN-0002/wn-0002.md">here</a>.</p>
+
+      <h2>
+        <a id="database-connections" class="header-link anchor" href="#database-connections">
+          Database Connections
+        </a>
+      </h2>
+    <p>The overarching mission of the Malloy team is to replace SQL for analytics. In order to achieve this goal, we need to make sure that users can run Malloy code anywhere that SQL runs. There are a huge number of databases out there that speak SQL, and it would be foolish for a team of our size to build connectors for all of them. Instead, we’re working on a different approach – we’re going to decouple the core Malloy language from the database connection code, and make it as easy as possible to write a custom database connection for Malloy. Our goal is to have an ecosystem of third-party connectors to handle the long-tail of database support, and if your desired database is not yet supported, it should be simple to get one up and running. Finally, we know that in order for Malloy to be successful, there’s a small number of cloud-native data warehouses that will need first-class support, and we’ll be investing in this in 2024.</p>
+
+      <h2>
+        <a id="a-world-class-ide-for-data-developers" class="header-link anchor" href="#a-world-class-ide-for-data-developers">
+          A World Class IDE for Data Developers
+        </a>
+      </h2>
+    <p>Software developers have had fantastic tooling for many years now. By comparison, data teams are living in the dark ages. We’re trying to build a first class development environment for data folks on par with what is available to other software domains, and so we put enormous effort into making our VS Code extension the best place for data modelers to do their work. Expect to see more tooling to make working with your data in Malloy a smooth and joyful experience. Some things to look forward to are improved code-completion, support for drilling into measures to look at more granular data, scratchpad support in Malloy notebooks, and allowing the VSCode extension to take advantage of the pluggable database connections described in the previous section.</p>
+
+      <h2>
+        <a id="conclusion" class="header-link anchor" href="#conclusion">
+          Conclusion
+        </a>
+      </h2>
+    <p>We’re a small team at the start of our journey, but we have huge ambitions. The above list is just a sampling of what we hope to achieve in the coming year. We love hearing feedback and suggestions, so if you’re excited about any of this, or you feel something is missing, we want to hear about it – <a href="/slack">join the Malloy community Slack channel</a> and drop us a line!</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-12-22-query-returns-database"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2024-01-28-bigquery-jobs"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

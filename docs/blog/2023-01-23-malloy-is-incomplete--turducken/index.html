@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>&quot;Malloy is Incomplete&quot; and the Turducken</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-23-malloy-is-incomplete--turducken/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="-malloy-is-incomplete-and-the-turducken" class="header-link anchor" href="#-malloy-is-incomplete-and-the-turducken">
+          "Malloy is Incomplete" and the Turducken
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-01-23-malloy-is-incomplete--turducken/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><em>January 23, 2023 by lloyd tabb and Michael Toy</em></p>
+<p><br/><br/><br/></p>
+<p>Designing a new language is hard. There are two competing forces:</p>
+<ol>
+<li><p>Make the language complete enough so that is useful.</p>
+</li>
+<li><p>You have to live with language mistakes forever, so don't make any.</p>
+</li></ol>
+<p><a href="http://www.malloydata.dev/">Malloy</a> aspires to be able to do everything that SQL does. SQL does a lot. We want to design <a href="http://www.malloydata.dev/">Malloy</a> slowly and carefully to avoid language regrets (yes, I'm looking at you Postgres and Perl). A language regret is a feature added to the language that was conceptually flawed and then corrected (Postgres's <code>UNNEST</code> for example). The 'flawed' feature lives in the language forever, forever confusing users.</p>
+<p>We really don't want many regrets, so we are cheating, we invented the Turducken.</p>
+
+      <h2>
+        <a id="the-turducken" class="header-link anchor" href="#the-turducken">
+          The Turducken
+        </a>
+      </h2>
+    <p>What the heck is a Turducken? I like to <a href="https://en.wikipedia.org/wiki/Turducken">think of a Turducken as recursive meat</a>. A Turducken is a chicken stuffed in a duck, stuffed in a turkey.</p>
+<p>The Malloy feature, <em><a href="https://malloydata.github.io/documentation/language/sql_blocks.html">Turducken</a></em>, allows you to base a Malloy data <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">:</span></span></code> on <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sql</span><span style="color: #000000">:</span></span></code> query which can contain Malloy <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">:</span></span></code>s.</p>
+<p>Wait, what? Why?</p>
+<p>If you need a feature that SQL supports that Malloy doesn't yet, you can use Malloy in SQL. But you can also use SQL in Malloy to get at the unsupported feature. This sounds more complex than it is.</p>
+
+      <h2>
+        <a id="an-example" class="header-link anchor" href="#an-example">
+          An Example
+        </a>
+      </h2>
+    <p><a href="https://twitter.com/carlineng">Carlin Eng</a> has been working on converting the TPCDS benchmarks to Malloy. In order to do this he needs to <code>UNION</code> the results of a queries he as written in Malloy, but Malloy does not yet support the union operation.</p>
+<p>Carlin writes a SQL query that unions Malloy queries from <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">web_sales</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">catalog_sales</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">store_sales</span></span></code>. Carl then builds a Malloy data source that is based on this query.</p>
+<p>Carlin's SQL Query (see the <a href="https://github.com/carlineng/malloy-tpcds/blob/acdbef3dc5da6c4e438bc83f26e736a2ac468768/malloy_queries/tpcds.malloy#L282-L291">complete code</a>)</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sql</span><span style="color: #000000">: </span><span style="color: #001080">all_sales_sql</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">select</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;&quot;&quot;</span></span>
+<span class="line"><span style="color: #A31515">    SELECT * FROM (%{ web_sales -&gt; projection }%)</span></span>
+<span class="line"><span style="color: #A31515">    UNION ALL</span></span>
+<span class="line"><span style="color: #A31515">    SELECT * FROM (%{ catalog_sales -&gt; projection }%)</span></span>
+<span class="line"><span style="color: #A31515">    UNION ALL</span></span>
+<span class="line"><span style="color: #A31515">    SELECT * FROM (%{ store_sales -&gt; projection }%)</span></span>
+<span class="line"><span style="color: #A31515">  &quot;&quot;&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">connection</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;duckdb&quot;</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>Carlin creates a Malloy source based on his SQL query.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">all_sales</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">from_sql</span><span style="color: #000000">(</span><span style="color: #001080">all_sales_sql</span><span style="color: #000000">) {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">date_dim</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">sold_date_sk</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">customer_demographics</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">cdemo_sk</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">customer</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">customer_sk</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">item</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">item_sk</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">promotion</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">promo_sk</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">customer_address</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">addr_sk</span></span>
+<span class="line"><span style="color: #000000">  ...</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>Malloy will eventually support <code>UNION</code>. The Turduckeon allows us to be in conversation with users who need <code>UNION</code>, to learn to think about the data as they do, so the Malloy expression of <code>UNION</code> can be both powerful and clear.</p>
+<p>As we move closer to Malloy 1.0 there are features that have not yet arrived, like with <code>UNION</code>. We are trying to get there as fast as possible, but not too fast. Thanks for your patience in our completion of the Malloy Language. In the meantime enjoy your Turducken.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-01-18-data-is-rectangular"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-03-10-malloy-data-notebooks"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
