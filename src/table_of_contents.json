@@ -217,6 +217,15 @@
       "items": [
         {
           "title": "Overview",
+          "link": "/visualizations/about_rendering.malloynb"
+        }
+      ]
+    },
+    {
+      "title": "Rendering Legacy Docs",
+      "items": [
+        {
+          "title": "Overview",
           "link": "/visualizations/overview.malloynb"
         },
         {

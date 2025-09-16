@@ -5,6 +5,8 @@ Malloy's rederer has flexible and powerful way of pivoting data.
 ## Nesting first
 Malloy's ability to nest queries allows you to compute two levels of queries simultaneously.  The query below first groups airports by `state` and then groups by the type of facility (`fac_type`).  For each state we see count of all the facilities.
 >>>malloy
+## renderer_legacy
+
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: state
   aggregate: facility_count is count()
@@ -186,3 +188,4 @@ run: flights -> {
   }
 }
 >>>markdown
+
