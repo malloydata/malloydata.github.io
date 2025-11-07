@@ -168,7 +168,7 @@ Temporal filter expressions can be combined with <code>and</code> and <code>or</
 
 # Boolean Filter Expressions
 
-Because a boolean value might equal NULL, there are the following boolean filters. `true` and `false` treat `NULL` as a false value, and `=true` and `=false` maintain the SQL semantic where a `NULL` value input produces a `NULL` output.
+Because a boolean value might equal NULL, the true `true` and `false` filters treat `NULL` as a false value. The other filters (`=true` and `=false`) maintain the SQL semantic where a `NULL` value input produces a `NULL` output.
 
 | **Boolean Filter Expression** | True Input | False Input | Null Input |
 | ----- | ----- | ----- | ---- |
