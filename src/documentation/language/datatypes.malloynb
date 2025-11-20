@@ -67,20 +67,26 @@ For expressions which return a `boolean`, e.g. `might_be_null > 0`:
 
 This is true for all the comparison operators (`>`, `=`, etc.) as well as functions which return a boolean (e.g. `starts_with`, `is_inf`, etc.).
 
-## Timestamp
+## Timestamp and Timestamptz
 
-A `timestamp` represents an instant in time.
+A `timestamp` and `timestamptz` both represent an instant in time. They work interchangeably in Malloy and have the same semantics. The distinction exists to support different database column storage formats.
 
-Malloy's approach to timezone related computations relating to timestamp data is explained in the [Timezones](timezones.malloynb) section.
+Malloy's approach to timezone related computations is explained in the [Timezones](timezones.malloynb) section.
 
 ### Timestamp literals
 
-Timestamp literals are specified in Malloy with the <code>@</code> character. Seconds, subsecond resolution, and locale are optional.
+Timestamp literals are specified in Malloy with the <code>@</code> character. Seconds and subsecond resolution are optional.
 
-* `@2001-02-03 04:05:06.001[America/Mexico_City]`
 * `@2001-02-03 04:05:06.001`
 * `@2001-02-03 04:05:06`
 * `@2001-02-03 04:05`
+
+A timezone can optionally be specified in square brackets:
+
+* `@2001-02-03 04:05:06[America/Mexico_City]`
+* `@2001-02-03 04:05:06.001[UTC]`
+
+On databases that support `timestamptz`, embedding a timezone in a literal produces a `timestamptz` literal.
 
 In addition, in any of the above, a `T` can be used instead of a space between the date and time portion of the timestamp string, as in
 

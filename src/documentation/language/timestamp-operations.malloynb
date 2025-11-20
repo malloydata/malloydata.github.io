@@ -35,3 +35,31 @@ expression | meaning | result
 `second(expr)` | second of minute 0-59 | 5
 
 * See [Timezones](timezones.malloynb) for information on how extraction interacts with timezones.
+
+## Casting
+
+Timestamps and dates can be cast between types using the `::` operator.
+
+### Casting to and from Date
+
+When casting between `date` and timestamp-like types (`timestamp` or `timestamptz`), the query timezone is used to determine the conversion:
+
+expression | meaning
+---- | ----
+`date_value::timestamp` | Interprets the date as midnight in the query timezone, returns a timestamp
+`date_value::timestamptz` | Interprets the date as midnight in the query timezone, returns a timestamptz
+`timestamp_value::date` | Converts the timestamp to a date in the query timezone
+`timestamptz_value::date` | Converts the timestamptz to a date in the query timezone
+
+For example, with `timezone: 'America/Mexico_City'`:
+- `@2020-02-20::timestamptz` creates a timestamptz representing midnight on Feb 20 in Mexico City
+- `@2020-02-20 00:00:00[UTC]::date` produces `@2020-02-19` (because midnight UTC is Feb 19 in Mexico City)
+
+### Casting between Timestamp and Timestamptz
+
+expression | meaning
+---- | ----
+`timestamp_value::timestamptz` | Converts timestamp to timestamptz (when no query timezone, interprets as UTC)
+`timestamptz_value::timestamp` | Converts timestamptz to timestamp in the query timezone
+
+* See [Timezones](timezones.malloynb) for more information on how timezones interact with casting.
