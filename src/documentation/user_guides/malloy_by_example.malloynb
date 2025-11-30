@@ -59,7 +59,7 @@ run: duckdb.table('../data/airports.parquet') -> {
 
 Malloy separates a query's view from the source of the data. A source can be thought of as a table and a collection of computations and relationships which are relevant to that table.  ([Source Documentation](../language/source.malloynb)).
 
-[Fields](../language/fields.malloynb) can be defined as part of a source.
+[Dimensions](../language/dimensions.malloynb) can be defined as part of a source.
 
 
 * A `measure:` is a declared aggregate calculation (think function that operates across the table) which can be used in `aggregate:` elements in a query stage
@@ -559,7 +559,7 @@ run: airport_facts -> flights_by_origin
 
 ### SQL Sources
 
-See the [SQL Sources](../language/sql_sources.malloynb) section.
+See the [SQL Blocks](../language/sql_blocks.malloynb) section.
 
 ### Embedding Malloy queries in SQL ([SQL Block Documentation](../language/sql_blocks.malloynb#embedding-malloy-queries-in-an-sql-block-turducken-))
 
@@ -571,6 +571,6 @@ See the [SQL Sources](../language/sql_sources.malloynb) section.
 
 ### Nested data and Symmetric aggregates  ([Aggregates Documentation](../language/aggregates.malloynb))
 
-### Import ([Import Documentation](../language/imports.malloynb))
+### Import ([Import Documentation](../language/statement.malloynb#import-statements))
 
 ### Data styles and rendering ([Rendering Documentation](../visualizations/dashboards.malloynb))

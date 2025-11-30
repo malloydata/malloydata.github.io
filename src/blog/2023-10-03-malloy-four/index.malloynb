@@ -51,11 +51,11 @@ the [4.0 Messages FAQ](../../documentation/language/m4warnings.malloynb) documen
   * The `declare:` statement has been removed, use `dimension:` or `measure:`
   * `join_:` statements in a query must be in the `extend: {}` block
 * The new [run statement](../../documentation/language/statement.malloynb#run-statements), `run:` replaces `query:` with no name
-* The `sql:` statement is replaced by [SQL sources](../../documentation/language/sql_sources.malloynb), e.g. `duckdb.sql("SELECT ...")`
+* The `sql:` statement is replaced by [SQL blocks](../../documentation/language/sql_blocks.malloynb), e.g. `duckdb.sql("SELECT ...")`
 * [Table sources](../../documentation/language/source.malloynb#sources-from-tables-or-views) have new syntax: `connection_name.table('table_path')` instead of `table('connection_name:table_path')`
 * [Projections](../../documentation/language/views.malloynb#projection) are performed with `select:` instead of `project:` 
 * The `from()` function to create a source from a query is no longer needed
-* When [nesting Malloy code inside a SQL string](../../documentation/language/sql_sources.malloynb#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-), the syntax 
+* When [nesting Malloy code inside a SQL string](../../documentation/language/sql_blocks.malloynb#embedding-malloy-queries-in-an-sql-block--turducken-), the syntax 
   is `%{ <<malloy query>> }` and not `%{ <<malloy query>> }%` 
 * [Explicit aggregate locality](../../documentation/language/aggregates.malloynb#required-explicit-aggregate-locality) (using `source.`) is now required in some cases for `sum()` and `avg()` 
 * The filter shortcut `{? }` has been removed
@@ -79,6 +79,6 @@ these will continue to work. They are listed here to provide a complete record o
 * New [safe cast operator](../../documentation/language/expressions.malloynb#safe-type-cast) `:::`
 * Addition of [annotations and tags](../../documentation/language/tags.malloynb)
 * New [null-coalescing operator](../../documentation/language/expressions.malloynb#null-operations) `??`
-* [Selective imports](../../documentation/language/imports.malloynb#selective-imports) of objects from other files
+* [Selective imports](../../documentation/language/statement.malloynb#selective-imports) of objects from other files
 * [Analytic/window functions](../../documentation/language/calculations_windows.malloynb) using `calculate:`
 >>>markdown
