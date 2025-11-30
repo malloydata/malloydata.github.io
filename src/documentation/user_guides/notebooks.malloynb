@@ -1,0 +1,135 @@
+>>>markdown
+# Analyzing with Notebooks
+
+Malloy Notebooks (`.malloynb` files) combine queries, results, and documentation in a single interactive document. They're the best way to explore data, build analyses, and share findings.
+
+---
+
+## What Is a Malloy Notebook?
+
+A notebook is a file with alternating cells of:
+
+- **Markdown** - Text, headings, explanations
+- **Malloy code** - Model definitions, queries
+
+When you run a notebook, each code cell executes and displays results inline. The document becomes a living report.
+
+<img src="notebook-screenshot.png" alt="Malloy Notebook in VS Code" style="max-width: 800px;">
+
+This entire documentation website is built from `.malloynb` files—interweaving markdown with actual running Malloy code blocks.
+
+---
+
+## Creating a Notebook
+
+### 1. Create the File
+
+In VS Code, create a new file with the `.malloynb` extension:
+
+```
+File → New File → sales_analysis.malloynb
+```
+
+### 2. Add Cells
+
+Click **+ Code** or **+ Markdown** to add new cells to your notebook.
+
+<img src="add-cell-buttons.png" alt="Add cell buttons in VS Code" style="max-width: 800px;">
+
+Under the hood, `.malloynb` files are plain text with cell markers (`>>>markdown` or `>>>malloy`), so they're easy to diff and version control.
+
+### 3. Run the Notebook
+
+Click **Run All** at the top of the VS Code editor, or run individual cells by clicking the play button next to each one.
+
+---
+
+## Use Cases
+
+### Static Dashboards
+
+Notebooks render code blocks with descriptions. They can render any Malloy visualization—dashboards, charts, tables. Readers can inspect the code used to generate them.
+
+### Data Stories
+
+From EDA and high-level statistics to detailed drill-down, notebooks show the flow of analysis. Use them to document your analytical journey and share insights with others.
+
+When published via Publisher, notebooks become read-only—great for dashboards and reports.
+
+---
+
+## Example Notebooks
+
+See these notebooks for inspiration:
+
+- [Names Analysis](https://github.com/malloydata/malloy-samples/blob/main/names/names2.malloynb) - Exploring baby name trends
+- [Carrier Analysis](https://github.com/malloydata/malloy-samples/blob/main/faa/carrier_analysis.malloynb) - Flight carrier performance
+- [Auto Recalls](https://github.com/malloydata/malloy-samples/blob/main/auto_recalls/README.malloynb) - Example of starting with an import
+
+**Tip:** Press `.` on any GitHub page to open it in github.dev (VS Code in the browser).
+
+---
+
+## Importing Models
+
+A typical notebook has two cells: an import cell and a query cell.
+
+**Cell 1 — Import your model:**
+>>>malloy
+import "flights.malloy"
+>>>markdown
+
+**Cell 2 — Query using sources from that model:**
+>>>malloy
+run: flights -> {
+  aggregate: flight_count
+  nest: by_carrier is {
+    group_by: carrier
+    aggregate: flight_count
+    limit: 5
+  }
+}
+>>>markdown
+
+This keeps your semantic model separate from analysis notebooks.
+
+---
+
+## Publishing Notebooks
+
+Notebooks can be deployed via [Publisher](publishing/publishing.malloynb) alongside your semantic models. Published notebooks:
+
+- Render as browsable HTML reports
+- Include live query results
+- Can be shared via URL
+
+To publish, include `.malloynb` files in your package alongside `.malloy` models:
+
+```
+my-analytics/
+├── publisher.json
+├── models/
+│   └── orders.malloy
+└── notebooks/
+    └── monthly_report.malloynb
+```
+
+---
+
+## Tips
+
+**Start simple** - Begin with a basic source, run a query, then add complexity.
+
+**Use markdown liberally** - Document your analysis as you go. Future you will thank present you.
+
+**Keep models separate** - For reusable logic, put it in a `.malloy` file and import it into notebooks.
+
+**Run cells individually** - When debugging, run one cell at a time to isolate issues.
+
+---
+
+## Next Steps
+
+- [Building Semantic Models](malloy_by_example.malloynb) - Deep dive into Malloy modeling
+- [Publishing Models](publishing/publishing.malloynb) - Deploy your work
+- [Malloy in Jupyter](../malloy_python/jupyter.malloynb) - Use Malloy in Jupyter notebooks

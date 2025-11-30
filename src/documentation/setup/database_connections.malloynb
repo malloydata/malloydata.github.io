@@ -1,0 +1,593 @@
+>>>markdown
+# Connecting Data
+
+Connect Malloy to your data. This guide covers configuration for VS Code, Publisher, and the CLI.
+
+## Supported Databases
+
+| Database | Backend | Notes |
+|----------|---------|-------|
+| [DuckDB](#duckdb) | `duckdb` | Built-in, no setup required |
+| [MotherDuck](#motherduck) | `duckdb` | Cloud-hosted DuckDB |
+| [BigQuery](#bigquery) | `bigquery` | OAuth or service account |
+| [Snowflake](#snowflake) | `snowflake` | Password or RSA key |
+| [PostgreSQL](#postgresql) | `postgres` | Standard credentials |
+| [MySQL](#mysql) | `mysql` | Standard credentials |
+| [Trino / Presto](#trino-and-presto) | `trino` / `presto` | Server URL + optional auth |
+
+---
+
+## Connection Basics
+
+In Malloy, you reference data using `connection_name.table('path')`:
+
+```malloy
+source: flights is duckdb.table('data/flights.parquet')
+source: orders is bigquery.table('my-project.analytics.orders')
+source: users is postgres.table('public.users')
+```
+
+The connection name (e.g., `duckdb`, `bigquery`, `postgres`) maps to a configured connection. You can name connections whatever you want—they don't need to match the database type:
+
+```malloy
+// Using a custom connection name
+source: orders is my_warehouse.table('analytics.orders')
+```
+
+### Connection Methods
+
+**`.table()`** - Reference a table or view:
+```malloy
+source: flights is duckdb.table('flights.parquet')
+source: users is bigquery.table('my-project.analytics.users')
+```
+
+**`.sql()`** - Define a source from a SQL query:
+```malloy
+source: recent_orders is postgres.sql("""
+  SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '30 days'
+""")
+```
+
+---
+
+## VS Code Extension Configuration
+
+Configure connections through the VS Code command palette.
+
+### Adding Connections
+
+1. Open Command Palette: `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+2. Type: **Malloy: Edit Connections**
+3. Click **Add Connection** and select your database type
+4. Fill in the connection details
+
+### Where Connections Are Stored
+
+VS Code stores Malloy connections in your user settings:
+
+**Mac:** `~/Library/Application Support/Code/User/settings.json`
+**Windows:** `%APPDATA%\Code\User\settings.json`
+**Linux:** `~/.config/Code/User/settings.json`
+
+Example `settings.json` with Malloy connections:
+
+```json
+{
+  "malloy.connections": [
+    {
+      "name": "duckdb",
+      "backend": "duckdb",
+      "id": "duckdb-default"
+    },
+    {
+      "name": "md",
+      "backend": "duckdb",
+      "id": "motherduck-default",
+      "databasePath": "md:"
+    },
+    {
+      "name": "bigquery",
+      "backend": "bigquery",
+      "id": "bigquery-default",
+      "projectId": "my-gcp-project"
+    },
+    {
+      "name": "bq_service_account",
+      "backend": "bigquery",
+      "id": "bq-sa-connection",
+      "serviceAccountKeyPath": "/path/to/service-account-key.json",
+      "configKey": "serviceAccountKeyPath"
+    },
+    {
+      "name": "postgres",
+      "backend": "postgres",
+      "id": "postgres-default",
+      "host": "localhost",
+      "port": 5432,
+      "databaseName": "analytics",
+      "username": "analyst"
+    },
+    {
+      "name": "snowflake",
+      "backend": "snowflake",
+      "id": "snowflake-default",
+      "account": "myorg-myaccount",
+      "username": "analyst",
+      "warehouse": "compute_wh",
+      "database": "analytics"
+    }
+  ]
+}
+```
+
+---
+
+## Malloy CLI Configuration
+
+For CLI connection setup, see [Installing the CLI](cli.malloynb).
+
+---
+
+## Publisher Configuration
+
+Publisher uses `publisher.config.json` for database connections. This file lives in your server root directory.
+
+**Note:** Publisher does not support environment variable substitution. Put actual credential values directly in the config file.
+
+### Basic Structure
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "connection_name": {
+          "type": "backend_type",
+          ...connection options...
+        }
+      },
+      "packages": [
+        {
+          "name": "my-package",
+          "location": "./my-package"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## DuckDB
+
+DuckDB runs locally with zero configuration. It reads Parquet, CSV, and JSON files.
+
+### Malloy Syntax
+
+```malloy
+// Local files (relative to .malloy file)
+source: flights is duckdb.table('data/flights.parquet')
+source: users is duckdb.table('../users.csv')
+
+// URLs
+source: remote_data is duckdb.table('https://example.com/data.parquet')
+```
+
+### Publisher Config
+
+DuckDB can read data files bundled in your published package:
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "duckdb": {
+          "type": "duckdb",
+          "workingDirectory": "./data"
+        }
+      },
+      "packages": [
+        {
+          "name": "my-analytics",
+          "location": "./my-analytics"
+        }
+      ]
+    }
+  ]
+}
+```
+
+The `workingDirectory` sets the base path for file references. If your Malloy code references `'flights.parquet'`, it will look in the `./data` directory.
+
+---
+
+## MotherDuck
+
+MotherDuck is cloud-hosted DuckDB.
+
+### VS Code Setup
+
+Set your token as an environment variable before launching VS Code:
+
+```bash
+export MOTHERDUCK_TOKEN=your_token_here
+```
+
+Or configure via **Malloy: Edit Connections** with `databasePath` set to `md:`.
+
+### Publisher Config
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "md": {
+          "type": "motherduck",
+          "token": "your_motherduck_token_here",
+          "database": "my_database"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+---
+
+## BigQuery
+
+### Authentication Methods
+
+1. **OAuth with gcloud** - For development, uses your Google account
+2. **Service account key** - For production, uses a JSON key file
+
+### VS Code Setup
+
+**OAuth (recommended for development):**
+
+```bash
+gcloud auth login --update-adc
+gcloud config set project my-project-id --installation
+```
+
+Then add a BigQuery connection via **Malloy: Edit Connections**. Leave the service account field empty to use gcloud credentials.
+
+**Service account:**
+
+In **Malloy: Edit Connections**, click "Pick file" to select your service account JSON key.
+
+### Publisher Config
+
+**With service account (recommended):**
+
+For Publisher deployments, embed the service account JSON directly in the config:
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "bigquery": {
+          "type": "bigquery",
+          "defaultProjectId": "my-gcp-project",
+          "location": "US",
+          "serviceAccountKeyJson": "{\n  \"type\": \"service_account\",\n  \"project_id\": \"my-gcp-project\",\n  \"private_key_id\": \"abc123def456\",\n  \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBAD...your-key-here...\\n-----END PRIVATE KEY-----\\n\",\n  \"client_email\": \"malloy-publisher@my-gcp-project.iam.gserviceaccount.com\",\n  \"client_id\": \"123456789\",\n  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/malloy-publisher%40my-gcp-project.iam.gserviceaccount.com\",\n  \"universe_domain\": \"googleapis.com\"\n}"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**With gcloud auth (development only):**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "bigquery": {
+          "type": "bigquery",
+          "defaultProjectId": "my-gcp-project",
+          "location": "US"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**External Resources:** [BigQuery SQL Reference](https://cloud.google.com/bigquery/docs/introduction-sql)
+
+---
+
+## Snowflake
+
+### Authentication Methods
+
+1. **Password** - Username and password
+2. **RSA private key** - For automated/service accounts
+
+### VS Code Setup
+
+Both password and RSA key authentication are supported via **Malloy: Edit Connections**.
+
+You can also use Snowflake's `connections.toml` file for credential management:
+
+**Location:** `~/.snowflake/connections.toml`
+
+```toml
+[default]
+account = "myorg-myaccount"
+user = "analyst"
+password = "your_password"
+warehouse = "compute_wh"
+database = "analytics"
+schema = "public"
+```
+
+The `connections.toml` file is Snowflake's standard credential storage. If it exists, Malloy will use it automatically. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
+
+### Publisher Config
+
+**Password authentication:**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "snowflake": {
+          "type": "snowflake",
+          "account": "myorg-myaccount",
+          "username": "publisher_user",
+          "password": "your_password_here",
+          "warehouse": "compute_wh",
+          "database": "analytics",
+          "schema": "public"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**RSA private key authentication:**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "snowflake": {
+          "type": "snowflake",
+          "account": "myorg-myaccount",
+          "username": "publisher_user",
+          "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBAD...your-key-here...\n-----END PRIVATE KEY-----",
+          "privateKeyPassphrase": "your_passphrase_if_encrypted",
+          "warehouse": "compute_wh",
+          "database": "analytics"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**External Resources:** [Snowflake Documentation](https://docs.snowflake.com/)
+
+---
+
+## PostgreSQL
+
+### VS Code Setup
+
+Add a PostgreSQL connection via **Malloy: Edit Connections**. Enter host, port, database, username, and password. The password is stored securely in your system keychain.
+
+### Publisher Config
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "postgres": {
+          "type": "postgres",
+          "host": "db.example.com",
+          "port": 5432,
+          "database": "analytics",
+          "username": "publisher_readonly",
+          "password": "your_password_here"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**External Resources:** [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+
+---
+
+## MySQL
+
+### VS Code Setup
+
+MySQL connections require environment variables:
+
+```bash
+export MYSQL_HOST=db.example.com
+export MYSQL_PORT=3306
+export MYSQL_DATABASE=analytics
+export MYSQL_USER=readonly
+export MYSQL_PASSWORD=your_password
+```
+
+Then launch VS Code.
+
+### Publisher Config
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "mysql": {
+          "type": "mysql",
+          "host": "db.example.com",
+          "port": 3306,
+          "database": "analytics",
+          "user": "publisher_readonly",
+          "password": "your_password_here"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+### Boolean Handling
+
+MySQL doesn't have a true boolean type. Boolean columns are read as numeric. Cast explicitly:
+
+```malloy
+dimension: is_active is active::boolean
+```
+
+**External Resources:** [MySQL Documentation](https://dev.mysql.com/doc/)
+
+---
+
+## Trino and Presto
+
+Trino and Presto use the same configuration. Trino is a fork of Presto with continued development.
+
+### VS Code Setup
+
+Add a Trino or Presto connection via **Malloy: Edit Connections**. Enter the server URL and port.
+
+### Publisher Config
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "trino": {
+          "type": "trino",
+          "server": "https://trino.example.com",
+          "port": 8443
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+For Presto, use `"type": "presto"` with the same configuration options.
+
+**External Resources:**
+- [Trino Documentation](https://trino.io/docs/current/index.html)
+- [Presto Documentation](https://prestodb.io/docs/current/)
+
+---
+
+## Database Functions Reference
+
+Each database supports [Malloy Standard Functions](../language/functions.malloynb) plus database-specific functions. Consult the database documentation for available functions:
+
+| Database | Function Reference |
+|----------|-------------------|
+| DuckDB | [DuckDB Functions](https://duckdb.org/docs/sql/functions/overview) |
+| BigQuery | [BigQuery Functions](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators) |
+| Snowflake | [Snowflake Functions](https://docs.snowflake.com/en/sql-reference-functions) |
+| PostgreSQL | [PostgreSQL Functions](https://www.postgresql.org/docs/current/functions.html) |
+| MySQL | [MySQL Functions](https://dev.mysql.com/doc/refman/8.0/en/functions.html) |
+| Trino | [Trino Functions](https://trino.io/docs/current/functions.html) |
+| Presto | [Presto Functions](https://prestodb.io/docs/current/functions.html) |
+
+**HyperLogLog Support:** BigQuery, Snowflake, and Trino/Presto support [HyperLogLog](../language/hyperloglog.malloynb) for efficient cardinality estimation.
+
+---
+
+## Dialect-Specific Notes
+
+### DuckDB
+
+Useful non-standard functions available in Malloy:
+- `count_approx` - Approximate count distinct
+- `string_agg_distinct` - Distinct string aggregation
+
+Additional DuckDB functions accessible via raw SQL: `list_extract`, `dayname`, `to_timestamp`, `string_agg`, `to_seconds`, `date_part`, `repeat`, `reverse`.
+
+### BigQuery
+
+Standard functions: `date_from_unix_date`, `string_agg`, `repeat`, `reverse`
+
+Specialized functions:
+- `string_agg_distinct` - Distinct string aggregation
+- `count_approx` - Approximate count distinct
+
+HyperLogLog: `HLL_COUNT.MERGE` merges sketches and estimates cardinality simultaneously.
+
+### Snowflake
+
+String operations: `repeat`, `reverse`
+
+String aggregation: `string_agg`, `string_agg_distinct`
+
+HyperLogLog: Snowflake's `HLL` function both initializes a new HLL sketch AND estimates cardinality.
+
+### PostgreSQL
+
+Available functions: `string_agg`, `repeat`, `reverse`
+
+Custom extension: `string_agg_distinct` for distinct string aggregation.
+
+### MySQL
+
+Available functions: `repeat`, `reverse`
+
+**Known issue:** MySQL lacks a native boolean data type. Boolean columns are read as numeric values.
+
+**Workaround:** Explicitly cast to boolean in filters:
+
+```malloy
+dimension: is_active is active::boolean
+```
+
+### Trino / Presto
+
+HyperLogLog functions: `hll_accumulate`, `hll_estimate`
+
+String aggregation: `string_agg`, `string_agg_distinct`
+
+Approximate counting: `count_approx`
+
+Array operations: `distinct`, `sort`, `join`, `normalize`, `slice`
+
+Statistical functions: `approx_percentile`, `corr`, `variance`, `percent_rank`
+
+**Presto-specific functions** (not available in Trino): `array_cum_sum`, `array_duplicates`, `array_top_n`, `remove_nulls`

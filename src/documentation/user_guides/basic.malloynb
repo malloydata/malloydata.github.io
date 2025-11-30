@@ -5,7 +5,7 @@ This guide introduces the basics of querying data and building a semantic model 
 
 The easiest way to follow along is by going to the [interactive notebook version of this tutorial](https://github.dev/malloydata/quickstart/blob/main/README.malloynb). The link will launch a browser-based VSCode environment and ask you to install the Malloy extension. Once installed, navigate back to the [quickstart notebook file](https://github.dev/malloydata/quickstart/blob/main/quickstart.malloynb), and dive in.
 
-If you'd like to run Malloy locally on your laptop instead, follow the setup instructions to [install the VSCode extension](../setup/extension.malloynb) and [connect to a database](../setup/connection_instructions.malloynb).
+If you'd like to run Malloy locally on your laptop instead, follow the setup instructions to [install the VSCode extension](../setup/extension.malloynb) and [connect to a database](../setup/database_connections.malloynb).
 
 ## A Simple Select Statement
 
@@ -504,7 +504,7 @@ run: duckdb.table('../data/airports.parquet') -> {
 This was a whirlwind tour of the syntax and features of Malloy. To continue on your Malloy journey:
 
 - Explore sample analyses and data models built in Malloy in our [Patterns Github repo](https://github.com/malloydata/patterns).
-- Learn how to [connect Malloy to your own database](../setup/connection_instructions.malloynb).
+- Learn how to [connect Malloy to your own database](../setup/database_connections.malloynb).
 - Join the [Malloy community Slack channel](/slack)!
 
 <!-- ## Joins are between primary and foreign keys.

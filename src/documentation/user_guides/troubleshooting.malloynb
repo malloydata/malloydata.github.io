@@ -1,0 +1,403 @@
+>>>markdown
+# Troubleshooting
+
+Jump to the section that matches your symptom:
+
+| Symptom | Problem |
+|---------|---------|
+| Row count multiplied after join | [Non-Unique Join Key](#problem-1-non-unique-join-key) |
+| Aggregates inflated 10x | [Grain Mismatch](#problem-2-grain-mismatch) |
+| Daily counts off by small % | [Timezone Mismatch](#problem-3-timezone-mismatch) |
+| Query takes minutes | [Slow Query](#problem-4-slow-query) |
+| "Maximum call stack size exceeded" | [Circular Imports](#problem-5-circular-imports) |
+| Date filter syntax questions | [Date Arithmetic](#problem-6-date-arithmetic) |
+| Can't reference joined field in join | [Multi-hop Joins](#problem-7-multi-hop-joins) |
+| "Field 'x' not found in source 'y'" | [Common Errors](#common-error-messages) |
+
+---
+
+## Problem 1: Non-Unique Join Key
+
+### Symptoms
+- Query returns 500,000 rows when you expect 50,000
+- Aggregates are 10x larger than expected
+- Single row multiplies into many after join
+
+### Diagnosis
+
+**Test join cardinality:**
+>>>malloy
+source: airports_p1 is duckdb.table('../data/airports.parquet') extend {
+  primary_key: code
+}
+
+source: flights_p1 is duckdb.table('../data/flights.parquet') extend {
+  join_one: airports_p1 with origin
+}
+
+run: flights_p1 -> {
+  where: id2 = 30272525  // ONE row
+  aggregate:
+    source_count is count()
+    joined_count is airports_p1.count()
+// If source_count=1 and joined_count=1, your join is correct
+}
+>>>markdown
+
+If `joined_count > source_count` for a `join_one`, your join key isn't unique.
+
+### The Problem
+
+Your join key doesn't uniquely identify rows in the target table. Consider a flight segments table where each flight can have multiple segments (legs):
+
+```malloy
+// WRONG - flight_segments keyed by (flight_id + segment_number)
+join_one: flight_segments on id2 = flight_segments.flight_id
+// One flight matches multiple segment rows → fan-out
+
+// CORRECT - include all keys that form the unique identifier
+join_one: flight_segments on id2 = flight_segments.flight_id
+                          and segment_num = flight_segments.segment_number
+```
+
+### Fix
+
+1. Identify the primary key of the table you're joining to
+2. Include ALL columns that form that key in your join condition
+3. Re-test cardinality using the diagnostic query above
+
+---
+
+## Problem 2: Grain Mismatch
+
+### Symptoms
+- Joining a daily/monthly summary table to raw transaction data
+- Every row gets the same aggregated value
+- Totals are wildly inflated
+
+### The Problem
+
+You have two tables at different granularity:
+- **Raw table**: One row per event (e.g., every flight, every order)
+- **Aggregated table**: One row per time period (e.g., daily totals, monthly stats)
+
+When you join them, every raw row matches the same summary row:
+
+```
+Raw Orders (5 orders on Jan 1):          Daily Summary:
+┌─────────┬────────────┬────────┐        ┌────────────┬─────────────┐
+│order_id │ date       │ amount │        │ date       │ daily_total │
+├─────────┼────────────┼────────┤        ├────────────┼─────────────┤
+│ 1       │ 2024-01-01 │ $100   │   ──►  │ 2024-01-01 │ $500        │
+│ 2       │ 2024-01-01 │ $150   │   ──►  │ 2024-01-01 │ $500        │
+│ 3       │ 2024-01-01 │ $50    │   ──►  │ 2024-01-01 │ $500        │
+│ 4       │ 2024-01-01 │ $100   │   ──►  │ 2024-01-01 │ $500        │
+│ 5       │ 2024-01-01 │ $100   │   ──►  │ 2024-01-01 │ $500        │
+└─────────┴────────────┴────────┘        └────────────┴─────────────┘
+
+Result: SUM(daily_total) = $2,500 (5x inflated!) instead of $500
+```
+
+### Example
+>>>malloy
+// Simulate a daily summary (one row per day)
+source: daily_summary is duckdb.sql("""
+  SELECT
+    dep_time::date as flight_date,
+    COUNT(*) as daily_flight_count,
+    SUM(distance) as daily_total_distance
+  FROM '../data/flights.parquet'
+  GROUP BY dep_time::date
+""")
+
+run: daily_summary -> {
+  aggregate: days_in_summary is count()
+  // ~365 rows (one per day)
+}
+>>>markdown
+
+If you joined raw `flights` to `daily_summary` on date, each flight would get the daily total attached—summing it would be wrong:
+>>>malloy
+source: daily_summary_p2 is duckdb.sql("""
+  SELECT
+    dep_time::date as flight_date,
+    COUNT(*) as daily_flight_count
+  FROM '../data/flights.parquet'
+  GROUP BY dep_time::date
+""") extend {
+  primary_key: flight_date
+}
+
+source: flights_with_daily is duckdb.table('../data/flights.parquet') extend {
+  dimension: flight_date is dep_time::date
+  join_one: daily_summary_p2 on flight_date = daily_summary_p2.flight_date
+}
+
+run: flights_with_daily -> {
+  aggregate:
+    actual_flights is count()
+    // This sums daily_flight_count once per flight = massively inflated!
+    wrong_total is daily_summary_p2.daily_flight_count.sum()
+}
+>>>markdown
+
+### Fix
+
+**Don't join aggregated tables to raw tables.** Instead:
+
+**Option 1: Keep them as separate sources**
+```malloy
+// Query raw data for granular questions
+source: orders is duckdb.table('orders') extend {...}
+
+// Query summary for high-level questions
+source: daily_summary is duckdb.table('daily_summary') extend {...}
+```
+
+**Option 2: Compute the aggregation in Malloy**
+```malloy
+source: orders is duckdb.table('orders') extend {
+  measure:
+    order_count is count()
+    total_revenue is amount.sum()
+
+  view: daily_summary is {
+    group_by: order_date
+    aggregate: order_count, total_revenue
+  }
+}
+```
+
+**Option 3: Use nested queries**
+
+Nested queries let you include detail rows without joining them to the parent grain—the aggregates stay correct at the outer level while the nested block shows supporting details:
+
+```malloy
+run: orders -> {
+  group_by: order_date
+  aggregate: order_count, total_revenue
+  nest: top_orders is {
+    group_by: order_id, customer_name, amount
+    limit: 5
+  }
+}
+```
+
+---
+
+## Problem 3: Timezone Mismatch
+
+### Symptoms
+- Counts are off by a few percent compared to other reports
+- Daily aggregations don't match between systems
+- Events appear on the wrong day
+
+### The Problem
+
+Your timestamps are in a different timezone than expected. A flight at 11pm UTC on January 1st is actually January 2nd in Sydney.
+
+```malloy
+// Same timestamp, different dates depending on timezone
+dimension:
+  date_utc is dep_time::date                                    // 2024-01-01
+  date_sydney is (dep_time at time zone 'Australia/Sydney')::date  // 2024-01-02
+```
+
+### Fix
+
+**Option 1: Convert to local timezone**
+```malloy
+source: events is duckdb.table('events') extend {
+  dimension:
+    event_date is (event_time at time zone 'America/Los_Angeles')::date
+}
+```
+
+**Option 2: Document your timezone assumption**
+```malloy
+source: events is duckdb.table('events') extend {
+  // All timestamps stored in UTC, displayed in UTC
+  dimension: event_date is event_time::date
+}
+```
+
+See [Timezones](../language/timezones.malloynb) for more details.
+
+---
+
+## Problem 4: Slow Query
+
+### Symptoms
+- Queries take minutes instead of seconds
+- Timeouts on large datasets
+
+### Fix
+
+**Option 0: Check your join cardinality**
+
+Join fan-out is a common cause of slow queries. If a `join_one` isn't actually one-to-one, your dataset explodes silently. See [Non-Unique Join Key](#problem-1-non-unique-join-key) to diagnose.
+
+**Option 1: Add filters to reduce data scanned**
+```malloy
+run: flights -> {
+  where: dep_time ? @2003  // Filter to one year
+  aggregate: flight_count
+}
+```
+
+**Option 2: Materialize a view of the data**
+
+If the same aggregation is queried repeatedly—across dashboards, by multiple users, or by LLM agents—pre-aggregate your data using MalloySQL:
+
+```sql
+-- connection:duckdb
+import "models/flights.malloy"
+
+CREATE TABLE monthly_stats AS
+%{
+  flights -> {
+    group_by: dep_time.month
+    aggregate: flight_count, total_distance
+  }
+}%
+```
+
+Then model against the materialized table for faster queries.
+
+See [Transform & Materialize](transform.malloynb) for details on materializing views with the Malloy CLI.
+
+---
+
+## Problem 5: Circular Imports
+
+### Symptoms
+- "Maximum call stack size exceeded" error
+- VS Code extension crashes or hangs
+
+### The Problem
+
+File A imports File B, and File B imports File A:
+
+```
+// customers.malloy
+import "orders.malloy"
+source: customers is ...
+
+// orders.malloy
+import "customers.malloy"  // Circular!
+source: orders is ...
+```
+
+### Fix
+
+Move shared definitions to a third file. This works because the dependency graph becomes `A→C`, `B→C` instead of `A↔B`:
+
+```
+// shared.malloy
+source: base_customers is duckdb.table('customers')
+source: base_orders is duckdb.table('orders')
+
+// customers.malloy
+import "shared.malloy"
+source: customers is base_customers extend {...}
+
+// orders.malloy
+import "shared.malloy"
+source: orders is base_orders extend {...}
+```
+
+---
+
+## Problem 6: Date Arithmetic
+
+### Symptoms
+- "How do I filter to the last 30 days?"
+- "How do I do `current_date - interval '50 days'`?"
+
+### Fix
+
+Use Malloy's time literals and ranges:
+
+```malloy
+run: events -> {
+  // Last 30 days
+  where: event_date > @now - 30 days
+
+  // Specific range
+  where: event_date ? @2024-01-01 to @2024-03-31
+
+  // Last complete month
+  where: event_date ? @now.month - 1 month
+
+  aggregate: event_count is count()
+}
+```
+
+See [Timestamp Operations](../language/timestamp-operations.malloynb) for more patterns.
+
+---
+
+## Problem 7: Multi-hop Joins
+
+### Symptoms
+- Need to join A to C through intermediate table B
+- "Cannot reference joined_table.joined_field in join condition"
+
+### The Problem
+
+You can't reference a joined table's fields in another join condition:
+
+```malloy
+// This doesn't work
+source: orders is duckdb.table('orders') extend {
+  join_one: customers with customer_id
+  // Can't use customers.region in this join condition
+  join_one: shipments on shipments.region = customers.region
+}
+```
+
+### Fix
+
+**Option 1: Flatten the join path**
+
+Join directly if possible:
+
+```malloy
+source: orders is duckdb.table('orders') extend {
+  join_one: customers with customer_id
+  join_one: shipments with shipment_id  // Direct join
+}
+```
+
+**Option 2: Denormalize in SQL source**
+
+```malloy
+source: orders_with_region is duckdb.sql("""
+  SELECT o.*, c.region
+  FROM orders o
+  JOIN customers c ON o.customer_id = c.customer_id
+""") extend {
+  join_one: shipments on region = shipments.region
+}
+```
+
+Note: Denormalization trades off the semantic relationship. If `customers.region` changes in the source table, the denormalized source won't reflect it until you rebuild the SQL query.
+
+**Option 3: Use separate sources**
+
+If you need different join paths for different questions, create purpose-specific sources rather than one uber-source.
+
+---
+
+## Common Error Messages
+
+Quick reference for error strings and their likely causes:
+
+| Error Message | Likely Cause | Solution |
+|---------------|--------------|----------|
+| `Field 'x' not found in source 'y'` | Typo in field name, or missing import | Check spelling; verify the import includes the source |
+| `Cannot use aggregate in dimension` | Using a measure where a dimension is expected | Define as `measure:` not `dimension:`, or move to an `aggregate:` block |
+| `Maximum call stack size exceeded` | Circular imports | See [Circular Imports](#problem-5-circular-imports) |
+| `Source 'x' not found` | Missing import statement | Add `import "path/to/file.malloy"` |
+| `Cannot join on expression` | Using a joined field in another join condition | See [Multi-hop Joins](#problem-7-multi-hop-joins) |
+| `Primary key required for join` | Missing `primary_key` declaration on joined source | Add `primary_key: field_name` to the target source |

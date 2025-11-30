@@ -1,0 +1,168 @@
+>>>markdown
+# Transform & Materialize
+
+This guide covers how to run materializations with the Malloy CLI and MalloySQL—creating tables, views, and exports from your Malloy queries.
+
+For transformation patterns (how dbt concepts map to Malloy), see [Malloy for dbt Users](malloy_for_dbt.malloynb). That guide illustrates common patterns, though Malloy supports many more.
+
+---
+
+## Prerequisites
+
+Install and configure the Malloy CLI: [Installing the CLI](../setup/cli.malloynb)
+
+---
+
+## Write MalloySQL
+
+MalloySQL lets you mix dialect-specific SQL with Malloy in a single file. This is ideal for transformations that need DDL (CREATE TABLE) or database-specific features.
+
+### File Extensions
+
+MalloySQL can be written in files with either extension:
+
+- `.malloysql` - SQL file format
+- `.malloynb` - Notebook format
+
+Both work with the VS Code extension and the Malloy CLI. In VS Code, MalloySQL files render in notebook format where you can add cells containing Markdown, Malloy, or MalloySQL. To change the language of a cell, click the language button on the bottom right of an individual code cell.
+
+<img src="malloynb_select_cell_language.png" alt="Change cell language in VS Code" style="max-width: 400px;">
+
+### Specify a Connection
+
+Add this directive at the top of your file:
+
+```sql
+-- connection:my_postgres
+
+SELECT * FROM raw_orders;
+```
+
+Only the first statement needs the connection directive. Subsequent statements use the same connection.
+
+### Embed Malloy Queries
+
+Wrap Malloy code with `%{` and `}%` to embed it in SQL:
+
+```sql
+-- connection:duckdb
+
+-- First, import a source to use with Malloy
+import "models/orders.malloy"
+
+-- Use embedded Malloy in a CREATE TABLE statement
+CREATE TABLE monthly_revenue AS
+%{
+  orders -> {
+    group_by: order_date.month
+    aggregate: total_revenue
+  }
+}%
+```
+
+The Malloy query compiles to SQL and runs within the larger statement.
+
+### Comment Styles
+
+MalloySQL supports three comment styles:
+
+```sql
+-- Single line (SQL style)
+// Single line (alternative)
+/* Multi-line
+   comment */
+```
+
+---
+
+## Materialization Examples
+
+### Create a Table from a Malloy Query
+
+```sql
+-- connection:duckdb
+
+import "models/flights.malloy"
+
+CREATE TABLE daily_stats AS
+%{
+  flights -> {
+    group_by: dep_time.day
+    aggregate: flight_count, total_distance
+  }
+}%
+```
+
+### Export to Parquet
+
+```sql
+-- connection:duckdb
+
+import "models/flights.malloy"
+
+COPY (
+%{ flights -> { select: * where: distance > 1000 } }%
+) TO 'long_flights.parquet' (FORMAT PARQUET);
+```
+
+### Create a Database View
+
+```sql
+-- connection:duckdb
+
+import "models/flights.malloy"
+
+CREATE OR REPLACE VIEW carrier_stats AS (
+%{ flights -> carrier_performance }%
+)
+```
+
+For transformation patterns (joins, aggregations, conditional logic), see [Malloy for dbt Users](malloy_for_dbt.malloynb).
+
+---
+
+## Execution Tips
+
+### Run from VS Code
+
+The Malloy VS Code extension executes MalloySQL files. Click the "Run" button above any SQL statement.
+
+**Important**: Running a specific statement executes all preceding Malloy statements (imports, source definitions) but only the selected SQL.
+
+### Chain Transformations
+
+Build pipelines by running multiple MalloySQL files in sequence:
+
+```bash
+malloy-cli run transforms/01-clean.malloysql
+malloy-cli run transforms/02-aggregate.malloysql
+malloy-cli run transforms/03-export.malloysql
+```
+
+### Environment-Specific Connections
+
+Create different connections for dev vs prod:
+
+```bash
+malloy-cli connections create-postgres dev_db
+malloy-cli connections create-postgres prod_db
+```
+
+Then reference the appropriate connection in your files:
+
+```sql
+-- connection:dev_db
+-- For development testing
+```
+
+---
+
+## Next Steps
+
+Your data is transformed and ready for modeling.
+
+- **[Quick Start: Modeling](quickstart_modeling.malloynb)** - Build your first semantic model
+- **[Malloy for dbt Users](malloy_for_dbt.malloynb)** - How Malloy's transformation approach compares to dbt
+
+**Resources**:
+- [malloy-cli GitHub](https://github.com/malloydata/malloy-cli)

@@ -21,12 +21,16 @@
       "title": "Setting up Malloy",
       "items": [
         {
-          "title": "Installing the Malloy Extension",
+          "title": "Installing the VS Code Extension",
           "link": "/setup/extension.malloynb"
         },
         {
-          "title": "Connecting a Database",
-          "link": "/setup/connection_instructions.malloynb"
+          "title": "Connecting Data",
+          "link": "/setup/database_connections.malloynb"
+        },
+        {
+          "title": "Installing the CLI",
+          "link": "/setup/cli.malloynb"
         }
       ]
     },
@@ -34,20 +38,85 @@
       "title": "User Guides",
       "items": [
         {
-          "title": "Querying a Semantic Model",
-          "link": "/user_guides/querying_a_model.malloynb"
+          "title": "Getting Started",
+          "items": [
+            {
+              "title": "Querying a Semantic Model",
+              "link": "/user_guides/querying_a_model.malloynb"
+            },
+            {
+              "title": "Building a Semantic Model",
+              "link": "/user_guides/quickstart_modeling.malloynb"
+            },
+            {
+              "title": "Advanced Modeling",
+              "link": "/user_guides/malloy_by_example.malloynb"
+            }
+          ]
         },
         {
-          "title": "Building Semantic Models",
-          "link": "/user_guides/malloy_by_example.malloynb"
+          "title": "Analyzing & Exploring",
+          "items": [
+            {
+              "title": "Analyzing with Notebooks",
+              "link": "/user_guides/notebooks.malloynb"
+            },
+            {
+              "title": "Explorer UI",
+              "link": "/user_guides/publishing/explorer.malloynb"
+            }
+          ]
         },
         {
-          "title": "Malloy for SQL Folks",
-          "link": "/user_guides/sql_experts1.malloynb"
+          "title": "Publishing",
+          "items": [
+            {
+              "title": "Publish Your Models",
+              "link": "/user_guides/publishing/publishing.malloynb"
+            },
+            {
+              "title": "REST API",
+              "link": "/user_guides/publishing/rest_api.malloynb"
+            },
+            {
+              "title": "Publisher SDK (React)",
+              "link": "/user_guides/publishing/publisher_sdk.malloynb"
+            },
+            {
+              "title": "MCP for AI Agents",
+              "link": "/user_guides/publishing/mcp_agents.malloynb"
+            }
+          ]
         },
         {
-          "title": "More Guidance for SQL Users",
-          "link": "/user_guides/sql_experts2.malloynb"
+          "title": "For SQL Users",
+          "items": [
+            {
+              "title": "Malloy for SQL Folks",
+              "link": "/user_guides/sql_experts1.malloynb"
+            },
+            {
+              "title": "Refactoring SQL to Malloy",
+              "link": "/user_guides/sql_experts2.malloynb"
+            }
+          ]
+        },
+        {
+          "title": "Data Transformation",
+          "items": [
+            {
+              "title": "Transform & Materialize",
+              "link": "/user_guides/transform.malloynb"
+            },
+            {
+              "title": "Malloy for dbt Users",
+              "link": "/user_guides/malloy_for_dbt.malloynb"
+            }
+          ]
+        },
+        {
+          "title": "Troubleshooting",
+          "link": "/user_guides/troubleshooting.malloynb"
         }
       ]
     },

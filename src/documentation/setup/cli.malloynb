@@ -1,0 +1,139 @@
+>>>markdown
+# Installing the CLI
+
+The [Malloy CLI](https://github.com/malloydata/malloy-cli) is a command-line interface for running `.malloysql` and `.malloy` files. Use it to automate transformations, build pipelines, or compile Malloy queries to SQL.
+
+---
+
+## Installation Options
+
+### Option 1: NPX (No Installation)
+
+Run directly without installing:
+
+```bash
+npx malloy-cli --help
+```
+
+### Option 2: Global Install via npm
+
+```bash
+npm install -g malloy-cli
+malloy-cli --help
+```
+
+---
+
+## Configure Connections
+
+The CLI stores its own configuration separately from VS Code in `~/.config/malloy/config.json`.
+
+### Connection Commands
+
+```bash
+# List all connections
+malloy connections list
+
+# Create a new connection
+malloy connections create-<type> <name>
+
+# Test a connection
+malloy connections test <name>
+
+# Show connection details
+malloy connections show <name>
+
+# Delete a connection
+malloy connections delete <name>
+```
+
+### Create a Connection
+
+```bash
+# For BigQuery
+malloy-cli connections create-bigquery <connection-name>
+
+# For Postgres
+malloy-cli connections create-postgres <connection-name>
+
+# For DuckDB
+malloy-cli connections create-duckdb <connection-name>
+```
+
+View options for each database type:
+
+```bash
+malloy-cli connections create-bigquery --help
+```
+
+**BigQuery options:**
+
+```
+-p, --project <id>                    GCP project ID
+-l, --location <region>               Query location (default: "US")
+-k, --service-account-key-path <path> Path to service account JSON key
+-t, --timeout <milliseconds>          Query timeout
+-m, --maximum-bytes-billed <bytes>    Limit bytes scanned
+```
+
+### Default Connections
+
+Two connections are created automatically:
+
+- **`bigquery`**: Uses existing gCloud authentication
+- **`duckdb`**: Uses a built-in DuckDB instance
+
+If your Malloy files reference these connection names, they work without explicit setup.
+
+### BigQuery with gCloud
+
+If you already use gCloud:
+
+```bash
+gcloud auth login --update-adc
+malloy-cli connections create-bigquery my-bq
+```
+
+---
+
+## Basic Commands
+
+### Run Queries
+
+Execute a query and return results:
+
+```bash
+# Run a named query from a Malloy file
+malloy-cli run path/to/model.malloy --query query_name
+
+# Run a MalloySQL file
+malloy-cli run transforms.malloysql
+```
+
+### Compile to SQL
+
+Get the generated SQL without executing:
+
+```bash
+malloy-cli compile path/to/model.malloy --query query_name
+```
+
+Useful for:
+- Debugging query logic
+- Copying SQL to other tools
+- Understanding what Malloy generates
+
+### Get Help
+
+```bash
+malloy-cli --help
+malloy-cli run --help
+malloy-cli compile --help
+```
+
+---
+
+## Next Steps
+
+- [Transform & Materialize](../user_guides/transform.malloynb) – Use the CLI with MalloySQL for data transformations
+- [malloy-cli GitHub](https://github.com/malloydata/malloy-cli)

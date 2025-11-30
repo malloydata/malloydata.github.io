@@ -1,65 +1,42 @@
 >>>markdown
-# The Malloy Extension
+# Installing the VS Code Extension
 
-The [Malloy Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) is an authoring enironments for Malloy models. It contains helpful features like schema browsing, query running, language auto-complete, help & documentation, and rudimentary visualizations.
-
-The Extension can be installed anywhere that VS Code runs - either locally on your machine, or in a variety of sites that provide the VS Code interface.
+The [Malloy VS Code Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) is the primary authoring environment for Malloy models. It includes schema browsing, query execution, language auto-complete, documentation, and result visualizations.
 
 <img class="small-img" src="./running_extension.gif">
 
-_**NOTE:**  Because there are two versions of VS Code - VS Code Desktop and [VS Code Web](https://code.visualstudio.com/docs/editor/vscode-web) - there are times when only specific databases are available. When running on a desktop, the Malloy Extension can execute database queries against any supported database, such as BigQuery, PostGres, or DuckDB. When running VS Code Web, the Malloy Extension can only communicate with a browser-based version of DuckDB that comes pre-packaged with the Extension._
+---
 
-## Using the Malloy Extension on your Desktop
+## Installation
 
 1. **Download Visual Studio Code**: If you don't already have it, download [Visual Studio Code](https://code.visualstudio.com/)
 
-2. **Add the Malloy Extension**: Open VS Code and click the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install"
+2. **Open the Extensions panel**: Press `Cmd+Shift+X` (Mac) or `Ctrl+Shift+X` (Windows/Linux). Or open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and type "Extensions: Install Extensions"
 
-3. **Download the [Sample Models](https://github.com/malloydata/malloy-samples) from Github**
+3. **Install Malloy**: Search for "Malloy" and click **Install**
 
-4. **Open the samples folder in VS Code:** In VS Code, go to File > **Open Folder**... select samples/duckdb > Open. DuckDB is built into the extension so you're ready to run these.
+   Or install directly from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode).
 
-## Using the Malloy Extension on Google Cloud Shell Editor
-Google Cloud customers have access to a built-in integrated development environment (IDE) running the Desktop version of VS Code, and Malloy can run in this environment access data in BigQuery, Postgres or DuckDB. Running Malloy here only takes a few clicks:
+4. **Try the samples**: Clone the [malloy-samples](https://github.com/malloydata/malloy-samples) repository:
 
-1. **Launch the Google Cloud Shell**
+   ```bash
+   git clone https://github.com/malloydata/malloy-samples.git
+   ```
 
-Goto https://shell.cloud.google.com
+   In VS Code, go to **File > Open Folder** and select `malloy-samples/duckdb`. DuckDB is built into the extension, so you can run queries immediately.
 
-1. **Install Malloy Extension & Examples:**
-The command below will install Malloy into your cloud shell account. Run the following command and replace [PROJECT_ID] with a project where you have permissions to run BigQuery queries (if you open a BigQuery console, you should see the project name on the top line).
+---
 
-```
-curl -sL \
-  https://github.com/malloydata/malloy/raw/main/scripts/cloud/update_malloy.sh \
-  | bash -s [PROJECT_ID]
-```
+## VS Code Web (github.dev)
 
-3. **Open the Cloud Shell Editor:**
+The Malloy Extension also works in VS Code Web environments like github.dev. Press `.` on any GitHub repository page to open it in the browser-based editor, then install the Malloy extension.
 
-Go to https://ide.cloud.google.com and open your "Home Workspace".
+**Limitation:** VS Code Web only supports DuckDB with local files (CSV, JSON, Parquet). For BigQuery, Snowflake, or PostgreSQL, use VS Code Desktop.
 
-<img class="small-img" src="./setup_ide_home.png">
+---
 
-You should see the directory called 'Malloy Samples'.
+## Next Steps
 
-4. **Verify that BigQuery connects correctly:**
-
-In the IDE Editor open <code>malloy-samples/bigquery/faa/airports.malloy</code> and scroll down click the 'Run' code lens above one of the queries.  You should see query results.
-
-<img class="small-img"src="./setup_ide_run.png">
-
-### Changing the Project ID
-If you need to modify the Google CLoud Project ID, open the settings by clicking the lower-left corner gear icon, search for "project," and enter the project ID for Cloudshell:Project
-
-<img class="small-img"src="./setup_ide_project.png">
-
-## Using the Malloy Extension on github.dev
-
-_**NOTE:** github.dev uses the Web version of VS Code, so it is only possible to interact with local data. If you have data stored in CSVs, JSON files, or Parquet files in your repository, you can query that data in the Malloy Extension directly from your browser_
-
-If you are logged into Github, any repository on Github can be opened into a web-only VS Code instance with all the files in the repository loaded into your browser memory. Simply press <code>.</code> on the main repo page, or change the url from <code>https://github.com/{repo-name}</code> to <code>https://github.dev/{repo-name}</code>.
-
-Once you have opened the repository on github.dev, install the Malloy extension by clicking the Extensions button on the far left (it looks like 4 blocks with one flying away). This will open the Extension Marketplace. Search for "Malloy" and, once found, click "Install".
-
-DuckDB is available without needing to explicitly configure a connection - you can simply reference your local files in the `source` of the Malloy model, i.e. `source: my_data_table is duckdb.table('my_file.csv')`
+- **[Query existing models](../user_guides/querying_a_model.malloynb)** — Explore the malloy-samples to see Malloy in action
+- **[Connect your data](database_connections.malloynb)** — Set up connections to BigQuery, Snowflake, PostgreSQL, and more
+- **[Build a semantic model](../user_guides/quickstart_modeling.malloynb)** — Create your first Malloy model from scratch
