@@ -1,5 +1,5 @@
 >>>markdown
-# Calculations and Window Functions
+# Calculations
 
 Window functions in Malloy are expressed in _calculation_ fields, using the `calculate: ` keyword. Calculation fields operate on the results of a aggregation or selection, while still operating within the same query stage. Logically these calculation operations occur "after" the other operations, so their exact semantics can be challenging to understand. For a full list of the window functions that Malloy supports, visit our [function reference documentation](./functions.malloynb#window-functions).
 

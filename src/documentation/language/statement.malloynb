@@ -1,14 +1,13 @@
 >>>markdown
-# Models
+# File Structure
 
-Malloy recognizes modeling as a key aspect of data analytics and provides tools that allow for modularity and reusability of definitions. Whereas in SQL, queries generally define all metrics inline, requiring useful snippets to be saved and managed separately, in Malloy,
-_dimensions_, _measures_, and _views_ can be saved and attached to a modeled source, which itself is defined as part of a Malloy document, often referred to as a _model_.
+A Malloy file (`.malloy`) is a collection of [statements](#statements), [comments](#comments), and [tags](#tags). Statements can be separated with an optional semi-colon for clarity, which helps readability when statements appear on the same line.
 
-A Malloy document is a collection of [statements](#statements), [comments](#comments), and [tags](#tags). Statements can be separated with an optional semi-colon for clarity, which helps readability when statements appear on the same line.
+Malloy recognizes modeling as a key aspect of data analytics and provides tools for modularity and reusability. Whereas SQL queries generally define all metrics inline, in Malloy, _dimensions_, _measures_, and _views_ can be saved and attached to a modeled source, which itself is defined as part of a Malloy file.
 
 ## Statements
 
-There are four kinds of statements that can appear in a Malloy model:
+There are four kinds of statements that can appear in a Malloy file:
 
 * [Import Statements](#import-statements)
 * [Query Statements](#query-statements)
@@ -18,12 +17,33 @@ There are four kinds of statements that can appear in a Malloy model:
 
 ### Import Statements
 
-Import statements allow you to import sources from another <code>.malloy</code> file. 
+Import statements allow you to import sources and queries from another `.malloy` file.
 >>>malloy
 import "flights.malloy"
 >>>markdown
 
-See the [Imports](imports.malloynb) section for more information.
+#### Import Locations
+
+Imported files may be specified with relative or absolute URLs.
+
+| Import Statement | Meaning from `"file:///f1/a.malloy"` |
+| ---------------- | --------|
+| `import "b.malloy"` | `"file:///f1/b.malloy"` |
+| `import "./c.malloy"` | `"file:///f1/c.malloy"` |
+| `import "/f1/d.malloy"` | `"file:///f1/d.malloy"` |
+| `import "file:///f1/e.malloy"` | `"file:///f1/e.malloy"` |
+| `import "../f2/f.malloy"` | `"file:///f2/f.malloy"` |
+| `import "https://example.com/g.malloy"` | `"https://example.com/g.malloy"` |
+
+#### Selective Imports
+
+By default, all objects from the referenced file are imported. You can use `{} from` to select (and optionally rename) specific objects:
+>>>malloy
+import { airports, spaceports is airports } from "airports.malloy"
+
+run: airports -> { aggregate: airport_count is count() }
+run: spaceports -> { aggregate: spaceport_count is count() }
+>>>markdown
 
 ### Query Statements
 

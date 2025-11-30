@@ -55,113 +55,102 @@
       "title": "Language Reference",
       "items": [
         {
-          "title": "Models",
-          "link": "/language/statement.malloynb"
+          "title": "Quick Reference",
+          "link": "/language/quick_reference.html"
         },
         {
-          "title": "Sources",
-          "link": "/language/source.malloynb"
+          "title": "Core Concepts",
+          "items": [
+            {
+              "title": "File Structure",
+              "link": "/language/statement.malloynb"
+            },
+            {
+              "title": "Sources",
+              "link": "/language/source.malloynb"
+            },
+            {
+              "title": "Queries",
+              "link": "/language/query.malloynb"
+            },
+            {
+              "title": "Views",
+              "link": "/language/views.malloynb"
+            }
+          ]
         },
         {
-          "title": "Queries",
-          "link": "/language/query.malloynb"
+          "title": "Field Types",
+          "items": [
+            {
+              "title": "Dimensions",
+              "link": "/language/dimensions.malloynb"
+            },
+            {
+              "title": "Aggregates",
+              "link": "/language/aggregates.malloynb"
+            },
+            {
+              "title": "Calculations",
+              "link": "/language/calculations_windows.malloynb"
+            }
+          ]
         },
         {
-          "title": "Views",
-          "link": "/language/views.malloynb"
+          "title": "Data & Expressions",
+          "items": [
+            {
+              "title": "Data Types",
+              "link": "/language/datatypes.malloynb"
+            },
+            {
+              "title": "Expressions",
+              "link": "/language/expressions.malloynb"
+            },
+            {
+              "title": "Functions",
+              "link": "/language/functions.malloynb"
+            }
+          ]
         },
         {
-          "title": "Data Types",
-          "link": "/language/datatypes.malloynb"
-        },
-        {
-          "title": "Fields",
-          "link": "/language/fields.malloynb"
-        },
-        {
-          "title": "Aggregates",
-          "link": "/language/aggregates.malloynb"
-        },
-        {
-          "title": "Expressions",
-          "link": "/language/expressions.malloynb"
-        },
-        {
-          "title": "Functions",
-          "link": "/language/functions.malloynb"
-        },
-        {
-          "title": "Filters",
-          "link": "/language/filters.malloynb"
-        },
-        {
-          "title": "Calculations (window functions)",
-          "link": "/language/calculations_windows.malloynb"
-        },
-        {
-          "title": "Ordering and Limiting",
-          "link": "/language/order_by.malloynb"
-        },
-        {
-          "title": "Joins",
-          "link": "/language/join.malloynb"
-        },
-        {
-          "title": "Nested Views",
-          "link": "/language/nesting.malloynb"
-        },
-        {
-          "title": "SQL Sources",
-          "link": "/language/sql_sources.malloynb"
-        },
-        {
-          "title": "Imports",
-          "link": "/language/imports.malloynb"
-        },
-        {
-          "title": "Connections",
-          "link": "/language/connections.malloynb"
+          "title": "Query Operations",
+          "items": [
+            {
+              "title": "Filters",
+              "link": "/language/filters.malloynb"
+            },
+            {
+              "title": "Joins",
+              "link": "/language/join.malloynb"
+            },
+            {
+              "title": "Nested Views",
+              "link": "/language/nesting.malloynb"
+            },
+            {
+              "title": "Ordering and Limiting",
+              "link": "/language/order_by.malloynb"
+            }
+          ]
         },
         {
           "title": "Tags",
           "link": "/language/tags.malloynb"
         },
         {
-          "title": "Quick Reference",
-          "link": "/language/quick_reference.html"
-        },
-        {
           "title": "Change Log",
           "link": "/language/changelog.malloynb"
-        },
-        {
-          "title": "Dialects",
-          "items": [
-            {
-              "title": "BigQuery",
-              "link": "/language/dialect/bigquery.malloynb"
-            },
-            {
-              "title": "Presto / Trino",
-              "link": "/language/dialect/presto-trino.malloynb"
-            },
-            {
-              "title": "Snowflake",
-              "link": "/language/dialect/snowflake.malloynb"
-            },
-            { "title": "MySQL", "link": "/language/dialect/mysql.malloynb" },
-            { "title": "DuckDB", "link": "/language/dialect/duckdb.malloynb" },
-            {
-              "title": "PostgreSQL",
-              "link": "/language/dialect/postgres.malloynb"
-            }
-          ]
         }
       ]
     },
     {
       "title": "Common Patterns",
       "items": [
+        {
+          "title": "Patterns Overview",
+          "link": "/patterns/index.malloynb"
+        },
         {
           "title": "Comparing Timeframes",
           "link": "/patterns/yoy.malloynb"
@@ -197,10 +186,6 @@
         {
           "title": "Moving Average",
           "link": "/patterns/moving_avg.malloynb"
-        },
-        {
-          "title": "Transform Data",
-          "link": "/patterns/transform.malloynb"
         },
         {
           "title": "Sessionize - Map/Reduce",
@@ -323,10 +308,6 @@
         {
           "title": "SQL Expressions",
           "link": "/experiments/sql_expressions.malloynb"
-        },
-        {
-          "title": "Window Partitions",
-          "link": "/experiments/window.malloynb"
         },
         {
           "title": "Parameters",

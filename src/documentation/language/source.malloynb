@@ -111,7 +111,7 @@ run: carrier_facts2 -> {
 
 ### Sources from SQL Queries
 
-Sources can be created from a SQL query, e.g.
+Sources can be created from a SQL query using the `.sql()` connection method:
 >>>malloy
 source: limited_users is duckdb.sql("""
   SELECT
@@ -129,6 +129,52 @@ run: limited_users -> {
 >>>markdown
 
 Like with `duckdb.table('data/users.parquet')`, Malloy fetches the schema from the database to make columns of the resulting table accessible in computations.
+
+Unlike other sources, SQL sources can be run directly as queries:
+>>>malloy
+run: duckdb.sql("select 1 as one")
+>>>markdown
+
+They can also be defined as named queries:
+>>>malloy
+query: my_sql_query is duckdb.sql("select 1 as one")
+run: my_sql_query
+>>>markdown
+
+SQL sources can be extended like any other source:
+>>>malloy
+source: users_extended is duckdb.sql("""
+  SELECT first_name, last_name, gender
+  FROM '../data/users.parquet'
+  LIMIT 10
+""") extend {
+  measure: user_count is count()
+}
+
+run: users_extended -> { aggregate: user_count }
+>>>markdown
+
+#### Embedding Malloy in SQL ("Turducken")
+
+Malloy queries can be embedded inside SQL blocks. When `%{` and `}` appear inside a `"""` quoted string, the Malloy query between the brackets is compiled and replaced with the generated SQL:
+>>>malloy
+source: users is duckdb.table('../data/users.parquet')
+
+source: malloy_in_sql is duckdb.sql("""
+  SELECT * FROM
+  (%{ // Malloy query starts with %{
+    users -> {
+      limit: 10 group_by: first_name, last_name, gender
+      aggregate: n_with_this_name is count()
+    }
+  })  -- Malloy query ends after }
+  WHERE n_with_this_name > 10
+""")
+
+run: malloy_in_sql -> { select: * }
+>>>markdown
+
+This technique is nicknamed ["Turducken"](https://en.wikipedia.org/wiki/Turducken) because you wrap Malloy inside SQL, then wrap that SQL back into a Malloy source.
 
 ## Source Extensions
 
@@ -187,7 +233,7 @@ run: airports2 -> {
   limit: 2
 }
 >>>markdown
-For more information about fields and how to define them, see the [Fields](./fields.malloynb) section, or for information on views specifically, see the [Views](./views.malloynb) section.
+For more information, see [Dimensions](./dimensions.malloynb), [Aggregates](./aggregates.malloynb), and [Views](./views.malloynb).
 
 ### Filtering Sources
 

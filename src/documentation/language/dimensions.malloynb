@@ -1,0 +1,141 @@
+>>>markdown
+# Dimensions
+
+Dimensions are scalar fields that represent attributes of your data. They're used to categorize, group, and filter data in queries. Unlike [measures](aggregates.malloynb), dimensions don't aggregate—they represent individual values.
+
+## Defining Dimensions
+
+Dimensions are defined in a source using the `dimension:` keyword.
+>>>malloy
+source: users is duckdb.table('../data/users.parquet') extend {
+  dimension: full_name is concat(first_name, ' ', last_name)
+  dimension: age_group is
+    pick 'minor' when age < 18
+    pick 'adult' when age < 65
+    else 'senior'
+}
+>>>markdown
+
+All columns from the underlying table are automatically available as dimensions—you only need to explicitly define computed dimensions.
+
+## Using Dimensions in Queries
+
+Dimensions can be used in several contexts:
+
+### Grouping with `group_by:`
+
+Use dimensions to group aggregated results:
+>>>malloy
+run: users -> {
+  group_by: full_name
+  aggregate: count_users is count()
+  limit: 5
+}
+>>>markdown
+
+### Selecting with `select:`
+
+Use dimensions in projection queries (no aggregation):
+>>>malloy
+run: users -> {
+  select: full_name, age
+  limit: 5
+}
+>>>markdown
+
+### Inline Dimensions
+
+Dimensions can be defined inline in a query:
+>>>malloy
+run: duckdb.table('../data/users.parquet') -> {
+  group_by:
+    name_length is length(first_name)
+  aggregate: user_count is count()
+  limit: 5
+}
+>>>markdown
+
+## Computed Dimensions
+
+Dimensions can be computed from other fields using expressions.
+
+### String Operations
+>>>malloy
+source: users2 is duckdb.table('../data/users.parquet') extend {
+  dimension: initials is concat(substr(first_name, 1, 1), substr(last_name, 1, 1))
+  dimension: email_domain is substr(email, strpos(email, '@') + 1)
+}
+>>>markdown
+
+### Date/Time Extractions
+>>>malloy
+##(docs) hidden
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  measure: flight_count is count()
+}
+>>>malloy
+run: flights -> {
+  group_by:
+    dep_year is dep_time.year
+    dep_quarter is dep_time.quarter
+    dep_month is dep_time.month
+  aggregate: flight_count
+  limit: 5
+}
+>>>markdown
+
+### Conditional Logic with `pick`
+>>>malloy
+source: flights2 is duckdb.table('../data/flights.parquet') extend {
+  dimension: distance_category is
+    pick 'short' when distance < 500
+    pick 'medium' when distance < 1500
+    else 'long'
+  measure: flight_count is count()
+}
+
+run: flights2 -> {
+  group_by: distance_category
+  aggregate: flight_count
+}
+>>>markdown
+
+## Dimensions from Joins
+
+When sources are joined, dimensions from joined sources are accessible using dot notation:
+>>>malloy
+source: carriers is duckdb.table('../data/carriers.parquet') extend {
+  primary_key: code
+}
+
+source: flights3 is duckdb.table('../data/flights.parquet') extend {
+  join_one: carriers with carrier
+  measure: flight_count is count()
+}
+
+run: flights3 -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  limit: 5
+}
+>>>markdown
+
+## Dimension Naming
+
+Dimension names must start with a letter or underscore and contain only letters, numbers, and underscores. Names that conflict with Malloy keywords must be enclosed in backticks:
+
+```malloy
+dimension: `year` is dep_time.year
+dimension: `order` is sort_order
+```
+
+## Dimensions vs Measures
+
+| Aspect | Dimensions | Measures |
+|--------|------------|----------|
+| Definition | Scalar calculations | Aggregate calculations |
+| Used in | `group_by:`, `select:` | `aggregate:` |
+| Purpose | Categorize/group data | Compute statistics |
+| Example | `carrier`, `dep_time.year` | `count()`, `sum(distance)` |
+
+For aggregate calculations, see [Aggregates](aggregates.malloynb).
