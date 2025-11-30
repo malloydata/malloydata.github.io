@@ -7,11 +7,10 @@ Jump to the section that matches your symptom:
 |---------|---------|
 | Row count multiplied after join | [Non-Unique Join Key](#problem-1-non-unique-join-key) |
 | Aggregates inflated 10x | [Grain Mismatch](#problem-2-grain-mismatch) |
-| Daily counts off by small % | [Timezone Mismatch](#problem-3-timezone-mismatch) |
-| Query takes minutes | [Slow Query](#problem-4-slow-query) |
-| "Maximum call stack size exceeded" | [Circular Imports](#problem-5-circular-imports) |
-| Date filter syntax questions | [Date Arithmetic](#problem-6-date-arithmetic) |
-| Can't reference joined field in join | [Multi-hop Joins](#problem-7-multi-hop-joins) |
+| Query takes minutes | [Slow Query](#problem-3-slow-query) |
+| Reference to undefined object | [Circular References](#problem-4-circular-references) |
+| Date filter syntax questions | [Date Arithmetic](#problem-5-date-arithmetic) |
+| Can't reference joined field in join | [Multi-hop Joins](#problem-6-multi-hop-joins) |
 | "Field 'x' not found in source 'y'" | [Common Errors](#common-error-messages) |
 
 ---
@@ -81,151 +80,35 @@ You have two tables at different granularity:
 - **Raw table**: One row per event (e.g., every flight, every order)
 - **Aggregated table**: One row per time period (e.g., daily totals, monthly stats)
 
-When you join them, every raw row matches the same summary row:
-
-```
-Raw Orders (5 orders on Jan 1):          Daily Summary:
-┌─────────┬────────────┬────────┐        ┌────────────┬─────────────┐
-│order_id │ date       │ amount │        │ date       │ daily_total │
-├─────────┼────────────┼────────┤        ├────────────┼─────────────┤
-│ 1       │ 2024-01-01 │ $100   │   ──►  │ 2024-01-01 │ $500        │
-│ 2       │ 2024-01-01 │ $150   │   ──►  │ 2024-01-01 │ $500        │
-│ 3       │ 2024-01-01 │ $50    │   ──►  │ 2024-01-01 │ $500        │
-│ 4       │ 2024-01-01 │ $100   │   ──►  │ 2024-01-01 │ $500        │
-│ 5       │ 2024-01-01 │ $100   │   ──►  │ 2024-01-01 │ $500        │
-└─────────┴────────────┴────────┘        └────────────┴─────────────┘
-
-Result: SUM(daily_total) = $2,500 (5x inflated!) instead of $500
-```
-
-### Example
+When you join them, every raw row matches the same summary row. Here, we join carrier-level stats to raw flights, then group by origin—each AA flight adds AA's entire total, each UA flight adds UA's total, etc:
 >>>malloy
-// Simulate a daily summary (one row per day)
-source: daily_summary is duckdb.sql("""
-  SELECT
-    dep_time::date as flight_date,
-    COUNT(*) as daily_flight_count,
-    SUM(distance) as daily_total_distance
+source: carrier_stats is duckdb.sql("""
+  SELECT carrier, COUNT(*) as carrier_total
   FROM '../data/flights.parquet'
-  GROUP BY dep_time::date
+  GROUP BY carrier
 """)
 
-run: daily_summary -> {
-  aggregate: days_in_summary is count()
-  // ~365 rows (one per day)
-}
->>>markdown
-
-If you joined raw `flights` to `daily_summary` on date, each flight would get the daily total attached—summing it would be wrong:
->>>malloy
-source: daily_summary_p2 is duckdb.sql("""
-  SELECT
-    dep_time::date as flight_date,
-    COUNT(*) as daily_flight_count
-  FROM '../data/flights.parquet'
-  GROUP BY dep_time::date
-""") extend {
-  primary_key: flight_date
+source: flights_p2 is duckdb.table('../data/flights.parquet') extend {
+  join_one: carrier_stats on carrier = carrier_stats.carrier
 }
 
-source: flights_with_daily is duckdb.table('../data/flights.parquet') extend {
-  dimension: flight_date is dep_time::date
-  join_one: daily_summary_p2 on flight_date = daily_summary_p2.flight_date
-}
-
-run: flights_with_daily -> {
+// WRONG: grouping by origin but summing carrier totals
+run: flights_p2 -> {
+  group_by: origin
   aggregate:
     actual_flights is count()
-    // This sums daily_flight_count once per flight = massively inflated!
-    wrong_total is daily_summary_p2.daily_flight_count.sum()
+    wrong_total is carrier_stats.carrier_total.sum()
+  limit: 5
 }
 >>>markdown
 
 ### Fix
 
-**Don't join aggregated tables to raw tables.** Instead:
-
-**Option 1: Keep them as separate sources**
-```malloy
-// Query raw data for granular questions
-source: orders is duckdb.table('orders') extend {...}
-
-// Query summary for high-level questions
-source: daily_summary is duckdb.table('daily_summary') extend {...}
-```
-
-**Option 2: Compute the aggregation in Malloy**
-```malloy
-source: orders is duckdb.table('orders') extend {
-  measure:
-    order_count is count()
-    total_revenue is amount.sum()
-
-  view: daily_summary is {
-    group_by: order_date
-    aggregate: order_count, total_revenue
-  }
-}
-```
-
-**Option 3: Use nested queries**
-
-Nested queries let you include detail rows without joining them to the parent grain—the aggregates stay correct at the outer level while the nested block shows supporting details:
-
-```malloy
-run: orders -> {
-  group_by: order_date
-  aggregate: order_count, total_revenue
-  nest: top_orders is {
-    group_by: order_id, customer_name, amount
-    limit: 5
-  }
-}
-```
+**Don't join aggregated tables to raw tables.** Query them independently—use the raw table for granular questions and compute aggregations directly from it.
 
 ---
 
-## Problem 3: Timezone Mismatch
-
-### Symptoms
-- Counts are off by a few percent compared to other reports
-- Daily aggregations don't match between systems
-- Events appear on the wrong day
-
-### The Problem
-
-Your timestamps are in a different timezone than expected. A flight at 11pm UTC on January 1st is actually January 2nd in Sydney.
-
-```malloy
-// Same timestamp, different dates depending on timezone
-dimension:
-  date_utc is dep_time::date                                    // 2024-01-01
-  date_sydney is (dep_time at time zone 'Australia/Sydney')::date  // 2024-01-02
-```
-
-### Fix
-
-**Option 1: Convert to local timezone**
-```malloy
-source: events is duckdb.table('events') extend {
-  dimension:
-    event_date is (event_time at time zone 'America/Los_Angeles')::date
-}
-```
-
-**Option 2: Document your timezone assumption**
-```malloy
-source: events is duckdb.table('events') extend {
-  // All timestamps stored in UTC, displayed in UTC
-  dimension: event_date is event_time::date
-}
-```
-
-See [Timezones](../language/timezones.malloynb) for more details.
-
----
-
-## Problem 4: Slow Query
+## Problem 3: Slow Query
 
 ### Symptoms
 - Queries take minutes instead of seconds
@@ -268,47 +151,40 @@ See [Transform & Materialize](transform.malloynb) for details on materializing v
 
 ---
 
-## Problem 5: Circular Imports
+## Problem 4: Circular References
 
 ### Symptoms
-- "Maximum call stack size exceeded" error
-- VS Code extension crashes or hangs
+- Can't define two sources that each join to the other
 
 ### The Problem
 
-File A imports File B, and File B imports File A:
-
-```
-// customers.malloy
-import "orders.malloy"
-source: customers is ...
-
-// orders.malloy
-import "customers.malloy"  // Circular!
-source: orders is ...
-```
+Malloy compiles linearly. You can't define `orders` joining to `customers` while `customers` also joins to `orders`—the second source doesn't exist yet when the first is compiled.
 
 ### Fix
 
-Move shared definitions to a third file. This works because the dependency graph becomes `A→C`, `B→C` instead of `A↔B`:
+Define base sources first, then extend them with joins. For cyclical relationships, add a third pass:
 
-```
-// shared.malloy
-source: base_customers is duckdb.table('customers')
-source: base_orders is duckdb.table('orders')
+```malloy
+// Base sources
+source: _orders is duckdb.table('orders') extend { ... }
+source: _customers is duckdb.table('customers') extend { ... }
 
-// customers.malloy
-import "shared.malloy"
-source: customers is base_customers extend {...}
+// Modeled sources with one direction of joins
+source: orders_modeled is _orders extend {
+  join_one: customer is _customers on customer_id = customer.id
+}
 
-// orders.malloy
-import "shared.malloy"
-source: orders is base_orders extend {...}
+source: customers_modeled is _customers extend { ... }
+
+// Final sources with cyclical joins added
+source: customers is customers_modeled extend {
+  join_many: orders is orders_modeled on id = orders.customer_id
+}
 ```
 
 ---
 
-## Problem 6: Date Arithmetic
+## Problem 5: Date Arithmetic
 
 ### Symptoms
 - "How do I filter to the last 30 days?"
@@ -337,7 +213,7 @@ See [Timestamp Operations](../language/timestamp-operations.malloynb) for more p
 
 ---
 
-## Problem 7: Multi-hop Joins
+## Problem 6: Multi-hop Joins
 
 ### Symptoms
 - Need to join A to C through intermediate table B
@@ -397,7 +273,8 @@ Quick reference for error strings and their likely causes:
 |---------------|--------------|----------|
 | `Field 'x' not found in source 'y'` | Typo in field name, or missing import | Check spelling; verify the import includes the source |
 | `Cannot use aggregate in dimension` | Using a measure where a dimension is expected | Define as `measure:` not `dimension:`, or move to an `aggregate:` block |
-| `Maximum call stack size exceeded` | Circular imports | See [Circular Imports](#problem-5-circular-imports) |
+| `Reference to undefined object` | Circular references | See [Circular References](#problem-4-circular-references) |
 | `Source 'x' not found` | Missing import statement | Add `import "path/to/file.malloy"` |
-| `Cannot join on expression` | Using a joined field in another join condition | See [Multi-hop Joins](#problem-7-multi-hop-joins) |
+| `Cannot join on expression` | Using a joined field in another join condition | See [Multi-hop Joins](#problem-6-multi-hop-joins) |
 | `Primary key required for join` | Missing `primary_key` declaration on joined source | Add `primary_key: field_name` to the target source |
+| Syntax error on `year`, `date`, `timestamp` | Using a reserved word as field name | Use backticks: `` `year` ``, `` `date` ``, `` `timestamp` `` |
