@@ -1,0 +1,44 @@
+>>>markdown
+# Common Patterns
+
+Reusable patterns for common data analysis tasks in Malloy.
+
+---
+
+## Time & Trends
+
+| Pattern | Description |
+|---------|-------------|
+| [Comparing Timeframes](yoy.malloynb) | How do I compare metrics across time periods? |
+| [Moving Average](moving_avg.malloynb) | How do I smooth out trends with moving averages? |
+| [Cohort Analysis](cohorts.malloynb) | How do I track cohorts over time? |
+
+---
+
+## Aggregation
+
+| Pattern | Description |
+|---------|-------------|
+| [Percent of Total](percent_of_total.malloynb) | How do I calculate percentages of totals? |
+| [Foreign Sums and Averages](foreign_sums.malloynb) | How do I aggregate across joined tables? |
+| [Nested Subtotals](nested_subtotals.malloynb) | How do I add subtotals to nested views? |
+
+---
+
+## Data Shaping
+
+| Pattern | Description |
+|---------|-------------|
+| [Bucketing with 'Other'](other.malloynb) | How do I group rare values into 'Other'? |
+| [Auto-binning Histograms](autobin.malloynb) | How do I create histograms automatically? |
+| [Reading Nested Data](reading_nested.malloynb) | How do I work with nested/array data? |
+| [Sessionize - Map/Reduce](sessionize.malloynb) | How do I sessionize event data? |
+
+---
+
+## Utility
+
+| Pattern | Description |
+|---------|-------------|
+| [Dimensional Indexes](dim_index.malloynb) | How do I build dimensional indexes? |
+

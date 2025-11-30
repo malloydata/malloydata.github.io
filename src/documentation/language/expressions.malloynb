@@ -104,7 +104,7 @@ Many functions available in SQL are available unchanged in Malloy. Malloy provid
 
 ## Aggregation
 
-Aggregations may included in an expression to create [measures](fields.malloynb#measures), e.g. `count()`, `sum(distance)`, or `aircraft_models.seats.avg()`. For detailed information, see the [Aggregates](aggregates.malloynb) section.
+Aggregations may be included in an expression to create measures, e.g. `count()`, `sum(distance)`, or `aircraft_models.seats.avg()`. For detailed information, see the [Aggregates](aggregates.malloynb) section.
 
 <!-- TODO more info on symmetric aggregates -->
 

@@ -18,7 +18,7 @@ For more information about views, see the [Views](./views.malloynb) section.
 
 New syntax for defining sources based on tables, `duckdb.table('data/users.parquet')` has been introduced. The old syntax, `table('duckdb:data/users.parquet')` still works for the time being, but will be deprecated in 4.0.
 
-See the [Connections](./connections.malloynb#table-connection-method) section for more details.
+See the [Sources](./source.malloynb) section for more details.
 
 ### SQL Source Method
 
@@ -26,7 +26,7 @@ New syntax for defining sources based on SQL queries, `duckdb.sql("""select * ..
 
 This makes `from_sql` no longer necessary, and it will be deprecated with the `sql:` statement.
 
-See the [SQL Sources](./sql_sources.malloynb) section for more details.
+See the [Sources](./source.malloynb#sources-from-sql-queries) section for more details.
 
 ### Source Extensions and Query Refinements
 

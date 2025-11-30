@@ -52,7 +52,7 @@ None of these are render tags, even though they use the tag property language.
 * `##! disableWarnings` tags are parsed by the compiler and interpreted as compiler flags
 * `#(myApp) custom="application" values="here"` something like this could be used by an app to write custom tags
 
-For a thorough list of available Renderer Tags, refer to the [Render Tags Documentation](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/renderer_tags_overview.md) in the Malloy GitHub project.
+For a thorough list of available Renderer Tags, refer to the [Render Tags Documentation](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/renderer_tags_overview.md) in the Malloy GitHub project, or see the [Rendering Results](../visualizations/overview.malloynb) section for usage examples and visualization guides.
 
 ## Tag Property Language
 

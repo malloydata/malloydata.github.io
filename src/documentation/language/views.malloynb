@@ -58,9 +58,7 @@ Dimensions are included with `group_by` (or `select` in a projection), measures 
 
 When referencing existing fields in a `select:` clause, wildcard expressions like `*`, or `some_join.*` may be used.
 
-See the [Fields](fields.malloynb) section for more information
-about the different kinds of fields and how they can be
-defined.
+See [Dimensions](dimensions.malloynb) and [Aggregates](aggregates.malloynb) for more information about field types and how they can be defined.
 
 ### Filters
 
