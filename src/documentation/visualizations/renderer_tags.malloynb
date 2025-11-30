@@ -1,0 +1,313 @@
+>>>markdown
+# Renderer Tags
+
+Control how Malloy renders query results using tags. Tags are annotations that tell the renderer how to display data.
+
+## Basic Syntax
+
+- Tags are prefixed with `#`: `# tag_name`
+- Tags with properties: `# tag_name { property=value }`
+- Boolean properties use dot notation: `# tag_name.property`
+- Nested properties: `# bar_chart { y.independent }`
+
+---
+
+## Chart Tags
+
+### Bar Chart
+
+Renders data as a bar chart. The renderer infers x (first dimension), y (first measure), and series (second dimension) from query structure.
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  measure: flight_count is count()
+}
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  limit: 10
+}
+>>>markdown
+
+**Properties:**
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.stack` | Stack bars when series present | `# bar_chart.stack` |
+| `.size` | Size preset: `spark`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` | `# bar_chart { size=lg }` |
+| `.size.width` | Pixel width | `# bar_chart { size.width=300 }` |
+| `.size.height` | Pixel height | `# bar_chart { size.height=220 }` |
+| `.x` | Field for x-axis | `# bar_chart { x=category }` |
+| `.x.limit` | Limit number of bars | `# bar_chart { x.limit=10 }` |
+| `.y` | Field(s) for y-axis | `# bar_chart { y=total }` or `{ y=['sales', 'cost'] }` |
+| `.y.independent` | Independent y-axis per nested chart | `# bar_chart { y.independent }` |
+| `.series` | Field for grouping/coloring | `# bar_chart { series=category }` |
+| `.series.limit` | Limit series shown (default 20) | `# bar_chart { series.limit=5 }` |
+| `.title` | Chart title | `# bar_chart { title='Sales' }` |
+
+#### Stacked Bar Chart
+
+Add a second dimension to create stacked bars:
+>>>malloy
+#(docs) size=large
+# bar_chart.stack
+run: flights -> {
+  group_by: origin, carrier
+  aggregate: flight_count
+  limit: 25
+}
+>>>markdown
+
+### Line Chart
+
+Renders data as a line chart. Similar inference to bar charts.
+>>>malloy
+#(docs) size=large
+# line_chart
+run: flights -> {
+  group_by: dep_time.month
+  aggregate: flight_count
+  order_by: 1
+}
+>>>markdown
+
+**Properties:**
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.zero_baseline` | Force y-axis to start at zero | `# line_chart { zero_baseline=true }` |
+| `.interpolate` | Line interpolation mode | `# line_chart { interpolate=step }` |
+| `.series.limit` | Limit lines shown (default 12) | `# line_chart { series.limit=5 }` |
+
+#### Multi-Series Line Chart
+
+Use explicit axis tags to control which fields map to x, y, and series:
+
+```malloy
+# line_chart { series.limit=5 }
+run: flights -> {
+  group_by:
+    # x
+    departure_month is dep_time.month
+  aggregate:
+    # y
+    flight_count
+  group_by:
+    # series
+    carrier
+  order_by: departure_month
+}
+```
+
+---
+
+## Layout Tags
+
+### Dashboard
+
+Arranges nested views into a dashboard layout. Put chart tags ABOVE the `nest:` keyword:
+>>>malloy
+#(docs) size=large
+# dashboard
+run: flights -> {
+  nest: total is {
+    aggregate: flight_count
+  }
+  # bar_chart
+  nest: by_carrier is {
+    group_by: carrier
+    aggregate: flight_count
+    limit: 5
+  }
+  # line_chart
+  nest: by_month is {
+    group_by: dep_time.month
+    aggregate: flight_count
+    order_by: 1
+  }
+}
+>>>markdown
+
+**Properties:**
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.table.max_height` | Max height for tables in tiles | `# dashboard { table.max_height=400 }` |
+| `# break` | Force new row (on nested view) | See example below |
+
+### Table
+
+Explicitly render as a table (often the default).
+
+**Properties:**
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `# pivot` | Pivot dimensions to columns | `# pivot` |
+| `# flatten` | Flatten single-row nested record | `# flatten` |
+| `.size=fill` | Fill container width | `# table.size=fill` |
+| `# column { width }` | Column width | `# column { width=lg }` |
+
+#### Pivot Syntax
+
+```malloy
+run: flights -> {
+  group_by: carrier
+  # pivot
+  nest: by_year is {
+    group_by: dep_time.year
+    aggregate: flight_count
+  }
+}
+```
+
+### List and List Detail
+
+Render nested results as comma-separated lists.
+>>>malloy
+#(docs) size=small
+run: flights -> {
+  group_by: origin
+  # list
+  nest: carriers is {
+    group_by: carrier
+    limit: 3
+  }
+  limit: 5
+}
+>>>markdown
+
+`# list_detail` shows value with detail in parentheses:
+>>>malloy
+#(docs) size=small
+run: flights -> {
+  group_by: origin
+  # list_detail
+  nest: carriers is {
+    group_by: carrier
+    aggregate: flight_count
+    limit: 3
+  }
+  limit: 5
+}
+>>>markdown
+
+### Transpose
+
+Swap rows and columns. Useful for single-row results with many measures.
+
+```malloy
+# transpose
+run: flights -> {
+  aggregate:
+    flight_count
+    total_distance is distance.sum()
+    avg_distance is distance.avg()
+}
+```
+
+---
+
+## Field Formatting Tags
+
+### Currency
+>>>malloy
+#(docs) size=small
+run: duckdb.table('../data/order_items.parquet') -> {
+  aggregate:
+    # currency
+    total_sales is sale_price.sum()
+}
+>>>markdown
+
+### Percent
+>>>malloy
+#(docs) size=small
+run: flights -> {
+  group_by: carrier
+  aggregate:
+    flight_count
+    # percent
+    percent_of_total is flight_count / all(flight_count)
+  limit: 5
+}
+>>>markdown
+
+### Number Format
+
+Use `ssf` format strings (Excel/Sheets style):
+>>>malloy
+#(docs) size=small
+run: flights -> {
+  aggregate:
+    # number="#,##0"
+    total_flights is count()
+}
+>>>markdown
+
+### Duration
+
+Format numbers as human-readable durations:
+
+| Property | Description |
+|----------|-------------|
+| `# duration` | Default (seconds) |
+| `# duration=milliseconds` | Input is milliseconds |
+| `# duration.terse` | Abbreviated (s, m, h, d) |
+
+### Image
+
+Render string as image:
+
+```malloy
+dimension: product_image is image_url # image { height=50px }
+```
+
+### Link
+
+Render as hyperlink:
+
+```malloy
+dimension: product_page is name # link { url_template="https://example.com/$$" }
+```
+
+---
+
+## Utility Tags
+
+| Tag | Description | Example |
+|-----|-------------|---------|
+| `# hidden` | Hide field from display | `dimension: id # hidden` |
+| `# label` | Override display name | `measure: total # label="Total Sales"` |
+| `# tooltip` | Include in chart tooltip | `nest: details is { # tooltip ... }` |
+
+---
+
+## Theme Configuration
+
+Apply theme overrides at model level (`##`) or view level (`#`):
+
+```malloy
+## theme { tableBodyColor=blue }
+
+source: my_source is ... extend {
+  view: styled is {
+    # theme { tableRowHeight=40 }
+    select: *
+  }
+}
+```
+
+---
+
+## Legacy Renderer
+
+Use the older HTML renderer for an entire model:
+
+```malloy
+## renderer_legacy
+
+source: my_source is ...
+```

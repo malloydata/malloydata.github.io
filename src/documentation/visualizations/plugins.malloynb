@@ -1,0 +1,46 @@
+>>>markdown
+# Custom Renderer Plugins
+
+The Malloy Render plugin system lets you create custom visualizations for specific field types or data patterns.
+
+## Use Cases
+
+- Custom chart types not included in the standard renderer
+- Domain-specific visualizations (maps, diagrams, etc.)
+- Branded or styled components
+- Interactive visualizations with custom behavior
+
+## Getting Started
+
+Plugins can be built using SolidJS (recommended) or direct DOM manipulation. They match fields based on tags and field types.
+
+```typescript
+const MyPluginFactory: RenderPluginFactory = {
+  name: 'my_plugin',
+
+  matches: (field, fieldTag, fieldType) => fieldTag.has('my_plugin'),
+
+  create: (field) => ({
+    name: 'my_plugin',
+    field,
+    renderMode: 'solidjs',
+    sizingStrategy: 'fixed',
+    renderComponent: (props) => <div>{props.dataColumn.value}</div>,
+    getMetadata: () => ({ type: 'my_plugin' })
+  })
+};
+```
+
+Then tag fields in Malloy to use your plugin:
+
+```malloy
+source: data extend {
+  dimension: status # my_plugin
+}
+```
+
+## Documentation
+
+- [Plugin System Overview](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/plugin-system.md) - Architecture and concepts
+- [Plugin Quick Start](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/plugin-quick-start.md) - Minimal examples
+- [Plugin API Reference](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/plugin-api-reference.md) - Complete type definitions
