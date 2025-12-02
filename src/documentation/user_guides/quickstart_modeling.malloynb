@@ -19,7 +19,7 @@ source: carriers is duckdb.table('../data/carriers.parquet') extend {}
 
 That's it. You now have sources you can query.
 
-The example above uses DuckDB with local files. To connect to other databases (Postgres, BigQuery, Snowflake, etc.), see [Database Connections](../setup/database_connections.malloynb).
+The example above uses DuckDB with local files. To connect to other databases (Postgres, BigQuery, Snowflake, etc.), see [Database Support](../setup/database_support.malloynb).
 
 ---
 

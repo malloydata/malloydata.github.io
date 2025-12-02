@@ -21,15 +21,15 @@
       "title": "Setting up Malloy",
       "items": [
         {
-          "title": "Installing the VS Code Extension",
+          "title": "VS Code Extension",
           "link": "/setup/extension.malloynb"
         },
         {
-          "title": "Connecting Data",
-          "link": "/setup/database_connections.malloynb"
+          "title": "Database Support",
+          "link": "/setup/database_support.malloynb"
         },
         {
-          "title": "Installing the CLI",
+          "title": "Malloy CLI",
           "link": "/setup/cli.malloynb"
         }
       ]
@@ -73,6 +73,10 @@
             {
               "title": "Publish Your Models",
               "link": "/user_guides/publishing/publishing.malloynb"
+            },
+            {
+              "title": "Publisher Connections",
+              "link": "/user_guides/publishing/connections.malloynb"
             },
             {
               "title": "REST API",

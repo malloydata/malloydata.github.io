@@ -46,11 +46,22 @@ npx @malloy-publisher/server --server_root .
 The `--server_root` should point to the directory that **contains** your package folder(s), not the package itself.
 
 ```
-projects/              ← Run npx from HERE (--server_root .)
-└── my-analytics/      ← This is your package
+projects/                    ← Run npx from HERE (--server_root .)
+├── publisher.config.json    ← Server configuration
+└── my-analytics/            ← This is your package
     ├── publisher.json
     └── orders.malloy
 ```
+
+**Want to try it immediately?** Use malloy-samples:
+
+```bash
+git clone https://github.com/credibledata/malloy-samples.git
+cd malloy-samples
+npx @malloy-publisher/server --port 4000 --server_root .
+```
+
+Then open `http://localhost:4000` to explore the sample models.
 
 For alternative deployment methods (Docker, build from source), see [Deployment & Configuration](#deployment-configuration) below.
 
@@ -79,7 +90,20 @@ That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or
 }
 ```
 
-See [Database Connections](../../setup/database_connections.malloynb#publisher-configuration) for BigQuery, Snowflake, and other databases.
+See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and other databases.
+
+---
+
+## Package Locations
+
+Publisher can load packages from various sources:
+
+**Local Filesystem**
+- Relative paths: `./package`, `../package`, `~/package`
+- Absolute paths: `/absolute/path/to/package`
+
+**GitHub**
+- `https://github.com/owner/repo/tree/branch/package-path`
 
 ---
 
@@ -99,43 +123,6 @@ cd publisher
 bun install
 bun run build:server-deploy
 bun run start
-```
-
-### Multiple Environments
-
-Serve the same models against different databases per environment:
-
-```json
-{
-  "projects": [
-    {
-      "name": "staging",
-      "connections": {
-        "postgres": {
-          "type": "postgres",
-          "host": "staging-db.example.com",
-          "password": "<password>"
-        }
-      },
-      "packages": [
-        { "name": "analytics", "location": "./packages/analytics" }
-      ]
-    },
-    {
-      "name": "production",
-      "connections": {
-        "postgres": {
-          "type": "postgres",
-          "host": "prod-db.example.com",
-          "password": "<password>"
-        }
-      },
-      "packages": [
-        { "name": "analytics", "location": "./packages/analytics" }
-      ]
-    }
-  ]
-}
 ```
 
 ### Option 3: Docker

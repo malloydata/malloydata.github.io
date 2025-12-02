@@ -1,5 +1,5 @@
 >>>markdown
-# Installing the VS Code Extension
+# VS Code Extension
 
 The [Malloy VS Code Extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) is the primary authoring environment for Malloy models. It includes schema browsing, query execution, language auto-complete, documentation, and result visualizations.
 
@@ -19,11 +19,19 @@ The [Malloy VS Code Extension](https://marketplace.visualstudio.com/items?itemNa
 
 4. **Try the samples**: Clone the [malloy-samples](https://github.com/malloydata/malloy-samples) repository:
 
-   ```bash
-   git clone https://github.com/malloydata/malloy-samples.git
+   **Option A:** In VS Code, use **Clone Git Repository** from the Start screen and enter:
+   ```
+   https://github.com/malloydata/malloy-samples.git
    ```
 
-   In VS Code, go to **File > Open Folder** and select `malloy-samples/duckdb`. DuckDB is built into the extension, so you can run queries immediately.
+   **Option B:** From the command line:
+   ```bash
+   git clone https://github.com/malloydata/malloy-samples.git
+   cd malloy-samples
+   code .
+   ```
+
+   DuckDB is built into the extension, so you can run queries immediately—try opening any `.malloy` file in the `faa` or `ecommerce` folders.
 
 ---
 
@@ -35,8 +43,237 @@ The Malloy Extension also works in VS Code Web environments like github.dev. Pre
 
 ---
 
+## Configuring Connections
+
+Configure database connections through the VS Code command palette.
+
+### Adding Connections
+
+1. Open Command Palette: `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+2. Type: **Malloy: Edit Connections**
+3. Click **Add Connection** and select your database type
+4. Fill in the connection details
+
+### Where Connections Are Stored
+
+VS Code stores Malloy connections in your user settings:
+
+**Mac:** `~/Library/Application Support/Code/User/settings.json`
+**Windows:** `%APPDATA%\Code\User\settings.json`
+**Linux:** `~/.config/Code/User/settings.json`
+
+Example `settings.json` with Malloy connections:
+
+```json
+{
+  "malloy.connections": [
+    {
+      "name": "duckdb",
+      "backend": "duckdb",
+      "id": "duckdb-default"
+    },
+    {
+      "name": "md",
+      "backend": "duckdb",
+      "id": "motherduck-default",
+      "databasePath": "md:"
+    },
+    {
+      "name": "bigquery",
+      "backend": "bigquery",
+      "id": "bigquery-default",
+      "projectId": "my-gcp-project"
+    },
+    {
+      "name": "bq_service_account",
+      "backend": "bigquery",
+      "id": "bq-sa-connection",
+      "serviceAccountKeyPath": "/path/to/service-account-key.json",
+      "configKey": "serviceAccountKeyPath"
+    },
+    {
+      "name": "postgres",
+      "backend": "postgres",
+      "id": "postgres-default",
+      "host": "localhost",
+      "port": 5432,
+      "databaseName": "analytics",
+      "username": "analyst"
+    },
+    {
+      "name": "snowflake",
+      "backend": "snowflake",
+      "id": "snowflake-default",
+      "account": "myorg-myaccount",
+      "username": "analyst",
+      "warehouse": "compute_wh",
+      "database": "analytics"
+    }
+  ]
+}
+```
+
+---
+
+## Environment Variable Configuration
+
+Some databases support configuration via environment variables. Set these before launching VS Code.
+
+### MotherDuck
+
+MotherDuck is configured through a token. In MotherDuck, click **Settings** then copy your token.
+
+```bash
+export MOTHERDUCK_TOKEN=your_token_here
+```
+
+Then launch VS Code. The extension will automatically use the token when connecting to MotherDuck databases.
+
+**Example usage:**
+```malloy
+source: hacker_news is md.table('sample_data.hn.hacker_news')
+```
+
+The default connection name for MotherDuck is `md`.
+
+### MySQL
+
+MySQL connections are configured **only** through environment variables. There is no UI configuration for MySQL in VS Code.
+
+```bash
+export MYSQL_USER=readonly
+export MYSQL_HOST=db.example.com
+export MYSQL_PORT=3306
+export MYSQL_PASSWORD=your_password
+export MYSQL_DATABASE=analytics
+```
+
+Then launch VS Code. The default connection name is `mysql`.
+
+**Note:** `MYSQL_USER` is required. Other variables are optional but typically needed.
+
+### Snowflake
+
+Snowflake can be configured via UI or environment variables:
+
+```bash
+export SNOWFLAKE_ACCOUNT=myorg-myaccount   # Required
+export SNOWFLAKE_USER=analyst
+export SNOWFLAKE_PASSWORD=your_password
+export SNOWFLAKE_WAREHOUSE=compute_wh
+export SNOWFLAKE_DATABASE=analytics
+export SNOWFLAKE_SCHEMA=public
+```
+
+Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
+
+### Trino
+
+```bash
+export TRINO_SERVER=https://trino.example.com   # Required
+export TRINO_USER=analyst                        # Required
+export TRINO_PASSWORD=your_password
+export TRINO_CATALOG=hive
+export TRINO_SCHEMA=default
+```
+
+The default connection name is `trino`.
+
+### Presto
+
+```bash
+export PRESTO_HOST=presto.example.com   # Required
+export PRESTO_PORT=8080                 # Defaults to 8080
+export PRESTO_USER=analyst
+export PRESTO_PASSWORD=your_password
+export PRESTO_CATALOG=hive
+export PRESTO_SCHEMA=default
+```
+
+The default connection name is `presto`.
+
+### Databases Without Environment Variable Support
+
+- **BigQuery**: Uses `gcloud auth login --update-adc` (OAuth) or service account key file
+- **PostgreSQL**: Uses connection configuration in VS Code UI (credentials stored in system keychain)
+- **DuckDB**: Uses file paths directly, no authentication needed
+
+---
+
+## Database-Specific Setup
+
+### DuckDB
+
+DuckDB runs locally with zero configuration. It reads Parquet, CSV, and JSON files.
+
+```malloy
+// Local files (relative to .malloy file)
+source: flights is duckdb.table('data/flights.parquet')
+source: users is duckdb.table('../users.csv')
+
+// URLs
+source: remote_data is duckdb.table('https://example.com/data.parquet')
+```
+
+### MotherDuck
+
+Set your token as an environment variable before launching VS Code:
+
+```bash
+export MOTHERDUCK_TOKEN=your_token_here
+```
+
+Or configure via **Malloy: Edit Connections** with `databasePath` set to `md:`.
+
+### BigQuery
+
+**OAuth (recommended for development):**
+
+```bash
+gcloud auth login --update-adc
+gcloud config set project my-project-id --installation
+```
+
+Then add a BigQuery connection via **Malloy: Edit Connections**. Leave the service account field empty to use gcloud credentials.
+
+**Service account:**
+
+In **Malloy: Edit Connections**, click "Pick file" to select your service account JSON key.
+
+### Snowflake
+
+Both password and RSA key authentication are supported via **Malloy: Edit Connections**.
+
+You can also use Snowflake's `connections.toml` file:
+
+**Location:** `~/.snowflake/connections.toml`
+
+```toml
+[default]
+account = "myorg-myaccount"
+user = "analyst"
+password = "your_password"
+warehouse = "compute_wh"
+database = "analytics"
+schema = "public"
+```
+
+### PostgreSQL
+
+Add a PostgreSQL connection via **Malloy: Edit Connections**. Enter host, port, database, username, and password. The password is stored securely in your system keychain.
+
+### MySQL
+
+MySQL connections require environment variables (see above). The extension will detect the connection automatically when the variables are set.
+
+### Trino and Presto
+
+Add a Trino or Presto connection via **Malloy: Edit Connections**. Enter the server URL and port.
+
+---
+
 ## Next Steps
 
+- **[Database Support](database_support.malloynb)** — Overview of all supported databases
 - **[Query existing models](../user_guides/querying_a_model.malloynb)** — Explore the malloy-samples to see Malloy in action
-- **[Connect your data](database_connections.malloynb)** — Set up connections to BigQuery, Snowflake, PostgreSQL, and more
 - **[Build a semantic model](../user_guides/quickstart_modeling.malloynb)** — Create your first Malloy model from scratch

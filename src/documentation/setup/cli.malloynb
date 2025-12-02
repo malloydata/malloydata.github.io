@@ -28,6 +28,8 @@ malloy-cli --help
 
 The CLI stores its own configuration separately from VS Code in `~/.config/malloy/config.json`.
 
+**Note:** The CLI does not support environment variables for connection configuration. Use the CLI commands below to manage connections.
+
 ### Connection Commands
 
 ```bash
@@ -135,5 +137,6 @@ malloy-cli compile --help
 
 ## Next Steps
 
-- [Transform & Materialize](../user_guides/transform.malloynb) – Use the CLI with MalloySQL for data transformations
-- [malloy-cli GitHub](https://github.com/malloydata/malloy-cli)
+- **[Database Support](database_support.malloynb)** — Overview of all supported databases
+- **[Transform & Materialize](../user_guides/transform.malloynb)** — Use the CLI with MalloySQL for data transformations
+- [malloy-cli on GitHub](https://github.com/malloydata/malloy-cli)
