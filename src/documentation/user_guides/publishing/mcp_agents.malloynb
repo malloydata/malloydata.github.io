@@ -1,0 +1,173 @@
+>>>markdown
+# MCP for AI Agents
+
+Connect AI assistants to your Malloy semantic models using the Model Context Protocol (MCP). Publisher includes a built-in MCP server that exposes your models to AI agents.
+
+---
+
+## Quick Start
+
+This works for MCP clients that support HTTP endpoints directly.
+
+### 1. Start Publisher
+
+```bash
+npx @malloy-publisher/server --server_root /path/to/your/packages
+```
+
+The AI sees all packages under your `server_root` directory. The MCP server starts automatically at `http://localhost:4040/mcp`.
+
+For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
+
+### 2. Configure Your MCP Client
+
+```json
+{
+  "mcpServers": {
+    "malloy-publisher": {
+      "url": "http://localhost:4040/mcp"
+    }
+  }
+}
+```
+
+### 3. Start Asking Questions
+
+Once connected, try prompts like:
+- "What Malloy packages are available?"
+- "Show me the measures in the orders model"
+- "Query total revenue by month"
+
+---
+
+## Stdio Bridge (VS Code, Claude Desktop, etc.)
+
+Some MCP clients (VS Code, Claude Desktop) require stdio-based commands instead of HTTP. Use the bridge script to translate between protocols.
+
+### Prerequisites
+
+- Python 3.x installed
+- Malloy Publisher MCP Server running on `localhost:4040/mcp`
+
+### 1. Download the Bridge
+
+[Download malloy_bridge.py](https://github.com/malloydata/publisher/blob/main/packages/server/dxt/malloy_bridge.py)
+
+Save it somewhere accessible, for example: `~/malloy_bridge.py`
+
+### 2. Configure Your MCP Client
+
+Example configuration for VS Code (`settings.json` or `.vscode/mcp.json`):
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "malloy": {
+        "command": "python3",
+        "args": ["/full/path/to/malloy_bridge.py"]
+      }
+    }
+  }
+}
+```
+
+Replace `/full/path/to/malloy_bridge.py` with the actual path where you saved the bridge script.
+
+### Testing the Bridge
+
+Test the bridge script:
+
+```bash
+echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' | python3 /path/to/malloy_bridge.py
+```
+
+Check `/tmp/malloy_bridge.log` for debugging information.
+
+---
+
+## MCP Tools
+
+Publisher exposes these tools to AI agents:
+
+### Discovery
+
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `malloy_projectList` | — | List all available projects |
+| `malloy_packageList` | `projectName` | List packages in a project |
+| `malloy_packageGet` | `projectName`, `packageName` | Get models in a package |
+| `malloy_modelGetText` | `projectName`, `packageName`, `modelPath` | Get raw model source code |
+
+### Query Execution
+
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `malloy_executeQuery` | `projectName`, `packageName`, `modelPath`, `query` | Run a Malloy query, returns JSON results |
+
+---
+
+## Example Prompts
+
+Once connected, try these prompts:
+
+**Exploration:**
+- "Use Malloy to run an exploratory analysis on the FAA dataset"
+- "Help me understand the ecommerce data and create charts"
+
+**Specific queries:**
+- "How many flights were there by carrier last year?"
+- "What's the average order value by region?"
+
+**Analysis:**
+- "Why did revenue drop in March? Investigate by region and product."
+
+---
+
+## Best Practices for AI-Friendly Models
+
+### Use Descriptive Names
+
+```malloy
+// Good - AI understands intent
+measure: customer_lifetime_value is ...
+measure: monthly_recurring_revenue is ...
+
+// Bad - cryptic abbreviations
+measure: clv is ...
+measure: mrr is ...
+```
+
+### Add Annotations
+
+Use [tags](../../language/tags.malloynb) to add metadata that AI agents can read:
+
+```malloy
+source: orders is duckdb.table('orders.parquet') extend {
+  # "Revenue after discounts and returns"
+  measure: net_revenue is sum(amount - discount - returns)
+}
+```
+
+### Define Common Views
+
+Pre-built views guide AI toward valid queries:
+
+```malloy
+view: executive_summary is {
+  aggregate: total_revenue, order_count, customer_count
+}
+
+view: regional_breakdown is {
+  group_by: region
+  aggregate: total_revenue, order_count
+}
+```
+
+---
+
+## Resources
+
+- [MCP Demo Video](https://www.loom.com/share/fcc5112ac1ca4bf78bee0985f1cd31be)
+- [Model Context Protocol Spec](https://modelcontextprotocol.io/)
+- [Publisher GitHub](https://github.com/malloydata/publisher)

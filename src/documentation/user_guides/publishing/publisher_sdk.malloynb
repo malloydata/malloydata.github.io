@@ -1,0 +1,154 @@
+>>>markdown
+# Publisher SDK: Embed Analytics in React
+
+Build custom data applications with the Publisher SDK. Embed live, governed analytics from your Malloy models directly into React apps.
+
+---
+
+## Try the Example App
+
+The fastest way to understand the SDK is to run the example data app:
+
+```bash
+# Clone the publisher repo
+git clone https://github.com/malloydata/publisher.git
+cd publisher
+
+# Start the Publisher server
+npx @malloy-publisher/server --server_root ./malloy-samples
+
+# In a new terminal, run the example app
+cd examples/data-app
+cp .env.example .env
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) to see a working dashboard with embedded Malloy visualizations.
+
+The example app demonstrates:
+- **Malloy Samples Dashboard** – Pre-configured charts from the names dataset
+- **Single Embed** – Embedding a single query result
+- **Dynamic Dashboard** – Adding charts at runtime
+- **Interactive Dashboard** – Using raw data with custom Recharts visualizations
+
+---
+
+## Core Concepts
+
+The SDK has two fundamental building blocks. For complete documentation, see the [Publisher SDK README](https://github.com/malloydata/publisher/blob/main/packages/sdk/README.md).
+
+### 1. ServerProvider
+
+Wraps your app and connects to a Publisher server:
+
+```tsx
+import { ServerProvider } from "@malloy-publisher/sdk/client";
+import "@malloy-publisher/sdk/styles.css";
+
+function App() {
+  return (
+    <ServerProvider>
+      <YourDashboard />
+    </ServerProvider>
+  );
+}
+```
+
+By default, connects to `http://localhost:4000`. For production:
+
+```tsx
+<ServerProvider server="https://analytics.yourcompany.com/api/v0">
+  <YourDashboard />
+</ServerProvider>
+```
+
+### 2. EmbeddedQueryResult
+
+Renders a Malloy query result. The component picks the visualization automatically—tables for flat data, bar charts for single-dimension aggregates, or whatever [renderer tag](../../language/tags.malloynb) you specify in your model (e.g., `# line_chart`).
+
+```tsx
+import { EmbeddedQueryResult } from "@malloy-publisher/sdk";
+
+function MyChart() {
+  const embeddedQuery = JSON.stringify({
+    modelPath: "orders.malloy",
+    query: "run: orders -> { group_by: region; aggregate: total_revenue }",
+    optionalPackageName: "ecommerce",
+    optionalProjectName: "production"
+  });
+
+  return <EmbeddedQueryResult embeddedQueryResult={embeddedQuery} />;
+}
+```
+
+The `optionalPackageName` and `optionalProjectName` parameters are required when your Publisher serves multiple projects or packages—they tell the SDK which model to use.
+
+---
+
+## Installation
+
+```bash
+npm install @malloy-publisher/sdk
+```
+
+**Important**: Import the CSS styles in your app entry point:
+
+```tsx
+import "@malloy-publisher/sdk/styles.css";
+```
+
+---
+
+## Project Structure
+
+A typical SDK project structure:
+
+```
+my-data-app/
+├── src/
+│   ├── main.tsx           # App entry with ServerProvider
+│   ├── Dashboard.tsx      # Dashboard with EmbeddedQueryResult
+│   ├── constants/
+│   │   └── widgets.json   # Saved embed configurations
+│   └── components/
+│       └── CustomChart.tsx
+├── .env                   # VITE_PUBLISHER_API=http://localhost:4000
+├── package.json
+└── vite.config.ts
+```
+
+---
+
+## CORS Configuration
+
+If your React app runs on a different port/domain than Publisher, configure CORS or use a proxy.
+
+**Vite proxy example** (`vite.config.ts`):
+
+```ts
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
+    },
+  },
+});
+```
+
+Then use relative paths in ServerProvider:
+
+```tsx
+<ServerProvider server="/api/v0">
+```
+
+---
+
+## Next Steps
+
+- **[Example App Source](https://github.com/malloydata/publisher/tree/main/examples/data-app)** – Full working example
+- **[REST API](rest_api.malloynb)** – Direct HTTP integration
+- **[Explorer](explorer.malloynb)** – Build queries visually before embedding

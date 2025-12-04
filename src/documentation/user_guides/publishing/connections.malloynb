@@ -1,0 +1,320 @@
+>>>markdown
+# Publisher Connections
+
+Configure database connections for Malloy Publisher deployments. For an overview of supported databases, see [Database Support](../../setup/database_support.malloynb).
+
+---
+
+## Configuration File
+
+Publisher uses `publisher.config.json` for database connections. This file lives in your server root directory.
+
+**Important:** Publisher does not support environment variable substitution. Put actual credential values directly in the config file.
+
+### Basic Structure
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "connection_name": {
+          "type": "backend_type",
+          ...connection options...
+        }
+      },
+      "packages": [
+        {
+          "name": "my-package",
+          "location": "./my-package"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## DuckDB
+
+DuckDB can read data files bundled in your published package:
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "duckdb": {
+          "type": "duckdb",
+          "workingDirectory": "./data"
+        }
+      },
+      "packages": [
+        {
+          "name": "my-analytics",
+          "location": "./my-analytics"
+        }
+      ]
+    }
+  ]
+}
+```
+
+The `workingDirectory` sets the base path for file references. If your Malloy code references `'flights.parquet'`, it will look in the `./data` directory.
+
+---
+
+## MotherDuck
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "md": {
+          "type": "motherduck",
+          "token": "your_motherduck_token_here",
+          "database": "my_database"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+---
+
+## BigQuery
+
+**With service account (recommended for production):**
+
+Embed the service account JSON directly in the config:
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "bigquery": {
+          "type": "bigquery",
+          "defaultProjectId": "my-gcp-project",
+          "location": "US",
+          "serviceAccountKeyJson": "{\n  \"type\": \"service_account\",\n  \"project_id\": \"my-gcp-project\",\n  \"private_key_id\": \"abc123def456\",\n  \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBAD...your-key-here...\\n-----END PRIVATE KEY-----\\n\",\n  \"client_email\": \"malloy-publisher@my-gcp-project.iam.gserviceaccount.com\",\n  \"client_id\": \"123456789\",\n  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/malloy-publisher%40my-gcp-project.iam.gserviceaccount.com\",\n  \"universe_domain\": \"googleapis.com\"\n}"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**With gcloud auth (development only):**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "bigquery": {
+          "type": "bigquery",
+          "defaultProjectId": "my-gcp-project",
+          "location": "US"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+---
+
+## Snowflake
+
+**Password authentication:**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "snowflake": {
+          "type": "snowflake",
+          "account": "myorg-myaccount",
+          "username": "publisher_user",
+          "password": "your_password_here",
+          "warehouse": "compute_wh",
+          "database": "analytics",
+          "schema": "public"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**RSA private key authentication:**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "snowflake": {
+          "type": "snowflake",
+          "account": "myorg-myaccount",
+          "username": "publisher_user",
+          "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBAD...your-key-here...\n-----END PRIVATE KEY-----",
+          "privateKeyPassphrase": "your_passphrase_if_encrypted",
+          "warehouse": "compute_wh",
+          "database": "analytics"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+---
+
+## PostgreSQL
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "postgres": {
+          "type": "postgres",
+          "host": "db.example.com",
+          "port": 5432,
+          "database": "analytics",
+          "username": "publisher_readonly",
+          "password": "your_password_here"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+---
+
+## MySQL
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "mysql": {
+          "type": "mysql",
+          "host": "db.example.com",
+          "port": 3306,
+          "database": "analytics",
+          "user": "publisher_readonly",
+          "password": "your_password_here"
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+---
+
+## Trino and Presto
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": {
+        "trino": {
+          "type": "trino",
+          "server": "https://trino.example.com",
+          "port": 8443
+        }
+      },
+      "packages": [...]
+    }
+  ]
+}
+```
+
+For Presto, use `"type": "presto"` with the same configuration options.
+
+---
+
+## Multi-Environment Configuration
+
+You can configure multiple projects for different environments:
+
+```json
+{
+  "projects": [
+    {
+      "name": "staging",
+      "connections": {
+        "postgres": {
+          "type": "postgres",
+          "host": "staging-db.example.com",
+          "port": 5432,
+          "database": "analytics",
+          "username": "staging_user",
+          "password": "staging_password"
+        }
+      },
+      "packages": [
+        {
+          "name": "analytics",
+          "location": "./packages/analytics"
+        }
+      ]
+    },
+    {
+      "name": "production",
+      "connections": {
+        "postgres": {
+          "type": "postgres",
+          "host": "prod-db.example.com",
+          "port": 5432,
+          "database": "analytics",
+          "username": "prod_readonly",
+          "password": "prod_password"
+        }
+      },
+      "packages": [
+        {
+          "name": "analytics",
+          "location": "./packages/analytics"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Next Steps
+
+- **[Publish Your Models](publishing.malloynb)** — Deploy and run Publisher
+- **[Database Support](../../setup/database_support.malloynb)** — Overview of all supported databases
+- **[REST API](rest_api.malloynb)** — Access your models via API

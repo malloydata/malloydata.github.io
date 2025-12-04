@@ -1,0 +1,328 @@
+>>>markdown
+# Malloy for dbt Users
+
+This guide maps common dbt patterns to their Malloy equivalents, using the flights dataset.
+
+---
+
+## Staging Models
+
+In dbt, "staging models" are the first transformation layer—typically one model per source table, doing light cleanup like renaming columns or casting types. The rest of your project builds on these staged versions rather than referencing raw tables directly.
+In Malloy, there's no separate staging step. You define a source pointing at the raw table and add transformations inline. The source definition is your staging layer and source extensions allow you to build on the initial source. 
+
+**dbt:**
+
+```sql
+-- models/staging/stg_flights.sql
+select id2, origin, destination, carrier, distance, dep_time
+from \{{ source('raw', 'flights') }}
+```
+
+**Malloy:**
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet')
+>>>markdown
+
+For transformations at the source level, use `extend`:
+>>>malloy
+source: flights2 is duckdb.table('../data/flights.parquet') extend {
+  dimension:
+    flight_year is year(dep_time)
+    is_long_haul is distance > 1000
+}
+
+run: flights2 -> {
+  group_by: flight_year, is_long_haul
+  aggregate: flight_count is count()
+}
+>>>markdown
+
+### Type Casting
+
+Cast columns to the correct types inline:
+
+```malloy
+source: orders is duckdb.table('raw_orders.parquet') extend {
+  dimension:
+    order_id is id::number
+    order_date is raw_date::date
+    total_amount is amount::number
+}
+```
+
+---
+
+## Joins
+
+**dbt:**
+
+```sql
+select f.*, c.nickname as carrier_name
+from \{{ ref('stg_flights') }} f
+left join \{{ ref('stg_carriers') }} c on f.carrier = c.code
+```
+
+**Malloy:**
+>>>malloy
+source: carriers is duckdb.table('../data/carriers.parquet') extend {
+  primary_key: code
+}
+
+source: flights3 is duckdb.table('../data/flights.parquet') extend {
+  join_one: carriers with carrier
+}
+
+run: flights3 -> {
+  group_by: carriers.nickname
+  aggregate: flight_count is count()
+  limit: 5
+}
+>>>markdown
+
+`join_one` indicates a many-to-one relationship (one carrier per flight). Use `join_many` for one-to-many relationships.
+
+### Denormalizing Data
+
+To flatten joined data into a wide table, use `select: *` with joined fields:
+
+```malloy
+source: orders is duckdb.table('orders.parquet') extend {
+  join_one: customers with customer_id
+  join_one: products with product_id
+}
+
+run: orders -> {
+  select:
+    *
+    customers.customer_name
+    customers.region
+    products.product_name
+    products.category
+}
+```
+
+---
+
+## Reusable Transformations (Macros)
+
+**dbt:**
+
+```sql
+-- macros/distance_category.sql
+{% macro distance_category(column_name) %}
+  case
+    when \{{ column_name }} < 500 then 'short'
+    when \{{ column_name }} < 1500 then 'medium'
+    else 'long'
+  end
+{% endmacro %}
+
+-- models/flights.sql
+select \{{ distance_category('distance') }} as distance_category
+```
+
+**Malloy** uses `pick` expressions:
+>>>malloy
+source: flights4 is duckdb.table('../data/flights.parquet') extend {
+  dimension: distance_category is
+    pick 'short' when distance < 500
+    pick 'medium' when distance < 1500
+    else 'long'
+}
+
+run: flights4 -> {
+  group_by: distance_category
+  aggregate: flight_count is count()
+}
+>>>markdown
+
+---
+
+## Chained Transformations
+
+**dbt** requires CTEs when columns reference other computed columns:
+
+```sql
+with with_hour as (
+  select *, extract(hour from dep_time) as dep_hour
+  from flights
+),
+with_period as (
+  select *,
+    case
+      when dep_hour < 6 then 'red-eye'
+      when dep_hour < 12 then 'morning'
+      when dep_hour < 18 then 'afternoon'
+      else 'evening'
+    end as time_of_day
+  from with_hour
+)
+select * from with_period
+```
+
+**Malloy** dimensions can reference earlier dimensions directly:
+>>>malloy
+source: flights5 is duckdb.table('../data/flights.parquet') extend {
+  dimension:
+    dep_hour is hour(dep_time)
+    time_of_day is
+      pick 'red-eye' when dep_hour < 6
+      pick 'morning' when dep_hour < 12
+      pick 'afternoon' when dep_hour < 18
+      else 'evening'
+}
+
+run: flights5 -> {
+  group_by: time_of_day
+  aggregate: flight_count is count()
+}
+>>>markdown
+
+---
+
+## Aggregations
+
+**dbt:**
+
+```sql
+select
+  carrier,
+  count(*) as flight_count,
+  sum(distance) as total_distance,
+  avg(distance) as avg_distance
+from \{{ ref('flights') }}
+group by 1
+```
+
+**Malloy:**
+>>>malloy
+source: flights6 is duckdb.table('../data/flights.parquet') extend {
+  measure:
+    flight_count is count()
+    total_distance is sum(distance)
+    avg_distance is avg(distance)
+}
+
+run: flights6 -> {
+  group_by: carrier
+  aggregate: flight_count, total_distance, avg_distance
+  limit: 5
+}
+>>>markdown
+
+Measures are defined once and reused across queries.
+
+---
+
+## Documentation
+
+**dbt:**
+
+```yaml
+models:
+  - name: flights
+    description: "Flight records"
+    columns:
+      - name: distance
+        description: "Flight distance in miles"
+```
+
+**Malloy** uses tags for documentation:
+
+```malloy
+source: flights is duckdb.table('flights.parquet') extend {
+  # "Flight distance in miles"
+  dimension: distance
+}
+```
+
+---
+
+## Imports and Refs
+
+**dbt:**
+
+```sql
+from \{{ ref('stg_flights') }}
+```
+
+**Malloy:**
+
+```malloy
+import "staging/flights.malloy"
+
+source: flight_metrics is flights extend {
+  measure: on_time_rate is avg(pick 1 when dep_delay <= 0 else 0)
+}
+```
+
+---
+
+## Raw SQL
+
+For database-specific features not covered by Malloy:
+>>>malloy
+source: flight_sample is duckdb.sql("""
+  SELECT origin, destination, distance, dep_time
+  FROM '../data/flights.parquet'
+  WHERE distance > 2000
+  LIMIT 1000
+""") extend {
+  measure: flight_count is count()
+}
+
+run: flight_sample -> {
+  group_by: origin
+  aggregate: flight_count
+  limit: 5
+}
+>>>markdown
+
+---
+
+## Materialization
+
+To persist query results as tables, views, or files, use MalloySQL—which embeds Malloy queries in DDL:
+
+```sql
+-- connection:duckdb
+
+import "models/flights.malloy"
+
+CREATE TABLE daily_stats AS
+%{
+  flights -> {
+    group_by: dep_time.day
+    aggregate: flight_count, total_distance
+  }
+}%
+```
+
+See [Transform & Materialize](transform.malloynb) for full details on MalloySQL syntax, exports, and views.
+
+---
+
+## Running Queries
+
+**dbt:**
+
+```bash
+dbt compile
+dbt run --select flights
+```
+
+**Malloy:**
+
+```bash
+malloy-cli run models/flights.malloy --query summary
+malloy-cli compile models/flights.malloy --query summary  # SQL only
+```
+
+The VS Code extension runs queries directly with real-time error checking.
+
+---
+
+## Next Steps
+
+- **[Transform & Materialize](transform.malloynb)** - CLI setup and MalloySQL patterns
+- **[Quick Start: Modeling](quickstart_modeling.malloynb)** - Build your first semantic model
