@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Exploring Data With Only a Webserver</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-11-24-webserver-data/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="exploring-data-with-only-a-webserver" class="header-link anchor" href="#exploring-data-with-only-a-webserver">
+          Exploring Data With Only a Webserver
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-11-24-webserver-data/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Malloy Composer lets you build a web based data exploration experience by adding just 3 files to your data model.</p>
+<p><em>November 24, 2022 by lloyd tabb</em>
+<br/><br/><br/></p>
+
+      <h2>
+        <a id="-a-href-https-lloydtabb-github-io-babynames-default-try-it-first-a-" class="header-link anchor" href="#-a-href-https-lloydtabb-github-io-babynames-default-try-it-first-a-">
+          <a href="https://lloydtabb.github.io/babynames/#/default">Try it First.</a>
+        </a>
+      </h2>
+    <p>Believe it or not, the page <a href="https://lloydtabb.github.io/babynames/#/default?page=about">below runs</a> entirely in your web browser. The SQL database engine (DuckDB) is running in your browser. The Malloy compiler is running in your browser too. The <a href="https://github.com/lloydtabb/babynames">whole</a> application is built with <a href="https://github.com/lloydtabb/babynames/blob/main/names.malloy">200 lines of Malloy code</a>, a <a href="https://github.com/lloydtabb/babynames/blob/main/composer.json">config file</a>, a <a href="https://raw.githubusercontent.com/lloydtabb/babynames/main/names.md">markdown document</a> and a <a href="https://github.com/lloydtabb/babynames/blob/main/index.html">single html file</a>. Just look at the <a href="https://github.com/lloydtabb/babynames">repository on Github</a>.</p>
+<img src="baby-names.png"/><p><a href="https://lloydtabb.github.io/babynames/#/default">Try it!</a></p>
+<div class="title-row">
+        
+      <h1>
+        <a id="want-to-do-this-with-your-own-data-set-" class="header-link anchor" href="#want-to-do-this-with-your-own-data-set-">
+          Want to do this with your own data set?
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-11-24-webserver-data/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>It’s easy, just follow the three steps below.</p>
+
+      <h2>
+        <a id="step-1-build-a-malloy-data-model" class="header-link anchor" href="#step-1-build-a-malloy-data-model">
+          Step 1: Build a Malloy Data Model
+        </a>
+      </h2>
+    <p>Install VSCode and add the <a href="https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode">Malloy Extension</a>. Build and test your data model.</p>
+
+      <h2>
+        <a id="step-2-add-the-index-html-composer-json-and-names-md" class="header-link anchor" href="#step-2-add-the-index-html-composer-json-and-names-md">
+          Step 2: Add the index.html, composer.json and names.md
+        </a>
+      </h2>
+    <p>The file <code>index.html</code> shouldn’t need any modification. Edit the <code>composer.json</code> to point at your malloy file and the tables that it uses. Rename and edit the names file to have queries that are interesting to you.</p>
+
+      <h2>
+        <a id="step-3-serve-from-any-webserver" class="header-link anchor" href="#step-3-serve-from-any-webserver">
+          Step 3: Serve from any webserver
+        </a>
+      </h2>
+    <p>We use <a href="https://pages.github.com/">Github Pages</a> to serve the above example. Check in all your source code, turn on Github Pages and your whole repository is available from the web. Point a browser at the root and composer should be running.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                
+              </div>
+              <div class="item">
+                <a href="/blog//2022-11-25-composing-queries"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
