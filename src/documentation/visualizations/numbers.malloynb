@@ -77,6 +77,17 @@ run: flights -> {
 }
 >>>markdown
 
+## # number=big
+
+The `# number=big` renderer formats large numbers with abbreviated notation and a single decimal place for easier readability. Numbers are automatically scaled and labeled with the appropriate magnitude:
+
+- **K** for thousands (1,000)
+- **M** for millions (1,000,000)
+- **B** for billions (1,000,000,000)
+- **T** for trillions (1,000,000,000,000)
+- **Q** for quadrillions (1,000,000,000,000,000)
+>>>markdown
+
 ## Durations
 
 The `# duration` renderer interprets a value as a number of seconds and renders it as a human-adjusted duration. Other units can be specified like `# duration="minutes"`, with possible units of `"nanoseconds"`, `"microseconds"`, `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, and `"days"`.
@@ -93,3 +104,4 @@ run: flights -> {
   limit: 20
 }
 >>>markdown
+
