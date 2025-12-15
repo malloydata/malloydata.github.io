@@ -28,7 +28,7 @@ malloy-cli --help
 
 The CLI stores its own configuration separately from VS Code in `~/.config/malloy/config.json`.
 
-**Note:** The CLI does not support environment variables for connection configuration. Use the CLI commands below to manage connections.
+**Note:** The CLI does not support environment variables for connection configuration (except for MotherDuck, which can use `MOTHERDUCK_TOKEN`). Use the CLI commands below to manage connections.
 
 ### Connection Commands
 
@@ -58,7 +58,7 @@ malloy-cli connections create-bigquery <connection-name>
 # For Postgres
 malloy-cli connections create-postgres <connection-name>
 
-# For DuckDB
+# For DuckDB (or MotherDuck)
 malloy-cli connections create-duckdb <connection-name>
 ```
 
@@ -78,6 +78,13 @@ malloy-cli connections create-bigquery --help
 -m, --maximum-bytes-billed <bytes>    Limit bytes scanned
 ```
 
+**DuckDB options:**
+
+```
+    --database-path <database>        Path to DuckDB database file or MotherDuck database (e.g., "md:my_database")
+    --mother-duck-token <token>       MotherDuck API token (can also use MOTHERDUCK_TOKEN env var)
+```
+
 ### Default Connections
 
 Two connections are created automatically:
@@ -94,6 +101,37 @@ If you already use gCloud:
 ```bash
 gcloud auth login --update-adc
 malloy-cli connections create-bigquery my-bq
+```
+
+### MotherDuck
+
+MotherDuck connections use the `create-duckdb` command with special options. To connect to MotherDuck, you'll need an access token:
+
+1. Log in to MotherDuck and go to **Settings**
+2. Create and copy your access token
+3. Create the connection using `create-duckdb` with `--database-path` set to `md:` followed by your database name:
+
+**Using environment variable (recommended):**
+
+```bash
+export MOTHERDUCK_TOKEN="your_token_here"
+malloy-cli connections create-duckdb my-md --database-path "md:my_database"
+```
+
+**Using command-line flag:**
+
+```bash
+malloy-cli connections create-duckdb my-md \
+  --database-path "md:my_database" \
+  --mother-duck-token "your_token_here"
+```
+
+If you don't specify a database name, use `md:`:
+
+```bash
+malloy-cli connections create-duckdb my-md \
+  --database-path "md:" \
+  --mother-duck-token "your_token_here"
 ```
 
 ---
