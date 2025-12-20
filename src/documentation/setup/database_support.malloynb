@@ -87,9 +87,9 @@ Each database supports [Malloy Standard Functions](../language/functions.malloyn
 
 Each database has unique capabilities and limitations. See the dialect documentation for details:
 
-- [DuckDB](../language/dialect/duckdb.malloynb) - File-based queries, approximate counts
-- [BigQuery](../language/dialect/bigquery.malloynb) - HyperLogLog, approximate counts
-- [Snowflake](../language/dialect/snowflake.malloynb) - HyperLogLog, TOML credential file support
-- [PostgreSQL](../language/dialect/postgres.malloynb) - String aggregation extensions
-- [MySQL](../language/dialect/mysql.malloynb) - Boolean type workarounds
-- [Trino / Presto](../language/dialect/presto-trino.malloynb) - HyperLogLog, array operations
+- [DuckDB](../language/dialect/duckdb.malloynb) - File-based queries, approximate counts, full bigint precision
+- [BigQuery](../language/dialect/bigquery.malloynb) - HyperLogLog, approximate counts, full bigint precision
+- [Snowflake](../language/dialect/snowflake.malloynb) - HyperLogLog, TOML credential file support, full bigint precision
+- [PostgreSQL](../language/dialect/postgres.malloynb) - String aggregation extensions, limited bigint precision
+- [MySQL](../language/dialect/mysql.malloynb) - Boolean type workarounds, full bigint precision
+- [Trino / Presto](../language/dialect/presto-trino.malloynb) - HyperLogLog, array operations, limited bigint precision
