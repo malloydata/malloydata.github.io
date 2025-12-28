@@ -23,6 +23,28 @@ A measure is something you can say about the pile.  "How many objects?", "How mu
 
 Aggregating queries tell us things about datasets.  Lookup queries find things.
 
+### In Malloy Syntax
+
+**Lookup (Projection)** - use `select:` to return rows without aggregation:
+>>>malloy
+run: duckdb.table('../data/flights.parquet') -> {
+  select: origin, destination, carrier, dep_time
+  where: carrier = 'WN'
+  limit: 5
+}
+>>>markdown
+
+**Aggregating (Reduction)** - use `group_by:` and `aggregate:` to group and measure:
+>>>malloy
+run: duckdb.table('../data/flights.parquet') -> {
+  group_by: carrier
+  aggregate: flight_count is count()
+  limit: 5
+}
+>>>markdown
+
+> **For SQL users**: `select:` is like `SELECT ... WHERE` (no GROUP BY). `group_by:` + `aggregate:` is like `SELECT ... GROUP BY`.
+
 ## SQL World
 
 In the SQL world, the interface to your data is just that, data.  The data sits in *tables*.  Everytime, you ask a question (run a query), you need to restate all the things about the data: the calculations, the relationships between *tables*. The unit of reusability is a *table*. You can run a query that makes a new *table*. You can turn a query into a SQL View, which is basically a *table* based on a calculation.

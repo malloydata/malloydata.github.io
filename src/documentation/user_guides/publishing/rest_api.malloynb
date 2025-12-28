@@ -1,0 +1,102 @@
+>>>markdown
+# REST API
+
+Build custom applications that query your Malloy models via HTTP.
+
+> **Building a React app?** Use the [Publisher SDK](publisher_sdk.malloynb) instead—it wraps these APIs in ready-to-use components with automatic rendering.
+
+---
+
+## Explore the API
+
+Publisher includes an interactive Swagger UI at:
+
+```
+http://localhost:4000/api-doc.html
+```
+
+Use it to browse endpoints, see request/response schemas, and try API calls directly in your browser.
+
+Full OpenAPI specification: [api-doc.yaml](https://github.com/malloydata/publisher/blob/main/api-doc.yaml)
+
+---
+
+## What You Can Do
+
+The REST API lets you:
+
+| Capability | Description |
+|------------|-------------|
+| **Browse models** | List projects, packages, and models available on the server |
+| **Get model schema** | Retrieve sources, measures, dimensions, and views defined in a model |
+| **Execute queries** | Run Malloy queries and get JSON results |
+| **Explore databases** | List schemas, tables, and columns from connected databases |
+| **Check health** | Verify server status and initialization |
+
+---
+
+## Quick Example
+
+Run a query against a model:
+
+```bash
+curl -X POST "http://localhost:4000/api/v0/projects/my-project/packages/ecommerce/queryResults/orders.malloy" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "run: orders -> { aggregate: order_count, total_revenue }"}'
+```
+
+Response:
+
+```json
+{
+  "result": [
+    { "order_count": 12345, "total_revenue": 1234567.89 }
+  ]
+}
+```
+
+---
+
+## Common Patterns
+
+### Fetch and Display Data
+
+```javascript
+async function fetchMetrics() {
+  const response = await fetch(
+    'http://localhost:4000/api/v0/projects/prod/packages/analytics/queryResults/orders.malloy?query=' +
+    encodeURIComponent('run: orders -> { aggregate: total_revenue }')
+  );
+  const data = await response.json();
+  return data.result;
+}
+```
+
+### Use Pre-defined Views
+
+Instead of writing queries inline, reference views defined in your model:
+
+```javascript
+// Model has: view: monthly_summary is { ... }
+const query = 'run: orders -> monthly_summary';
+```
+
+This keeps business logic in the model, not scattered across API calls.
+
+---
+
+## When to Use REST vs SDK
+
+| Use REST API when... | Use [Publisher SDK](publisher_sdk.malloynb) when... |
+|---------------------|-----------------------------------------------------|
+| Building backend services | Building React frontends |
+| Non-JavaScript environments | Want automatic rendering |
+| Need full control over requests | Want pre-built components |
+| Integrating with existing systems | Rapid dashboard development |
+
+---
+
+## Next Steps
+
+- **[Publisher SDK](publisher_sdk.malloynb)** – React components for embedding analytics
+- **[MCP for AI Agents](mcp_agents.malloynb)** – Connect AI assistants to your models

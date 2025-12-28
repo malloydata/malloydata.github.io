@@ -3,6 +3,14 @@
 
 Malloy supports Presto and Trino databases with two dialects which are closely related.
 
+## Large Integer Precision
+
+The Malloy Presto and Trino connections use JSON intermediate results, which limits integer precision to JavaScript's safe integer range (±9,007,199,254,740,991). Integer values larger than this may lose precision in query results.
+
+If your data contains very large integers, consider:
+- Casting to string before returning from queries
+- Using DuckDB or BigQuery for full precision support
+
 # Functions
 
 ## Useful Functions not in the database function library

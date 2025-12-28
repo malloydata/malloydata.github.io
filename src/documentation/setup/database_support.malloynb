@@ -1,0 +1,95 @@
+>>>markdown
+# Database Support
+
+Malloy connects to a variety of databases. This page provides an overview of supported databases and links to platform-specific setup guides.
+
+## Supported Databases
+
+| Database | Backend Type | Notes |
+|----------|--------------|-------|
+| [DuckDB](../language/dialect/duckdb.malloynb) | `duckdb` | Built-in, no setup required. Reads Parquet, CSV, JSON files |
+| [MotherDuck](../language/dialect/duckdb.malloynb) | `duckdb` | Cloud-hosted DuckDB |
+| [BigQuery](../language/dialect/bigquery.malloynb) | `bigquery` | OAuth or service account authentication |
+| [Snowflake](../language/dialect/snowflake.malloynb) | `snowflake` | Password or RSA key authentication |
+| [PostgreSQL](../language/dialect/postgres.malloynb) | `postgres` | Standard credentials |
+| [MySQL](../language/dialect/mysql.malloynb) | `mysql` | Environment variables only (VS Code) |
+| [Trino / Presto](../language/dialect/presto-trino.malloynb) | `trino` / `presto` | Server URL + optional auth |
+
+---
+
+## Platform-Specific Setup
+
+Configure database connections based on how you're using Malloy:
+
+| Platform | Guide | Notes |
+|----------|-------|-------|
+| **VS Code Extension** | [VS Code Extension](extension.malloynb) | Interactive development with UI configuration and environment variables |
+| **Malloy CLI** | [Malloy CLI](cli.malloynb) | Command-line interface with config file |
+| **Publisher** | [Publisher Connections](../user_guides/publishing/connections.malloynb) | Deployment with `publisher.config.json` |
+
+---
+
+## Connection Basics
+
+In Malloy, you reference data using `connection_name.table('path')`:
+
+```malloy
+source: flights is duckdb.table('data/flights.parquet')
+source: orders is bigquery.table('my-project.analytics.orders')
+source: users is postgres.table('public.users')
+```
+
+The connection name (e.g., `duckdb`, `bigquery`, `postgres`) maps to a configured connection. You can name connections whatever you want—they don't need to match the database type:
+
+```malloy
+// Using a custom connection name
+source: orders is my_warehouse.table('analytics.orders')
+```
+
+### Connection Methods
+
+**`.table()`** - Reference a table or view:
+```malloy
+source: flights is duckdb.table('flights.parquet')
+source: users is bigquery.table('my-project.analytics.users')
+```
+
+**`.sql()`** - Define a source from a SQL query:
+```malloy
+source: recent_orders is postgres.sql("""
+  SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '30 days'
+""")
+```
+
+See [SQL Sources](../language/sql_sources.malloynb) for more details.
+
+---
+
+## Database Functions Reference
+
+Each database supports [Malloy Standard Functions](../language/functions.malloynb) plus database-specific functions. Consult the database documentation for available functions:
+
+| Database | Function Reference |
+|----------|-------------------|
+| DuckDB | [DuckDB Functions](https://duckdb.org/docs/sql/functions/overview) |
+| BigQuery | [BigQuery Functions](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators) |
+| Snowflake | [Snowflake Functions](https://docs.snowflake.com/en/sql-reference-functions) |
+| PostgreSQL | [PostgreSQL Functions](https://www.postgresql.org/docs/current/functions.html) |
+| MySQL | [MySQL Functions](https://dev.mysql.com/doc/refman/8.0/en/functions.html) |
+| Trino | [Trino Functions](https://trino.io/docs/current/functions.html) |
+| Presto | [Presto Functions](https://prestodb.io/docs/current/functions.html) |
+
+**HyperLogLog Support:** BigQuery, Snowflake, and Trino/Presto support [HyperLogLog](../language/hyperloglog.malloynb) for efficient cardinality estimation.
+
+---
+
+## Dialect-Specific Features
+
+Each database has unique capabilities and limitations. See the dialect documentation for details:
+
+- [DuckDB](../language/dialect/duckdb.malloynb) - File-based queries, approximate counts, full bigint precision
+- [BigQuery](../language/dialect/bigquery.malloynb) - HyperLogLog, approximate counts, full bigint precision
+- [Snowflake](../language/dialect/snowflake.malloynb) - HyperLogLog, TOML credential file support, full bigint precision
+- [PostgreSQL](../language/dialect/postgres.malloynb) - String aggregation extensions, limited bigint precision
+- [MySQL](../language/dialect/mysql.malloynb) - Boolean type workarounds, full bigint precision
+- [Trino / Presto](../language/dialect/presto-trino.malloynb) - HyperLogLog, array operations, limited bigint precision

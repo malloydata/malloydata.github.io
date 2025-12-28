@@ -1,0 +1,201 @@
+>>>markdown
+# Publish Your Models
+
+Publisher serves Malloy models through APIs—for tools, applications, and AI agents.
+
+Once published, your models can be accessed via:
+
+- **Web UI** at `localhost:4000` – Browse and query models in your browser
+- **[REST API](rest_api.malloynb)** at `localhost:4000/api/...` – Build custom applications
+- **[Publisher SDK](publisher_sdk.malloynb)** – Embed analytics in React apps
+- **[MCP](mcp_agents.malloynb)** at `localhost:4040` – Connect Claude and other AI assistants
+
+---
+
+## Quick Start
+
+### 1. Create a Package
+
+A package is a directory with your models and a manifest:
+
+```
+my-analytics/
+├── publisher.json       # Package manifest
+├── orders.malloy        # Your semantic model
+└── data/               # Optional: local data files
+```
+
+Create `publisher.json`:
+
+```json
+{
+  "name": "my-analytics",
+  "version": "1.0.0",
+  "description": "Order analytics semantic models"
+}
+```
+
+### 2. Start Publisher
+
+Navigate to the **parent directory** (the folder containing `my-analytics/`), then run:
+
+```bash
+npx @malloy-publisher/server --server_root .
+```
+
+The `--server_root` should point to the directory that **contains** your package folder(s), not the package itself.
+
+```
+projects/                    ← Run npx from HERE (--server_root .)
+├── publisher.config.json    ← Server configuration
+└── my-analytics/            ← This is your package
+    ├── publisher.json
+    └── orders.malloy
+```
+
+**Want to try it immediately?** Use malloy-samples:
+
+```bash
+git clone https://github.com/credibledata/malloy-samples.git
+cd malloy-samples
+npx @malloy-publisher/server --port 4000 --server_root .
+```
+
+Then open `http://localhost:4000` to explore the sample models.
+
+For alternative deployment methods (Docker, build from source), see [Deployment & Configuration](#deployment-configuration) below.
+
+### 3. Open Browser
+
+Go to `http://localhost:4000` to browse and query your models.
+
+That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or `.json` files, you're done.
+
+**Note:** If you edit a `.malloy` file while Publisher is running, you'll need to restart it to pick up changes.
+
+**Want to connect to a database?** Create `publisher.config.json` in the same directory:
+
+```json
+{
+  "connections": {
+    "my_postgres": {
+      "type": "postgres",
+      "host": "localhost",
+      "port": 5432,
+      "database": "analytics",
+      "user": "malloy",
+      "password": "<password>"
+    }
+  }
+}
+```
+
+See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and other databases.
+
+---
+
+## Package Locations
+
+Publisher can load packages from various sources:
+
+**Local Filesystem**
+- Relative paths: `./package`, `../package`, `~/package`
+- Absolute paths: `/absolute/path/to/package`
+
+**GitHub**
+- `https://github.com/owner/repo/tree/branch/package-path`
+
+---
+
+## Deployment & Configuration
+
+### Option 1: npx (Quickest)
+
+```bash
+npx @malloy-publisher/server --server_root ./my-packages
+```
+
+### Option 2: Build from Source
+
+```bash
+git clone https://github.com/malloydata/publisher.git
+cd publisher
+bun install
+bun run build:server-deploy
+bun run start
+```
+
+### Option 3: Docker
+
+Mount your config and packages into the container:
+
+```bash
+docker run -p 4000:4000 \
+  -v ./publisher.config.json:/publisher/publisher.config.json \
+  -v ./packages:/publisher/packages \
+  malloydata/publisher
+```
+
+### Docker Compose
+
+```yaml
+version: '3.8'
+
+services:
+  publisher:
+    image: malloydata/publisher
+    ports:
+      - "4000:4000"
+      - "4040:4040"  # MCP endpoint for AI agents
+    volumes:
+      - ./publisher.config.json:/publisher/publisher.config.json
+      - ./packages:/publisher/packages
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+```
+
+---
+
+## Verify It Works
+
+### Health Check
+
+```bash
+curl http://localhost:4000/status
+```
+
+### List Projects
+
+```bash
+curl http://localhost:4000/api/v1/projects
+```
+
+See the [REST API](rest_api.malloynb) documentation for all available endpoints.
+
+### Test in Browser
+
+1. Open `http://localhost:4000`
+2. Click your package
+3. Click a model
+4. Click **Explore**
+5. Add a dimension and measure
+6. Run query
+
+---
+
+## Next Steps
+
+Your models are published. Build consumption experiences:
+
+- **[Explorer UI](explorer.malloynb)** – Visual query builder
+- **[REST API](rest_api.malloynb)** – Build custom applications
+- **[Publisher SDK](publisher_sdk.malloynb)** – Embed analytics in React apps
+- **[MCP for AI Agents](mcp_agents.malloynb)** – Connect AI assistants
+
+**Resources:**
+- [Publisher GitHub](https://github.com/malloydata/publisher)
+- [OpenAPI Spec](https://github.com/malloydata/publisher/blob/main/api-doc.yaml)

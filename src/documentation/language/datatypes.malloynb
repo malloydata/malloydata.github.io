@@ -7,9 +7,20 @@ Malloy does have a set of data types and there is a mapping between the types of
 
 ## Number
 
-An engine will have a large variety of storage formats for numeric data. Malloy doesn't distinguish between these, and simply folds them all into one type, `number`.
+Malloy has a single `number` type that encompasses all numeric data from the underlying database. Internally, Malloy tracks three subtypes to optimize display and prevent precision loss:
 
-Although Malloy can use columns of any numberic type, there is no way to write a pure Malloy query to generate columns in a specific engine type.
+- **integer** - Whole numbers within JavaScript's safe integer range (±9,007,199,254,740,991)
+- **bigint** - Large integers that exceed the safe range but fit in 64-bit or larger integer types
+- **float** - Decimal numbers
+
+This distinction is mostly invisible to users, but affects:
+- **Arithmetic**: Operations like `bigint + integer` produce `bigint`; division always produces `float`
+- **Display**: The renderer uses the appropriate format for the number subtype
+- **Precision**: Some databases may lose precision for very large integers (see below)
+
+### Database Precision Limitations
+
+The Malloy connections for PostgreSQL, Presto, and Trino use JSON intermediate results, which cannot represent integers larger than JavaScript's safe integer limit. On these databases, very large integer values may lose precision in query results. DuckDB, BigQuery, Snowflake, and MySQL preserve full integer precision.
 
 ### Numeric Literals
 

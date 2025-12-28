@@ -1,6 +1,10 @@
 >>>markdown
 # PostgreSQL
 
+## Large Integer Precision
+
+The Malloy PostgreSQL connection uses JSON intermediate results, which limits integer precision to JavaScript's safe integer range (±9,007,199,254,740,991). Integer values larger than this may lose precision in query results.
+
 # Functions
 
 ## Useful Functions not in the database function library

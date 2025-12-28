@@ -36,3 +36,14 @@ In Postgres, the string passed to the `.table()` connection method can be a two-
 ## SQL Connection Method
 
 The `.sql()` connection method is used to define a source or query based on a SQL query. See the [SQL Sources](./sql_sources.malloynb) section for more information.
+
+---
+
+## Configuring Connections
+
+For information on configuring database connections for your environment, see:
+
+- **[Database Support](../setup/database_support.malloynb)** — Overview of supported databases
+- **[VS Code Extension](../setup/extension.malloynb)** — Configure connections in VS Code
+- **[Malloy CLI](../setup/cli.malloynb)** — Configure connections for the CLI
+- **[Publisher Connections](../user_guides/publishing/connections.malloynb)** — Configure connections for Publisher

@@ -1,0 +1,280 @@
+>>>markdown
+# Troubleshooting
+
+Jump to the section that matches your symptom:
+
+| Symptom | Problem |
+|---------|---------|
+| Row count multiplied after join | [Non-Unique Join Key](#problem-1-non-unique-join-key) |
+| Aggregates inflated 10x | [Grain Mismatch](#problem-2-grain-mismatch) |
+| Query takes minutes | [Slow Query](#problem-3-slow-query) |
+| Reference to undefined object | [Circular References](#problem-4-circular-references) |
+| Date filter syntax questions | [Date Arithmetic](#problem-5-date-arithmetic) |
+| Can't reference joined field in join | [Multi-hop Joins](#problem-6-multi-hop-joins) |
+| "Field 'x' not found in source 'y'" | [Common Errors](#common-error-messages) |
+
+---
+
+## Problem 1: Non-Unique Join Key
+
+### Symptoms
+- Query returns 500,000 rows when you expect 50,000
+- Aggregates are 10x larger than expected
+- Single row multiplies into many after join
+
+### Diagnosis
+
+**Test join cardinality:**
+>>>malloy
+source: airports_p1 is duckdb.table('../data/airports.parquet') extend {
+  primary_key: code
+}
+
+source: flights_p1 is duckdb.table('../data/flights.parquet') extend {
+  join_one: airports_p1 with origin
+}
+
+run: flights_p1 -> {
+  where: id2 = 30272525  // ONE row
+  aggregate:
+    source_count is count()
+    joined_count is airports_p1.count()
+// If source_count=1 and joined_count=1, your join is correct
+}
+>>>markdown
+
+If `joined_count > source_count` for a `join_one`, your join key isn't unique.
+
+### The Problem
+
+Your join key doesn't uniquely identify rows in the target table. Consider a flight segments table where each flight can have multiple segments (legs):
+
+```malloy
+// WRONG - flight_segments keyed by (flight_id + segment_number)
+join_one: flight_segments on id2 = flight_segments.flight_id
+// One flight matches multiple segment rows → fan-out
+
+// CORRECT - include all keys that form the unique identifier
+join_one: flight_segments on id2 = flight_segments.flight_id
+                          and segment_num = flight_segments.segment_number
+```
+
+### Fix
+
+1. Identify the primary key of the table you're joining to
+2. Include ALL columns that form that key in your join condition
+3. Re-test cardinality using the diagnostic query above
+
+---
+
+## Problem 2: Grain Mismatch
+
+### Symptoms
+- Joining a daily/monthly summary table to raw transaction data
+- Every row gets the same aggregated value
+- Totals are wildly inflated
+
+### The Problem
+
+You have two tables at different granularity:
+- **Raw table**: One row per event (e.g., every flight, every order)
+- **Aggregated table**: One row per time period (e.g., daily totals, monthly stats)
+
+When you join them, every raw row matches the same summary row. Here, we join carrier-level stats to raw flights, then group by origin—each AA flight adds AA's entire total, each UA flight adds UA's total, etc:
+>>>malloy
+source: carrier_stats is duckdb.sql("""
+  SELECT carrier, COUNT(*) as carrier_total
+  FROM '../data/flights.parquet'
+  GROUP BY carrier
+""")
+
+source: flights_p2 is duckdb.table('../data/flights.parquet') extend {
+  join_one: carrier_stats on carrier = carrier_stats.carrier
+}
+
+// WRONG: grouping by origin but summing carrier totals
+run: flights_p2 -> {
+  group_by: origin
+  aggregate:
+    actual_flights is count()
+    wrong_total is carrier_stats.carrier_total.sum()
+  limit: 5
+}
+>>>markdown
+
+### Fix
+
+**Don't join aggregated tables to raw tables.** Query them independently—use the raw table for granular questions and compute aggregations directly from it.
+
+---
+
+## Problem 3: Slow Query
+
+### Symptoms
+- Queries take minutes instead of seconds
+- Timeouts on large datasets
+
+### Fix
+
+**Option 0: Check your join cardinality**
+
+Join fan-out is a common cause of slow queries. If a `join_one` isn't actually one-to-one, your dataset explodes silently. See [Non-Unique Join Key](#problem-1-non-unique-join-key) to diagnose.
+
+**Option 1: Add filters to reduce data scanned**
+```malloy
+run: flights -> {
+  where: dep_time ? @2003  // Filter to one year
+  aggregate: flight_count
+}
+```
+
+**Option 2: Materialize a view of the data**
+
+If the same aggregation is queried repeatedly—across dashboards, by multiple users, or by LLM agents—pre-aggregate your data using MalloySQL:
+
+```sql
+-- connection:duckdb
+import "models/flights.malloy"
+
+CREATE TABLE monthly_stats AS
+%{
+  flights -> {
+    group_by: dep_time.month
+    aggregate: flight_count, total_distance
+  }
+}%
+```
+
+Then model against the materialized table for faster queries.
+
+See [Transform & Materialize](transform.malloynb) for details on materializing views with the Malloy CLI.
+
+---
+
+## Problem 4: Circular References
+
+### Symptoms
+- Can't define two sources that each join to the other
+
+### The Problem
+
+Malloy compiles linearly. You can't define `orders` joining to `customers` while `customers` also joins to `orders`—the second source doesn't exist yet when the first is compiled.
+
+### Fix
+
+Define base sources first, then extend them with joins. For cyclical relationships, add a third pass:
+
+```malloy
+// Base sources
+source: _orders is duckdb.table('orders') extend { ... }
+source: _customers is duckdb.table('customers') extend { ... }
+
+// Modeled sources with one direction of joins
+source: orders_modeled is _orders extend {
+  join_one: customer is _customers on customer_id = customer.id
+}
+
+source: customers_modeled is _customers extend { ... }
+
+// Final sources with cyclical joins added
+source: customers is customers_modeled extend {
+  join_many: orders is orders_modeled on id = orders.customer_id
+}
+```
+
+---
+
+## Problem 5: Date Arithmetic
+
+### Symptoms
+- "How do I filter to the last 30 days?"
+- "How do I do `current_date - interval '50 days'`?"
+
+### Fix
+
+Use Malloy's time literals and ranges:
+
+```malloy
+run: events -> {
+  // Last 30 days
+  where: event_date > @now - 30 days
+
+  // Specific range
+  where: event_date ? @2024-01-01 to @2024-03-31
+
+  // Last complete month
+  where: event_date ? @now.month - 1 month
+
+  aggregate: event_count is count()
+}
+```
+
+See [Timestamp Operations](../language/timestamp-operations.malloynb) for more patterns.
+
+---
+
+## Problem 6: Multi-hop Joins
+
+### Symptoms
+- Need to join A to C through intermediate table B
+- "Cannot reference joined_table.joined_field in join condition"
+
+### The Problem
+
+You can't reference a joined table's fields in another join condition:
+
+```malloy
+// This doesn't work
+source: orders is duckdb.table('orders') extend {
+  join_one: customers with customer_id
+  // Can't use customers.region in this join condition
+  join_one: shipments on shipments.region = customers.region
+}
+```
+
+### Fix
+
+**Option 1: Flatten the join path**
+
+Join directly if possible:
+
+```malloy
+source: orders is duckdb.table('orders') extend {
+  join_one: customers with customer_id
+  join_one: shipments with shipment_id  // Direct join
+}
+```
+
+**Option 2: Denormalize in SQL source**
+
+```malloy
+source: orders_with_region is duckdb.sql("""
+  SELECT o.*, c.region
+  FROM orders o
+  JOIN customers c ON o.customer_id = c.customer_id
+""") extend {
+  join_one: shipments on region = shipments.region
+}
+```
+
+Note: Denormalization trades off the semantic relationship. If `customers.region` changes in the source table, the denormalized source won't reflect it until you rebuild the SQL query.
+
+**Option 3: Use separate sources**
+
+If you need different join paths for different questions, create purpose-specific sources rather than one uber-source.
+
+---
+
+## Common Error Messages
+
+Quick reference for error strings and their likely causes:
+
+| Error Message | Likely Cause | Solution |
+|---------------|--------------|----------|
+| `Field 'x' not found in source 'y'` | Typo in field name, or missing import | Check spelling; verify the import includes the source |
+| `Cannot use aggregate in dimension` | Using a measure where a dimension is expected | Define as `measure:` not `dimension:`, or move to an `aggregate:` block |
+| `Reference to undefined object` | Circular references | See [Circular References](#problem-4-circular-references) |
+| `Source 'x' not found` | Missing import statement | Add `import "path/to/file.malloy"` |
+| `Cannot join on expression` | Using a joined field in another join condition | See [Multi-hop Joins](#problem-6-multi-hop-joins) |
+| `Primary key required for join` | Missing `primary_key` declaration on joined source | Add `primary_key: field_name` to the target source |
+| Syntax error on `year`, `date`, `timestamp` | Using a reserved word as field name | Use backticks: `` `year` ``, `` `date` ``, `` `timestamp` `` |
