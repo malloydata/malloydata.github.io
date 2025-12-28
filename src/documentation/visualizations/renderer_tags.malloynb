@@ -103,6 +103,200 @@ run: flights -> {
 
 ---
 
+## Embedded Field Tags
+
+Tag fields directly to control chart axis mapping, overriding automatic inference.
+
+### `# x` - X-Axis Field
+
+Mark a dimension for the X-axis:
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  # x
+  group_by: carrier
+  aggregate: flight_count
+  limit: 10
+}
+>>>markdown
+
+### `# y` - Y-Axis Field(s)
+
+Mark aggregates for the Y-axis. Multiple `# y` fields create a measure series:
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  group_by: carrier
+  # y
+  aggregate: flight_count
+  # y
+  aggregate: total_distance is distance.sum() / 1000000
+  limit: 10
+}
+>>>markdown
+
+### `# series` - Series Grouping
+
+Mark a dimension for series grouping (different colors):
+>>>malloy
+#(docs) size=large
+# line_chart { series.limit=5 }
+run: flights -> {
+  # x
+  group_by: dep_time.month
+  # series
+  group_by: carrier
+  aggregate: flight_count
+  order_by: 1
+}
+>>>markdown
+
+---
+
+## Advanced Chart Features
+
+### Understanding Axis Independence
+
+By default, nested charts **share axes** when there are ≤20 unique values. This helps compare across charts.
+
+**Shared axes (default):** All nested charts use the same scale:
+>>>malloy
+#(docs) size=large
+run: flights -> {
+  group_by: origin
+  aggregate: flight_count
+  # bar_chart
+  nest: by_carrier is {
+    group_by: carrier
+    aggregate: flight_count
+    limit: 5
+  }
+  limit: 3
+}
+>>>markdown
+
+**Independent axes:** Each nested chart scales to its own data:
+>>>malloy
+#(docs) size=large
+run: flights -> {
+  group_by: origin
+  aggregate: flight_count
+  # bar_chart { y.independent }
+  nest: by_carrier is {
+    group_by: carrier
+    aggregate: flight_count
+    limit: 5
+  }
+  limit: 3
+}
+>>>markdown
+
+### Dimension Series vs Measure Series
+
+**Dimension Series:** A second dimension creates grouped or stacked bars:
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  where: origin ? 'SFO' | 'LAX' | 'JFK'
+  group_by: carrier, origin
+  aggregate: flight_count
+  limit: 30
+}
+>>>markdown
+
+**Measure Series:** Multiple `# y` aggregates create series from different measures:
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  group_by: carrier
+  # y
+  aggregate: flight_count
+  # y
+  aggregate: total_distance is distance.sum() / 1000000
+  limit: 10
+}
+>>>markdown
+
+### Sparklines
+
+Use `size="spark"` for compact inline charts:
+>>>malloy
+#(docs) size=large
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  # bar_chart size="spark"
+  nest: trend is {
+    group_by: dep_time.month
+    aggregate: flight_count
+    order_by: 1
+    limit: 12
+  }
+  limit: 5
+}
+>>>markdown
+
+### Handling Many Lines
+
+Use `series.limit` to show only the top N series by total Y-value:
+>>>malloy
+#(docs) size=large
+# line_chart { series.limit=5 }
+run: flights -> {
+  # x
+  group_by: dep_time.month
+  # series
+  group_by: carrier
+  aggregate: flight_count
+  order_by: 1
+}
+>>>markdown
+
+---
+
+## Tooltip Interactions
+
+Tooltips can contain simple values, nested tables, or nested charts.
+
+### Simple Value Tooltips
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  # tooltip
+  aggregate: total_distance is distance.sum()
+  limit: 10
+}
+>>>markdown
+
+### Chart Tooltips
+
+Add `# tooltip` with a chart tag to show mini-charts on hover:
+>>>malloy
+#(docs) size=large
+# bar_chart
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  # tooltip bar_chart.size=xs
+  nest: by_month is {
+    group_by: dep_time.month
+    aggregate: flight_count
+    order_by: 1
+    limit: 6
+  }
+  limit: 10
+}
+>>>markdown
+
+---
+
 ## Layout Tags
 
 ### Dashboard
@@ -222,6 +416,29 @@ run: duckdb.table('../data/order_items.parquet') -> {
 }
 >>>markdown
 
+#### Currency Scaling
+
+Scale large currency values for readability:
+>>>malloy
+#(docs) size=small
+run: duckdb.table('../data/order_items.parquet') -> {
+  aggregate:
+    # currency { scale=thousands }
+    sales_k is sale_price.sum()
+    # currency { scale=millions decimals=2 }
+    sales_m is sale_price.sum()
+    # currency { scale=thousands no_suffix }
+    sales_raw is sale_price.sum()
+}
+>>>markdown
+
+| Property | Description |
+|----------|-------------|
+| `scale=thousands` | Divide by 1000, add "K" suffix |
+| `scale=millions` | Divide by 1M, add "M" suffix |
+| `decimals=2` | Control decimal places |
+| `no_suffix` | Show scaled number without suffix |
+
 ### Percent
 >>>malloy
 #(docs) size=small
@@ -282,6 +499,23 @@ dimension: product_page is name # link { url_template="https://example.com/$$" }
 | `# hidden` | Hide field from display | `dimension: id # hidden` |
 | `# label` | Override display name | `measure: total # label="Total Sales"` |
 | `# tooltip` | Include in chart tooltip | `nest: details is { # tooltip ... }` |
+
+### Label Limitations
+
+`# label` overrides display names for:
+- Table column headers ✓
+- Dashboard card titles ✓
+
+**Note:** `# label` does **not** work for chart axis labels. For chart titles, use the `.title` and `.subtitle` properties:
+>>>malloy
+#(docs) size=large
+# bar_chart { title='Custom Title' subtitle='With subtitle' }
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count
+  limit: 5
+}
+>>>markdown
 
 ---
 
