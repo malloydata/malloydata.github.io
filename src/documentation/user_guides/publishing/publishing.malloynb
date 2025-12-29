@@ -187,6 +187,59 @@ See the [REST API](rest_api.malloynb) documentation for all available endpoints.
 
 ---
 
+## State Persistence
+
+Publisher persists configuration changes in a local DuckDB database (`publisher.db`). This means changes made via the REST API—adding projects, packages, or connections—survive server restarts.
+
+### How It Works
+
+1. **First start**: Publisher reads `publisher.config.json` and syncs it to `publisher.db`
+2. **Subsequent starts**: Publisher loads from the database, ignoring config file changes
+3. **API changes**: Adding/removing projects, packages, or connections updates the database
+
+### Reinitializing from Config
+
+To reset the database and reload from `publisher.config.json`:
+
+```bash
+npx @malloy-publisher/server --init --server_root .
+```
+
+Use `--init` when:
+- You've updated `publisher.config.json` and want those changes applied
+- You want to reset to the original configuration
+- You're troubleshooting configuration issues
+
+### Mutable vs Frozen Configuration
+
+By default, Publisher allows configuration changes via the API. To lock the configuration (e.g., in production):
+
+```json
+{
+  "frozenConfig": true,
+  "projects": [...]
+}
+```
+
+When `frozenConfig: true`:
+- API endpoints that modify configuration return errors
+- The UI hides add/edit/delete controls
+- Only the config file (with `--init`) can change the setup
+
+### Storage Location
+
+Publisher creates these files in your `--server_root` directory:
+
+```
+my-server-root/
+├── publisher.config.json    # Initial configuration
+├── publisher.db             # Persisted state (DuckDB)
+├── publisher.db.wal         # Database write-ahead log
+└── publisher_data/          # Downloaded packages (from GitHub, etc.)
+```
+
+---
+
 ## Next Steps
 
 Your models are published. Build consumption experiences:
