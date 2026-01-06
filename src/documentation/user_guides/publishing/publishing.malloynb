@@ -69,24 +69,38 @@ For alternative deployment methods (Docker, build from source), see [Deployment 
 
 Go to `http://localhost:4000` to browse and query your models.
 
-That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or `.json` files, you're done.
+That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or `.json` files, you're done—no config file needed.
 
-**Note:** If you edit a `.malloy` file while Publisher is running, you'll need to restart it to pick up changes.
+**Note:** If you edit a `.malloy` file while Publisher is running, restart it to pick up changes.
 
 **Want to connect to a database?** Create `publisher.config.json` in the same directory:
 
 ```json
 {
-  "connections": {
-    "my_postgres": {
-      "type": "postgres",
-      "host": "localhost",
-      "port": 5432,
-      "database": "analytics",
-      "user": "malloy",
-      "password": "<password>"
+  "projects": [
+    {
+      "name": "default",
+      "connections": [
+        {
+          "name": "my_postgres",
+          "type": "postgres",
+          "postgresConnection": {
+            "host": "localhost",
+            "port": 5432,
+            "databaseName": "analytics",
+            "userName": "malloy",
+            "password": "<password>"
+          }
+        }
+      ],
+      "packages": [
+        {
+          "name": "my-analytics",
+          "location": "./my-analytics"
+        }
+      ]
     }
-  }
+  ]
 }
 ```
 
@@ -206,9 +220,12 @@ npx @malloy-publisher/server --init --server_root .
 ```
 
 Use `--init` when:
+- **After upgrading** Publisher (schema may have changed)
 - You've updated `publisher.config.json` and want those changes applied
 - You want to reset to the original configuration
 - You're troubleshooting configuration issues
+
+**Note:** On first run, Publisher automatically creates the database and syncs from `publisher.config.json`—no `--init` needed.
 
 ### Mutable vs Frozen Configuration
 

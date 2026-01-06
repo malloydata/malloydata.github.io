@@ -22,7 +22,9 @@ Publisher uses `publisher.config.json` for database connections. This file lives
         {
           "name": "connection_name",
           "type": "backend_type",
-          ...connection options...
+          "<type>Connection": {
+            ...connection options...
+          }
         }
       ],
       "packages": [
@@ -35,6 +37,11 @@ Publisher uses `publisher.config.json` for database connections. This file lives
   ]
 }
 ```
+
+Each connection object requires:
+- `name`: The connection name used in your Malloy code
+- `type`: The backend type (`duckdb`, `postgres`, `bigquery`, etc.)
+- Type-specific options nested under `<type>Connection` (e.g., `postgresConnection`, `bigqueryConnection`)
 
 **Note:** For packages with local parquet/CSV files, you don't need a connections config at all — Publisher automatically uses DuckDB.
 
@@ -219,8 +226,10 @@ source: events is duckdb.table('my_bq.my_dataset.events')
         {
           "name": "md",
           "type": "motherduck",
-          "token": "your_motherduck_token_here",
-          "database": "my_database"
+          "motherduckConnection": {
+            "accessToken": "your_motherduck_token_here",
+            "database": "my_database"
+          }
         }
       ],
       "packages": [...]
@@ -246,9 +255,11 @@ Embed the service account JSON directly in the config:
         {
           "name": "bigquery",
           "type": "bigquery",
-          "defaultProjectId": "my-gcp-project",
-          "location": "US",
-          "serviceAccountKeyJson": "{\n  \"type\": \"service_account\",\n  \"project_id\": \"my-gcp-project\",\n  ...rest of service account JSON...\n}"
+          "bigqueryConnection": {
+            "defaultProjectId": "my-gcp-project",
+            "location": "US",
+            "serviceAccountKeyJson": "{\n  \"type\": \"service_account\",\n  \"project_id\": \"my-gcp-project\",\n  ...rest of service account JSON...\n}"
+          }
         }
       ],
       "packages": [...]
@@ -268,8 +279,10 @@ Embed the service account JSON directly in the config:
         {
           "name": "bigquery",
           "type": "bigquery",
-          "defaultProjectId": "my-gcp-project",
-          "location": "US"
+          "bigqueryConnection": {
+            "defaultProjectId": "my-gcp-project",
+            "location": "US"
+          }
         }
       ],
       "packages": [...]
@@ -293,12 +306,14 @@ Embed the service account JSON directly in the config:
         {
           "name": "snowflake",
           "type": "snowflake",
-          "account": "myorg-myaccount",
-          "username": "publisher_user",
-          "password": "your_password_here",
-          "warehouse": "compute_wh",
-          "database": "analytics",
-          "schema": "public"
+          "snowflakeConnection": {
+            "account": "myorg-myaccount",
+            "username": "publisher_user",
+            "password": "your_password_here",
+            "warehouse": "compute_wh",
+            "database": "analytics",
+            "schema": "public"
+          }
         }
       ],
       "packages": [...]
@@ -318,12 +333,14 @@ Embed the service account JSON directly in the config:
         {
           "name": "snowflake",
           "type": "snowflake",
-          "account": "myorg-myaccount",
-          "username": "publisher_user",
-          "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBAD...your-key-here...\n-----END PRIVATE KEY-----",
-          "privateKeyPassphrase": "your_passphrase_if_encrypted",
-          "warehouse": "compute_wh",
-          "database": "analytics"
+          "snowflakeConnection": {
+            "account": "myorg-myaccount",
+            "username": "publisher_user",
+            "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBAD...your-key-here...\n-----END PRIVATE KEY-----",
+            "privateKeyPass": "your_passphrase_if_encrypted",
+            "warehouse": "compute_wh",
+            "database": "analytics"
+          }
         }
       ],
       "packages": [...]
@@ -345,11 +362,13 @@ Embed the service account JSON directly in the config:
         {
           "name": "postgres",
           "type": "postgres",
-          "host": "db.example.com",
-          "port": 5432,
-          "database": "analytics",
-          "username": "publisher_readonly",
-          "password": "your_password_here"
+          "postgresConnection": {
+            "host": "db.example.com",
+            "port": 5432,
+            "databaseName": "analytics",
+            "userName": "publisher_readonly",
+            "password": "your_password_here"
+          }
         }
       ],
       "packages": [...]
@@ -371,11 +390,13 @@ Embed the service account JSON directly in the config:
         {
           "name": "mysql",
           "type": "mysql",
-          "host": "db.example.com",
-          "port": 3306,
-          "database": "analytics",
-          "user": "publisher_readonly",
-          "password": "your_password_here"
+          "mysqlConnection": {
+            "host": "db.example.com",
+            "port": 3306,
+            "database": "analytics",
+            "user": "publisher_readonly",
+            "password": "your_password_here"
+          }
         }
       ],
       "packages": [...]
@@ -397,8 +418,10 @@ Embed the service account JSON directly in the config:
         {
           "name": "trino",
           "type": "trino",
-          "server": "https://trino.example.com",
-          "port": 8443
+          "trinoConnection": {
+            "server": "https://trino.example.com",
+            "port": 8443
+          }
         }
       ],
       "packages": [...]
@@ -424,11 +447,13 @@ You can configure multiple projects for different environments:
         {
           "name": "postgres",
           "type": "postgres",
-          "host": "staging-db.example.com",
-          "port": 5432,
-          "database": "analytics",
-          "username": "staging_user",
-          "password": "staging_password"
+          "postgresConnection": {
+            "host": "staging-db.example.com",
+            "port": 5432,
+            "databaseName": "analytics",
+            "userName": "staging_user",
+            "password": "staging_password"
+          }
         }
       ],
       "packages": [
@@ -444,11 +469,13 @@ You can configure multiple projects for different environments:
         {
           "name": "postgres",
           "type": "postgres",
-          "host": "prod-db.example.com",
-          "port": 5432,
-          "database": "analytics",
-          "username": "prod_readonly",
-          "password": "prod_password"
+          "postgresConnection": {
+            "host": "prod-db.example.com",
+            "port": 5432,
+            "databaseName": "analytics",
+            "userName": "prod_readonly",
+            "password": "prod_password"
+          }
         }
       ],
       "packages": [
