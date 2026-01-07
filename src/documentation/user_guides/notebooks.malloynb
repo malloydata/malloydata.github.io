@@ -116,6 +116,93 @@ my-analytics/
 
 ---
 
+## Interactive Filters
+
+Notebooks can include interactive dropdown filters that allow viewers to filter query results dynamically. When a user selects filter values, all queries in the notebook automatically re-execute with those filters applied.
+
+> **Note:** Interactive filters are rendered when viewing notebooks via [Publisher](publishing/publishing.malloynb) or the Publisher SDK. They are not currently displayed in VS Code—that capability is coming soon.
+
+### How It Works
+
+1. **Annotate dimensions** in your Malloy source files to mark them as filterable
+2. **Add a `##(filters)` annotation** in your notebook to specify which dimensions appear as filter controls
+3. When published, the notebook displays filter dropdowns that users can interact with
+
+### Step 1: Annotate Filterable Dimensions
+
+In your Malloy source file, add `#(filter)` annotations to dimensions you want to expose as filters:
+
+```malloy
+source: flights is duckdb.table('data/flights.parquet') extend {
+  dimension:
+    // Multi-select dropdown for string values
+    #(filter) {"type": "Star"}
+    origin_code is origin
+
+    // Date range picker
+    #(filter) {"type": "DateMinMax"}
+    flight_departure is dep_time
+
+  join_one: carriers with carrier
+}
+
+source: carriers is duckdb.table('data/carriers.parquet') extend {
+  dimension:
+    #(filter) {"type": "Star"}
+    nickname is nickname_old
+}
+```
+
+### Filter Types
+
+| Type | UI Component | Use Case |
+|------|--------------|----------|
+| `Star` | Multi-select dropdown | String fields with discrete values |
+| `MinMax` | Numeric input | Numeric fields |
+| `DateMinMax` | Date range picker | Date/timestamp fields |
+| `Boolean` | Toggle selector | Boolean fields |
+
+### Step 2: Add Notebook Filter Annotation
+
+In your notebook, add a `##(filters)` annotation in the code cell that imports your model. The annotation lists which dimensions should appear as filters using `source.dimension` format:
+
+```malloy
+##(filters) ["flights.origin_code", "carriers.nickname", "flights.flight_departure"]
+import {flights, carriers} from 'flights.malloy'
+```
+
+The filter type for each dimension is determined by the `#(filter)` annotation on that dimension in the source file.
+
+### Custom Labels
+
+By default, filters display the dimension field name. You can customize the label using the `# label="..."` annotation in your source file:
+
+```malloy
+source: recalls is duckdb.table('data/recalls.csv') extend {
+  dimension:
+    #(filter) {"type": "Star"}
+    # label="Vehicle Manufacturer"
+    Manufacturer is Manufacturer_old
+}
+```
+
+### Match Types
+
+Each filter type supports different match types that users can select:
+
+| Filter Type | Available Match Types |
+|------------|----------------------|
+| Star | Equals, Contains |
+| MinMax | Equals, Less Than, Greater Than, Between |
+| DateMinMax | Equals, Before, After, Between |
+| Boolean | Equals (True/False) |
+
+### Example
+
+See the [Carrier Analysis notebook](https://github.com/credibledata/malloy-samples/blob/main/faa/carrier_analysis.malloynb#L4) and [Auto Recalls notebook](https://github.com/credibledata/malloy-samples/blob/main/auto_recalls/README.malloynb#L10) for working examples of interactive filters.
+
+---
+
 ## Tips
 
 **Start simple** - Begin with a basic source, run a query, then add complexity.
