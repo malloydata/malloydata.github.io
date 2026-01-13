@@ -1,0 +1,96 @@
+>>>markdown
+![context.md header](context-header.jpeg)
+# Integrating LLMs in the Malloy Development Workflow
+
+*January 13, 2026 by Michael Toy*
+
+After a year of working with LLMs on the Malloy codebase, we've developed a convention for organizing context that we think could benefit other projects. Today we're publishing it as a proposal: [The CONTEXT.md Convention](https://github.com/the-michael-toy/llm-context-md).
+
+This is based on our experience. We're sharing it to start a conversation. We hope that this, or something like this, becomes "The Way" to work with LLMs in open source repositories.
+
+## The Malloy Experience
+
+Starting from zero experience with LLMs we discovered that if you fill a conversation context with all information about the Malloy repository, the result is a context with very little room for exploration and problem solving. In our experience, the results of LLM assisted coding are much better when carefully feeding the LLM a context focused on the problem at hand. Over time we found there were particular areas of the code where it made sense to gather the information the LLM gleaned, and some guidance from a human who is very familiar with the code, into a context-unit which would be re-usable and shareable.
+
+As we review pull requests, we continue to update our contexts, and this is gradually making pull request reviews cleaner. If our scheme of `CONTEXT.md` maintenance were generally known and recognized by the LLMs used by contributors, it would make it easier for external contributors to make solid contributions to our repository.
+
+## Context Should Be Structured Like Code
+
+At a high level, we propose that context should leverage the structuring of the source code to associate context with the code it describes.  **Context should be modular, hierarchical, and local**, just like code.
+
+We distribute `CONTEXT.md` files throughout the repository tree. Each file describes its directory and links to child CONTEXT files. An LLM working on any file can walk up the directory tree, reading `CONTEXT.md` files, to gather exactly the context it needs—layered from general to specific.
+
+  - Our main repository is a monorepo, with multiple sub-components (Compiler, Renderer, API, etc.) so
+    a single context file doesn't make sense for these individual components.
+  - Keeps individual context files smaller, allows an LLM assisted activity to read the appropriate context
+    to finish a task without reading all documentation for the project. Scales well to larger projects.
+  - Keeps the naming/location of these files LLM-agnostic
+  - Humans and LLMs are always pair programming, so both humans and LLMs need to be able to
+    both review code changes, and update and maintain context files for the code.
+
+In our repository it looks something like this:
+
+```
+malloy/
+├── CONTEXT.md                     # Architecture overview, build commands
+├── packages/
+│   └── malloy/
+│       └── src/
+│           ├── lang/
+│           │   ├── CONTEXT.md     # Translator: AST, grammar, IR
+│           │   └── test/
+│           │       └── CONTEXT.md # Test infrastructure, matchers
+│           └── model/
+│               └── CONTEXT.md     # IR types, query compilation
+└── test/
+    └── CONTEXT.md                 # Integration tests
+```
+
+We've found that this proposal provides a framework for us to leverage LLMs in our development, and to allow us to share the knowledge we collect while working with LLMs with outside contributors to the Malloy project.
+
+* An LLM assisted code review could easily find and read all the appropriate context which might affect the PR.
+* A human submitting a PR to a repository they are not familiar with could ask their LLM to check their work, or even to plan the work with the appropriate context.
+
+## Example
+
+When an LLM starts working on `packages/malloy/src/lang/test/expressions.spec.ts`, it reads:
+1. Root `CONTEXT.md` - gets the big picture
+2. `packages/malloy/src/lang/CONTEXT.md` - understands the translator
+3. `packages/malloy/src/lang/test/CONTEXT.md` - learns the test infrastructure
+
+## Key Principles
+
+**Locality**: Context lives next to the code it describes. The `CONTEXT.md` in `src/api/` describes the API, not the whole project.
+
+**Human-Reviewable**: Each file is small enough that a developer can review changes without needing to understand the entire repository. This enables distributed maintenance—the person who knows auth reviews the auth `CONTEXT.md`.
+
+**LLM-Optimized**: Written for LLM consumption—concise, factual, structured. Include concrete examples (file paths, commands, code patterns). Skip the verbose explanations humans need but LLMs don't.
+
+**Verifiable**: Include a maintenance section so you can periodically ask an LLM to verify the `CONTEXT.md` tree is still accurate. We do this in Malloy—"Read the CONTEXT tree and verify it is up to date."
+
+## Other Solutions
+
+### llms.txt
+
+Searching for prior art, we found [llms.txt](https://llmstxt.org/), proposed by Jeremy Howard. It's a great idea for websites to provide LLM-friendly content at a known URL.
+
+`CONTEXT.md` complements `llms.txt`.  In some ways these two proposals are addressing different problems. Maybe if people like our proposal there could be some merged proposal, or conventions for using both.
+
+## Try It
+
+We've published the convention as a standalone proposal: [github.com/the-michael-toy/llm-context-md](https://github.com/the-michael-toy/llm-context-md)
+
+You can see it in action in the [Malloy repository](https://github.com/malloydata/malloy)—look for `CONTEXT.md` files throughout the tree.
+
+Getting started is easy:
+1. Add a root `CONTEXT.md` with your project overview
+2. Add `CONTEXT.md` files to subsystems as you work on them
+3. Link child files from parents
+
+No tooling required. No configuration. Just markdown files that any LLM can read.
+
+## The Meta Point
+
+We built this convention while working with LLMs on Malloy itself. The LLM that helped write this blog post used `CONTEXT.md` files to understand the codebase well enough to make meaningful contributions to the compiler, test infrastructure, and documentation.
+
+Context isn't just documentation—it's how you collaborate with AI. Structure it well, and the collaboration gets dramatically better.
