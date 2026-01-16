@@ -291,6 +291,18 @@
         {
           "title": "Overview",
           "link": "/visualizations/about_rendering.malloynb"
+        },
+        {
+          "title": "Renderer Tags",
+          "link": "/visualizations/renderer_tags.malloynb"
+        },
+        {
+          "title": "Tag Cheatsheet",
+          "link": "/visualizations/renderer_cheatsheet.malloynb"
+        },
+        {
+          "title": "Custom Plugins",
+          "link": "/visualizations/plugins.malloynb"
         }
       ]
     },
