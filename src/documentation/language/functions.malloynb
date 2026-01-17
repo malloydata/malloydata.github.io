@@ -1334,25 +1334,25 @@ run: flights -> {
 <table class="transpose">
   <tr>
     <td><a href="#avg_moving">avg_moving</a></td>
+    <td><a href="#dense_rank">dense_rank</a></td>
     <td><a href="#first_value">first_value</a></td>
     <td><a href="#lag">lag</a></td>
-    <td><a href="#last_value">last_value</a></td>
   </tr>
   <tr>
+    <td><a href="#last_value">last_value</a></td>
     <td><a href="#lead">lead</a></td>
     <td><a href="#max_cumulative">max_cumulative</a></td>
     <td><a href="#max_window">max_window</a></td>
-    <td><a href="#min_cumulative">min_cumulative</a></td>
   </tr>
   <tr>
+    <td><a href="#min_cumulative">min_cumulative</a></td>
     <td><a href="#min_window">min_window</a></td>
     <td><a href="#rank">rank</a></td>
     <td><a href="#row_number">row_number</a></td>
-    <td><a href="#sum_cumulative">sum_cumulative</a></td>
   </tr>
   <tr>
+    <td><a href="#sum_cumulative">sum_cumulative</a></td>
     <td><a href="#sum_window">sum_window</a></td>
-    <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
@@ -1385,6 +1385,21 @@ run: flights -> {
   aggregate: flight_count_bucket is round(flight_count, -6)
   order_by: flight_count_bucket desc
   calculate: flight_count_rank is rank()
+}
+>>>markdown
+### dense_rank
+
+```malloy
+dense_rank()
+```
+
+Returns the rank according to the query ordering, with values having equal ordering value getting equal rank, numbers are consecutive.
+>>>malloy
+run: flights -> {
+  group_by: carrier
+  aggregate: flight_count_bucket is round(flight_count, -6)
+  order_by: flight_count_bucket desc
+  calculate: flight_count_rank is dense_rank()
 }
 >>>markdown
 
@@ -1553,7 +1568,7 @@ sum_window(expr)
 Returns the sum of all values of `expr` across all rows.
 >>>malloy
 run: flights -> {
-  group_by: carrier
+  group_by: carrier 
   aggregate: flight_count
   calculate: total_flight_count1 is sum_window(flight_count)
   aggregate: total_flight_count2 is all(flight_count)
@@ -1613,6 +1628,7 @@ run: flights -> {
     <td><a href="#day_of_week">day_of_week</a></td>
     <td><a href="#day_of_year">day_of_year</a></td>
     <td><a href="#div">div</a></td>
+    <td><a href="#dense_rank">dense_rank</a></td>
     <td><a href="#ends_with">ends_with</a></td>
   </tr>
   <tr>
