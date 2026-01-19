@@ -1,5 +1,13 @@
 [
-    {
+  {
+    "title": "Integrating LLMs in the Malloy Development Workflow",
+    "path": "/2026-01-13-context-md-convention",
+    "subtitle": "The CONTEXT.md Convention",
+    "author": "Michael Toy",
+    "published": "2026-01-13",
+    "previewImage": "context-header.jpeg"
+  },
+  {
     "title": "Metadata in Malloy",
     "path": "/2025-06-16-annotations-and-tags",
     "subtitle": "Annotations and Tags",
