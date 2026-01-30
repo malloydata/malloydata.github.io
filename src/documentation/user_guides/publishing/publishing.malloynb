@@ -147,7 +147,7 @@ Mount your config and packages into the container:
 docker run -p 4000:4000 \
   -v ./publisher.config.json:/publisher/publisher.config.json \
   -v ./packages:/publisher/packages \
-  malloydata/publisher
+  ms2data/malloy-publisher
 ```
 
 ### Docker Compose
@@ -157,7 +157,7 @@ version: '3.8'
 
 services:
   publisher:
-    image: malloydata/publisher
+    image: ms2data/malloy-publisher
     ports:
       - "4000:4000"
       - "4040:4040"  # MCP endpoint for AI agents
