@@ -45,73 +45,120 @@ The Malloy Extension also works in VS Code Web environments like github.dev. Pre
 
 ## Configuring Connections
 
-Configure database connections through the VS Code command palette.
+There are two ways to configure database connections:
 
-### Adding Connections
+1. **`malloy-config.json`** (recommended) — a project-level config file checked into source control
+2. **VS Code Settings** — user-level configuration via the command palette
+
+If a `malloy-config.json` exists in your workspace root, it takes priority over VS Code settings.
+
+### Project Configuration: `malloy-config.json`
+
+Place a `malloy-config.json` file in the root of your project (workspace root). The extension detects it automatically and picks up changes whenever you save.
+
+The file contains a `connections` object where each key is a connection name and each value specifies the connection type and its parameters. The first connection listed is the default.
+
+```json
+{
+  "connections": {
+    "my_duckdb": {
+      "is": "duckdb",
+      "databasePath": "./data.db"
+    },
+    "my_bq": {
+      "is": "bigquery",
+      "projectId": "my-project"
+    }
+  }
+}
+```
+
+In multi-root workspaces, each workspace root can have its own `malloy-config.json` with independent connection namespaces. If you open a single file without a workspace (`code file.malloy`), the extension looks for `malloy-config.json` in the file's directory.
+
+#### Connection Types
+
+**`duckdb`** — DuckDB / MotherDuck
+
+| Parameter | Type | Description |
+|---|---|---|
+| `databasePath` | file | Path to .db file (default: `:memory:`) |
+| `workingDirectory` | string | Working directory for relative paths |
+| `motherDuckToken` | password | MotherDuck auth token |
+| `additionalExtensions` | string | Extra DuckDB extensions to load |
+| `readOnly` | boolean | Open database read-only |
+
+**`bigquery`** — Google BigQuery
+
+| Parameter | Type | Description |
+|---|---|---|
+| `projectId` | string | GCP project ID |
+| `serviceAccountKeyPath` | file | Path to service account JSON key |
+| `location` | string | Dataset location |
+| `maximumBytesBilled` | string | Byte billing cap |
+| `timeoutMs` | string | Query timeout in ms |
+| `billingProjectId` | string | Billing project (if different) |
+
+**`postgres`** — PostgreSQL
+
+| Parameter | Type | Description |
+|---|---|---|
+| `host` | string | Server host |
+| `port` | number | Server port |
+| `username` | string | Username |
+| `password` | password | Password |
+| `databaseName` | string | Database name |
+| `connectionString` | string | Full connection string (alternative) |
+
+**`mysql`** — MySQL
+
+| Parameter | Type | Description |
+|---|---|---|
+| `host` | string | Server host |
+| `port` | number | Server port (default: 3306) |
+| `database` | string | Database name |
+| `user` | string | Username |
+| `password` | password | Password |
+
+**`snowflake`** — Snowflake
+
+| Parameter | Type | Description |
+|---|---|---|
+| `account` | string | Snowflake account identifier (required) |
+| `username` | string | Username |
+| `password` | password | Password |
+| `role` | string | Role |
+| `warehouse` | string | Warehouse |
+| `database` | string | Database |
+| `schema` | string | Schema |
+| `privateKeyPath` | file | Path to private key (.pem/.key) |
+| `privateKeyPass` | password | Private key passphrase |
+| `timeoutMs` | number | Query timeout in ms |
+
+**`trino`** / **`presto`** — Trino or Presto
+
+| Parameter | Type | Description |
+|---|---|---|
+| `server` | string | Server hostname |
+| `port` | number | Server port |
+| `catalog` | string | Catalog name |
+| `schema` | string | Schema name |
+| `user` | string | Username |
+| `password` | password | Password |
+
+### VS Code Settings
+
+You can also configure connections through the VS Code command palette:
 
 1. Open Command Palette: `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
 2. Type: **Malloy: Edit Connections**
 3. Click **Add Connection** and select your database type
 4. Fill in the connection details
 
-### Where Connections Are Stored
-
-VS Code stores Malloy connections in your user settings:
+VS Code stores these in your user settings:
 
 **Mac:** `~/Library/Application Support/Code/User/settings.json`
 **Windows:** `%APPDATA%\Code\User\settings.json`
 **Linux:** `~/.config/Code/User/settings.json`
-
-Example `settings.json` with Malloy connections:
-
-```json
-{
-  "malloy.connections": [
-    {
-      "name": "duckdb",
-      "backend": "duckdb",
-      "id": "duckdb-default"
-    },
-    {
-      "name": "md",
-      "backend": "duckdb",
-      "id": "motherduck-default",
-      "databasePath": "md:"
-    },
-    {
-      "name": "bigquery",
-      "backend": "bigquery",
-      "id": "bigquery-default",
-      "projectId": "my-gcp-project"
-    },
-    {
-      "name": "bq_service_account",
-      "backend": "bigquery",
-      "id": "bq-sa-connection",
-      "serviceAccountKeyPath": "/path/to/service-account-key.json",
-      "configKey": "serviceAccountKeyPath"
-    },
-    {
-      "name": "postgres",
-      "backend": "postgres",
-      "id": "postgres-default",
-      "host": "localhost",
-      "port": 5432,
-      "databaseName": "analytics",
-      "username": "analyst"
-    },
-    {
-      "name": "snowflake",
-      "backend": "snowflake",
-      "id": "snowflake-default",
-      "account": "myorg-myaccount",
-      "username": "analyst",
-      "warehouse": "compute_wh",
-      "database": "analytics"
-    }
-  ]
-}
-```
 
 ---
 
