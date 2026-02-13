@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Metadata in Malloy</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2025-06-16-annotations-and-tags/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><p><img src="annotation-header.png" alt="annotation and tagging banner"/></p>
+<div class="title-row">
+        
+      <h1>
+        <a id="metadata-in-malloy-annotations-and-tags" class="header-link anchor" href="#metadata-in-malloy-annotations-and-tags">
+          Metadata in Malloy: Annotations and Tags
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2025-06-16-annotations-and-tags/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><a href="https://docs.malloydata.dev/documentation/language/tags"><em>Annotation</em> and <em>Tagging</em></a> are a pair of features for attaching metadata to objects in a Malloy model.
+The idea of attaching metadata to fragments of a program is a common one in modern programing languages.
+When designing this feature for Malloy, we were not certain what uses there might be for metadata, because a Malloy model is
+a slightly different kind of programming and might have slightly different requirments for its metadata.</p>
+<p>Because of this, the main feature of the Malloy design for annotation is that it imposes almost no
+structure on what kinds of data might be contained in the annotations. Annotations in Malloy are surface
+which is flexible and powerful, to allow users of Malloy to investigate the possibilities of
+annotation that we were unable to envision when we designed Malloy.</p>
+<p>Malloy uses annotation sparingly, but we are noticing more projects using Malloy and taking advantage of annotations, and
+now seemed like a good time to go into a little more detail on the feature so that it would be clear
+how to take advantage of all the power offered by annotations.</p>
+
+      <h2>
+        <a id="annotations" class="header-link anchor" href="#annotations">
+          Annotations
+        </a>
+      </h2>
+    <p>Annotations can be attached to models, sources, queries, views, and and field calculations. (e.g. dimensions, measures, caclucations, etc.)
+An annotation is some text starting with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#</span></span></code> character and continuing to the end of the line.</p>
+<p>Annotation lines beginning with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##</span></span></code> are applied to the model. Annotations beginning with a single <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#</span></span></code> are applied to the next object being defined.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5">## (def</span><span style="color: #008000"> </span><span style="color: #0451A5">model-level-notice</span><span style="color: #008000"> </span><span style="color: #0451A5">&quot;This</span><span style="color: #008000"> </span><span style="color: #0451A5">is</span><span style="color: #008000"> </span><span style="color: #0451A5">a</span><span style="color: #008000"> </span><span style="color: #0451A5">model</span><span style="color: #008000"> </span><span style="color: #0451A5">level</span><span style="color: #008000"> </span><span style="color: #0451A5">annotation&quot;)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #0451A5"># &quot;queryProperties&quot;:</span><span style="color: #008000"> </span><span style="color: #0451A5">{</span><span style="color: #008000"> </span><span style="color: #0451A5">&quot;notice&quot;:</span><span style="color: #008000"> </span><span style="color: #0451A5">&quot;This</span><span style="color: #008000"> </span><span style="color: #0451A5">annotation</span><span style="color: #008000"> </span><span style="color: #0451A5">is</span><span style="color: #008000"> </span><span style="color: #0451A5">attach</span><span style="color: #008000"> </span><span style="color: #0451A5">to</span><span style="color: #008000"> </span><span style="color: #0451A5">the</span><span style="color: #008000"> </span><span style="color: #0451A5">query</span><span style="color: #008000"> </span><span style="color: #0451A5">&#39;first_row&#39;&quot;</span><span style="color: #008000"> </span><span style="color: #0451A5">}</span></span>
+<span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #001080">first_row</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">some_src</span><span style="color: #000000"> -&gt; {</span><span style="color: #AF00DB">select</span><span style="color: #000000">: *; </span><span style="color: #AF00DB">limit</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">}</span></span></pre></div><p>You will notice in these examples that each annotation is written in a different language, this is
+just an example of what is possible.  An application can choose to parse its own annotations any
+way it chooses, or even to not parse them at all and simply use them as free form text. There is a
+Malloy companion property language (Malloy Tag Language) designed to be used with annotations, but
+applications are free to interpret their annotations in any way which make sense to them.</p>
+
+      <h3>
+        <a id="annotation-prefixes" class="header-link anchor" href="#annotation-prefixes">
+          Annotation Prefixes
+        </a>
+      </h3>
+    <p>Multiple applications can decorate a Malloy model with annotations, and there is a convention which will
+allow applications to add annotations even without being aware of each other. This is the "annotation prefix".</p>
+<p>When an application requests annotations for an object, a regular expression is passed along with the request,
+and only annotations matching that regular expression are returned. Here are some example annotation usages with
+their annotation prefixes:</p>
+<ul>
+<li><p><strong>prefix:</strong> <code>/^# /</code></p>
+<ul>
+<li><p>Instructions to the Malloy rendering library</p>
+</li>
+<li><p>Example: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5"># chart</span><span style="color: #008000"> </span><span style="color: #0451A5">{</span><span style="color: #008000"> </span><span style="color: #0451A5">type</span><span style="color: #000000">=</span><span style="color: #A31515">bar</span><span style="color: #008000"> </span><span style="color: #0451A5">variant</span><span style="color: #000000">=</span><span style="color: #A31515">stacked</span><span style="color: #008000"> </span><span style="color: #0451A5">}</span></span></code></p>
+</li>
+<li><p>Parsed by the renderer using the Malloy Tag Language (See the <a href="https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/renderer_tags_overview.md">Render Tag Documentaion</a>)</p>
+</li></ul>
+</li>
+<li><p><strong>prefix:</strong> <code>/^##!/</code></p>
+<ul>
+<li><p>Flags to control the Malloy to SQL translator</p>
+</li>
+<li><p>Example: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental { featureName1 }</span></span></code></p>
+</li>
+<li><p>Parsed by the Malloy translator, alsing using the Malloy Tag Language (See <a href="https://docs.malloydata.dev/documentation/experiments/experiments">Experimental Features</a>)</p>
+</li></ul>
+</li>
+<li><p><strong>prefix</strong>: <code>/^#"/</code></p>
+<ul>
+<li><p>Doc strings for describing objects</p>
+</li>
+<li><p>Example: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">#&quot; This source requires a date filter expression (fex)</span></span></code></p>
+</li>
+<li><p>Parsed by: Nothing yet, this is aspirational. Our intention is this would be where developer documentation
+for reusable components in Malloy models would be written, allowing an IDE to use the annotations to offer information to developers.</p>
+</li></ul>
+</li>
+<li><p><strong>prefix:</strong> <code>/#(yourApp)/</code></p>
+<ul>
+<li><p>Annotations for the app <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">yourApp</span></span></code></p>
+</li>
+<li><p>Example: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#(docs) size=medium</span></span></code></p>
+</li>
+<li><p>We use the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">(</span><span style="color: #001080">docs</span><span style="color: #000000">)</span></span></code> prefix internally to attach formatting instructions for the Malloy documentation package.</p>
+</li></ul>
+</li></ul>
+
+      <h3>
+        <a id="indirect-annotations" class="header-link anchor" href="#indirect-annotations">
+          Indirect Annotations
+        </a>
+      </h3>
+    <p>In addition to annotations directly placed on an object, there are two other ways for an object to have annotation metadata.</p>
+<p>If one object is an extension, or refinement of an existing object, it will have all the annotations of the object it is based on, as well as it's own annotations. For example</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">// this will render as a bar chart</span></span>
+<span class="line"><span style="color: #0451A5"># bar_chart</span></span>
+<span class="line"><span style="color: #AF00DB">view</span><span style="color: #000000">: </span><span style="color: #001080">by_color</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> { </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">color</span><span style="color: #000000">; </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">thing_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">() }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #008000">// will &quot;inherit&quot; the bar_char annotation from by_color</span></span>
+<span class="line"><span style="color: #AF00DB">view</span><span style="color: #000000">: </span><span style="color: #001080">by_color_and_size</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">by_color</span><span style="color: #000000"> + { </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">size</span><span style="color: #000000"> }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #008000">// will show the by_color bar chart, only for the most common colors</span></span>
+<span class="line"><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">top_colors</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">by_color</span><span style="color: #000000"> + { </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000"> }</span></span></pre></div><p>The other indirect way annotations can be placed on an object is available to objects which can be defined with a single statement</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">// Every measure defined in this measure statement will have the &quot;private&quot; annotation, in addition</span></span>
+<span class="line"><span style="color: #008000">// to any annotations on the actual object.</span></span>
+<span class="line"><span style="color: #0451A5"># private</span></span>
+<span class="line"><span style="color: #AF00DB">measure</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># currency</span><span style="color: #000000">=</span><span style="color: #A31515">US_DOLLARS</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">total_revenue</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">revenue</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># font_color</span><span style="color: #000000">=</span><span style="color: #A31515">green</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">profitable</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;Yes&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">revenue</span><span style="color: #000000">) &gt; </span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">cost</span><span style="color: #000000">) </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;No&#39;</span></span></pre></div>
+      <h2>
+        <a id="the-malloy-tag-language" class="header-link anchor" href="#the-malloy-tag-language">
+          The Malloy Tag Language
+        </a>
+      </h2>
+    <p>In some of the examples above we showed annotations intended be be parsed by an S-Expression parser and a JSON Parser,
+but Malloy also has its own language for writing simple property-value data structures, the Malloy Tag Language.</p>
+<p>More details on the tag language <a href="https://docs.malloydata.dev/documentation/language/tags#tag-property-language">are in the documentation</a>,
+but here is a quick overview to give a flavor of the language.</p>
+
+      <h3>
+        <a id="tag-values" class="header-link anchor" href="#tag-values">
+          Tag Values
+        </a>
+      </h3>
+    <ul>
+<li><p>A tag has a value which can be a string or an array of values</p>
+</li>
+<li><p>A string can be quoted, but if it is a simple series of alphanumeric chartacters it can also be unquoted</p>
+</li>
+<li><p>An array is written using <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[ ]</span></span></code> to bracket the contents (e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span><span style="color: #001080">mark</span><span style="color: #000000"> </span><span style="color: #001080">mack</span><span style="color: #000000"> </span><span style="color: #001080">molly</span><span style="color: #000000"> </span><span style="color: #001080">mandy</span><span style="color: #000000">]</span></span></code>)</p>
+</li>
+<li><p>There is no boolean value, while you can use the strings <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code> as values, the intention
+is that true/false conditions are indicated by presence/absence of a tag</p>
+</li></ul>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">go_color=green</span></span>
+<span class="line"><span style="color: #000000">stop_color=&quot;red&quot;</span></span>
+<span class="line"><span style="color: #000000">slow_colors=[yellow orange &quot;yellowish orange&quot;]</span></span>
+<span class="line"><span style="color: #000000"></span></span>
+<span class="line"><span style="color: #000000">// a boolean ..</span></span>
+<span class="line"><span style="color: #000000">slowdown</span></span>
+<span class="line"><span style="color: #000000">// turning off a boolean</span></span>
+<span class="line"><span style="color: #000000">-slowdown</span></span></pre></div>
+      <h3>
+        <a id="tag-properties" class="header-link anchor" href="#tag-properties">
+          Tag Properties
+        </a>
+      </h3>
+    <p>This is unlike other property languages. A tag, in addition to values, can also have properties.</p>
+<ul>
+<li><p>Properties on a tag can be set using the familiar <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span></span></code> (dot) gesture</p>
+</li>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{}</span></span></code> can be used to specify a number of properties at once</p>
+</li></ul>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">slow_colors=[yellow orange &quot;yellowish orange&quot;]</span></span>
+<span class="line"><span style="color: #000000">slow_colors.flashing</span></span>
+<span class="line"><span style="color: #000000">slow_colors { blinks_per_minute=10 safetymode }</span></span></pre></div>
+      <h2>
+        <a id="sample-code-for-annotation-usage" class="header-link anchor" href="#sample-code-for-annotation-usage">
+          Sample Code For Annotation Usage
+        </a>
+      </h2>
+    <p>For some example metadata markup which looks like this ...</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">// some documentation</span></span>
+<span class="line"><span style="color: #A31515">#(myDoc) This is a lot of documentation</span></span>
+<span class="line"><span style="color: #A31515">#(myDoc) across many lines</span></span>
+<span class="line"><span style="color: #008000">// and some properties</span></span>
+<span class="line"><span style="color: #A31515">#(myTags) force default=go </span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">foo</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> ...</span></span></pre></div><p>Here is some code which might be written to access the metadata
+on an object from the Malloy API which has annotations.</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">myTagsAndDocs</span><span style="color: #000000">(</span><span style="color: #001080">t</span><span style="color: #000000">: </span><span style="color: #267F99">Taggable</span><span style="color: #000000">): { </span><span style="color: #001080">tags</span><span style="color: #000000">: </span><span style="color: #267F99">Tag</span><span style="color: #000000">, </span><span style="color: #001080">docs</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">[] } {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">tagParse</span><span style="color: #000000"> = </span><span style="color: #001080">t</span><span style="color: #000000">.</span><span style="color: #795E26">tagParse</span><span style="color: #000000">({</span><span style="color: #001080">prefix:</span><span style="color: #811F3F"> /</span><span style="color: #EE0000">^</span><span style="color: #811F3F">#</span><span style="color: #EE0000">\(</span><span style="color: #811F3F">myTags</span><span style="color: #EE0000">\)</span><span style="color: #811F3F">/</span><span style="color: #000000">});</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">tagParse</span><span style="color: #000000">.</span><span style="color: #001080">log</span><span style="color: #000000">) {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #008000">// deal with syntax errors, or ignore them</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #AF00DB">throw</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Error</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;syntax errors in tag parse&#39;</span><span style="color: #000000">);</span></span>
+<span class="line"><span style="color: #000000">    }</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #001080">tags:</span><span style="color: #000000"> </span><span style="color: #001080">tagParse</span><span style="color: #000000">.</span><span style="color: #001080">tag</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #001080">docs:</span><span style="color: #000000"> </span><span style="color: #001080">t</span><span style="color: #000000">.</span><span style="color: #795E26">getTaglines</span><span style="color: #000000">(</span><span style="color: #811F3F">/</span><span style="color: #EE0000">^</span><span style="color: #811F3F">#</span><span style="color: #EE0000">\(</span><span style="color: #811F3F">myDocs</span><span style="color: #EE0000">\)</span><span style="color: #811F3F">/</span><span style="color: #000000">),</span></span>
+<span class="line"><span style="color: #000000">    };</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #008000">// ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">metadata</span><span style="color: #000000"> = </span><span style="color: #795E26">myTagsAndDocs</span><span style="color: #000000">(</span><span style="color: #001080">someObj</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">metadata</span><span style="color: #000000">.</span><span style="color: #001080">tags</span><span style="color: #000000">.</span><span style="color: #795E26">has</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;force&#39;</span><span style="color: #000000">)) </span><span style="color: #795E26">do_force_action</span><span style="color: #000000">();</span></span>
+<span class="line"><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">metadata</span><span style="color: #000000">.</span><span style="color: #001080">tags</span><span style="color: #000000">.</span><span style="color: #795E26">has</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;default&#39;</span><span style="color: #000000">)) </span><span style="color: #795E26">set_default</span><span style="color: #000000">(</span><span style="color: #001080">metadata</span><span style="color: #000000">.</span><span style="color: #001080">tags</span><span style="color: #000000">.</span><span style="color: #795E26">text</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;default&#39;</span><span style="color: #000000">));</span></span>
+<span class="line"><span style="color: #795E26">setDocs</span><span style="color: #000000">(</span><span style="color: #001080">metadata</span><span style="color: #000000">.</span><span style="color: #001080">docs</span><span style="color: #000000">);</span></span></pre></div>
+      <h2>
+        <a id="the-future-of-annotation" class="header-link anchor" href="#the-future-of-annotation">
+          The Future of Annotation
+        </a>
+      </h2>
+    <p>We are waiting to see how annotations are used. We have many ideas for the future, but
+we have decided on "wait and learn" approach for this feature. Things we have talked about
+are ...</p>
+<ul>
+<li><p>Some syntax for annotation metadata which is longer than one line</p>
+</li>
+<li><p>More formality on "annotation prefixes", perhaps requiring prefixes to match a pattern,
+or maybe some sort of "prefix registry" to make certain applications do not
+inadvertantly affect metadata from other applications.</p>
+</li>
+<li><p>More formality on which annotations are tags, and what the "schema" is for a tagged
+annotation, allowing the IDE to assist in tagging complex objects.</p>
+</li></ul>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2024-02-29-hierarchical-viz"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2026-01-13-context-md-convention"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dimensional Flexibility, one of the things that makes Malloy Special</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-12-01-dimensional-flexibility/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="dimensional-flexibility-one-of-the-things-that-makes-malloy-special" class="header-link anchor" href="#dimensional-flexibility-one-of-the-things-that-makes-malloy-special">
+          Dimensional Flexibility, one of the things that makes Malloy Special
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2022-12-01-dimensional-flexibility/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Grouping by some attribute is the core operation of most data analysis</p>
+<p><em>December 1, 2022 by lloyd tabb</em>
+<br/><br/><br/></p>
+<p><em><a href="http://www.malloydata.dev/">Malloy</a> is an new experimental data language. <a href="https://github.com/malloydata/malloy-composer/blob/main/README.md">Malloy's Composer</a>, shown here, offers allows you to easily explore complex data.</em></p>
+<p>In data analysis, one operation, dimensionalization, stands above the rest. In SQL, <strong>grouping by</strong> a column and computing <strong>aggregate</strong> statistics (measures/metrics) about the elements that fall into that group is the fundamental motion of nearly all data analysis.</p>
+<p>In SQL, unfortunately, dimensionalization isn't always straight forward. The way that you relate data in a query can affect aggregate calculations and make them incorrect at times. The general solution to this is to make dimensional fragments and link them together, but that adds a lot of complexity.</p>
+<p><a href="http://www.malloydata.dev/">Malloy</a> is interesting in that aggregates operate independently from relations. Because of this innovation, <a href="http://www.malloydata.dev/">Malloy</a> offers a degree of dimensional flexibility not available anywhere else.</p>
+<p>Let's take a tour.</p>
+
+      <h2>
+        <a id="imdb-for-example" class="header-link anchor" href="#imdb-for-example">
+          IMDB, for example
+        </a>
+      </h2>
+    <p>In the IMDB for example. There are movies (titles), people, genres and ratings. The relations and some basic calcuations are encoded in this 75 line data model on github.</p>
+<p>These are live examples, click “Try it!” to run any of the queries.</p>
+
+      <h2>
+        <a id="how-many-movies-" class="header-link anchor" href="#how-many-movies-">
+          How many movies?
+        </a>
+      </h2>
+    <p>Lets take a look at movies and filter to just three genres, <em>Drama</em>, <em>Comedy</em> and <em>Action</em>. We will also filter to just movies from 2010 until 2020. The first query we run shows there are 2146 movies with an average rating of 6.986.</p>
+<img src="avg_rating.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++aggregate%3A+%0A++++title_count%0A++++average_rating%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="dimensionalize-by-genre" class="header-link anchor" href="#dimensionalize-by-genre">
+          Dimensionalize by genre
+        </a>
+      </h2>
+    <p>By dimensionalizing (grouping by) genre, we can see the number of movies that are in a particular genre. But if we add up the numbers 1358 + 783 + 716 we get 2857. Wait, Why? I thought the number of titles was only 2146? Movies can have multiple genres. Movies can appear in multiple groupings.</p>
+<img src="by_genre.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+genre%0A++aggregate%3A+%0A++++title_count%0A++++average_rating%0A++limit%3A+10%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="top-level-query-is-aggregates-plus-nesting-" class="header-link anchor" href="#top-level-query-is-aggregates-plus-nesting-">
+          Top level query is aggregates plus nesting.
+        </a>
+      </h2>
+    <p>Malloy can compute mulitple levels of dimensionality simultaneously. One way Malloy does this is through nesting queries. Nested queries are expressed exactly the same as top level queries. In the query below, we pick our top level measures as well as building a nested query that is essentially the same shape as the one above.</p>
+<img src="agg_nest.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++aggregate%3A+%0A++++title_count%0A++++average_rating%0A++nest%3A+by_genre+is+%7B%0A++++group_by%3A+genre%0A++++aggregate%3A+%0A++++++title_count%0A++++++average_rating%0A++%7D%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true">Try it!</a></p>
+<p>While the query above is relatively easy to understand, it is quite difficult to express in SQL. Malloy hides this complexity from us. We can see the SQL for any query by bonking the SQL tab. All Malloy queries execute as a single SQL query so the data is only read once.</p>
+
+      <h2>
+        <a id="-code-class-language-malloy-style-background-color-fbfbfb-span-class-line-span-style-color-001080-all-span-span-code-function-escapes-grouping" class="header-link anchor" href="#-code-class-language-malloy-style-background-color-fbfbfb-span-class-line-span-style-color-001080-all-span-span-code-function-escapes-grouping">
+          <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">all</span></span></code> function escapes grouping
+        </a>
+      </h2>
+    <p>Another way to work with dimensionality in Malloy with <a href="https://malloydata.github.io/malloy/documentation/language/ungrouped-aggregates.html">ungrouped aggregate functions</a>. The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">all</span><span style="color: #000000">()</span></span></code> function can be used to make calculations independently of dimensional grouping in the current query, but return results in the same table. In the example below, we compute <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">all_titles</span></span></code> as <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">all</span><span style="color: #000000">(</span><span style="color: #001080">title_count</span><span style="color: #000000">)</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">all_average_rating</span></span></code> as <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">all</span><span style="color: #000000">(</span><span style="color: #001080">average_rating</span><span style="color: #000000">)</span></span></code>. Any measure can be used within the all function. Fine grain control over which columns to escape is also available, see the Malloy documentation on <a href="https://malloydata.github.io/malloy/documentation/language/ungrouped-aggregates.html">Ungrouped Aggregates</a>.</p>
+<img src="ungroup_agg.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+genre%0A++aggregate%3A+%0A++++title_count%0A++++all_titles+is+all%28title_count%29%0A++++average_rating%0A++++all_average_rating+is+all%28average_rating%29%0A++limit%3A+10%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="percent-of-total" class="header-link anchor" href="#percent-of-total">
+          Percent of Total
+        </a>
+      </h2>
+    <p>Percent of total tell us about a groups relationship to it's parent. What percent of movies are Drama?, Comedy?. Using the calculation for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">percent_of_titles</span></span></code> is <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">title_count</span><span style="color: #000000"> / </span><span style="color: #795E26">all</span><span style="color: #000000">(</span><span style="color: #001080">title_count</span><span style="color: #000000">)</span></span></code> can show us. Malloy composer allow us to style this number as a percentage. Notice that the percentages sum to greater then 100%. Movies can have mulitple genres.</p>
+<img src="percent_total.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+genre%0A++aggregate%3A+%0A++++title_count%0A++++percent_of_titles+is+title_count%2Fall%28title_count%29%0A++limit%3A+10%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="nesting-adds-dimensionality-and-perspective-" class="header-link anchor" href="#nesting-adds-dimensionality-and-perspective-">
+          Nesting adds dimensionality (and perspective)
+        </a>
+      </h2>
+    <p>Grouping by year and nesting our <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">by_genre</span></span></code> query allows us to gain perspective over time. Notice that we are free to include aggregate computations at any level of nesting.</p>
+<img src="nesting.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+startYear%0A++aggregate%3A+%0A++++title_count%0A++++percent_of_titles+is+title_count%2Fall%28title_count%29%0A++nest%3A+by_genre+is+%7B%0A++++group_by%3A+genre%0A++++aggregate%3A+%0A++++++title_count%0A++++++percent_of_titles+is+title_count%2Fall%28title_count%29%0A++%7D%0A++limit%3A+10%0A++order_by%3A+startYear+desc%0A%7D&styles=%7B%22percent_of_titles%22%3A%7B%22renderer%22%3A%22percent%22%7D%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="running-queries-side-by-side-with-a-shared-filter" class="header-link anchor" href="#running-queries-side-by-side-with-a-shared-filter">
+          Running queries side by side with a shared filter
+        </a>
+      </h2>
+    <p>A useful pattern is to nest several queries at the top level. This mimics a traditional dashboard in other tools. The difference here is that the data is all executed in a single query.</p>
+<img src="shared_filter.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+by_genre+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+title_count%0A++++%7D%0A++++by_year+is+%7B%0A++++++group_by%3A+startYear%0A++++++aggregate%3A+title_count%0A++++++order_by%3A+startYear+desc%0A++++%7D%0A%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="styling-results" class="header-link anchor" href="#styling-results">
+          Styling Results
+        </a>
+      </h2>
+    <p>We can add styles to any of the nested queries to have them rendered as charts.</p>
+<img src="styling.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+by_genre+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+title_count%0A++++%7D%0A++++by_year+is+%7B%0A++++++group_by%3A+startYear%0A++++++aggregate%3A+title_count%0A++++++order_by%3A+startYear+desc%0A++++%7D%0A++limit%3A+10%0A%7D&styles=%7B%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%2C%22by_genre%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%7D&run=true">Try It!</a></p>
+
+      <h2>
+        <a id="adding-more-dimensionality" class="header-link anchor" href="#adding-more-dimensionality">
+          Adding more dimensionality
+        </a>
+      </h2>
+    <p>Let's look at the top people in the industry by grouping by person.</p>
+<img src="dimensionality.png"><p><a href="https://lloydtabb.github.io/imdb_fiddle/composer.html#/default?page=query&source=movies&model=movies-simple&query=query%3A+new_query+is+movies+-%3E+%7B%0A++where%3A%0A++++startYear%3A+%3E%3D+2010+%26+%3C+2020%2C%0A++++genre+%3D+%27Drama%27+%7C+%27Comedy%27+%7C+%27Action%27%0A++group_by%3A+person%0A++aggregate%3A+total_votes%0A++nest%3A+%0A++++by_genre+is+%7B%0A++++++group_by%3A+genre%0A++++++aggregate%3A+title_count%0A++++%7D%0A++++by_year+is+%7B%0A++++++group_by%3A+startYear%0A++++++aggregate%3A+title_count%0A++++++order_by%3A+startYear+desc%0A++++%7D%0A++limit%3A+10%0A%7D&styles=%7B%22by_year%22%3A%7B%22renderer%22%3A%22line_chart%22%7D%2C%22by_genre%22%3A%7B%22renderer%22%3A%22bar_chart%22%7D%7D">Try It!</a></p>
+
+      <h2>
+        <a id="dimensional-freedom" class="header-link anchor" href="#dimensional-freedom">
+          Dimensional Freedom
+        </a>
+      </h2>
+    <p>Malloy will compute aggregate calculations correctly independently from dimensionalization. This freedom gives you much more flexibility in building tooling to understand your data.</p>
+<p><a href="https://malloydata.github.io/malloy-samples/wasm/">Try more examples in Malloy Composer</a></p>
+<p><a href="https://www.malloydata.dev/">Learn more about Malloy</a></p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2022-11-25-composing-queries"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-01-18-data-is-rectangular"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

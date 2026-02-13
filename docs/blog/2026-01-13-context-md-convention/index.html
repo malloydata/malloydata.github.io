@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      property="og:image"
+      content="https://malloydata.github.io/blog/2026-01-13-context-md-convention/context-header.jpeg"
+    />
+    <title>Integrating LLMs in the Malloy Development Workflow</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2026-01-13-context-md-convention/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><p><img src="context-header.jpeg" alt="context.md header"/></p>
+<div class="title-row">
+        
+      <h1>
+        <a id="integrating-llms-in-the-malloy-development-workflow" class="header-link anchor" href="#integrating-llms-in-the-malloy-development-workflow">
+          Integrating LLMs in the Malloy Development Workflow
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2026-01-13-context-md-convention/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><em>January 13, 2026 by Michael Toy</em></p>
+<p>After a year of working with LLMs on the Malloy codebase, we've developed a convention for organizing context that we think could benefit other projects. Today we're publishing it as a proposal: <a href="https://github.com/the-michael-toy/llm-context-md">The CONTEXT.md Convention</a>.</p>
+<p>This is based on our experience. We're sharing it to start a conversation. We hope that this, or something like this, becomes "The Way" to work with LLMs in open source repositories.</p>
+
+      <h2>
+        <a id="the-malloy-experience" class="header-link anchor" href="#the-malloy-experience">
+          The Malloy Experience
+        </a>
+      </h2>
+    <p>Starting from zero experience with LLMs we discovered that if you fill a conversation context with all information about the Malloy repository, the result is a context with very little room for exploration and problem solving. In our experience, the results of LLM assisted coding are much better when carefully feeding the LLM a context focused on the problem at hand. Over time we found there were particular areas of the code where it made sense to gather the information the LLM gleaned, and some guidance from a human who is very familiar with the code, into a context-unit which would be re-usable and shareable.</p>
+<p>As we review pull requests, we continue to update our contexts, and this is gradually making pull request reviews cleaner. If our scheme of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> maintenance were generally known and recognized by the LLMs used by contributors, it would make it easier for external contributors to make solid contributions to our repository.</p>
+
+      <h2>
+        <a id="context-should-be-structured-like-code" class="header-link anchor" href="#context-should-be-structured-like-code">
+          Context Should Be Structured Like Code
+        </a>
+      </h2>
+    <p>At a high level, we propose that context should leverage the structuring of the source code to associate context with the code it describes.  <strong>Context should be modular, hierarchical, and local</strong>, just like code.</p>
+<p>We distribute <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> files throughout the repository tree. Each file describes its directory and links to child CONTEXT files. An LLM working on any file can walk up the directory tree, reading <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> files, to gather exactly the context it needs—layered from general to specific.</p>
+<ul>
+<li><p>Our main repository is a monorepo, with multiple sub-components (Compiler, Renderer, API, etc.) so
+a single context file doesn't make sense for these individual components.</p>
+</li>
+<li><p>Keeps individual context files smaller, allows an LLM assisted activity to read the appropriate context
+to finish a task without reading all documentation for the project. Scales well to larger projects.</p>
+</li>
+<li><p>Keeps the naming/location of these files LLM-agnostic</p>
+</li>
+<li><p>Humans and LLMs are always pair programming, so both humans and LLMs need to be able to
+both review code changes, and update and maintain context files for the code.</p>
+</li></ul>
+<p>In our repository it looks something like this:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">malloy/</span></span>
+<span class="line"><span style="color: #000000">├── CONTEXT.md                     # Architecture overview, build commands</span></span>
+<span class="line"><span style="color: #000000">├── packages/</span></span>
+<span class="line"><span style="color: #000000">│   └── malloy/</span></span>
+<span class="line"><span style="color: #000000">│       └── src/</span></span>
+<span class="line"><span style="color: #000000">│           ├── lang/</span></span>
+<span class="line"><span style="color: #000000">│           │   ├── CONTEXT.md     # Translator: AST, grammar, IR</span></span>
+<span class="line"><span style="color: #000000">│           │   └── test/</span></span>
+<span class="line"><span style="color: #000000">│           │       └── CONTEXT.md # Test infrastructure, matchers</span></span>
+<span class="line"><span style="color: #000000">│           └── model/</span></span>
+<span class="line"><span style="color: #000000">│               └── CONTEXT.md     # IR types, query compilation</span></span>
+<span class="line"><span style="color: #000000">└── test/</span></span>
+<span class="line"><span style="color: #000000">    └── CONTEXT.md                 # Integration tests</span></span></pre></div><p>We've found that this proposal provides a framework for us to leverage LLMs in our development, and to allow us to share the knowledge we collect while working with LLMs with outside contributors to the Malloy project.</p>
+<ul>
+<li><p>An LLM assisted code review could easily find and read all the appropriate context which might affect the PR.</p>
+</li>
+<li><p>A human submitting a PR to a repository they are not familiar with could ask their LLM to check their work, or even to plan the work with the appropriate context.</p>
+</li></ul>
+
+      <h2>
+        <a id="example" class="header-link anchor" href="#example">
+          Example
+        </a>
+      </h2>
+    <p>When an LLM starts working on <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">packages</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span><span style="color: #000000">/</span><span style="color: #001080">src</span><span style="color: #000000">/</span><span style="color: #001080">lang</span><span style="color: #000000">/</span><span style="color: #001080">test</span><span style="color: #000000">/</span><span style="color: #001080">expressions</span><span style="color: #000000">.</span><span style="color: #001080">spec</span><span style="color: #000000">.</span><span style="color: #001080">ts</span></span></code>, it reads:</p>
+<ol>
+<li><p>Root <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> - gets the big picture</p>
+</li>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">packages</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span><span style="color: #000000">/</span><span style="color: #001080">src</span><span style="color: #000000">/</span><span style="color: #001080">lang</span><span style="color: #000000">/</span><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> - understands the translator</p>
+</li>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">packages</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span><span style="color: #000000">/</span><span style="color: #001080">src</span><span style="color: #000000">/</span><span style="color: #001080">lang</span><span style="color: #000000">/</span><span style="color: #001080">test</span><span style="color: #000000">/</span><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> - learns the test infrastructure</p>
+</li></ol>
+
+      <h2>
+        <a id="key-principles" class="header-link anchor" href="#key-principles">
+          Key Principles
+        </a>
+      </h2>
+    <p><strong>Locality</strong>: Context lives next to the code it describes. The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">src</span><span style="color: #000000">/</span><span style="color: #001080">api</span><span style="color: #000000">/</span></span></code> describes the API, not the whole project.</p>
+<p><strong>Human-Reviewable</strong>: Each file is small enough that a developer can review changes without needing to understand the entire repository. This enables distributed maintenance—the person who knows auth reviews the auth <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code>.</p>
+<p><strong>LLM-Optimized</strong>: Written for LLM consumption—concise, factual, structured. Include concrete examples (file paths, commands, code patterns). Skip the verbose explanations humans need but LLMs don't.</p>
+<p><strong>Verifiable</strong>: Include a maintenance section so you can periodically ask an LLM to verify the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> tree is still accurate. We do this in Malloy—"Read the CONTEXT tree and verify it is up to date."</p>
+
+      <h2>
+        <a id="other-solutions" class="header-link anchor" href="#other-solutions">
+          Other Solutions
+        </a>
+      </h2>
+    
+      <h3>
+        <a id="llms-txt" class="header-link anchor" href="#llms-txt">
+          llms.txt
+        </a>
+      </h3>
+    <p>Searching for prior art, we found <a href="https://llmstxt.org/">llms.txt</a>, proposed by Jeremy Howard. It's a great idea for websites to provide LLM-friendly content at a known URL.</p>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> complements <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">llms</span><span style="color: #000000">.</span><span style="color: #001080">txt</span></span></code>.  In some ways these two proposals are addressing different problems. Maybe if people like our proposal there could be some merged proposal, or conventions for using both.</p>
+
+      <h2>
+        <a id="try-it" class="header-link anchor" href="#try-it">
+          Try It
+        </a>
+      </h2>
+    <p>We've published the convention as a standalone proposal: <a href="https://github.com/the-michael-toy/llm-context-md">github.com/the-michael-toy/llm-context-md</a></p>
+<p>You can see it in action in the <a href="https://github.com/malloydata/malloy">Malloy repository</a>—look for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> files throughout the tree.</p>
+<p>Getting started is easy:</p>
+<ol>
+<li><p>Add a root <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> with your project overview</p>
+</li>
+<li><p>Add <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> files to subsystems as you work on them</p>
+</li>
+<li><p>Link child files from parents</p>
+</li></ol>
+<p>No tooling required. No configuration. Just markdown files that any LLM can read.</p>
+
+      <h2>
+        <a id="the-meta-point" class="header-link anchor" href="#the-meta-point">
+          The Meta Point
+        </a>
+      </h2>
+    <p>We built this convention while working with LLMs on Malloy itself. The LLM that helped write this blog post used <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">CONTEXT</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> files to understand the codebase well enough to make meaningful contributions to the compiler, test infrastructure, and documentation.</p>
+<p>Context isn't just documentation—it's how you collaborate with AI. Structure it well, and the collaboration gets dramatically better.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2025-06-16-annotations-and-tags"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

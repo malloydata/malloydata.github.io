@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Announcing Malloy 4.0</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-10-03-malloy-four/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><img src="malloy-four-dot-zero.png" class="no-shadow"/><div class="title-row">
+        
+      <h1>
+        <a id="announcing-malloy-4-0" class="header-link anchor" href="#announcing-malloy-4-0">
+          Announcing Malloy 4.0
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-10-03-malloy-four/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>The next major update to the Malloy syntax is here.</p>
+<p><em>October 3, 2023 by the Malloy Team</em>
+<br/><br/><br/></p>
+<p>While there was never an official "3.0" version we are calling this release 4.0 because this is the fourth major
+renovation of the language. It could also be thought of as "1.0" because this is when we stop using
+the word "experimental" to describe the language. At this point we have experimented enough.  We believe
+Malloy is now the best language for working with data stored in an SQL server.</p>
+<p>If you haven't tried Malloy yet, you can try it right now with just your browser by</p>
+<ul>
+<li><p>going to the <a href="https://github.com/malloydata/malloy-samples">Malloy Examples Repository</a> on Github</p>
+</li>
+<li><p>log into Github</p>
+</li>
+<li><p>press '.' (the period key) to launch VSCode</p>
+</li>
+<li><p>Install the Malloy Extension</p>
+</li></ul>
+
+      <h2>
+        <a id="the-4-0-release-timeline" class="header-link anchor" href="#the-4-0-release-timeline">
+          The 4.0 Release Timeline
+        </a>
+      </h2>
+    <p>While Malloy 4.0 was in development, it was considered acceptable to make breaking
+changes to the language as we discovered better ways to express data computations.  Beginning with
+4.0, it is our intention to keep code compatibility for existing code, even as we continue to add
+capabilities to the language.</p>
+<p>The rollout of 4.0 will happen in stages so users will have time to upgrade their code before it stops working.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Date</th>
+
+<th align="left">Malloy Langauge Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right"><strong>October 3, 2023</strong></td>
+
+<td align="left">Both 4.0 and pre-4.0 Malloy code are usable in the Pre-Release Malloy VS Code Extension<br/><ul><li>If you are using a language construct which will not work in 4.0, the IDE will show you a warning.</li><li>The <a href="../../documentation/index">Documentation</a> describes the 4.0 syntax.</li></ul></td>
+</tr>
+
+<tr>
+<td align="right"><strong>October 9, 2023</strong></td>
+
+<td align="left">The Release version of the extension will begin to warn on pre-4.0 compatibility problems.</td>
+</tr>
+
+<tr>
+<td align="right"><strong>October 23, 2023</strong></td>
+
+<td align="left">The Pre-Release version of the extension will give errors, not warnings, on pre-4.0 code.</td>
+</tr>
+
+<tr>
+<td align="right"><strong>October 30, 2023</strong></td>
+
+<td align="left">The Release version of the extension will give errors, not warnings, on pre-4.0 code.</td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="4-0-differences" class="header-link anchor" href="#4-0-differences">
+          4.0 Differences
+        </a>
+      </h2>
+    
+      <h3>
+        <a id="incompatible-changes" class="header-link anchor" href="#incompatible-changes">
+          Incompatible Changes
+        </a>
+      </h3>
+    <p>With the Malloy 4.0 language changes, we're making Malloy more consistent readable and learnable. Some of
+these changes will require users to edit existing code. The IDE will issue warnings to flag code which
+needs to change, once the rollout begins. For examples showing both the old and new syntaxes, refer to
+the <a href="../../documentation/language/m4warnings">4.0 Messages FAQ</a> document.</p>
+<ul>
+<li><p><a href="../../documentation/language/source#source-extensions">Source extensions</a> now use <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">extend</span><span style="color: #000000"> {}</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/views#refining-views">Query refinement</a> now uses <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">+ {}</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/source#adding-fields">Reusable query operations</a> in a source are now defined with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">view</span><span style="color: #000000">:</span></span></code> instead of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">:</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/views#source-extensions">Source extensions in a query</a> must be contained in an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">extend</span><span style="color: #000000">: { }</span></span></code></p>
+<ul>
+<li><p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">declare</span><span style="color: #000000">:</span></span></code> statement has been removed, use <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">measure</span><span style="color: #000000">:</span></span></code></p>
+</li>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">join_</span><span style="color: #000000">:</span></span></code> statements in a query must be in the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">extend</span><span style="color: #000000">: {}</span></span></code> block</p>
+</li></ul>
+</li>
+<li><p>The new <a href="../../documentation/language/statement#run-statements">run statement</a>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">:</span></span></code> replaces <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">:</span></span></code> with no name</p>
+</li>
+<li><p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sql</span><span style="color: #000000">:</span></span></code> statement is replaced by <a href="../../documentation/language/sql_sources">SQL sources</a>, e.g. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">sql</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;SELECT ...&quot;</span><span style="color: #000000">)</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/source#sources-from-tables-or-views">Table sources</a> have new syntax: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">connection_name</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;table_path&#39;</span><span style="color: #000000">)</span></span></code> instead of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;connection_name:table_path&#39;</span><span style="color: #000000">)</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/views#projection">Projections</a> are performed with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">select</span><span style="color: #000000">:</span></span></code> instead of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">project</span><span style="color: #000000">:</span></span></code></p>
+</li>
+<li><p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">from</span><span style="color: #000000">()</span></span></code> function to create a source from a query is no longer needed</p>
+</li>
+<li><p>When <a href="../../documentation/language/sql_sources#embedding-malloy-queries-in-an-sql-block-a-k-a-turducken-">nesting Malloy code inside a SQL string</a>, the syntax
+is <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">%{ </span><span style="color: #000000; font-style: italic">malloy query</span><span style="color: #000000"> }</span></span></code> and not <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">%{ </span><span style="color: #000000; font-style: italic">malloy query</span><span style="color: #000000"> }%</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/aggregates#required-explicit-aggregate-locality">Explicit aggregate locality</a> (using <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">.</span></span></code>) is now required in some cases for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span></code></p>
+</li>
+<li><p>The filter shortcut <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{? }</span></span></code> has been removed</p>
+</li>
+<li><p>The expression to run an existing query is now <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">query_name</span></span></code> instead of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">-&gt; </span><span style="color: #001080">query_name</span></span></code></p>
+</li>
+<li><p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">-&gt;</span></span></code> after the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">is</span></span></code> in a <a href="../../documentation/language/source#adding-fields"><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">view</span><span style="color: #000000">:</span></span></code></a> or <a href="../../documentation/language/nesting"><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">nest</span><span style="color: #000000">:</span></span></code></a> statement is not longer needed</p>
+</li>
+<li><p>New syntax for <a href="../../documentation/language/aggregates#count-expr-">distinct counts</a>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">count</span><span style="color: #000000">(</span><span style="color: #000000; font-style: italic">expression</span><span style="color: #000000">)</span></span></code> instead of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">count</span><span style="color: #000000">(</span><span style="color: #795E26">distinct</span><span style="color: #000000"> </span><span style="color: #000000; font-style: italic">expression</span><span style="color: #000000">)</span></span></code></p>
+</li>
+<li><p>The syntax for <a href="../../documentation/language/aggregates#count">counts</a> is now just <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">count</span><span style="color: #000000">()</span></span></code>, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">count</span><span style="color: #000000">(*)</span></span></code> is deprecated</p>
+</li>
+<li><p>Malloy has a <a href="../../documentation/language/functions">function library</a> for doing common data manipulation operations</p>
+<ul>
+<li><p>Access to the database's internal functions directly must be through the <a href="../../documentation/language/functions#raw-sql-functions">raw sql function syntax</a></p>
+</li></ul>
+</li></ul>
+
+      <h3>
+        <a id="new-features" class="header-link anchor" href="#new-features">
+          New Features
+        </a>
+      </h3>
+    <p>These features are all active now.  Most are not "new" in that they have already appeared in the
+Release version of the Malloy VS Code extension, even though they were part of the 4.0 project.  Code which uses
+these will continue to work. They are listed here to provide a complete record of "What Is Malloy
+4.0."</p>
+<ul>
+<li><p>There are three kinds of <a href="../../documentation/language/datatypes#string">string literals</a>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&#39;</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&quot;</span></span></code>, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&quot;&quot;&quot;</span></span></code>, which can be used interchangeably anywhere a literal is legal</p>
+</li>
+<li><p><a href="../../documentation/language/expressions#casting-to-specific-database-types">Casting to a specific database type</a> is now legal using a quoted type name</p>
+</li>
+<li><p>New <a href="../../documentation/language/expressions#safe-type-cast">safe cast operator</a> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">:::</span></span></code></p>
+</li>
+<li><p>Addition of <a href="../../documentation/language/tags">annotations and tags</a></p>
+</li>
+<li><p>New <a href="../../documentation/language/expressions#null-operations">null-coalescing operator</a> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">??</span></span></code></p>
+</li>
+<li><p><a href="../../documentation/language/imports#selective-imports">Selective imports</a> of objects from other files</p>
+</li>
+<li><p><a href="../../documentation/language/calculations_windows">Analytic/window functions</a> using <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">calculate</span><span style="color: #000000">:</span></span></code></p>
+</li></ul>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-08-25-malloy-cli"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-10-18-malloy-python-notebooks"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
