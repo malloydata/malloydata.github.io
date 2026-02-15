@@ -86,6 +86,7 @@ In multi-root workspaces, each workspace root can have its own `malloy-config.js
 | `motherDuckToken` | password | MotherDuck auth token |
 | `additionalExtensions` | string | Extra DuckDB extensions to load |
 | `readOnly` | boolean | Open database read-only |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 **`bigquery`** — Google BigQuery
 
@@ -97,6 +98,7 @@ In multi-root workspaces, each workspace root can have its own `malloy-config.js
 | `maximumBytesBilled` | string | Byte billing cap |
 | `timeoutMs` | string | Query timeout in ms |
 | `billingProjectId` | string | Billing project (if different) |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 **`postgres`** — PostgreSQL
 
@@ -108,6 +110,7 @@ In multi-root workspaces, each workspace root can have its own `malloy-config.js
 | `password` | password | Password |
 | `databaseName` | string | Database name |
 | `connectionString` | string | Full connection string (alternative) |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 **`mysql`** — MySQL
 
@@ -118,6 +121,7 @@ In multi-root workspaces, each workspace root can have its own `malloy-config.js
 | `database` | string | Database name |
 | `user` | string | Username |
 | `password` | password | Password |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 **`snowflake`** — Snowflake
 
@@ -133,6 +137,7 @@ In multi-root workspaces, each workspace root can have its own `malloy-config.js
 | `privateKeyPath` | file | Path to private key (.pem/.key) |
 | `privateKeyPass` | password | Private key passphrase |
 | `timeoutMs` | number | Query timeout in ms |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 **`trino`** / **`presto`** — Trino or Presto
 
@@ -144,6 +149,25 @@ In multi-root workspaces, each workspace root can have its own `malloy-config.js
 | `schema` | string | Schema name |
 | `user` | string | Username |
 | `password` | password | Password |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+
+#### Setup SQL
+
+All connection types support a `setupSQL` parameter. This is a multi-line text field containing SQL statements to execute each time the connection is established.
+
+Each statement must end with `;` at the end of a line. Statements can span multiple lines. Only one statement-ending `;` is allowed per line.
+
+**Legal** — each statement ends with `;` on its own line:
+```
+SET search_path TO analytics;
+CREATE TEMP TABLE foo
+  AS SELECT 1;
+```
+
+**Illegal** — two statements on the same line:
+```
+SET search_path TO analytics; CREATE TEMP TABLE foo AS SELECT 1;
+```
 
 ### VS Code Settings
 
