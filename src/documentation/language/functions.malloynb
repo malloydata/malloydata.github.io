@@ -27,7 +27,7 @@ Functions that are "built-in" to Malloy can be called the usual way with the nam
 
 ### Raw SQL Functions
 
-Functions that are _not_ built in may be called in the same way, but with an `!` in between the function name and argument list: `sinh!(x)`. In this case, Malloy assumes the return type of the function is the same as that of the first argument (or `number` if there are no arguments). When this is not correct, the return type can be specified after the `!`, e.g. `hash!number(username)`.
+Functions that are _not_ built in may be called in the same way, but with an `!` in between the function name and argument list: `sinh!(x)`. In this case, Malloy assumes the return type of the function is the same as that of the first argument (or `number` if there are no arguments). When this is not correct, the return type can be specified after the `!`, e.g. `hash!number(username)`. The return type can also be a compound type, e.g. `some_func!number[](x)` or `json_to_record!{name :: string, age :: number}(j)`.
 
 ## Function Documentation
 
