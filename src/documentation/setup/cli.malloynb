@@ -26,75 +26,62 @@ malloy-cli --help
 
 ## Configure Connections
 
-The CLI stores its own configuration separately from VS Code in `~/.config/malloy/config.json`.
+The CLI stores its own configuration separately from VS Code in `~/.config/malloy/malloy-config.json`. See **[Configuration](config.malloynb)** for the full config file format, connection type properties, environment variables, and default connections.
 
-**Note:** The CLI does not support environment variables for connection configuration. Use the CLI commands below to manage connections.
+**Migrating from an older version:** If you have an existing `~/.config/malloy/config.json`, the CLI will automatically migrate it to the new `malloy-config.json` format on first run.
 
 ### Connection Commands
 
 ```bash
 # List all connections
-malloy connections list
+malloy-cli connections list
 
 # Create a new connection
-malloy connections create-<type> <name>
+malloy-cli connections create <type> <name> [key=value ...]
 
-# Test a connection
-malloy connections test <name>
+# Update an existing connection
+malloy-cli connections update <name> [key=value ...]
 
 # Show connection details
-malloy connections show <name>
+malloy-cli connections show <name>
+
+# Test a connection
+malloy-cli connections test <name>
+
+# Show available connection types
+malloy-cli connections describe
+
+# Show properties for a connection type
+malloy-cli connections describe <type>
 
 # Delete a connection
-malloy connections delete <name>
+malloy-cli connections delete <name>
 ```
 
 ### Create a Connection
 
-```bash
-# For BigQuery
-malloy-cli connections create-bigquery <connection-name>
-
-# For Postgres
-malloy-cli connections create-postgres <connection-name>
-
-# For DuckDB
-malloy-cli connections create-duckdb <connection-name>
-```
-
-View options for each database type:
+Properties use the exact names from the connection type registry, passed as `key=value` pairs. Use `malloy-cli connections describe <type>` to see available properties for any connection type.
 
 ```bash
-malloy-cli connections create-bigquery --help
+# DuckDB
+malloy-cli connections create duckdb mydb databasePath=/path/to/data.db
+
+# DuckDB with MotherDuck
+malloy-cli connections create duckdb md motherDuckToken=tok123 databasePath=md:my_database
+
+# BigQuery
+malloy-cli connections create bigquery bq projectId=my-project location=US
+
+# Snowflake
+malloy-cli connections create snowflake sf account=myorg warehouse=compute_wh
+
+# Postgres
+malloy-cli connections create postgres pg host=localhost port=5432 databaseName=mydb
 ```
 
-**BigQuery options:**
+### DuckDB Working Directory
 
-```
--p, --project <id>                    GCP project ID
--l, --location <region>               Query location (default: "US")
--k, --service-account-key-path <path> Path to service account JSON key
--t, --timeout <milliseconds>          Query timeout
--m, --maximum-bytes-billed <bytes>    Limit bytes scanned
-```
-
-### Default Connections
-
-Two connections are created automatically:
-
-- **`bigquery`**: Uses existing gCloud authentication
-- **`duckdb`**: Uses a built-in DuckDB instance
-
-If your Malloy files reference these connection names, they work without explicit setup.
-
-### BigQuery with gCloud
-
-If you already use gCloud:
-
-```bash
-gcloud auth login --update-adc
-malloy-cli connections create-bigquery my-bq
-```
+When a DuckDB connection does not have `workingDirectory` set in the config, the CLI automatically resolves relative table paths (like `duckdb.table('data.csv')`) relative to the `.malloy` or `.malloysql` file being run. If you set `workingDirectory` explicitly, that value is used instead.
 
 ---
 

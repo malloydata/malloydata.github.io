@@ -29,6 +29,10 @@
           "link": "/setup/database_support.malloynb"
         },
         {
+          "title": "Configuration",
+          "link": "/setup/config.malloynb"
+        },
+        {
           "title": "Malloy CLI",
           "link": "/setup/cli.malloynb"
         }
