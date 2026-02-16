@@ -50,124 +50,13 @@ There are two ways to configure database connections:
 1. **`malloy-config.json`** (recommended) — a project-level config file checked into source control
 2. **VS Code Settings** — user-level configuration via the command palette
 
-If a `malloy-config.json` exists in your workspace root, it takes priority over VS Code settings.
+**Note:** If a `malloy-config.json` exists in your workspace root, VS Code settings for connections are ignored entirely — all connections come from the config file.
 
 ### Project Configuration: `malloy-config.json`
 
-Place a `malloy-config.json` file in the root of your project (workspace root). The extension detects it automatically and picks up changes whenever you save.
+Place a `malloy-config.json` file in the root of your project (workspace root). The extension detects it automatically and picks up changes whenever you save. In multi-root workspaces, each workspace root can have its own file with independent connection namespaces.
 
-The file contains a `connections` object where each key is a connection name and each value specifies the connection type and its parameters. The first connection listed is the default.
-
-```json
-{
-  "connections": {
-    "my_duckdb": {
-      "is": "duckdb",
-      "databasePath": "./data.db"
-    },
-    "my_bq": {
-      "is": "bigquery",
-      "projectId": "my-project"
-    }
-  }
-}
-```
-
-In multi-root workspaces, each workspace root can have its own `malloy-config.json` with independent connection namespaces. If you open a single file without a workspace (`code file.malloy`), the extension looks for `malloy-config.json` in the file's directory.
-
-#### Connection Types
-
-**`duckdb`** — DuckDB / MotherDuck
-
-| Parameter | Type | Description |
-|---|---|---|
-| `databasePath` | file | Path to .db file (default: `:memory:`) |
-| `workingDirectory` | string | Working directory for relative paths |
-| `motherDuckToken` | password | MotherDuck auth token |
-| `additionalExtensions` | string | Extra DuckDB extensions to load |
-| `readOnly` | boolean | Open database read-only |
-| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-
-**`bigquery`** — Google BigQuery
-
-| Parameter | Type | Description |
-|---|---|---|
-| `projectId` | string | GCP project ID |
-| `serviceAccountKeyPath` | file | Path to service account JSON key |
-| `location` | string | Dataset location |
-| `maximumBytesBilled` | string | Byte billing cap |
-| `timeoutMs` | string | Query timeout in ms |
-| `billingProjectId` | string | Billing project (if different) |
-| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-
-**`postgres`** — PostgreSQL
-
-| Parameter | Type | Description |
-|---|---|---|
-| `host` | string | Server host |
-| `port` | number | Server port |
-| `username` | string | Username |
-| `password` | password | Password |
-| `databaseName` | string | Database name |
-| `connectionString` | string | Full connection string (alternative) |
-| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-
-**`mysql`** — MySQL
-
-| Parameter | Type | Description |
-|---|---|---|
-| `host` | string | Server host |
-| `port` | number | Server port (default: 3306) |
-| `database` | string | Database name |
-| `user` | string | Username |
-| `password` | password | Password |
-| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-
-**`snowflake`** — Snowflake
-
-| Parameter | Type | Description |
-|---|---|---|
-| `account` | string | Snowflake account identifier (required) |
-| `username` | string | Username |
-| `password` | password | Password |
-| `role` | string | Role |
-| `warehouse` | string | Warehouse |
-| `database` | string | Database |
-| `schema` | string | Schema |
-| `privateKeyPath` | file | Path to private key (.pem/.key) |
-| `privateKeyPass` | password | Private key passphrase |
-| `timeoutMs` | number | Query timeout in ms |
-| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-
-**`trino`** / **`presto`** — Trino or Presto
-
-| Parameter | Type | Description |
-|---|---|---|
-| `server` | string | Server hostname |
-| `port` | number | Server port |
-| `catalog` | string | Catalog name |
-| `schema` | string | Schema name |
-| `user` | string | Username |
-| `password` | password | Password |
-| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-
-#### Setup SQL
-
-All connection types support a `setupSQL` parameter. This is a multi-line text field containing SQL statements to execute each time the connection is established.
-
-Each statement must end with `;` at the end of a line. Statements can span multiple lines. Only one statement-ending `;` is allowed per line.
-
-**Legal** — each statement ends with `;` on its own line:
-```
-SET search_path TO analytics;
-CREATE TEMP TABLE foo
-  AS SELECT 1;
-```
-
-**Illegal** — two statements on the same line:
-```
-SET search_path TO analytics; CREATE TEMP TABLE foo AS SELECT 1;
-```
+See **[Configuration](config.malloynb)** for the full config file format, connection type properties, setup SQL, and environment variables.
 
 ### VS Code Settings
 
@@ -183,91 +72,6 @@ VS Code stores these in your user settings:
 **Mac:** `~/Library/Application Support/Code/User/settings.json`
 **Windows:** `%APPDATA%\Code\User\settings.json`
 **Linux:** `~/.config/Code/User/settings.json`
-
----
-
-## Environment Variable Configuration
-
-Some databases support configuration via environment variables. Set these before launching VS Code.
-
-### MotherDuck
-
-MotherDuck is configured through a token. In MotherDuck, click **Settings** then copy your token.
-
-```bash
-export MOTHERDUCK_TOKEN=your_token_here
-```
-
-Then launch VS Code. The extension will automatically use the token when connecting to MotherDuck databases.
-
-**Example usage:**
-```malloy
-source: hacker_news is md.table('sample_data.hn.hacker_news')
-```
-
-The default connection name for MotherDuck is `md`.
-
-### MySQL
-
-MySQL connections are configured **only** through environment variables. There is no UI configuration for MySQL in VS Code.
-
-```bash
-export MYSQL_USER=readonly
-export MYSQL_HOST=db.example.com
-export MYSQL_PORT=3306
-export MYSQL_PASSWORD=your_password
-export MYSQL_DATABASE=analytics
-```
-
-Then launch VS Code. The default connection name is `mysql`.
-
-**Note:** `MYSQL_USER` is required. Other variables are optional but typically needed.
-
-### Snowflake
-
-Snowflake can be configured via UI or environment variables:
-
-```bash
-export SNOWFLAKE_ACCOUNT=myorg-myaccount   # Required
-export SNOWFLAKE_USER=analyst
-export SNOWFLAKE_PASSWORD=your_password
-export SNOWFLAKE_WAREHOUSE=compute_wh
-export SNOWFLAKE_DATABASE=analytics
-export SNOWFLAKE_SCHEMA=public
-```
-
-Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
-
-### Trino
-
-```bash
-export TRINO_SERVER=https://trino.example.com   # Required
-export TRINO_USER=analyst                        # Required
-export TRINO_PASSWORD=your_password
-export TRINO_CATALOG=hive
-export TRINO_SCHEMA=default
-```
-
-The default connection name is `trino`.
-
-### Presto
-
-```bash
-export PRESTO_HOST=presto.example.com   # Required
-export PRESTO_PORT=8080                 # Defaults to 8080
-export PRESTO_USER=analyst
-export PRESTO_PASSWORD=your_password
-export PRESTO_CATALOG=hive
-export PRESTO_SCHEMA=default
-```
-
-The default connection name is `presto`.
-
-### Databases Without Environment Variable Support
-
-- **BigQuery**: Uses `gcloud auth login --update-adc` (OAuth) or service account key file
-- **PostgreSQL**: Uses connection configuration in VS Code UI (credentials stored in system keychain)
-- **DuckDB**: Uses file paths directly, no authentication needed
 
 ---
 
@@ -335,7 +139,7 @@ Add a PostgreSQL connection via **Malloy: Edit Connections**. Enter host, port, 
 
 ### MySQL
 
-MySQL connections require environment variables (see above). The extension will detect the connection automatically when the variables are set.
+MySQL connections require environment variables — see [Configuration](config.malloynb#mysql). The extension will detect the connection automatically when the variables are set.
 
 ### Trino and Presto
 
