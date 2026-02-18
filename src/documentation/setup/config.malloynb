@@ -41,7 +41,7 @@ The `is` field identifies the connection type. All other fields are type-specifi
 |---|---|---|
 | `databasePath` | file | Path to .db file (default: `:memory:`) |
 | `workingDirectory` | string | Working directory for relative paths |
-| `motherDuckToken` | password | MotherDuck auth token |
+| `motherDuckToken` | secret | MotherDuck auth token. Default: `{env: "MOTHERDUCK_TOKEN"}` |
 | `additionalExtensions` | string | Comma-separated DuckDB extensions to load (e.g. `"spatial,fts"`). Built-in: json, httpfs, icu |
 | `readOnly` | boolean | Open database read-only |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
@@ -74,39 +74,53 @@ The `is` field identifies the connection type. All other fields are type-specifi
 
 | Parameter | Type | Description |
 |---|---|---|
-| `host` | string | Server host |
-| `port` | number | Server port (default: 3306) |
-| `database` | string | Database name |
-| `user` | string | Username |
-| `password` | password | Password |
+| `host` | string | Server host. Default: `{env: "MYSQL_HOST"}` |
+| `port` | number | Server port. Default: `{env: "MYSQL_PORT"}` or 3306 |
+| `database` | string | Database name. Default: `{env: "MYSQL_DATABASE"}` |
+| `user` | string | Username. Default: `{env: "MYSQL_USER"}` |
+| `password` | password | Password. Default: `{env: "MYSQL_PASSWORD"}` |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 ### `snowflake` — Snowflake
 
 | Parameter | Type | Description |
 |---|---|---|
-| `account` | string | Snowflake account identifier (required) |
-| `username` | string | Username |
-| `password` | password | Password |
+| `account` | string | Snowflake account identifier (required). Default: `{env: "SNOWFLAKE_ACCOUNT"}` |
+| `username` | string | Username. Default: `{env: "SNOWFLAKE_USER"}` |
+| `password` | password | Password. Default: `{env: "SNOWFLAKE_PASSWORD"}` |
 | `role` | string | Role |
-| `warehouse` | string | Warehouse |
-| `database` | string | Database |
-| `schema` | string | Schema |
+| `warehouse` | string | Warehouse. Default: `{env: "SNOWFLAKE_WAREHOUSE"}` |
+| `database` | string | Database. Default: `{env: "SNOWFLAKE_DATABASE"}` |
+| `schema` | string | Schema. Default: `{env: "SNOWFLAKE_SCHEMA"}` |
 | `privateKeyPath` | file | Path to private key (.pem/.key) |
 | `privateKeyPass` | password | Private key passphrase |
 | `timeoutMs` | number | Query timeout in ms |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
-### `trino` / `presto` — Trino or Presto
+Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
+
+### `trino` — Trino
 
 | Parameter | Type | Description |
 |---|---|---|
-| `server` | string | Server hostname |
+| `server` | string | Server hostname. Default: `{env: "TRINO_SERVER"}` |
 | `port` | number | Server port |
-| `catalog` | string | Catalog name |
-| `schema` | string | Schema name |
-| `user` | string | Username |
-| `password` | password | Password |
+| `catalog` | string | Catalog name. Default: `{env: "TRINO_CATALOG"}` |
+| `schema` | string | Schema name. Default: `{env: "TRINO_SCHEMA"}` |
+| `user` | string | Username. Default: `{env: "TRINO_USER"}` |
+| `password` | password | Password. Default: `{env: "TRINO_PASSWORD"}` |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+
+### `presto` — Presto
+
+| Parameter | Type | Description |
+|---|---|---|
+| `server` | string | Server hostname. Default: `{env: "PRESTO_HOST"}` |
+| `port` | number | Server port (default: 8080). Default: `{env: "PRESTO_PORT"}` |
+| `catalog` | string | Catalog name. Default: `{env: "PRESTO_CATALOG"}` |
+| `schema` | string | Schema name. Default: `{env: "PRESTO_SCHEMA"}` |
+| `user` | string | Username. Default: `{env: "PRESTO_USER"}` |
+| `password` | password | Password. Default: `{env: "PRESTO_PASSWORD"}` |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 ---
@@ -131,85 +145,28 @@ SET search_path TO analytics; CREATE TEMP TABLE foo AS SELECT 1;
 
 ---
 
-## Environment Variables
+## Sensitive Values
 
-Some databases support configuration via environment variables. When environment variables are set, a connection is created automatically using those values. Values set in `malloy-config.json` override environment variables.
+Fields with type `password` or `secret` contain sensitive values like credentials and API tokens. Instead of putting these directly in your config file, you can use an environment variable reference:
 
-### MotherDuck
-
-MotherDuck is configured through a token. In MotherDuck, click **Settings** then copy your token.
-
-```bash
-export MOTHERDUCK_TOKEN=your_token_here
+```json
+{
+  "connections": {
+    "my_motherduck": {
+      "is": "duckdb",
+      "databasePath": "md:my_database",
+      "motherDuckToken": {"env": "MOTHERDUCK_TOKEN"}
+    },
+    "my_postgres": {
+      "is": "postgres",
+      "host": "db.example.com",
+      "password": {"env": "PG_PASSWORD"}
+    }
+  }
+}
 ```
 
-The default connection name for MotherDuck is `md`.
+The `{"env": "VAR_NAME"}` syntax looks up the value from the named environment variable at connection time. If the variable is not set, the field is omitted and the connection proceeds without it.
 
-**Example usage:**
-```malloy
-source: hacker_news is md.table('sample_data.hn.hacker_news')
-```
+You can also provide a plain string value directly — this is useful for testing but not recommended for shared or committed config files.
 
-### MySQL
-
-MySQL connections can be configured entirely through environment variables.
-
-```bash
-export MYSQL_USER=readonly
-export MYSQL_HOST=db.example.com
-export MYSQL_PORT=3306
-export MYSQL_PASSWORD=your_password
-export MYSQL_DATABASE=analytics
-```
-
-The default connection name is `mysql`. `MYSQL_USER` is required; other variables are optional but typically needed.
-
-### Snowflake
-
-```bash
-export SNOWFLAKE_ACCOUNT=myorg-myaccount   # Required
-export SNOWFLAKE_USER=analyst
-export SNOWFLAKE_PASSWORD=your_password
-export SNOWFLAKE_WAREHOUSE=compute_wh
-export SNOWFLAKE_DATABASE=analytics
-export SNOWFLAKE_SCHEMA=public
-```
-
-Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
-
-### Trino
-
-```bash
-export TRINO_SERVER=https://trino.example.com   # Required
-export TRINO_USER=analyst                        # Required
-export TRINO_PASSWORD=your_password
-export TRINO_CATALOG=hive
-export TRINO_SCHEMA=default
-```
-
-The default connection name is `trino`.
-
-### Presto
-
-```bash
-export PRESTO_HOST=presto.example.com   # Required
-export PRESTO_PORT=8080                 # Defaults to 8080
-export PRESTO_USER=analyst
-export PRESTO_PASSWORD=your_password
-export PRESTO_CATALOG=hive
-export PRESTO_SCHEMA=default
-```
-
-The default connection name is `presto`.
-
-### Databases Without Environment Variable Support
-
-- **BigQuery**: Uses `gcloud auth login --update-adc` (OAuth) or a service account key file configured in `malloy-config.json`
-- **PostgreSQL**: Uses connection parameters in `malloy-config.json` (credentials stored in system keychain for VS Code)
-- **DuckDB**: Uses file paths directly, no authentication needed
-
----
-
-## Default Connections
-
-Two connections are created automatically if you don't already have a connection that overrides them — `bigquery` and `duckdb`. If your Malloy files reference these connection names, they work without explicit setup. DuckDB uses a built-in in-memory instance, and BigQuery attempts to connect using any existing gcloud authentication on your computer.

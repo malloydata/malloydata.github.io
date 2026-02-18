@@ -79,6 +79,10 @@ malloy-cli connections create snowflake sf account=myorg warehouse=compute_wh
 malloy-cli connections create postgres pg host=localhost port=5432 databaseName=mydb
 ```
 
+### Default Connections
+
+Two connections are created automatically if you don't already have a connection that overrides them — `bigquery` and `duckdb`. If your Malloy files reference these connection names, they work without explicit setup. DuckDB uses a built-in in-memory instance, and BigQuery attempts to connect using any existing gcloud authentication on your computer.
+
 ### DuckDB Working Directory
 
 When a DuckDB connection does not have `workingDirectory` set in the config, the CLI automatically resolves relative table paths (like `duckdb.table('data.csv')`) relative to the `.malloy` or `.malloysql` file being run. If you set `workingDirectory` explicitly, that value is used instead.

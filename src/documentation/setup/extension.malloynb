@@ -139,7 +139,7 @@ Add a PostgreSQL connection via **Malloy: Edit Connections**. Enter host, port, 
 
 ### MySQL
 
-MySQL connections require environment variables — see [Configuration](config.malloynb#mysql). The extension will detect the connection automatically when the variables are set.
+MySQL connections can be configured in `malloy-config.json` or via environment variables — see [Configuration](config.malloynb).
 
 ### Trino and Presto
 
