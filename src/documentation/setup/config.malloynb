@@ -28,7 +28,7 @@ The `is` field identifies the connection type. All other fields are type-specifi
 
 ### Where the config file lives
 
-- **VS Code Extension** — place `malloy-config.json` in your workspace root. The extension detects it automatically and picks up changes on save. In multi-root workspaces, each root can have its own file.
+- **VS Code Extension** — place `malloy-config.json` in your workspace root. The extension detects it automatically and picks up changes on save. In multi-root workspaces, each root can have its own file. You can also set a global fallback directory via the `malloy.globalConfigDirectory` setting (e.g. `~/.config/malloy`) — this is used when no workspace config file exists.
 - **Malloy CLI** — `~/.config/malloy/malloy-config.json`. See the [CLI setup](cli.malloynb) for details.
 
 ---
@@ -145,9 +145,9 @@ SET search_path TO analytics; CREATE TEMP TABLE foo AS SELECT 1;
 
 ---
 
-## Sensitive Values
+## Environment Variables
 
-Fields with type `password` or `secret` contain sensitive values like credentials and API tokens. Instead of putting these directly in your config file, you can use an environment variable reference:
+Any property value can be replaced with an environment variable reference. This is especially useful for sensitive values like passwords and API tokens, so they don't need to appear directly in your config file:
 
 ```json
 {
