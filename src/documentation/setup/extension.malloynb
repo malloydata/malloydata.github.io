@@ -48,9 +48,19 @@ The Malloy Extension also works in VS Code Web environments like github.dev. Pre
 There are two ways to configure database connections:
 
 1. **`malloy-config.json`** (recommended) — a project-level config file checked into source control
-2. **VS Code Settings** — user-level configuration via the command palette
+2. **VS Code Settings** — user-level configuration via the Connections sidebar
 
-**Note:** If a `malloy-config.json` exists in your workspace root, VS Code settings for connections are ignored entirely — all connections come from the config file.
+When both exist, config file connections take priority. Settings connections are used as a fallback for any connection names not defined in the config file.
+
+### Connections Sidebar
+
+The **Malloy Connections** sidebar shows all configured connections grouped by source:
+
+- **Config** — Connections from discovered `malloy-config.json` files. These are read-only in the editor; edit the JSON file directly to make changes.
+- **Settings** — User-defined connections from VS Code settings. Editable through the connection editor. If a settings connection has the same name as a config connection, it appears as "(shadowed)" since the config version takes priority.
+- **Defaults** — One entry per supported database type, using built-in defaults. Click to create a new settings connection from the default.
+
+Click any connection to open the connection editor, or use the **+** button to create a new connection.
 
 ### Project Configuration: `malloy-config.json`
 
@@ -60,18 +70,31 @@ See **[Configuration](config.malloynb)** for the full config file format, connec
 
 ### VS Code Settings
 
-You can also configure connections through the VS Code command palette:
+You can also configure connections through the Connections sidebar or the command palette:
 
 1. Open Command Palette: `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
 2. Type: **Malloy: Edit Connections**
 3. Click **Add Connection** and select your database type
 4. Fill in the connection details
 
-VS Code stores these in your user settings:
+Sensitive values (passwords, tokens) are stored securely in your system keychain.
 
-**Mac:** `~/Library/Application Support/Code/User/settings.json`
-**Windows:** `%APPDATA%\Code\User\settings.json`
-**Linux:** `~/.config/Code/User/settings.json`
+### Connection Editor
+
+The connection editor lets you view and manage individual connections:
+
+- **Test** — Verify the connection works with the current settings
+- **Duplicate** — Create a copy of an existing connection
+- **Delete** — Remove a settings connection
+
+Config file connections open in a read-only view. You can still test them, but edit the JSON file directly to change settings.
+
+### Connection Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `malloy.globalConfigDirectory` | Directory containing a global `malloy-config.json`, used as a fallback when no workspace config file exists (e.g. `~/.config/malloy`) | `""` |
+| `malloy.projectConnectionsOnly` | Only use workspace config file connections — hides global config, settings, and defaults | `false` |
 
 ---
 

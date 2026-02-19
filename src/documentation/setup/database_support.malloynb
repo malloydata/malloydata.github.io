@@ -12,7 +12,7 @@ Malloy connects to a variety of databases. This page provides an overview of sup
 | [BigQuery](../language/dialect/bigquery.malloynb) | `bigquery` | OAuth or service account authentication |
 | [Snowflake](../language/dialect/snowflake.malloynb) | `snowflake` | Password or RSA key authentication |
 | [PostgreSQL](../language/dialect/postgres.malloynb) | `postgres` | Standard credentials |
-| [MySQL](../language/dialect/mysql.malloynb) | `mysql` | Environment variables only (VS Code) |
+| [MySQL](../language/dialect/mysql.malloynb) | `mysql` | Standard credentials |
 | [Trino / Presto](../language/dialect/presto-trino.malloynb) | `trino` / `presto` | Server URL + optional auth |
 
 ---
