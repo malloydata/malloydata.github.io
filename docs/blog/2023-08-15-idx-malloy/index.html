@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy Blog</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-08-15-idx-malloy/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="using-google-s-project-idx-with-malloy" class="header-link anchor" href="#using-google-s-project-idx-with-malloy">
+          Using Google's Project IDX with Malloy
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-08-15-idx-malloy/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><em>August 15, 2023 by lloyd tabb</em>
+</br></br></br></p>
+<p>Google recently announced <a href="https://developers.googleblog.com/2023/08/introducing-project-idx-experiment-to-improve-full-stack-multiplatform-app-development.html">Poject IDX</a> and a Cloud-based, AI-powered coding development enviornment.  It turns out that this environment makes a pretty fabulous development environment for working with <a href="https://www.malloydata.dev">Malloy</a>.</p>
+<p>A Project IDX development environment consists configurable clouds instance, VSCode and AI to help you.  We've configured some of our Malloy repositories so that when you open them in Project IDX, everything is setup to run, all you need to do is log into gcloud at the command line.</p>
+
+      <h2>
+        <a id="setting-it-up" class="header-link anchor" href="#setting-it-up">
+          Setting it up
+        </a>
+      </h2>
+    <p>The first thing is to join the waitlist for <a href="https://idx.dev">Project IDX</a>.  Once you've done this, <a href="/slack">ping the Malloy team in the Slack channel</a> and we'll use our insider influence to help expedite the process.</p>
+
+      <h2>
+        <a id="import-a-repo" class="header-link anchor" href="#import-a-repo">
+          Import a Repo
+        </a>
+      </h2>
+    <p>Project IDX gives you several choices in starting machine instances.  Choose "Import a Repo" and click 'enable Nix for this workspace'.  <a href="https://nixos.org">Nix</a> is a way of configuring development environments (more on this later).  You can think of it as a super lightweight Docker.</p>
+<img src="import.png"><p>Click "Create" and IDX will create your development environment.  <strong>Try not to click on things while this is happening</strong>.</p>
+
+      <h2>
+        <a id="rebuild-environment" class="header-link anchor" href="#rebuild-environment">
+          Rebuild Environment
+        </a>
+      </h2>
+    <p>Once VSCode opens up in your browser, you'll see a notification in the lower-right corner that says <strong>Rebuild Enviornment</strong>.  Click it.  This button tells Project IDX to install all the stuff specified in <code>~/.idx/dev.nix</code> (Malloy and other tooling).  If you don't see this button, make any change to the above file and the button will re-appear.</p>
+<p>You should see another set of screens about installing stuff and then ultimately you should be back in VSCode.</p>
+<img src="rebuild.png">
+      <h2>
+        <a id="log-into-gcloud" class="header-link anchor" href="#log-into-gcloud">
+          Log into gcloud
+        </a>
+      </h2>
+    <p>The final step in setting up your Project IDX with Malloy is to log into <code>gcloud</code> so you can run queries against BigQuery.</p>
+<p>Open a new terminal window by Clicking the three lines in the upper left corner.</p>
+<img src="new_terminal.png"><p>In terminal log into gcloud by running the commands (using your project)</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">gcloud auth login --update-adc</span></span>
+<span class="line"><span style="color: #000000">gcloud config set project {my_project_id}</span></span></pre></div>
+      <h2>
+        <a id="test-your-bigquery-connection" class="header-link anchor" href="#test-your-bigquery-connection">
+          Test your BigQuery connection
+        </a>
+      </h2>
+    <p>Open <code>~/bigquery/faa/airports.malloy</code> and click <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">Run</span><span style="color: #000000"> </span><span style="color: #AF00DB">Query</span></span></code> on any of the queries.</p>
+<p>Everything should be setup.</p>
+<p>As always, <a href="/slack">please visit our Slack Communitity</a> if you have any problems or feedback.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                
+              </div>
+              <div class="item">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

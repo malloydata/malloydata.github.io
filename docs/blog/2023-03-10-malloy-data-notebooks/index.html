@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy Data Notebooks: A picture is now worth 10,000 words</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-03-10-malloy-data-notebooks/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="malloy-data-notebooks-a-picture-is-now-worth-10-000-words" class="header-link anchor" href="#malloy-data-notebooks-a-picture-is-now-worth-10-000-words">
+          Malloy Data Notebooks: A picture is now worth 10,000 words
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-03-10-malloy-data-notebooks/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Notebooks feel great when working with data</p>
+<p><em>March 10, 2023 by lloyd tabb</em>
+<br/><br/><br/></p>
+<p>We always knew that putting <a href="http://www.malloydata.dev/">Malloy</a> into a data notebook would be pretty great, but I don’t think we quite realized how great it would be. Notebooks in Malloy showcase the re-usability of a semantic data model and the simplicity of writing complex queries.</p>
+
+      <h2>
+        <a id="setting-up-malloy-in-browser-" class="header-link anchor" href="#setting-up-malloy-in-browser-">
+          Setting up Malloy - in browser.
+        </a>
+      </h2>
+    <p>One of the great things about Malloy is that it runs in all the places that VSCode runs. One of those places is Github (github.dev), an entirely browser based experience. Malloy has DuckDB built right in so all you really need is a browser.</p>
+<p>To set up Malloy on github.dev, <a href="https://github.dev/lloydtabb/install-malloy/blob/main/README.md">Go to the setup repository</a> and say yes when it asks if you want to install. You can close this window once Malloy has been installed. You don’t have to do this again.</p>
+<img src="add-extension.webp"/><div class="title-row">
+        
+      <h1>
+        <a id="some-notebooks-" class="header-link anchor" href="#some-notebooks-">
+          Some Notebooks.
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-03-10-malloy-data-notebooks/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>We’ve put together a few notebooks. Pretty amazingly, the Malloy code and data are all stored in repositories on Github. Try these notebooks we’ve built and then try it with your own data.</p>
+<p>Open a notebook and then bonk <strong>Run All</strong> at the top of the page.</p>
+<p><a href="https://github.dev/lloydtabb/auto_recalls/blob/main/auto_recalls.malloynb">Auto Recalls</a> - Recall data from Data.gov.</p>
+<p><a href="https://github.dev/lloydtabb/name_fiddle/blob/main/names.malloynb">Baby Names</a> - What are the 100 most common baby names, and by decade.</p>
+<p><a href="https://github.dev/malloydata/patterns/blob/main/flight_routes.malloynb">Plane Tracker</a> - Map/Reduce example. Take flight records and map to individual airplane/days along with maps of where the plane flew.</p>
+<p><a href="https://github.dev/malloydata/patterns/blob/main/quickstart.malloynb">Malloy Quickstart</a> - we’ve converted the Malloy Quickstart documentation into a Notebook. Run all the examples. Try modifying them.</p>
+
+      <h2>
+        <a id="how-it-works" class="header-link anchor" href="#how-it-works">
+          How it works
+        </a>
+      </h2>
+    <p>In a Malloy Notebook a cell is either Markdown or Malloy Code. The Malloy code is spread throughout the notebook. Each cell includes the code from the previous cells so you can define object in one cell and use it in the next. For example, the first cell below describes a data model with some measures and dimensions. The next cell uses these definitions.</p>
+<img src="notebook.webp"/>
+      <h2>
+        <a id="use-the-schema" class="header-link anchor" href="#use-the-schema">
+          Use the Schema
+        </a>
+      </h2>
+    <p>Whenever you are editing a Malloy Code Cell in a notebook, all the definitions available to you are located in the schema panel to the left. This makes programming easier.</p>
+<img src="schema.webp"/>
+      <h2>
+        <a id="code-in-style" class="header-link anchor" href="#code-in-style">
+          Code in Style
+        </a>
+      </h2>
+    <p>Styles can be applied to rendered cells by placing a comment on the last line.</p>
+<img src="style.webp"/>
+      <h2>
+        <a id="make-your-own-notebook" class="header-link anchor" href="#make-your-own-notebook">
+          Make your own Notebook
+        </a>
+      </h2>
+    <p>Making your own notebook in Github is really easy.</p>
+<ol>
+<li><p>Make a new repository in github.</p>
+</li></ol>
+<img src="new-repo.webp"/><ol start="2">
+<li><p>Upload a some data (csv, parquet or json) and bonk the <strong>Commit changes</strong> button.</p>
+</li></ol>
+<img src="upload-data.webp"/><ol start="3">
+<li><p>Press the Period Key on your keyboard (magic will happen). You should now be in VSCode!</p>
+<img src="vscode.webp"/></li>
+<li><p>Make sure you have the Malloy extension installed (If you ran any of the above examples, you should have it installed already).</p>
+</li></ol>
+<img src="check-extension.webp"/><ol start="5">
+<li><p>From the menu File/New File. Give it a name with an extension of <code>.malloynb</code></p>
+</li></ol>
+<img src="new_file.webp"/><ol start="6">
+<li><p>Build your Notebook</p>
+<img src="build-notebook.webp"/></li>
+<li><p>Run it.</p>
+<img src="run.webp"/></li>
+<li><p>Commit your changes</p>
+</li></ol>
+<img src="commit.webp"/><p><a href="https://github.dev/lloydtabb/auto_recalls/blob/main/auto_recalls.malloynb">And there it is. Try it.</a></p>
+
+      <h2>
+        <a id="more" class="header-link anchor" href="#more">
+          More
+        </a>
+      </h2>
+    <p>Notebooks can work on your local machine and can work with BigQuery and Postgres. We’re just getting started here, so we’d love your feedback. If you make some public notebooks, please share them with us.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-01-23-malloy-is-incomplete--turducken"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-06-15-malloy-roadmap"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
