@@ -145,6 +145,21 @@ SET search_path TO analytics; CREATE TEMP TABLE foo AS SELECT 1;
 
 ---
 
+## Manifest Path
+
+The config file can specify where [persistence](../experiments/persistence.malloynb) manifests are stored:
+
+```json
+{
+  "connections": { ... },
+  "manifestPath": "MANIFESTS"
+}
+```
+
+The `manifestPath` property is optional and defaults to `"MANIFESTS"`. The manifest file is `<manifestPath>/malloy-manifest.json`, relative to the config file's location. Both the builder (`malloy-cli build`) and the VS Code extension read the manifest from this path.
+
+---
+
 ## Environment Variables
 
 Any property value can be replaced with an environment variable reference. This is especially useful for sensitive values like passwords and API tokens, so they don't need to appear directly in your config file:

@@ -14,3 +14,4 @@ Below is a list of currently running experiements and how to turn them on.
 * `##! experimental.parameters` - [Declare sources with parameters](parameters.malloynb)
 * `##! experimental.composite_sources` - [Create virtual sources backed by multiple cube tables or source definitions](composite_sources.malloynb)
 * `##! experimental.access_modifiers` - [Limit access to fields in a source](include.malloynb)
+* `##! experimental.persistence` - [Persist sources as tables with the CLI builder](persistence.malloynb)
