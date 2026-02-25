@@ -416,6 +416,10 @@
         {
           "title": "Access Modifiers",
           "link": "/experiments/include.malloynb"
+        },
+        {
+          "title": "Persistence",
+          "link": "/experiments/persistence.malloynb"
         }
       ]
     }

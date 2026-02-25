@@ -1,0 +1,158 @@
+>>>markdown
+## Persistence
+
+Malloy sources backed by queries can be "persisted" — their results saved as database tables. When queries run against a persistent source, the runtime reads from the pre-built table instead of recomputing the query.
+
+This is an experimental feature. Enable it with `##! experimental.persistence` at the top of your `.malloy` file.
+
+### Persistence in Malloy
+
+Malloy's persistence support is a foundation, not a complete solution. The core provides machinery for annotating sources, examining models for dependencies, and substituting pre-built tables at query time — but all policy decisions (scheduling, invalidation, environments, quotas, garbage collection) are left to the application layer. This makes it possible to build sophisticated persistence strategies for complex applications. See [WN-0022 (Persistent Sources)](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0022-persistence/wn-0022.md) and [WN-0023 (Shared Configuration)](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0023-connection-config/wn-0023.md) for the full design.
+
+**This document** covers the simple, built-in persistence workflow: annotate sources with `#@ persist`, build tables with `malloy-cli build`, and use them in the [VS Code extension](../setup/extension.malloynb). No custom application code required.
+
+### Annotating sources
+
+Add `#@ persist name=<table_name>` before any source backed by a query. The `name` is required — it specifies the database table that will hold the results.
+
+```malloy
+##! experimental.persistence
+
+source: flights is duckdb.table('flights.parquet') extend {
+  measure: flight_count is count()
+}
+
+#@ persist name=by_carrier
+source: by_carrier is flights -> {
+  group_by: carrier
+  aggregate: flight_count
+}
+
+#@ persist name=by_origin
+source: by_origin is flights -> {
+  group_by: origin
+  aggregate: flight_count
+}
+```
+
+Persistence is inherited when you `extend` a persistent source. The child keeps the same table name unless you override it. Use `#@ -persist` to opt out:
+
+```malloy
+// Inherits persistence from by_carrier
+source: enriched is by_carrier extend {
+  dimension: upper_carrier is upper(carrier)
+}
+
+// Opt out of persistence
+#@ -persist
+source: temporary is by_carrier extend { ... }
+```
+
+### Setup
+
+Many database connections work with no [configuration](../setup/config.malloynb) at all — if a connection name matches a registered database type (DuckDB, BigQuery, Postgres, etc.), Malloy creates one with default settings. So for simple cases, you may not need a `malloy-config.json` to get started.
+
+The builder writes a **manifest** (`malloy-manifest.json`) that tells the runtime which tables have been built. The manifest lives in a directory next to the config file (default: `MANIFESTS/`, configurable via `manifestPath` in `malloy-config.json`). Both the builder and VS Code read the manifest from the same location.
+
+You need to decide where your config and manifest live. There are two common setups:
+
+#### Global config
+
+The CLI reads `~/.config/malloy/malloy-config.json` by default. The manifest is written to `~/.config/malloy/MANIFESTS/malloy-manifest.json`.
+
+This is the simplest setup — no flags needed when running the builder:
+
+```bash
+malloy-cli build models/analytics.malloy
+```
+
+To have VS Code use the same global config and manifest, set the `malloy.globalConfigDirectory` setting to `~/.config/malloy`.
+
+#### Project config
+
+For project-specific connections or to keep the manifest with your project, place a `malloy-config.json` in the project directory. It can be as minimal as `{}` if default connections are sufficient — what matters is that it anchors the manifest location.
+
+```
+my-project/
+  malloy-config.json
+  MANIFESTS/
+    malloy-manifest.json    ← created by the builder
+  models/
+    analytics.malloy
+```
+
+VS Code detects `malloy-config.json` in the workspace root automatically.
+
+When using a project config with the CLI, pass `--config`:
+
+```bash
+malloy-cli --config . build models/
+```
+
+### Building
+
+The builder compiles `.malloy` files, finds `#@ persist` sources, and creates the database tables:
+
+```bash
+# Build all .malloy files in the current directory (recursive)
+malloy-cli build
+
+# Build a specific file
+malloy-cli build models/analytics.malloy
+
+# Build all files in a directory (recursive)
+malloy-cli build models/
+
+# Preview what would be built without executing
+malloy-cli build --dry-run
+```
+
+The builder:
+1. Finds `#@ persist` sources in the specified files or directories
+2. Computes a dependency graph and processes sources in topological order
+3. Checks whether each table is already up to date (same SQL, same connection)
+4. Skips unchanged sources; creates or replaces changed ones
+5. Writes the manifest once at the end
+
+Output shows the status of each source:
+
+```
+models/analytics.malloy
+  ✓ by_carrier (duckdb) — up to date
+  ✓ by_origin (duckdb) — built (1.2s) → by_origin
+
+Manifest written: MANIFESTS/malloy-manifest.json
+
+Build complete: 1 built, 1 up to date
+```
+
+### Refreshing tables
+
+When a table needs to be rebuilt even though the Malloy source hasn't changed — for example, a summary of data that updates daily — use `--refresh` to force a rebuild:
+
+```bash
+# Refresh a specific table
+malloy-cli build --refresh duckdb:daily_summary
+
+# Refresh multiple tables
+malloy-cli build --refresh duckdb:daily_summary,duckdb:hourly_counts
+```
+
+Tables not named in `--refresh` are still checked normally and skipped if up to date.
+
+Since the builder is a command-line tool, you can schedule refreshes however you like — cron, CI pipelines, or any other scheduler. For example:
+
+```bash
+# crontab example
+0 0 * * *   malloy-cli --config /path/to/project build --refresh duckdb:daily_summary
+```
+
+### Using persisted tables in VS Code
+
+Once the builder has written the manifest, VS Code picks it up automatically — no restart needed. Queries against persistent sources use the persisted tables instead of recomputing.
+
+To verify, compile a query (without running it) and check the generated SQL. With a manifest, you'll see `FROM by_carrier` instead of an inlined subquery.
+
+If VS Code and the builder are reading different config files, they'll have different manifests. Make sure both point at the same `malloy-config.json` (see [Setup](#setup) above).
+>>>markdown
+

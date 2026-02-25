@@ -66,7 +66,9 @@ Click any connection to open the connection editor, or use the **+** button to c
 
 Place a `malloy-config.json` file in the root of your project (workspace root). The extension detects it automatically and picks up changes whenever you save. In multi-root workspaces, each workspace root can have its own file with independent connection namespaces.
 
-See **[Configuration](config.malloynb)** for the full config file format, connection type properties, setup SQL, and environment variables.
+The extension also reads [persistence manifests](../experiments/persistence.malloynb) from the config's `manifestPath` directory. When the builder (`malloy-cli build`) writes a manifest, VS Code picks it up automatically — no restart needed.
+
+See **[Configuration](config.malloynb)** for the full config file format, connection type properties, manifest path, setup SQL, and environment variables.
 
 ### VS Code Settings
 
@@ -175,3 +177,4 @@ Add a Trino or Presto connection via **Malloy: Edit Connections**. Enter the ser
 - **[Database Support](database_support.malloynb)** — Overview of all supported databases
 - **[Query existing models](../user_guides/querying_a_model.malloynb)** — Explore the malloy-samples to see Malloy in action
 - **[Build a semantic model](../user_guides/quickstart_modeling.malloynb)** — Create your first Malloy model from scratch
+- **[Persistence](../experiments/persistence.malloynb)** — Persist sources as pre-built tables

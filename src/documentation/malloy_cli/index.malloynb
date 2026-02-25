@@ -21,7 +21,7 @@ For detailed setup instructions including environment variables, connection comm
 
 ### Default Connections
 
-Two connections are created automatically if you don't already have a name that overrides them — `bigquery` and `duckdb`. If `.malloy` or `.malloysql` files reference these connection names, they work without explicit setup. DuckDB uses a built-in instance, and BigQuery attempts to connect using any existing gcloud authentication on your computer.
+If a connection name in your model matches a registered database type (DuckDB, BigQuery, Postgres, Snowflake, Trino, or Presto), the CLI creates one with default settings automatically. For example, `duckdb.table('data.parquet')` works out of the box. Some database types rely on environment variables for their defaults (e.g. `SNOWFLAKE_ACCOUNT`, `TRINO_SERVER`) — see the [Configuration](../setup/config.malloynb) reference for the full list of defaults per connection type.
 
 ## Usage
 

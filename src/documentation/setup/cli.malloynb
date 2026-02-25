@@ -81,7 +81,7 @@ malloy-cli connections create postgres pg host=localhost port=5432 databaseName=
 
 ### Default Connections
 
-Two connections are created automatically if you don't already have a connection that overrides them — `bigquery` and `duckdb`. If your Malloy files reference these connection names, they work without explicit setup. DuckDB uses a built-in in-memory instance, and BigQuery attempts to connect using any existing gcloud authentication on your computer.
+If a connection name in your model matches a registered database type (DuckDB, BigQuery, Postgres, Snowflake, Trino, or Presto), the CLI creates one with default settings automatically. For example, `duckdb.table('data.parquet')` works out of the box. Some database types rely on environment variables for their defaults (e.g. `SNOWFLAKE_ACCOUNT`, `TRINO_SERVER`) — see the [Configuration](config.malloynb) reference for the full list of defaults per connection type.
 
 ### DuckDB Working Directory
 
@@ -116,12 +116,41 @@ Useful for:
 - Copying SQL to other tools
 - Understanding what Malloy generates
 
-### Get Help
+### Build Persistent Tables
+
+Build persistent tables defined with `#@ persist` in Malloy files:
 
 ```bash
+# Build all .malloy files in the current directory
+malloy-cli build
+
+# Build a specific file
+malloy-cli build path/to/model.malloy
+
+# Build all files in a directory (recursive)
+malloy-cli build models/
+
+# Preview what would be built without executing
+malloy-cli build --dry-run
+
+# Force rebuild specific tables
+malloy-cli build --refresh duckdb:daily_summary,duckdb:hourly_counts
+```
+
+See **[Persistence](../experiments/persistence.malloynb)** for full details on setting up persistent sources, manifests, and using them with VS Code.
+
+### Global Options
+
+```bash
+# Use a project-level config instead of the global default
+malloy-cli --config . run model.malloy
+malloy-cli --config /path/to/malloy-config.json build
+
+# Get help
 malloy-cli --help
 malloy-cli run --help
 malloy-cli compile --help
+malloy-cli build --help
 ```
 
 ---
@@ -130,4 +159,5 @@ malloy-cli compile --help
 
 - **[Database Support](database_support.malloynb)** — Overview of all supported databases
 - **[Transform & Materialize](../user_guides/transform.malloynb)** — Use the CLI with MalloySQL for data transformations
+- **[Persistence](../experiments/persistence.malloynb)** — Persist sources as tables with the CLI builder
 - [malloy-cli on GitHub](https://github.com/malloydata/malloy-cli)

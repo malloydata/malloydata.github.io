@@ -1,0 +1,171 @@
+>>>markdown
+# Persistence in Malloy: A Foundation, Not a Framework
+
+*February 25, 2026 by Michael Toy*
+
+As complex data is mined for information, inevitably there are transformations that are expensive to compute. A summary table that takes thirty seconds to build is fine the first time, but not when it gets recomputed every time someone opens a dashboard. The obvious answer is to save those intermediate results as tables — but "obvious" and "simple" are very different things.
+
+Persistence in data computation is a huge problem space. Caching. Invalidation. Scheduling. Garbage collection. Production versus staging environments. Developer workflows. Multi-tenant quotas. The list goes on. Most tools either ignore this entirely — leaving you to manage it outside the system — or ship an opinionated pipeline that works great until your needs don't fit the opinions.
+
+We wanted a third option. So Malloy provides a **simple** implementation of persistence — and a foundation for **sophisticated** ones.
+
+## Separate the Machinery from the Policy
+
+The simple implementation is `malloy-cli build` and the VS Code extension: annotate sources, run a build, query pre-built tables. It handles the common case — a developer or small team persisting expensive intermediate results — with minimal setup.
+
+But the persistence *foundation* is deliberately more general. The core provides three primitives:
+
+1. **Annotation** — mark a source as persistent with `#@ persist`
+2. **Graph examination** — walk a model's dependency graph to understand what needs building, and in what order
+3. **Table substitution** — given a manifest of what's been built, swap in the pre-built table at query time
+
+Everything else — when to build, when to invalidate, how to handle environments, what to do about failures — is the application's problem. This is a design choice, not a limitation. The simple builder and a multi-tenant SAAS platform serving thousands of users with age-based refresh and per-user quotas both use the same three primitives. The foundation doesn't care what you build on it.
+
+## The Design Journey: From Queries to Sources
+
+Our initial thinking focused on queries as the unit of persistence. After all, when you persist something, you're persisting the result of running a query.
+
+But as we worked through the design, we realized that while a *query* is what gets executed and persisted, it is always being persisted *as a source*. The resulting table becomes something that other Malloy code references — and references in Malloy are to sources, not queries.
+
+This shift clarified the design significantly. To mark something as persistent, you annotate the source:
+
+```malloy
+##! experimental.persistence
+
+#@ persist name=by_carrier
+source: by_carrier is flights -> {
+  group_by: carrier
+  aggregate: flight_count is count()
+}
+```
+
+The `#@ persist` annotation is metadata, not a language keyword. It lives in Malloy's tag system, which means it's extensible — a builder application can look at whatever additional data it wants in the annotation. The `name=by_carrier` part tells the simple builder what table to create, but a more sophisticated application might use annotations for table lifetime, environment targeting, or refresh policy. The language doesn't prescribe any of that.
+
+### Inheritance
+
+Persistence flows through `extend`. If the base data is worth persisting, derived versions usually are too:
+
+```malloy
+#@ persist name=by_carrier
+source: by_carrier is flights -> {
+  group_by: carrier
+  aggregate: flight_count is count()
+}
+
+// Also persistent — inherits from by_carrier
+source: enriched is by_carrier extend {
+  dimension: upper_carrier is upper(carrier)
+}
+
+// Break the chain when you need to
+#@ -persist
+source: scratch is by_carrier extend { ... }
+```
+
+## The Simple Implementation: Builder + VS Code
+
+Here's what the simple implementation looks like in practice.
+
+### Annotate your sources
+
+Add `#@ persist name=<table>` to any source backed by a query. Enable the experiment at the top of your file:
+
+```malloy
+##! experimental.persistence
+
+source: flights is duckdb.table('flights.parquet') extend {
+  measure: flight_count is count()
+}
+
+#@ persist name=by_carrier
+source: by_carrier is flights -> {
+  group_by: carrier
+  aggregate: flight_count
+}
+
+#@ persist name=by_origin
+source: by_origin is flights -> {
+  group_by: origin
+  aggregate: flight_count
+}
+```
+
+### Build with the CLI
+
+`malloy-cli build` is the builder. It compiles your models, walks the dependency graph, and creates tables in order:
+
+```bash
+malloy-cli build models/
+```
+
+It's incremental — unchanged sources are skipped. When you need to force a rebuild (say the underlying data has refreshed but your Malloy source hasn't changed), use `--refresh`:
+
+```bash
+malloy-cli build --refresh duckdb:by_carrier
+```
+
+The builder writes a manifest when it's done. That's its only output beyond the database tables themselves.
+
+### Query in VS Code
+
+The VS Code extension, once it's set up to read the same config the builder uses, reads the manifest automatically. After a build, queries against persistent sources use the pre-built tables — no restart needed.
+
+To verify it's working, compile a query without running it and check the SQL. You'll see `FROM by_carrier` instead of an inlined subquery.
+
+### Setup
+
+Many connections work with no configuration at all — if a connection name matches a registered database type, Malloy creates one with default settings. For persistence, the main thing you need to decide is where the manifest lives:
+
+- **Global config** (simplest): The CLI reads `~/.config/malloy/malloy-config.json` by default and writes the manifest next to it. Point VS Code's `malloy.globalConfigDirectory` at the same directory, and both tools share the same manifest. No flags needed.
+
+- **Project config**: Put a `malloy-config.json` in your project root (it can be as minimal as `{}`) to anchor the manifest to your project. VS Code finds it automatically; the CLI needs `--config .`.
+
+See the [persistence documentation](https://docs.malloydata.dev/experiments/persistence.malloynb) for the full setup guide.
+
+## How It Works Under the Hood
+
+### BuildID: Content-Addressed Identity
+
+Every persistent source gets a **BuildID** — a hash of the SQL that would be generated and the connection it targets. This captures both the logical content of the source and the context in which it runs. Two users with different connection parameters get different BuildIDs for the same Malloy source, which is correct — their built tables may differ because the underlying data differs.
+
+Because the BuildID is content-addressed, incremental builds fall out naturally. If the SQL hasn't changed and the connection hasn't changed, the BuildID is the same, and the table doesn't need rebuilding. Change a `where` clause, and the BuildID changes, and the builder knows to rebuild.
+
+### Manifests: The Bridge Between Builder and Runtime
+
+The manifest is a simple data structure: a map from BuildID to information about the built table (connection, table name, when it was built). A builder writes it. The runtime reads it. That's the entire contract.
+
+This simplicity is the point. The manifest is just a JSON file. How it's stored and shared is up to you — it could be a file on disk, a blob in cloud storage, a row in a database. The runtime doesn't care where it came from.
+
+### The Spectrum of Manifest Usage
+
+Because the manifest is optional, persistence supports very different experiences depending on what you provide:
+
+**No manifest (development):** Everything expands inline. The model runs exactly as if no `#@ persist` annotations existed. Persistence is invisible until you opt in. This is the default — you can always run a model without building anything first.
+
+**Partial manifest (incremental builds):** Some sources are pre-built, others expand inline. The compiler doesn't care which sources are in the manifest and which aren't. This lets a builder do incremental work — build what's missing, skip what's fresh.
+
+**Full manifest with `strictPersist` (production):** The `strictPersist` option tells the compiler to fail if any persistent source is *missing* from the manifest. This catches configuration errors — if a table should have been built but wasn't, you find out at compile time rather than by accidentally running an expensive query in production.
+
+## Building a Sophisticated Persistence Application
+
+The simple implementation is built on top of the same API that a sophisticated application would use. If you need more — multi-environment manifests, custom invalidation logic, integration with your deployment pipeline, per-user table management — the foundation is there.
+
+The key API surfaces:
+
+- **`MalloyConfig`** — loads config and manifest, creates connections from the registry
+- **`Manifest`** — in-memory manifest store; load, update, serialize
+- **Model compilation** — compile a model and walk it to find persistent sources and their dependencies
+- **BuildID computation** — content-addressed identity for each persistent source
+- **`buildManifest` on Runtime** — set a manifest and the compiler handles substitution
+
+A builder application owns everything else: which models to scan, when to rebuild, how to handle partial failures, where to store manifests, how to manage environments. The foundation provides the "what" (these sources need building, in this order, and here's how to record what you built). Your application provides the "when," "where," and "how."
+
+For a concrete starting point, [`simple_builder.ts`](https://github.com/malloydata/malloy/blob/main/scripts/simple_builder.ts) is a skeleton builder application that shows how to find what needs building, build it, and record the results in a manifest. It's a good place to start if you want to build your own persistence layer.
+
+For the full persistence design, see [WN-0022: Persistent Sources](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0022-persistence/wn-0022.md). For the shared configuration system that underpins both the simple workflow and custom applications, see [WN-0023: Shared Configuration](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0023-connection-config/wn-0023.md).
+
+## Try It
+
+Persistence is experimental — enable it with `##! experimental.persistence` and let us know what you think. The [documentation](https://docs.malloydata.dev/experiments/persistence.malloynb) covers setup and usage. The WN specs linked above cover the design in full. And if you're building something interesting on the persistence API, we'd love to hear about it.
+
+>>>markdown
