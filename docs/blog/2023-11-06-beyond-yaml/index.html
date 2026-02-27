@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      property="og:image"
+      content="https://malloydata.github.io/blog/2023-11-06-beyond-yaml/no_yaml_small.png"
+    />
+    <title>Beyond YAML: Why Semantic Layers Need Real Programming Languages</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-11-06-beyond-yaml/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><img src="no_yaml_small.png" class="no-shadow"/><div class="title-row">
+        
+      <h1>
+        <a id="beyond-yaml-why-semantic-layers-need-real-programming-languages" class="header-link anchor" href="#beyond-yaml-why-semantic-layers-need-real-programming-languages">
+          Beyond YAML: Why Semantic Layers Need Real Programming Languages
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-11-06-beyond-yaml/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>The easy thing is not always the right thing</p>
+<p><em>November 6, 2023 by Carlin Eng</em>
+<br/><br/><br/></p>
+<p>Many commercial implementations of <a href="https://en.wikipedia.org/wiki/Semantic_layer">semantic layers</a> are built using YAML, a “human-readable” data serialization format often used for configuration files. Because of its superficial readability, at first it may seem like the natural choice. It’s also relatively easy to start building a semantic layer using YAML, so it’s a quick path to get a product to market. However, taking this shortcut shifts the burden to users and creates a poor developer experience. In this post, I’ll lay out the reasons why, and explain why the Malloy team believes that a real semantic layer needs a full-fledged programming language.</p>
+<p>YAML was designed to create human-readable configuration files. When writing YAML configuration in an IDE, the editing environment sees input fields as simple text strings. This means the IDE cannot validate the contents of the configuration. Parsing and validation is usually passed off to some external program that lives outside of the IDE, and can take several seconds to run to completion. Unfortunately, users oftentimes need to write complex expressions in these configurations, and since the IDE has no knowledge of what those expressions can or cannot contain, those users are trapped in a vicious loop of guessing the correct syntax, leaving the IDE to run a validation script, trying to interpret any resulting error messages, and returning back to the IDE to try to fix their syntax. For cognitively demanding tasks like data modeling, fast feedback loops are absolutely critical, and this disjointed experience is crippling. The Malloy team experienced these limitations firsthand when they initially built LookML back in 2012 as a domain-specific language (DSL) on top of YAML. It’s one of the many lessons they took to heart when creating Malloy.</p>
+<p>Let’s look at a concrete example of this problem by inspecting a metric definition from another YAML-based semantic layer solution:</p>
+<img src="yaml_filter_example.png"/><p>In this example, the logic for the filter field is fairly simple, but the correct syntax is quite complex. The field takes an expression where some values are enclosed in double-curlies, and those values have their own parenthesized subexpressions. Until you run a validation command, you have no idea if this is the correct syntax, or if you’ve referenced a non-existent field. Errors in this semantic data model can come from one of 3 totally separate languages:</p>
+<ul>
+<li><p><em>YAML</em>: these errors show up in the IDE, and are easy to fix</p>
+</li>
+<li><p><em>Semantic Model DSL</em>: you need to explicitly run your DSL’s compilation program to see the problem. Maybe it’s a syntax error, maybe it’s an undefined field.</p>
+</li>
+<li><p><em>SQL</em>: semantic model DSLs typically contain SQL fragments, and the only way to test these is to run or compile the query.</p>
+</li></ul>
+<p>Modern programming environments don’t work this way. When someone writes syntactically invalid Javascript or Python code, they get immediate feedback from the IDE. Features like “jump to reference” or “peek at definition” allow developers to quickly explore a codebase and understand how complex components work together. By implementing a real programming language, instead of just a configuration DSL, Malloy offers this same functionality. In Malloy, when you type an invalid expression (either because the syntax isn’t correct, or because the object you’re referencing doesn’t exist), you get instantaneous feedback:</p>
+<img src="error_highlighting.gif"/><p>When reading someone else’s query that uses complex dimensions or measures, it’s a single click to see exactly how those objects are defined:</p>
+<img src="show_definition.gif"/><p>This doesn’t come for free. Writing a real compiler is a complex undertaking that requires a lot of hard work, knowledge, and skill. However, we believe it’s 100% worth the effort. Just like programming, data modeling and exploration is a very cognitively demanding process, and cognitively demanding processes benefit tremendously from fast feedback loops. At the Malloy team, we’re trying as hard as we can to ensure that data modelers and analysts can achieve “flow state” while doing their work. This means doing hard things, and sweating every tiny detail that causes friction in the experience.</p>
+<p>To learn more about Malloy, and experience the power of a semantic layer implemented as full programming language, check out our <a href="https://malloydata.github.io/documentation/">documentation</a>, and make sure to join our <a href="/slack">Slack community</a> to introduce yourself and join the conversation!</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-10-26-malloy-bump-chart"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-11-13-querying-a-semantic-model"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

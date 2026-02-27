@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Analyzing with Notebooks | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item active'>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/about_rendering.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/about_rendering">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_legacy docs
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/legacy_renderer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Legacy Docs
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/legacy_renderer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Legacy Renderer
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="malloy_by_example.html"><img src="/img/previous.svg" alt="previous"/>Advanced Modeling</a>
+  </div>
+  <div class="item">
+      <a href="publishing/explorer.html">Explorer UI<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="analyzing-with-notebooks" class="header-link anchor" href="#analyzing-with-notebooks">
+          Analyzing with Notebooks
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/user_guides/notebooks.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Malloy Notebooks (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloynb</span></span></code> files) combine queries, results, and documentation in a single interactive document. They're the best way to explore data, build analyses, and share findings.</p>
+<hr/>
+
+      <h2>
+        <a id="what-is-a-malloy-notebook-" class="header-link anchor" href="#what-is-a-malloy-notebook-">
+          What Is a Malloy Notebook?
+        </a>
+      </h2>
+    <p>A notebook is a file with alternating cells of:</p>
+<ul>
+<li><p><strong>Markdown</strong> - Text, headings, explanations</p>
+</li>
+<li><p><strong>Malloy code</strong> - Model definitions, queries</p>
+</li></ul>
+<p>When you run a notebook, each code cell executes and displays results inline. The document becomes a living report.</p>
+<img src="notebook-screenshot.png" alt="Malloy Notebook in VS Code" style="max-width: 800px;"><p>This entire documentation website is built from <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloynb</span></span></code> files—interweaving markdown with actual running Malloy code blocks.</p>
+<hr/>
+
+      <h2>
+        <a id="creating-a-notebook" class="header-link anchor" href="#creating-a-notebook">
+          Creating a Notebook
+        </a>
+      </h2>
+    
+      <h3>
+        <a id="1-create-the-file" class="header-link anchor" href="#1-create-the-file">
+          1. Create the File
+        </a>
+      </h3>
+    <p>In VS Code, create a new file with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloynb</span></span></code> extension:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">File → New File → sales_analysis.malloynb</span></span></pre></div>
+      <h3>
+        <a id="2-add-cells" class="header-link anchor" href="#2-add-cells">
+          2. Add Cells
+        </a>
+      </h3>
+    <p>Click <strong>+ Code</strong> or <strong>+ Markdown</strong> to add new cells to your notebook.</p>
+<img src="add-cell-buttons.png" alt="Add cell buttons in VS Code" style="max-width: 800px;"><p>Under the hood, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloynb</span></span></code> files are plain text with cell markers (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;&gt;&gt;</span><span style="color: #001080">markdown</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;&gt;&gt;</span><span style="color: #001080">malloy</span></span></code>), so they're easy to diff and version control.</p>
+
+      <h3>
+        <a id="3-run-the-notebook" class="header-link anchor" href="#3-run-the-notebook">
+          3. Run the Notebook
+        </a>
+      </h3>
+    <p>Click <strong>Run All</strong> at the top of the VS Code editor, or run individual cells by clicking the play button next to each one.</p>
+<hr/>
+
+      <h2>
+        <a id="use-cases" class="header-link anchor" href="#use-cases">
+          Use Cases
+        </a>
+      </h2>
+    
+      <h3>
+        <a id="static-dashboards" class="header-link anchor" href="#static-dashboards">
+          Static Dashboards
+        </a>
+      </h3>
+    <p>Notebooks render code blocks with descriptions. They can render any Malloy visualization—dashboards, charts, tables. Readers can inspect the code used to generate them.</p>
+
+      <h3>
+        <a id="data-stories" class="header-link anchor" href="#data-stories">
+          Data Stories
+        </a>
+      </h3>
+    <p>From EDA and high-level statistics to detailed drill-down, notebooks show the flow of analysis. Use them to document your analytical journey and share insights with others.</p>
+<p>When published via Publisher, notebooks become read-only—great for dashboards and reports.</p>
+<hr/>
+
+      <h2>
+        <a id="example-notebooks" class="header-link anchor" href="#example-notebooks">
+          Example Notebooks
+        </a>
+      </h2>
+    <p>See these notebooks for inspiration:</p>
+<ul>
+<li><p><a href="https://github.com/malloydata/malloy-samples/blob/main/names/names2.malloynb">Names Analysis</a> - Exploring baby name trends</p>
+</li>
+<li><p><a href="https://github.com/malloydata/malloy-samples/blob/main/faa/carrier_analysis.malloynb">Carrier Analysis</a> - Flight carrier performance</p>
+</li>
+<li><p><a href="https://github.com/malloydata/malloy-samples/blob/main/auto_recalls/README.malloynb">Auto Recalls</a> - Example of starting with an import</p>
+</li></ul>
+<p><strong>Tip:</strong> Press <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span></span></code> on any GitHub page to open it in github.dev (VS Code in the browser).</p>
+<hr/>
+
+      <h2>
+        <a id="importing-models" class="header-link anchor" href="#importing-models">
+          Importing Models
+        </a>
+      </h2>
+    <p>A typical notebook has two cells: an import cell and a query cell.</p>
+<p><strong>Cell 1 — Import your model:</strong></p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/user_guides/notebooks.malloynb#C2" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flights.malloy&quot;</span></span></pre></div><p><strong>Cell 2 — Query using sources from that model:</strong></p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/user_guides/notebooks.malloynb#C4" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">by_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="61b6d811-0773-4dc9-a9c9-126f616c5691">
+        <script>(()=>{var e=document.getElementById("61b6d811-0773-4dc9-a9c9-126f616c5691"),a=document.createElement("malloy-render");a.modelDef={name:"",exports:[],contents:{carriers:{type:"table",name:"duckdb:../../documentation/data/carriers.parquet",dialect:"duckdb",tablePath:"../../documentation/data/carriers.parquet",connection:"duckdb",fields:[{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"nickname",fieldUsage:[{path:["nickname"]}]},{type:"number",numberType:"integer",name:"carrier_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"code",parameters:{},as:"carriers"},airports:{type:"table",name:"duckdb:../../documentation/data/airports.parquet",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},as:"airports"},aircraft_models:{type:"table",name:"duckdb:../../documentation/data/aircraft_models.parquet",dialect:"duckdb",tablePath:"../../documentation/data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]},{type:"number",numberType:"integer",name:"aircraft_model_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"aircraft_model_code",parameters:{},as:"aircraft_models"},aircraft:{type:"table",name:"duckdb:../../documentation/data/aircraft.parquet",dialect:"duckdb",tablePath:"../../documentation/data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../../documentation/data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]},{type:"number",numberType:"integer",name:"aircraft_model_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"aircraft_model_code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},as:"aircraft"},flights:{type:"table",name:"duckdb:../../documentation/data/flights.parquet",dialect:"duckdb",tablePath:"../../documentation/data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}],as:"origin_code"},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}],as:"destination_code"},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"number",numberType:"integer",name:"total_distance",e:{node:"aggregate",function:"sum",e:{node:"field",path:["distance"]}},fieldUsage:[{path:["distance"]}],expressionType:"aggregate",code:"sum(distance)"},{type:"number",numberType:"integer",name:"destination_count",e:{node:"field",path:["destination","airport_count"]},fieldUsage:[{path:["destination","airport_count"]}],expressionType:"aggregate",code:"destination.airport_count"},{type:"number",numberType:"integer",name:"origin_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["origin"]},fieldUsage:[],expressionType:"aggregate",code:"origin.count()"},{type:"number",name:"percent_of_flights",e:{node:"/",kids:{left:{node:"field",path:["flight_count"]},right:{node:"all",e:{node:"field",path:["flight_count"]}}}},fieldUsage:[{path:["flight_count"]},{path:["flight_count"]}],ungroupings:[{requiresGroupBy:[],fieldUsage:[{path:["flight_count"]}],ungroupedFields:"*"}],expressionType:"ungrouped_aggregate",code:"flight_count/all(flight_count)",annotation:{notes:[{text:"# percent\n"}]}},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["aircraft"]},fieldUsage:[],expressionType:"aggregate",code:"aircraft.count()"},{type:"number",numberType:"integer",name:"seats_for_sale",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]}},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"source.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"seats_owned",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"average_plane_size",e:{node:"aggregate",function:"avg",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.avg(aircraft.aircraft_models.seats)"},{type:"string",name:"origin_name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["origin","code"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["origin","city"]}]},expressionType:"scalar"},fieldUsage:[{path:["origin","code"]},{path:["origin","city"]}],expressionType:"scalar",code:'concat(origin.code," - ", origin.city)'},{type:"string",name:"destination_name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["destination","code"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["destination","city"]}]},expressionType:"scalar"},fieldUsage:[{path:["destination","code"]},{path:["destination","city"]}],expressionType:"scalar",code:'concat(destination.code," - ", destination.city)'},{type:"string",name:"carrier_name",e:{node:"field",path:["carriers","nickname"]},fieldUsage:[{path:["carriers","nickname"]}],expressionType:"scalar",code:"carriers.nickname"},{type:"string",name:"plane_manufacturer",e:{node:"field",path:["aircraft","aircraft_models","manufacturer"]},fieldUsage:[{path:["aircraft","aircraft_models","manufacturer"]}],expressionType:"scalar",code:"aircraft.aircraft_models.manufacturer"},{type:"timestamp",name:"dep_month",timeframe:"month",e:{node:"trunc",e:{node:"field",path:["dep_time"],typeDef:{type:"timestamp"}},units:"month"},fieldUsage:[{path:["dep_time"]}],expressionType:"scalar",code:"dep_time.month"},{type:"table",name:"carriers",dialect:"duckdb",tablePath:"../../documentation/data/carriers.parquet",connection:"duckdb",fields:[{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"nickname",fieldUsage:[{path:["nickname"]}]},{type:"number",numberType:"integer",name:"carrier_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["carriers","code"]},right:{node:"field",path:["carrier"]}}},onFieldUsage:[{path:["carrier"]}]},{type:"table",name:"origin",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["origin","code"]},right:{node:"field",path:["origin_code"]}}},onFieldUsage:[{path:["origin_code"]}]},{type:"table",name:"destination",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["destination","code"]},right:{node:"field",path:["destination_code"]}}},onFieldUsage:[{path:["destination_code"]}]},{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../../documentation/data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../../documentation/data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]},{type:"number",numberType:"integer",name:"aircraft_model_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"aircraft_model_code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},{type:"turtle",name:"metrics",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["flight_count"]},{type:"fieldref",path:["total_distance"]},{type:"fieldref",path:["percent_of_flights"],annotation:{inherits:{notes:[{text:"# percent\n"}]}}}],filterList:[],fieldUsage:[{path:["flight_count"]},{path:["total_distance"]},{path:["percent_of_flights"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{}},{type:"turtle",name:"by_carrier",pipeline:[{type:"reduce",queryFields:[{type:"string",name:"carrier",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["carrier"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["carrier_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["carrier"]},{path:["carrier_name"]}],expressionType:"scalar",code:"concat(carrier, ' - ', carrier_name)"},{type:"fieldref",path:["flight_count"],drillView:"metrics"},{type:"fieldref",path:["total_distance"],drillView:"metrics"},{type:"fieldref",path:["percent_of_flights"],annotation:{inherits:{notes:[{text:"# percent\n"}]}},drillView:"metrics"}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carrier_name"]},{path:["flight_count"]},{path:["total_distance"]},{path:["percent_of_flights"]}],defaultOrderBy:!0,orderBy:[{field:"carrier",dir:"asc"}]}],annotation:{}},{type:"turtle",name:"carrier_list",pipeline:[{type:"reduce",queryFields:[{type:"turtle",name:"cl",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["carriers","nickname"],drillView:"cl"},{type:"fieldref",path:["flight_count"],drillView:"cl"}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{blockNotes:[{text:"# list\n"}]},fieldUsage:[{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}]}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}]}],annotation:{}}],primaryKey:"id2",parameters:{},as:"flights"}},queryList:[{type:"query",structRef:{type:"table",name:"duckdb:../../documentation/data/flights.parquet",dialect:"duckdb",tablePath:"../../documentation/data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}],as:"origin_code"},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}],as:"destination_code"},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"number",numberType:"integer",name:"total_distance",e:{node:"aggregate",function:"sum",e:{node:"field",path:["distance"]}},fieldUsage:[{path:["distance"]}],expressionType:"aggregate",code:"sum(distance)"},{type:"number",numberType:"integer",name:"destination_count",e:{node:"field",path:["destination","airport_count"]},fieldUsage:[{path:["destination","airport_count"]}],expressionType:"aggregate",code:"destination.airport_count"},{type:"number",numberType:"integer",name:"origin_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["origin"]},fieldUsage:[],expressionType:"aggregate",code:"origin.count()"},{type:"number",name:"percent_of_flights",e:{node:"/",kids:{left:{node:"field",path:["flight_count"]},right:{node:"all",e:{node:"field",path:["flight_count"]}}}},fieldUsage:[{path:["flight_count"]},{path:["flight_count"]}],ungroupings:[{requiresGroupBy:[],fieldUsage:[{path:["flight_count"]}],ungroupedFields:"*"}],expressionType:"ungrouped_aggregate",code:"flight_count/all(flight_count)",annotation:{notes:[{text:"# percent\n"}]}},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["aircraft"]},fieldUsage:[],expressionType:"aggregate",code:"aircraft.count()"},{type:"number",numberType:"integer",name:"seats_for_sale",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]}},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"source.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"seats_owned",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"average_plane_size",e:{node:"aggregate",function:"avg",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.avg(aircraft.aircraft_models.seats)"},{type:"string",name:"origin_name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["origin","code"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["origin","city"]}]},expressionType:"scalar"},fieldUsage:[{path:["origin","code"]},{path:["origin","city"]}],expressionType:"scalar",code:'concat(origin.code," - ", origin.city)'},{type:"string",name:"destination_name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["destination","code"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["destination","city"]}]},expressionType:"scalar"},fieldUsage:[{path:["destination","code"]},{path:["destination","city"]}],expressionType:"scalar",code:'concat(destination.code," - ", destination.city)'},{type:"string",name:"carrier_name",e:{node:"field",path:["carriers","nickname"]},fieldUsage:[{path:["carriers","nickname"]}],expressionType:"scalar",code:"carriers.nickname"},{type:"string",name:"plane_manufacturer",e:{node:"field",path:["aircraft","aircraft_models","manufacturer"]},fieldUsage:[{path:["aircraft","aircraft_models","manufacturer"]}],expressionType:"scalar",code:"aircraft.aircraft_models.manufacturer"},{type:"timestamp",name:"dep_month",timeframe:"month",e:{node:"trunc",e:{node:"field",path:["dep_time"],typeDef:{type:"timestamp"}},units:"month"},fieldUsage:[{path:["dep_time"]}],expressionType:"scalar",code:"dep_time.month"},{type:"table",name:"carriers",dialect:"duckdb",tablePath:"../../documentation/data/carriers.parquet",connection:"duckdb",fields:[{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"nickname",fieldUsage:[{path:["nickname"]}]},{type:"number",numberType:"integer",name:"carrier_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["carriers","code"]},right:{node:"field",path:["carrier"]}}},onFieldUsage:[{path:["carrier"]}]},{type:"table",name:"origin",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["origin","code"]},right:{node:"field",path:["origin_code"]}}},onFieldUsage:[{path:["origin_code"]}]},{type:"table",name:"destination",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["destination","code"]},right:{node:"field",path:["destination_code"]}}},onFieldUsage:[{path:["destination_code"]}]},{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../../documentation/data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../../documentation/data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]},{type:"number",numberType:"integer",name:"aircraft_model_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"aircraft_model_code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},{type:"turtle",name:"metrics",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["flight_count"]},{type:"fieldref",path:["total_distance"]},{type:"fieldref",path:["percent_of_flights"],annotation:{inherits:{notes:[{text:"# percent\n"}]}}}],filterList:[],fieldUsage:[{path:["flight_count"]},{path:["total_distance"]},{path:["percent_of_flights"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{}},{type:"turtle",name:"by_carrier",pipeline:[{type:"reduce",queryFields:[{type:"string",name:"carrier",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["carrier"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["carrier_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["carrier"]},{path:["carrier_name"]}],expressionType:"scalar",code:"concat(carrier, ' - ', carrier_name)"},{type:"fieldref",path:["flight_count"],drillView:"metrics"},{type:"fieldref",path:["total_distance"],drillView:"metrics"},{type:"fieldref",path:["percent_of_flights"],annotation:{inherits:{notes:[{text:"# percent\n"}]}},drillView:"metrics"}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carrier_name"]},{path:["flight_count"]},{path:["total_distance"]},{path:["percent_of_flights"]}],defaultOrderBy:!0,orderBy:[{field:"carrier",dir:"asc"}]}],annotation:{}},{type:"turtle",name:"carrier_list",pipeline:[{type:"reduce",queryFields:[{type:"turtle",name:"cl",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["carriers","nickname"],drillView:"cl"},{type:"fieldref",path:["flight_count"],drillView:"cl"}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{blockNotes:[{text:"# list\n"}]},fieldUsage:[{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}]}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}]}],annotation:{}}],primaryKey:"id2",parameters:{},as:"flights",arguments:{}},pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["flight_count"]},{type:"turtle",name:"by_carrier",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["carrier"],drillView:"by_carrier"},{type:"fieldref",path:["flight_count"],drillView:"by_carrier"}],limit:5,filterList:[],fieldUsage:[{path:["carrier"]},{path:["flight_count"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{},fieldUsage:[{path:["carrier"]},{path:["flight_count"]}]}],filterList:[],fieldUsage:[{path:["flight_count"]},{path:["carrier"]},{path:["flight_count"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}]}],dependencies:{},references:[{type:"exploreReference",text:"flights",definition:{type:"table",name:"duckdb:../../documentation/data/flights.parquet",dialect:"duckdb",tablePath:"../../documentation/data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}],as:"origin_code"},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}],as:"destination_code"},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"number",numberType:"integer",name:"total_distance",e:{node:"aggregate",function:"sum",e:{node:"field",path:["distance"]}},fieldUsage:[{path:["distance"]}],expressionType:"aggregate",code:"sum(distance)"},{type:"number",numberType:"integer",name:"destination_count",e:{node:"field",path:["destination","airport_count"]},fieldUsage:[{path:["destination","airport_count"]}],expressionType:"aggregate",code:"destination.airport_count"},{type:"number",numberType:"integer",name:"origin_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["origin"]},fieldUsage:[],expressionType:"aggregate",code:"origin.count()"},{type:"number",name:"percent_of_flights",e:{node:"/",kids:{left:{node:"field",path:["flight_count"]},right:{node:"all",e:{node:"field",path:["flight_count"]}}}},fieldUsage:[{path:["flight_count"]},{path:["flight_count"]}],ungroupings:[{requiresGroupBy:[],fieldUsage:[{path:["flight_count"]}],ungroupedFields:"*"}],expressionType:"ungrouped_aggregate",code:"flight_count/all(flight_count)",annotation:{notes:[{text:"# percent\n"}]}},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["aircraft"]},fieldUsage:[],expressionType:"aggregate",code:"aircraft.count()"},{type:"number",numberType:"integer",name:"seats_for_sale",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]}},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"source.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"seats_owned",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"average_plane_size",e:{node:"aggregate",function:"avg",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.avg(aircraft.aircraft_models.seats)"},{type:"string",name:"origin_name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["origin","code"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["origin","city"]}]},expressionType:"scalar"},fieldUsage:[{path:["origin","code"]},{path:["origin","city"]}],expressionType:"scalar",code:'concat(origin.code," - ", origin.city)'},{type:"string",name:"destination_name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["destination","code"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["destination","city"]}]},expressionType:"scalar"},fieldUsage:[{path:["destination","code"]},{path:["destination","city"]}],expressionType:"scalar",code:'concat(destination.code," - ", destination.city)'},{type:"string",name:"carrier_name",e:{node:"field",path:["carriers","nickname"]},fieldUsage:[{path:["carriers","nickname"]}],expressionType:"scalar",code:"carriers.nickname"},{type:"string",name:"plane_manufacturer",e:{node:"field",path:["aircraft","aircraft_models","manufacturer"]},fieldUsage:[{path:["aircraft","aircraft_models","manufacturer"]}],expressionType:"scalar",code:"aircraft.aircraft_models.manufacturer"},{type:"timestamp",name:"dep_month",timeframe:"month",e:{node:"trunc",e:{node:"field",path:["dep_time"],typeDef:{type:"timestamp"}},units:"month"},fieldUsage:[{path:["dep_time"]}],expressionType:"scalar",code:"dep_time.month"},{type:"table",name:"carriers",dialect:"duckdb",tablePath:"../../documentation/data/carriers.parquet",connection:"duckdb",fields:[{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"nickname",fieldUsage:[{path:["nickname"]}]},{type:"number",numberType:"integer",name:"carrier_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["carriers","code"]},right:{node:"field",path:["carrier"]}}},onFieldUsage:[{path:["carrier"]}]},{type:"table",name:"origin",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["origin","code"]},right:{node:"field",path:["origin_code"]}}},onFieldUsage:[{path:["origin_code"]}]},{type:"table",name:"destination",dialect:"duckdb",tablePath:"../../documentation/data/airports.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"code",fieldUsage:[{path:["code"]}]},{type:"string",name:"site_number",fieldUsage:[{path:["site_number"]}]},{type:"string",name:"fac_type",fieldUsage:[{path:["fac_type"]}]},{type:"string",name:"fac_use",fieldUsage:[{path:["fac_use"]}]},{type:"string",name:"faa_region",fieldUsage:[{path:["faa_region"]}]},{type:"string",name:"faa_dist",fieldUsage:[{path:["faa_dist"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"full_name",fieldUsage:[{path:["full_name"]}]},{type:"string",name:"own_type",fieldUsage:[{path:["own_type"]}]},{type:"number",numberType:"float",name:"longitude",fieldUsage:[{path:["longitude"]}]},{type:"number",numberType:"float",name:"latitude",fieldUsage:[{path:["latitude"]}]},{type:"number",numberType:"integer",name:"elevation",fieldUsage:[{path:["elevation"]}]},{type:"string",name:"aero_cht",fieldUsage:[{path:["aero_cht"]}]},{type:"number",numberType:"integer",name:"cbd_dist",fieldUsage:[{path:["cbd_dist"]}]},{type:"string",name:"cbd_dir",fieldUsage:[{path:["cbd_dir"]}]},{type:"string",name:"act_date",fieldUsage:[{path:["act_date"]}]},{type:"string",name:"cert",fieldUsage:[{path:["cert"]}]},{type:"string",name:"fed_agree",fieldUsage:[{path:["fed_agree"]}]},{type:"string",name:"cust_intl",fieldUsage:[{path:["cust_intl"]}]},{type:"string",name:"c_ldg_rts",fieldUsage:[{path:["c_ldg_rts"]}]},{type:"string",name:"joint_use",fieldUsage:[{path:["joint_use"]}]},{type:"string",name:"mil_rts",fieldUsage:[{path:["mil_rts"]}]},{type:"string",name:"cntl_twr",fieldUsage:[{path:["cntl_twr"]}]},{type:"string",name:"major",fieldUsage:[{path:["major"]}]},{type:"number",numberType:"integer",name:"airport_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"string",name:"name",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["code"]},{node:"stringLiteral",literal:"-"},{node:"field",path:["full_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["code"]},{path:["full_name"]}],expressionType:"scalar",code:"concat(code, '-', full_name )"}],primaryKey:"code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["destination","code"]},right:{node:"field",path:["destination_code"]}}},onFieldUsage:[{path:["destination_code"]}]},{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../../documentation/data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../../documentation/data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]},{type:"number",numberType:"integer",name:"aircraft_model_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],primaryKey:"aircraft_model_code",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},{type:"turtle",name:"metrics",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["flight_count"]},{type:"fieldref",path:["total_distance"]},{type:"fieldref",path:["percent_of_flights"],annotation:{inherits:{notes:[{text:"# percent\n"}]}}}],filterList:[],fieldUsage:[{path:["flight_count"]},{path:["total_distance"]},{path:["percent_of_flights"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{}},{type:"turtle",name:"by_carrier",pipeline:[{type:"reduce",queryFields:[{type:"string",name:"carrier",e:{node:"function_call",overload:{returnType:{type:"string",expressionType:"scalar",evalSpace:"input"},params:[{name:"values",allowedTypes:[{type:"string",evalSpace:"input"},{type:"number",evalSpace:"input"},{type:"date",evalSpace:"input"},{type:"timestamp",evalSpace:"input"},{type:"boolean",evalSpace:"input"}],isVariadic:!0}],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},standardsql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},duckdb:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},snowflake:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}},trino:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},presto:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"CAST(",suffix:"AS VARCHAR)"}]},src:["CONCAT(",")"]}},mysql:{e:{node:"genericSQLExpr",kids:{args:[{node:"spread",e:{node:"function_parameter",name:"values"},prefix:"",suffix:""}]},src:["CONCAT(",")"]}}}},name:"concat",kids:{args:[{node:"field",path:["carrier"]},{node:"stringLiteral",literal:" - "},{node:"field",path:["carrier_name"]}]},expressionType:"scalar"},fieldUsage:[{path:["carrier"]},{path:["carrier_name"]}],expressionType:"scalar",code:"concat(carrier, ' - ', carrier_name)"},{type:"fieldref",path:["flight_count"],drillView:"metrics"},{type:"fieldref",path:["total_distance"],drillView:"metrics"},{type:"fieldref",path:["percent_of_flights"],annotation:{inherits:{notes:[{text:"# percent\n"}]}},drillView:"metrics"}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carrier_name"]},{path:["flight_count"]},{path:["total_distance"]},{path:["percent_of_flights"]}],defaultOrderBy:!0,orderBy:[{field:"carrier",dir:"asc"}]}],annotation:{}},{type:"turtle",name:"carrier_list",pipeline:[{type:"reduce",queryFields:[{type:"turtle",name:"cl",pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["carriers","nickname"],drillView:"cl"},{type:"fieldref",path:["flight_count"],drillView:"cl"}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}],annotation:{blockNotes:[{text:"# list\n"}]},fieldUsage:[{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}]}],filterList:[],fieldUsage:[{path:["carrier"]},{path:["carrier"]},{path:["carriers","nickname"]},{path:["flight_count"]}]}],annotation:{}}],primaryKey:"id2",parameters:{},as:"flights"}},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},text:"flight_count"},{type:"fieldReference",definition:{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},text:"carrier"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},text:"flight_count"}],imports:[]},a.queryResult={lastStageName:"__stage1",malloy:"",sql:'WITH __stage0 AS (\n  SELECT\n    group_set,\n    CASE WHEN group_set=0 THEN\n      COUNT(1)\n      END as "flight_count__0",\n    CASE WHEN group_set=1 THEN\n      base."carrier"\n      END as "carrier__1",\n    CASE WHEN group_set=1 THEN\n      COUNT(1)\n      END as "flight_count__1"\n  FROM \'../../documentation/data/flights.parquet\' as base\n  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,1,1)) as group_set  ) as group_set\n  GROUP BY 1,3\n)\nSELECT\n  MAX(CASE WHEN group_set=0 THEN "flight_count__0" END) as "flight_count",\n  COALESCE(LIST({\n    "carrier": "carrier__1", \n    "flight_count": "flight_count__1"}  ORDER BY  "flight_count__1" desc NULLS LAST) FILTER (WHERE group_set=1)[1:5],[]) as "by_carrier"\nFROM __stage0\n',dependenciesToMaterialize:{},structs:[{type:"query_result",name:"__stage1",fields:[{name:"flight_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"flight_count",sourceExpression:"count()",sourceClasses:["flight_count"],referenceId:"db29ef6e-2ecf-4668-91ed-e306772c7e5f",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/user_guides/flights.malloy",range:{start:{line:35,character:4},end:{line:35,character:27}}}},{type:"array",name:"by_carrier",fields:[{name:"carrier",type:"string",resultMetadata:{sourceField:"carrier",sourceClasses:["carrier"],referenceId:"e6d023f4-a912-482e-b0e2-753b0f4db0bb",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/user_guides/flights.malloy",range:{start:{line:22,character:19},end:{line:22,character:75}}},drillView:"by_carrier"},{name:"flight_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"flight_count",sourceExpression:"count()",sourceClasses:["flight_count"],referenceId:"db29ef6e-2ecf-4668-91ed-e306772c7e5f",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/user_guides/flights.malloy",range:{start:{line:35,character:4},end:{line:35,character:27}}},drillView:"by_carrier"}],dialect:"duckdb",connection:"duckdb",resultMetadata:{sourceField:"by_carrier",filterList:[],sourceClasses:["by_carrier"],fieldKind:"struct",limit:5,orderBy:[{field:"flight_count",dir:"desc"}],drillable:!0},annotation:{},elementTypeDef:{type:"record_element"},join:"many"}],dialect:"duckdb",connection:"duckdb",resultMetadata:{sourceField:"ignoreme",filterList:[],sourceClasses:["ignoreme"],fieldKind:"struct",orderBy:[{field:"flight_count",dir:"desc"}],drillable:!0}}],sourceExplore:"flights",sourceArguments:{},connectionName:"duckdb",result:[{flight_count:344827,by_carrier:[{carrier:"WN",flight_count:88751},{carrier:"US",flight_count:37683},{carrier:"AA",flight_count:34577},{carrier:"NW",flight_count:33580},{carrier:"UA",flight_count:32757}]}],totalRows:1},e.appendChild(a)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">344827</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;by_carrier&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">88751</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;US&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">37683</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">34577</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">33580</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;UA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">32757</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;carrier&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;carrier__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count__1&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../../documentation/data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;carrier__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;flight_count__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;flight_count__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">)[1:5],[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;by_carrier&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div><p>This keeps your semantic model separate from analysis notebooks.</p>
+<hr/>
+
+      <h2>
+        <a id="publishing-notebooks" class="header-link anchor" href="#publishing-notebooks">
+          Publishing Notebooks
+        </a>
+      </h2>
+    <p>Notebooks can be deployed via <a href="publishing/publishing">Publisher</a> alongside your semantic models. Published notebooks:</p>
+<ul>
+<li><p>Render as browsable HTML reports</p>
+</li>
+<li><p>Include live query results</p>
+</li>
+<li><p>Can be shared via URL</p>
+</li></ul>
+<p>To publish, include <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloynb</span></span></code> files in your package alongside <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> models:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">my-analytics/</span></span>
+<span class="line"><span style="color: #000000">├── publisher.json</span></span>
+<span class="line"><span style="color: #000000">├── models/</span></span>
+<span class="line"><span style="color: #000000">│   └── orders.malloy</span></span>
+<span class="line"><span style="color: #000000">└── notebooks/</span></span>
+<span class="line"><span style="color: #000000">    └── monthly_report.malloynb</span></span></pre></div><hr/>
+
+      <h2>
+        <a id="interactive-filters" class="header-link anchor" href="#interactive-filters">
+          Interactive Filters
+        </a>
+      </h2>
+    <p>Notebooks can include interactive dropdown filters that allow viewers to filter query results dynamically. When a user selects filter values, all queries in the notebook automatically re-execute with those filters applied.</p>
+<blockquote>
+<p><strong>Note:</strong> Interactive filters are rendered when viewing notebooks via <a href="publishing/publishing">Publisher</a> or the Publisher SDK. They are not currently displayed in VS Code—that capability is coming soon.</p>
+</blockquote>
+
+      <h3>
+        <a id="how-it-works" class="header-link anchor" href="#how-it-works">
+          How It Works
+        </a>
+      </h3>
+    <ol>
+<li><p><strong>Annotate dimensions</strong> in your Malloy source files to mark them as filterable</p>
+</li>
+<li><p><strong>Add a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##(filters)</span></span></code> annotation</strong> in your notebook to specify which dimensions appear as filter controls</p>
+</li>
+<li><p>When published, the notebook displays filter dropdowns that users can interact with</p>
+</li></ol>
+
+      <h3>
+        <a id="step-1-annotate-filterable-dimensions" class="header-link anchor" href="#step-1-annotate-filterable-dimensions">
+          Step 1: Annotate Filterable Dimensions
+        </a>
+      </h3>
+    <p>In your Malloy source file, add <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#(filter)</span></span></code> annotations to dimensions you want to expose as filters:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/flights.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// Multi-select dropdown for string values</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">#(filter) {&quot;type&quot;: &quot;Star&quot;}</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">origin_code</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">origin</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// Date range picker</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">#(filter) {&quot;type&quot;: &quot;DateMinMax&quot;}</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">flight_departure</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">dep_time</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">carriers</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">carriers</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/carriers.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">#(filter) {&quot;type&quot;: &quot;Star&quot;}</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">nickname</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">nickname_old</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h3>
+        <a id="filter-types" class="header-link anchor" href="#filter-types">
+          Filter Types
+        </a>
+      </h3>
+    <table>
+<thead>
+<tr>
+<th>Type</th>
+
+<th>UI Component</th>
+
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Star</span></span></code></td>
+
+<td>Multi-select dropdown</td>
+
+<td>String fields with discrete values</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">MinMax</span></span></code></td>
+
+<td>Numeric input</td>
+
+<td>Numeric fields</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">DateMinMax</span></span></code></td>
+
+<td>Date range picker</td>
+
+<td>Date/timestamp fields</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Boolean</span></span></code></td>
+
+<td>Toggle selector</td>
+
+<td>Boolean fields</td>
+</tr>
+</tbody></table>
+
+      <h3>
+        <a id="step-2-add-notebook-filter-annotation" class="header-link anchor" href="#step-2-add-notebook-filter-annotation">
+          Step 2: Add Notebook Filter Annotation
+        </a>
+      </h3>
+    <p>In your notebook, add a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##(filters)</span></span></code> annotation in the code cell that imports your model. The annotation lists which dimensions should appear as filters using <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">.</span><span style="color: #AF00DB">dimension</span></span></code> format:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##(filters) [&quot;flights.origin_code&quot;, &quot;carriers.nickname&quot;, &quot;flights.flight_departure&quot;]</span></span>
+<span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span><span style="color: #001080">flights</span><span style="color: #000000">, </span><span style="color: #001080">carriers</span><span style="color: #000000">} </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;flights.malloy&#39;</span></span></pre></div><p>The filter type for each dimension is determined by the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#(filter)</span></span></code> annotation on that dimension in the source file.</p>
+
+      <h3>
+        <a id="custom-labels" class="header-link anchor" href="#custom-labels">
+          Custom Labels
+        </a>
+      </h3>
+    <p>By default, filters display the dimension field name. You can customize the label using the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5"># label</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;...&quot;</span></span></code> annotation in your source file:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">recalls</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;data/recalls.csv&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">#(filter) {&quot;type&quot;: &quot;Star&quot;}</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># label</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;Vehicle</span><span style="color: #008000"> </span><span style="color: #0451A5">Manufacturer&quot;</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">Manufacturer</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">Manufacturer_old</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h3>
+        <a id="match-types" class="header-link anchor" href="#match-types">
+          Match Types
+        </a>
+      </h3>
+    <p>Each filter type supports different match types that users can select:</p>
+<table>
+<thead>
+<tr>
+<th>Filter Type</th>
+
+<th>Available Match Types</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Star</td>
+
+<td>Equals, Contains</td>
+</tr>
+
+<tr>
+<td>MinMax</td>
+
+<td>Equals, Less Than, Greater Than, Between</td>
+</tr>
+
+<tr>
+<td>DateMinMax</td>
+
+<td>Equals, Before, After, Between</td>
+</tr>
+
+<tr>
+<td>Boolean</td>
+
+<td>Equals (True/False)</td>
+</tr>
+</tbody></table>
+
+      <h3>
+        <a id="example" class="header-link anchor" href="#example">
+          Example
+        </a>
+      </h3>
+    <p>See the <a href="https://github.com/credibledata/malloy-samples/blob/main/faa/carrier_analysis.malloynb#L4">Carrier Analysis notebook</a> and <a href="https://github.com/credibledata/malloy-samples/blob/main/auto_recalls/README.malloynb#L10">Auto Recalls notebook</a> for working examples of interactive filters.</p>
+<hr/>
+
+      <h2>
+        <a id="tips" class="header-link anchor" href="#tips">
+          Tips
+        </a>
+      </h2>
+    <p><strong>Start simple</strong> - Begin with a basic source, run a query, then add complexity.</p>
+<p><strong>Use markdown liberally</strong> - Document your analysis as you go. Future you will thank present you.</p>
+<p><strong>Keep models separate</strong> - For reusable logic, put it in a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> file and import it into notebooks.</p>
+<p><strong>Run cells individually</strong> - When debugging, run one cell at a time to isolate issues.</p>
+<hr/>
+
+      <h2>
+        <a id="next-steps" class="header-link anchor" href="#next-steps">
+          Next Steps
+        </a>
+      </h2>
+    <ul>
+<li><p><a href="malloy_by_example">Building Semantic Models</a> - Deep dive into Malloy modeling</p>
+</li>
+<li><p><a href="publishing/publishing">Publishing Models</a> - Deploy your work</p>
+</li>
+<li><p><a href="../malloy_python/jupyter">Malloy in Jupyter</a> - Use Malloy in Jupyter notebooks</p>
+</li></ul>
+</div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

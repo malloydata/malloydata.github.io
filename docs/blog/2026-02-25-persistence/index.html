@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy Blog</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2026-02-25-persistence/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="persistence-in-malloy-a-foundation-not-a-framework" class="header-link anchor" href="#persistence-in-malloy-a-foundation-not-a-framework">
+          Persistence in Malloy: A Foundation, Not a Framework
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2026-02-25-persistence/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><em>February 25, 2026 by Michael Toy</em></p>
+<p>As complex data is mined for information, inevitably there are transformations that are expensive to compute. A summary table that takes thirty seconds to build is fine the first time, but not when it gets recomputed every time someone opens a dashboard. The obvious answer is to save those intermediate results as tables — but "obvious" and "simple" are very different things.</p>
+<p>Persistence in data computation is a huge problem space. Caching. Invalidation. Scheduling. Garbage collection. Production versus staging environments. Developer workflows. Multi-tenant quotas. The list goes on. Most tools either ignore this entirely — leaving you to manage it outside the system — or ship an opinionated pipeline that works great until your needs don't fit the opinions.</p>
+<p>We wanted a third option. So Malloy provides a <strong>simple</strong> implementation of persistence — and a foundation for <strong>sophisticated</strong> ones.</p>
+
+      <h2>
+        <a id="separate-the-machinery-from-the-policy" class="header-link anchor" href="#separate-the-machinery-from-the-policy">
+          Separate the Machinery from the Policy
+        </a>
+      </h2>
+    <p>The simple implementation is <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">cli</span><span style="color: #000000"> </span><span style="color: #001080">build</span></span></code> and the VS Code extension: annotate sources, run a build, query pre-built tables. It handles the common case — a developer or small team persisting expensive intermediate results — with minimal setup.</p>
+<p>But the persistence <em>foundation</em> is deliberately more general. The core provides three primitives:</p>
+<ol>
+<li><p><strong>Annotation</strong> — mark a source as persistent with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#@ persist</span></span></code></p>
+</li>
+<li><p><strong>Graph examination</strong> — walk a model's dependency graph to understand what needs building, and in what order</p>
+</li>
+<li><p><strong>Table substitution</strong> — given a manifest of what's been built, swap in the pre-built table at query time</p>
+</li></ol>
+<p>Everything else — when to build, when to invalidate, how to handle environments, what to do about failures — is the application's problem. This is a design choice, not a limitation. The simple builder and a multi-tenant SAAS platform serving thousands of users with age-based refresh and per-user quotas both use the same three primitives. The foundation doesn't care what you build on it.</p>
+
+      <h2>
+        <a id="the-design-journey-from-queries-to-sources" class="header-link anchor" href="#the-design-journey-from-queries-to-sources">
+          The Design Journey: From Queries to Sources
+        </a>
+      </h2>
+    <p>Our initial thinking focused on queries as the unit of persistence. After all, when you persist something, you're persisting the result of running a query.</p>
+<p>But as we worked through the design, we realized that while a <em>query</em> is what gets executed and persisted, it is always being persisted <em>as a source</em>. The resulting table becomes something that other Malloy code references — and references in Malloy are to sources, not queries.</p>
+<p>This shift clarified the design significantly. To mark something as persistent, you annotate the source:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental.persistence</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #A31515">#@ persist name=by_carrier</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">by_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#@ persist</span></span></code> annotation is metadata, not a language keyword. It lives in Malloy's tag system, which means it's extensible — a builder application can look at whatever additional data it wants in the annotation. The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">name</span><span style="color: #000000">=</span><span style="color: #001080">by_carrier</span></span></code> part tells the simple builder what table to create, but a more sophisticated application might use annotations for table lifetime, environment targeting, or refresh policy. The language doesn't prescribe any of that.</p>
+
+      <h3>
+        <a id="inheritance" class="header-link anchor" href="#inheritance">
+          Inheritance
+        </a>
+      </h3>
+    <p>Persistence flows through <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">extend</span></span></code>. If the base data is worth persisting, derived versions usually are too:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#@ persist name=by_carrier</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">by_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #008000">// Also persistent — inherits from by_carrier</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">enriched</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">by_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">upper_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">upper</span><span style="color: #000000">(</span><span style="color: #001080">carrier</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #008000">// Break the chain when you need to</span></span>
+<span class="line"><span style="color: #A31515">#@ -persist</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">scratch</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">by_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> { ... }</span></span></pre></div>
+      <h2>
+        <a id="the-simple-implementation-builder-vs-code" class="header-link anchor" href="#the-simple-implementation-builder-vs-code">
+          The Simple Implementation: Builder + VS Code
+        </a>
+      </h2>
+    <p>Here's what the simple implementation looks like in practice.</p>
+
+      <h3>
+        <a id="annotate-your-sources" class="header-link anchor" href="#annotate-your-sources">
+          Annotate your sources
+        </a>
+      </h3>
+    <p>Add <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#@ persist name=&lt;table&gt;</span></span></code> to any source backed by a query. Enable the experiment at the top of your file:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental.persistence</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;flights.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #A31515">#@ persist name=by_carrier</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">by_carrier</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #A31515">#@ persist name=by_origin</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">by_origin</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">origin</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h3>
+        <a id="build-with-the-cli" class="header-link anchor" href="#build-with-the-cli">
+          Build with the CLI
+        </a>
+      </h3>
+    <p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">cli</span><span style="color: #000000"> </span><span style="color: #001080">build</span></span></code> is the builder. It compiles your models, walks the dependency graph, and creates tables in order:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">malloy-cli build models/</span></span></pre></div><p>It's incremental — unchanged sources are skipped. When you need to force a rebuild (say the underlying data has refreshed but your Malloy source hasn't changed), use <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">--refresh</span></span></code>:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">malloy-cli build --refresh duckdb:by_carrier</span></span></pre></div><p>The builder writes a manifest when it's done. That's its only output beyond the database tables themselves.</p>
+
+      <h3>
+        <a id="query-in-vs-code" class="header-link anchor" href="#query-in-vs-code">
+          Query in VS Code
+        </a>
+      </h3>
+    <p>The VS Code extension, once it's set up to read the same config the builder uses, reads the manifest automatically. After a build, queries against persistent sources use the pre-built tables — no restart needed.</p>
+<p>To verify it's working, compile a query without running it and check the SQL. You'll see <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">FROM</span><span style="color: #000000"> </span><span style="color: #001080">by_carrier</span></span></code> instead of an inlined subquery.</p>
+
+      <h3>
+        <a id="setup" class="header-link anchor" href="#setup">
+          Setup
+        </a>
+      </h3>
+    <p>Many connections work with no configuration at all — if a connection name matches a registered database type, Malloy creates one with default settings. For persistence, the main thing you need to decide is where the manifest lives:</p>
+<ul>
+<li><p><strong>Global config</strong> (simplest): The CLI reads <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">~/.</span><span style="color: #001080">config</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> by default and writes the manifest next to it. Point VS Code's <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">.</span><span style="color: #001080">globalConfigDirectory</span></span></code> at the same directory, and both tools share the same manifest. No flags needed.</p>
+</li>
+<li><p><strong>Project config</strong>: Put a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> in your project root (it can be as minimal as <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{}</span></span></code>) to anchor the manifest to your project. VS Code finds it automatically; the CLI needs <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">--config .</span></span></code>.</p>
+</li></ul>
+<p>See the <a href="https://docs.malloydata.dev/documentation/experiments/persistence">persistence documentation</a> for the full setup guide.</p>
+
+      <h2>
+        <a id="how-it-works-under-the-hood" class="header-link anchor" href="#how-it-works-under-the-hood">
+          How It Works Under the Hood
+        </a>
+      </h2>
+    
+      <h3>
+        <a id="buildid-content-addressed-identity" class="header-link anchor" href="#buildid-content-addressed-identity">
+          BuildID: Content-Addressed Identity
+        </a>
+      </h3>
+    <p>Every persistent source gets a <strong>BuildID</strong> — a hash of the SQL that would be generated and the connection it targets. This captures both the logical content of the source and the context in which it runs. Two users with different connection parameters get different BuildIDs for the same Malloy source, which is correct — their built tables may differ because the underlying data differs.</p>
+<p>Because the BuildID is content-addressed, incremental builds fall out naturally. If the SQL hasn't changed and the connection hasn't changed, the BuildID is the same, and the table doesn't need rebuilding. Change a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">where</span></span></code> clause, and the BuildID changes, and the builder knows to rebuild.</p>
+
+      <h3>
+        <a id="manifests-the-bridge-between-builder-and-runtime" class="header-link anchor" href="#manifests-the-bridge-between-builder-and-runtime">
+          Manifests: The Bridge Between Builder and Runtime
+        </a>
+      </h3>
+    <p>The manifest is a simple data structure: a map from BuildID to information about the built table (connection, table name, when it was built). A builder writes it. The runtime reads it. That's the entire contract.</p>
+<p>This simplicity is the point. The manifest is just a JSON file. How it's stored and shared is up to you — it could be a file on disk, a blob in cloud storage, a row in a database. The runtime doesn't care where it came from.</p>
+
+      <h3>
+        <a id="the-spectrum-of-manifest-usage" class="header-link anchor" href="#the-spectrum-of-manifest-usage">
+          The Spectrum of Manifest Usage
+        </a>
+      </h3>
+    <p>Because the manifest is optional, persistence supports very different experiences depending on what you provide:</p>
+<p><strong>No manifest (development):</strong> Everything expands inline. The model runs exactly as if no <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#@ persist</span></span></code> annotations existed. Persistence is invisible until you opt in. This is the default — you can always run a model without building anything first.</p>
+<p><strong>Partial manifest (incremental builds):</strong> Some sources are pre-built, others expand inline. The compiler doesn't care which sources are in the manifest and which aren't. This lets a builder do incremental work — build what's missing, skip what's fresh.</p>
+<p><strong>Full manifest with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">strictPersist</span></span></code> (production):</strong> The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">strictPersist</span></span></code> option tells the compiler to fail if any persistent source is <em>missing</em> from the manifest. This catches configuration errors — if a table should have been built but wasn't, you find out at compile time rather than by accidentally running an expensive query in production.</p>
+
+      <h2>
+        <a id="building-a-sophisticated-persistence-application" class="header-link anchor" href="#building-a-sophisticated-persistence-application">
+          Building a Sophisticated Persistence Application
+        </a>
+      </h2>
+    <p>The simple implementation is built on top of the same API that a sophisticated application would use. If you need more — multi-environment manifests, custom invalidation logic, integration with your deployment pipeline, per-user table management — the foundation is there.</p>
+<p>The key API surfaces:</p>
+<ul>
+<li><p><strong><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">MalloyConfig</span></span></code></strong> — loads config and manifest, creates connections from the registry</p>
+</li>
+<li><p><strong><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Manifest</span></span></code></strong> — in-memory manifest store; load, update, serialize</p>
+</li>
+<li><p><strong>Model compilation</strong> — compile a model and walk it to find persistent sources and their dependencies</p>
+</li>
+<li><p><strong>BuildID computation</strong> — content-addressed identity for each persistent source</p>
+</li>
+<li><p><strong><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">buildManifest</span></span></code> on Runtime</strong> — set a manifest and the compiler handles substitution</p>
+</li></ul>
+<p>A builder application owns everything else: which models to scan, when to rebuild, how to handle partial failures, where to store manifests, how to manage environments. The foundation provides the "what" (these sources need building, in this order, and here's how to record what you built). Your application provides the "when," "where," and "how."</p>
+<p>For a concrete starting point, <a href="https://github.com/malloydata/malloy/blob/main/scripts/simple-builder.ts"><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">simple</span><span style="color: #000000">-</span><span style="color: #001080">builder</span><span style="color: #000000">.</span><span style="color: #001080">ts</span></span></code></a> is a skeleton builder application that shows how to find what needs building, build it, and record the results in a manifest. It's a good place to start if you want to build your own persistence layer.</p>
+<p>For the full persistence design, see <a href="https://github.com/malloydata/whatsnext/blob/main/wns/WN-0022-persistence/wn-0022.md">WN-0022: Persistent Sources</a>. For the shared configuration system that underpins both the simple workflow and custom applications, see <a href="https://github.com/malloydata/whatsnext/blob/main/wns/WN-0023-connection-config/wn-0023.md">WN-0023: Shared Configuration</a>.</p>
+
+      <h2>
+        <a id="try-it" class="header-link anchor" href="#try-it">
+          Try It
+        </a>
+      </h2>
+    <p>Persistence is experimental — enable it with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental.persistence</span></span></code> and let us know what you think. The <a href="https://docs.malloydata.dev/documentation/experiments/persistence">documentation</a> covers setup and usage. The WN specs linked above cover the design in full. And if you're building something interesting on the persistence API, we'd love to hear about it.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                
+              </div>
+              <div class="item">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

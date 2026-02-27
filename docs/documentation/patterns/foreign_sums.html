@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Foreign Sums and Averages | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/about_rendering.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/about_rendering">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_legacy docs
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/legacy_renderer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Legacy Docs
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/legacy_renderer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Legacy Renderer
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="yoy.html"><img src="/img/previous.svg" alt="previous"/>Comparing Timeframes</a>
+  </div>
+  <div class="item">
+      <a href="reading_nested.html">Reading Nested Data<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="foreign-sums" class="header-link anchor" href="#foreign-sums">
+          Foreign Sums
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/foreign_sums.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Malloy allows you to compute sums and averages correctly based on your join tree. Fan-outs based on join relationships will never impact the correctness of these aggregations. This example has <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">flights</span></span></code>, joining to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">aircraft</span></span></code>, joining to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">aircraft_model``</span><span style="color: #000000">.</span></span>
+<span class="line"></span></code>aircraft_model` has the number of seats specified on this model of aircraft.  Code below computes sums and averages at various places in the join tree.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/foreign_sums.malloynb#C2" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">// join 3 tables, flights, aircraft and aircraft models.</span></span>
+<span class="line"><span style="color: #008000">// `flights` is individual flights</span></span>
+<span class="line"><span style="color: #008000">// `aircraft` is the plane that made the flight</span></span>
+<span class="line"><span style="color: #008000">// `aircraft_models` is data about the kind of aircraft</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">aircraft_models</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/aircraft_models.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">primary_key</span><span style="color: #000000">: </span><span style="color: #001080">aircraft_model_code</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">aircraft</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/aircraft.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">primary_key</span><span style="color: #000000">: </span><span style="color: #001080">tail_num</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">aircraft_models</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">aircraft_model_code</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">join_one</span><span style="color: #000000">: </span><span style="color: #001080">aircraft</span><span style="color: #000000"> </span><span style="color: #AF00DB">with</span><span style="color: #000000"> </span><span style="color: #001080">tail_num</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">dep_time</span><span style="color: #000000"> = </span><span style="color: #098658">@2003-01</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// number of flights</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// number of planes</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">aircraft_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// number of different aircraft_models</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">aircraft_model_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// count each seat once for each flight.</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">seats_for_sale</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #001080">seats</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// count the seat once for each plane</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">seats_on_all_planes</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">(</span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #001080">seats</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #008000">// average number of seats on each model by model</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">average_seats_per_model</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">aircraft</span><span style="color: #000000">.</span><span style="color: #001080">aircraft_models</span><span style="color: #000000">.</span><span style="color: #001080">seats</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="1c197c40-b4a0-44b6-808b-24d1ff89765c">
+        <script>(()=>{var e=document.getElementById("1c197c40-b4a0-44b6-808b-24d1ff89765c"),a=document.createElement("malloy-render");a.modelDef={name:"",exports:["aircraft_models","aircraft","flights"],contents:{aircraft_models:{type:"table",name:"duckdb:../data/aircraft_models.parquet",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},as:"aircraft_models",annotation:{blockNotes:[{text:"#(docs) size=large\n"}]}},aircraft:{type:"table",name:"duckdb:../data/aircraft.parquet",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},as:"aircraft"},flights:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"],sql:'aircraft_models_0."aircraft_model_code"'},right:{node:"field",path:["aircraft_model_code"],sql:'aircraft_0."aircraft_model_code"'}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"],sql:'aircraft_0."tail_num"'},right:{node:"field",path:["tail_num"],sql:'base."tail_num"'}}},onFieldUsage:[{path:["tail_num"]}]}],parameters:{},as:"flights"}},queryList:[{type:"query",structRef:"flights",sourceArguments:{},pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["carrier"]},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},{type:"number",numberType:"integer",name:"aircraft_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["aircraft"]},fieldUsage:[],expressionType:"aggregate",code:"aircraft.count()"},{type:"number",numberType:"integer",name:"aircraft_model_count",e:{node:"aggregate",function:"count",e:{node:""},structPath:["aircraft","aircraft_models"]},fieldUsage:[],expressionType:"aggregate",code:"aircraft.aircraft_models.count()"},{type:"number",numberType:"integer",name:"seats_for_sale",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]}},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"seats_on_all_planes",e:{node:"aggregate",function:"sum",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft"]},fieldUsage:[{path:["aircraft","aircraft_models","seats"]}],expressionType:"aggregate",code:"aircraft.sum(aircraft.aircraft_models.seats)"},{type:"number",numberType:"integer",name:"average_seats_per_model",e:{node:"aggregate",function:"avg",e:{node:"field",path:["aircraft","aircraft_models","seats"]},structPath:["aircraft","aircraft_models"]},fieldUsage:[{path:["seats"]}],expressionType:"aggregate",code:"aircraft.aircraft_models.seats.avg()"}],filterList:[{node:"filterCondition",code:"dep_time = @2003-01",e:{node:"and",kids:{left:{node:">=",kids:{left:{node:"field",path:["dep_time"]},right:{node:"timeLiteral",literal:"2003-01-01 00:00:00",typeDef:{type:"timestamp",timeframe:"month"}}}},right:{node:"<",kids:{left:{node:"field",path:["dep_time"]},right:{node:"timeLiteral",literal:"2003-02-01 00:00:00",typeDef:{type:"timestamp",timeframe:"month"}}}}}},expressionType:"scalar",fieldUsage:[{path:["dep_time"]},{path:["dep_time"]}],stableFilter:{kind:"literal_equality",field_reference:{name:"dep_time",path:[]},value:{kind:"date_literal",date_value:"2003-01-01",granularity:"month"}}}],fieldUsage:[{path:["dep_time"]},{path:["dep_time"]},{path:["carrier"]},{path:["aircraft","aircraft_model_code"]},{path:["aircraft","aircraft_models","seats"]},{path:["aircraft","aircraft_model_code"]},{path:["aircraft","aircraft_models","seats"]},{path:["seats"]}],defaultOrderBy:!0,orderBy:[{field:"flight_count",dir:"desc"}]}]}],dependencies:{},references:[{type:"fieldReference",definition:{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},text:"aircraft_model_code"},{type:"fieldReference",definition:{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},text:"tail_num"},{type:"exploreReference",text:"aircraft_models",definition:{type:"table",name:"duckdb:../data/aircraft_models.parquet",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},as:"aircraft_models",annotation:{blockNotes:[{text:"#(docs) size=large\n"}]}}},{type:"fieldReference",definition:{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},text:"aircraft_model_code"},{type:"exploreReference",text:"aircraft",definition:{type:"table",name:"duckdb:../data/aircraft.parquet",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},as:"aircraft"}},{type:"fieldReference",definition:{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},text:"tail_num"},{type:"exploreReference",text:"flights",definition:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]}],parameters:{},as:"flights"}},{type:"fieldReference",definition:{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},text:"dep_time"},{type:"fieldReference",definition:{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},text:"carrier"},{type:"joinReference",definition:{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},text:"aircraft"},{type:"joinReference",definition:{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]},text:"aircraft_models"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},text:"seats"},{type:"joinReference",definition:{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},text:"aircraft"},{type:"joinReference",definition:{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},text:"aircraft"},{type:"joinReference",definition:{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]},text:"aircraft_models"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},text:"seats"},{type:"joinReference",definition:{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},text:"aircraft"},{type:"joinReference",definition:{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]},text:"aircraft_models"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},text:"seats"},{type:"joinReference",definition:{type:"table",name:"aircraft",dialect:"duckdb",tablePath:"../data/aircraft.parquet",connection:"duckdb",fields:[{type:"number",numberType:"integer",name:"id",fieldUsage:[{path:["id"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"string",name:"aircraft_serial",fieldUsage:[{path:["aircraft_serial"]}]},{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"aircraft_engine_code",fieldUsage:[{path:["aircraft_engine_code"]}]},{type:"number",numberType:"integer",name:"year_built",fieldUsage:[{path:["year_built"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"registrant_type_id",fieldUsage:[{path:["registrant_type_id"]}]},{type:"string",name:"name",fieldUsage:[{path:["name"]}]},{type:"string",name:"address1",fieldUsage:[{path:["address1"]}]},{type:"string",name:"address2",fieldUsage:[{path:["address2"]}]},{type:"string",name:"city",fieldUsage:[{path:["city"]}]},{type:"string",name:"state",fieldUsage:[{path:["state"]}]},{type:"string",name:"zip",fieldUsage:[{path:["zip"]}]},{type:"string",name:"region",fieldUsage:[{path:["region"]}]},{type:"string",name:"county",fieldUsage:[{path:["county"]}]},{type:"string",name:"country",fieldUsage:[{path:["country"]}]},{type:"string",name:"certification",fieldUsage:[{path:["certification"]}]},{type:"string",name:"status_code",fieldUsage:[{path:["status_code"]}]},{type:"string",name:"mode_s_code",fieldUsage:[{path:["mode_s_code"]}]},{type:"string",name:"fract_owner",fieldUsage:[{path:["fract_owner"]}]},{type:"date",name:"last_action_date",fieldUsage:[{path:["last_action_date"]}]},{type:"date",name:"cert_issue_date",fieldUsage:[{path:["cert_issue_date"]}]},{type:"date",name:"air_worth_date",fieldUsage:[{path:["air_worth_date"]}]},{type:"table",name:"aircraft_models",dialect:"duckdb",tablePath:"../data/aircraft_models.parquet",connection:"duckdb",fields:[{type:"string",name:"aircraft_model_code",fieldUsage:[{path:["aircraft_model_code"]}]},{type:"string",name:"manufacturer",fieldUsage:[{path:["manufacturer"]}]},{type:"string",name:"model",fieldUsage:[{path:["model"]}]},{type:"number",numberType:"integer",name:"aircraft_type_id",fieldUsage:[{path:["aircraft_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_engine_type_id",fieldUsage:[{path:["aircraft_engine_type_id"]}]},{type:"number",numberType:"integer",name:"aircraft_category_id",fieldUsage:[{path:["aircraft_category_id"]}]},{type:"number",numberType:"integer",name:"amateur",fieldUsage:[{path:["amateur"]}]},{type:"number",numberType:"integer",name:"engines",fieldUsage:[{path:["engines"]}]},{type:"number",numberType:"integer",name:"seats",fieldUsage:[{path:["seats"]}]},{type:"number",numberType:"integer",name:"weight",fieldUsage:[{path:["weight"]}]},{type:"number",numberType:"integer",name:"speed",fieldUsage:[{path:["speed"]}]}],primaryKey:"aircraft_model_code",parameters:{},annotation:{blockNotes:[{text:"#(docs) size=large\n"}]},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft_models","aircraft_model_code"]},right:{node:"field",path:["aircraft_model_code"]}}},onFieldUsage:[{path:["aircraft_model_code"]}]}],primaryKey:"tail_num",parameters:{},arguments:{},join:"one",matrixOperation:"left",onExpression:{node:"=",kids:{left:{node:"field",path:["aircraft","tail_num"]},right:{node:"field",path:["tail_num"]}}},onFieldUsage:[{path:["tail_num"]}]},text:"aircraft"}],imports:[]},a.queryResult={lastStageName:"__stage0",malloy:"",sql:'SELECT \n   base."carrier" as "carrier",\n   COUNT(1) as "flight_count",\n   COUNT(DISTINCT aircraft_0."tail_num") as "aircraft_count",\n   COUNT(DISTINCT aircraft_models_0."aircraft_model_code") as "aircraft_model_count",\n   COALESCE(SUM(aircraft_models_0."seats"),0) as "seats_for_sale",\n   COALESCE((\n        SELECT SUM(a.val) as value\n        FROM (\n          SELECT UNNEST(list(distinct {key:aircraft_0."tail_num", val: aircraft_models_0."seats"})) a\n        )\n      ),0) as "seats_on_all_planes",\n   (\n        SELECT AVG(a.val) as value\n        FROM (\n          SELECT UNNEST(list(distinct {key:aircraft_models_0."aircraft_model_code", val: aircraft_models_0."seats"})) a\n        )\n      ) as "average_seats_per_model"\nFROM \'../data/flights.parquet\' as base\n LEFT JOIN \'../data/aircraft.parquet\' AS aircraft_0\n  ON aircraft_0."tail_num"=base."tail_num"\n LEFT JOIN \'../data/aircraft_models.parquet\' AS aircraft_models_0\n  ON aircraft_models_0."aircraft_model_code"=aircraft_0."aircraft_model_code"\nWHERE (base."dep_time">=TIMESTAMP \'2003-01-01 00:00:00\') and (base."dep_time"<TIMESTAMP \'2003-02-01 00:00:00\')\nGROUP BY 1\nORDER BY 2 desc NULLS LAST\n',dependenciesToMaterialize:{},structs:[{type:"query_result",name:"__stage0",fields:[{name:"carrier",type:"string",resultMetadata:{sourceField:"carrier",sourceClasses:["carrier"],referenceId:"724ce6c7-ca8c-4d7c-8435-2d7584a40039",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:15,character:19},end:{line:15,character:58}}}},{name:"flight_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"flight_count",sourceExpression:"count()",sourceClasses:["flight_count"],referenceId:"c694094c-601a-419d-af2e-31724740683e",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:24,character:4},end:{line:24,character:27}}}},{name:"aircraft_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"aircraft_count",sourceExpression:"aircraft.count()",sourceClasses:["aircraft_count"],referenceId:"ff758215-610e-47b5-a2be-3702d99c2ba3",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:26,character:4},end:{line:26,character:38}}}},{name:"aircraft_model_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"aircraft_model_count",sourceExpression:"aircraft.aircraft_models.count()",sourceClasses:["aircraft_model_count"],referenceId:"f7278bef-b3a8-458c-bbd6-e8fe61e6a52f",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:28,character:4},end:{line:28,character:60}}}},{name:"seats_for_sale",numberType:"integer",type:"number",resultMetadata:{sourceField:"seats_for_sale",sourceExpression:"sum(aircraft.aircraft_models.seats)",sourceClasses:["seats_for_sale"],referenceId:"309af100-150c-4911-aced-7383ff499333",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:30,character:4},end:{line:30,character:57}}}},{name:"seats_on_all_planes",numberType:"integer",type:"number",resultMetadata:{sourceField:"seats_on_all_planes",sourceExpression:"aircraft.sum(aircraft.aircraft_models.seats)",sourceClasses:["seats_on_all_planes"],referenceId:"b34d1dc4-ed5c-44aa-833c-cb8cc79d276c",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:32,character:4},end:{line:32,character:71}}}},{name:"average_seats_per_model",numberType:"integer",type:"number",resultMetadata:{sourceField:"average_seats_per_model",sourceExpression:"aircraft.aircraft_models.seats.avg()",sourceClasses:["average_seats_per_model"],referenceId:"4269e160-d186-4d0f-ae1d-5f16225a3e7a",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:34,character:4},end:{line:34,character:67}}}}],dialect:"duckdb",primaryKey:"carrier",connection:"duckdb",resultMetadata:{sourceField:"ignoreme",filterList:[{node:"filterCondition",code:"dep_time = @2003-01",e:{node:"and",kids:{left:{node:">=",kids:{left:{node:"field",path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:20,character:9},end:{line:20,character:17}}},sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2003-01-01 00:00:00",typeDef:{type:"timestamp",timeframe:"month"},sql:"TIMESTAMP '2003-01-01 00:00:00'"}},sql:"(base.\"dep_time\">=TIMESTAMP '2003-01-01 00:00:00')"},right:{node:"<",kids:{left:{node:"field",path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:20,character:9},end:{line:20,character:17}}},sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2003-02-01 00:00:00",typeDef:{type:"timestamp",timeframe:"month"},sql:"TIMESTAMP '2003-02-01 00:00:00'"}},sql:"(base.\"dep_time\"<TIMESTAMP '2003-02-01 00:00:00')"}}},expressionType:"scalar",fieldUsage:[{path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:20,character:9},end:{line:20,character:17}}}},{path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/foreign_sums.malloynb",range:{start:{line:20,character:9},end:{line:20,character:17}}}}],stableFilter:{kind:"literal_equality",field_reference:{name:"dep_time",path:[]},value:{kind:"date_literal",date_value:"2003-01-01",granularity:"month"}}}],sourceClasses:["ignoreme"],fieldKind:"struct",orderBy:[{field:"flight_count",dir:"desc"}],drillable:!0}}],sourceExplore:"flights",sourceArguments:{},connectionName:"duckdb",result:[{carrier:"WN",flight_count:1209,aircraft_count:6,aircraft_model_count:2,seats_for_sale:175362,seats_on_all_planes:867,average_seats_per_model:144.5},{carrier:"EV",flight_count:547,aircraft_count:3,aircraft_model_count:3,seats_for_sale:35896,seats_on_all_planes:184,average_seats_per_model:61.333333333333336},{carrier:"UA",flight_count:524,aircraft_count:6,aircraft_model_count:5,seats_for_sale:107646,seats_on_all_planes:1357,average_seats_per_model:231.4},{carrier:"AA",flight_count:422,aircraft_count:6,aircraft_model_count:4,seats_for_sale:73492,seats_on_all_planes:945,average_seats_per_model:150.25},{carrier:"NW",flight_count:419,aircraft_count:5,aircraft_model_count:5,seats_for_sale:78528,seats_on_all_planes:914,average_seats_per_model:182.8}],totalRows:5},e.appendChild(a)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1209</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_model_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_for_sale&quot;</span><span style="color: #000000">: </span><span style="color: #098658">175362</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_on_all_planes&quot;</span><span style="color: #000000">: </span><span style="color: #098658">867</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;average_seats_per_model&quot;</span><span style="color: #000000">: </span><span style="color: #098658">144.5</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;EV&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">547</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_model_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_for_sale&quot;</span><span style="color: #000000">: </span><span style="color: #098658">35896</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_on_all_planes&quot;</span><span style="color: #000000">: </span><span style="color: #098658">184</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;average_seats_per_model&quot;</span><span style="color: #000000">: </span><span style="color: #098658">61.333333333333336</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;UA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">524</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_model_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_for_sale&quot;</span><span style="color: #000000">: </span><span style="color: #098658">107646</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_on_all_planes&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1357</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;average_seats_per_model&quot;</span><span style="color: #000000">: </span><span style="color: #098658">231.4</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">422</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_model_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_for_sale&quot;</span><span style="color: #000000">: </span><span style="color: #098658">73492</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_on_all_planes&quot;</span><span style="color: #000000">: </span><span style="color: #098658">945</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;average_seats_per_model&quot;</span><span style="color: #000000">: </span><span style="color: #098658">150.25</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">419</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;aircraft_model_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_for_sale&quot;</span><span style="color: #000000">: </span><span style="color: #098658">78528</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;seats_on_all_planes&quot;</span><span style="color: #000000">: </span><span style="color: #098658">914</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;average_seats_per_model&quot;</span><span style="color: #000000">: </span><span style="color: #098658">182.8</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   base.</span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> aircraft_0.</span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;aircraft_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> aircraft_models_0.</span><span style="color: #A31515">&quot;aircraft_model_code&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;aircraft_model_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(aircraft_models_0.</span><span style="color: #A31515">&quot;seats&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;seats_for_sale&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">((</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span><span style="color: #795E26">SUM</span><span style="color: #000000">(a.val) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #0000FF">value</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(list(</span><span style="color: #0000FF">distinct</span><span style="color: #000000"> {</span><span style="color: #0000FF">key</span><span style="color: #000000">:aircraft_0.</span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000">, val: aircraft_models_0.</span><span style="color: #A31515">&quot;seats&quot;</span><span style="color: #000000">})) a</span></span>
+<span class="line"><span style="color: #000000">        )</span></span>
+<span class="line"><span style="color: #000000">      ),</span><span style="color: #098658">0</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;seats_on_all_planes&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   (</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span><span style="color: #795E26">AVG</span><span style="color: #000000">(a.val) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #0000FF">value</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">          </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(list(</span><span style="color: #0000FF">distinct</span><span style="color: #000000"> {</span><span style="color: #0000FF">key</span><span style="color: #000000">:aircraft_models_0.</span><span style="color: #A31515">&quot;aircraft_model_code&quot;</span><span style="color: #000000">, val: aircraft_models_0.</span><span style="color: #A31515">&quot;seats&quot;</span><span style="color: #000000">})) a</span></span>
+<span class="line"><span style="color: #000000">        )</span></span>
+<span class="line"><span style="color: #000000">      ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;average_seats_per_model&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/aircraft.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> aircraft_0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">ON</span><span style="color: #000000"> aircraft_0.</span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000">=base.</span><span style="color: #A31515">&quot;tail_num&quot;</span></span>
+<span class="line"><span style="color: #000000"> </span><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/aircraft_models.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">AS</span><span style="color: #000000"> aircraft_models_0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">ON</span><span style="color: #000000"> aircraft_models_0.</span><span style="color: #A31515">&quot;aircraft_model_code&quot;</span><span style="color: #000000">=aircraft_0.</span><span style="color: #A31515">&quot;aircraft_model_code&quot;</span></span>
+<span class="line"><span style="color: #0000FF">WHERE</span><span style="color: #000000"> (base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&gt;=</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2003-01-01 00:00:00&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">and</span><span style="color: #000000"> (base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&lt;</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2003-02-01 00:00:00&#39;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div></div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

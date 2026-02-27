@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      property="og:image"
+      content="https://malloydata.github.io/blog/2024-02-08-tables/CleanShot 2024-02-08 at 08.18.41@2x.png"
+    />
+    <title>Malloy Renders Nested Data</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2024-02-08-tables/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="malloy-renders-nested-data" class="header-link anchor" href="#malloy-renders-nested-data">
+          Malloy Renders Nested Data
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2024-02-08-tables/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>A preview of our new nested data renderer</p>
+<p><em>February 8, 2024 by Speros Kokenes</em>
+<br/><br/><br/>
+<img class="table-post-img" src="CleanShot 2024-02-08 at 08.18.41@2x.png" style="" alt=""></p>
+<p>When I first encountered Malloy in the wild, the aspect that stood out the most to me was how effortlessly it allows working with nested data. Nested data can be used as both an input and an output in Malloy queries to easily ask complicated questions that require inspecting complex relationships.</p>
+<p>But as a dataviz practioner, Malloy's nested outputs presented a new challenge to me: how do you visualize complex data structures in a consumable way? Since that first encounter, I've joined the Malloy team to work on this problem alongside some great thinkers. Below is a preview of where we are taking Malloy's rendering capabilities, which are available under the experimental <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5">## renderer_next</span></span></code> model annotation.</p>
+<style>
+  .table-post-img {
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+</style>
+      <h2>
+        <a id="first-our-dataset" class="header-link anchor" href="#first-our-dataset">
+          First, Our Dataset
+        </a>
+      </h2>
+    <p>Let's explore the renderer with an ecommerce model called <strong>order_items</strong>. This model has data about a company's retail clothing sales.</p>
+<p>An example of a view found in this model is <strong>Top Categories</strong>,
+which shows which of our product categories are leading in total sales dollars. It is written in the Malloy model as:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">sale_price</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">view</span><span style="color: #000000">: </span><span style="color: #001080">`Top Categories`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">`Product Category`</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">top</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h2>
+        <a id="malloy-renders-a-single-table-of-data-" class="header-link anchor" href="#malloy-renders-a-single-table-of-data-">
+          Malloy renders a single table of data.
+        </a>
+      </h2>
+    <p>We can take any view in our <strong>order_items</strong> model and view the result in a table. The table aligns the columns properly based on data type and sizes to fit the data. Let's look at the <strong>Top Categories</strong> view.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; </span><span style="color: #001080">`Top Categories`</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 07.25.46@2x.png" style="width: 400px;" alt="A two column data table">
+      <h2>
+        <a id="malloy-renders-multiple-tables-side-by-side" class="header-link anchor" href="#malloy-renders-multiple-tables-side-by-side">
+          Malloy renders multiple tables side by side
+        </a>
+      </h2>
+    <p>We are not limited to only one view at a time. Malloy can show tables side by side in the same structure by nesting them in adjacent columns. The output implements proper spacing and alignment to keep the tables separated, but visually cohesive.</p>
+<p>Here, we add a second view from the model called <strong>Top Brands</strong> which tells us which brands are selling the most.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">`Top Categories`</span><span style="color: #000000">, </span><span style="color: #001080">`Top Brands`</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 07.46.19@2x.png" style="" alt="Two data tables side by side">
+      <h2>
+        <a id="malloy-renders-multiple-tables-within-table-rows" class="header-link anchor" href="#malloy-renders-multiple-tables-within-table-rows">
+          Malloy renders multiple tables within table rows
+        </a>
+      </h2>
+    <p>We are not limited to looking at these views over the context of the entire dataset. We can nest these tables inside other tables in order to analyze our top categories and brands within subsets of the data.</p>
+<p>In this case, we break out by City to see which cities sell the most, and within those cities which categories and brands sell the most.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">City</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">`Top Categories`</span><span style="color: #000000">, </span><span style="color: #001080">`Top Brands Margin`</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 07.56.06@2x.png" style="" alt="">
+      <h2>
+        <a id="malloy-renders-unevenly-nested-data" class="header-link anchor" href="#malloy-renders-unevenly-nested-data">
+          Malloy renders unevenly nested data
+        </a>
+      </h2>
+    <p>The nested data we render doesn't have to match in breadth or depth. Nested data across different columns can have different numbers of rows, or even deeper levels of nesting. As users navigate these complex results, visual cues like pinned headers appear to help maintain context.</p>
+<p>Here we construct a different view: for our top customers, what are their top categories, favorite brands to purchase, and the last 3 purchases they've made with us?</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Customer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">isTopCustomer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Top Categories`</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Favorite Brands`</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Last 3 Purchases`</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 07.58.45.gif" style="" alt="">
+      <h2>
+        <a id="malloy-renders-deeply-nested-data" class="header-link anchor" href="#malloy-renders-deeply-nested-data">
+          Malloy renders deeply nested data
+        </a>
+      </h2>
+    <p>Data can be nested as deeply as needed. For example, instead of looking at each customer's overall favorite brands, what if we want to know their favorite brands within each of their top categories? We can find that out by making the <strong>Favorite Brands</strong> view a nest of the <strong>Top Categories</strong> view, instead of an adjacent column:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Customer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">isTopCustomer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Top Categories`</span><span style="color: #000000"> + { </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">`Favorite Brands`</span><span style="color: #000000"> }</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Last 3 Purchases`</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.05.14@2x.png" style="" alt="">
+      <h2>
+        <a id="malloy-renders-formatted-numbers" class="header-link anchor" href="#malloy-renders-formatted-numbers">
+          Malloy renders formatted numbers
+        </a>
+      </h2>
+    <p>So far, we haven't told Malloy how to render anything. But we can give our own instructions on how to visualize the data. These instructions are provided with simple <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">#</span></span></code> tags on the data elements that we want to modify.</p>
+<p>For example, we can format numbers in different ways. Currencies, durations, percentages, and even spreadsheet formatting syntax is supported.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Default Format`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># currency</span><span style="color: #008000"> </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">Currency</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># duration</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Duration (seconds)`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># duration</span><span style="color: #000000">=</span><span style="color: #A31515">minutes</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Duration (minutes)`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># number</span><span style="color: #000000">=</span><span style="color: #A31515">&#39;0.0,,&quot;M&quot;&#39;</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Spreadsheet format`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.06.46@2x.png" style="" alt="">
+      <h2>
+        <a id="malloy-renders-charts" class="header-link anchor" href="#malloy-renders-charts">
+          Malloy renders charts
+        </a>
+      </h2>
+    <p>Simple tags can be used to produce charts as well. These charts can be nested inside of tables. When doing so, the charts make sure to align their displays such that all the charts in a column form a cohesive, comparable set of information.</p>
+<p>Here, we look at Customers broken out by their <strong>Top Categories</strong> and <strong>Top Brands</strong>, but tag Top Brands as a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5"># bar</span></span></code> to get a bar chart instead of a nested table.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Customer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">isTopCustomer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Top Categories`</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Top Brands`</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.09.16@2x.png" style="" alt="">
+      <h2>
+        <a id="malloy-renders-customized-charts" class="header-link anchor" href="#malloy-renders-customized-charts">
+          Malloy renders customized charts
+        </a>
+      </h2>
+    <p>Charts can be easily customized by setting additional tags and tag properties on a column. From the previous example, we can add size tags to customize the size of the nested <strong>Top Brands</strong> charts.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Customer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">isTopCustomer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span><span style="color: #000000">, </span><span style="color: #001080">Quantity</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">`Top Categories`</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0451A5"># bar</span><span style="color: #008000"> </span><span style="color: #0451A5">size.width</span><span style="color: #000000">=</span><span style="color: #A31515">100</span><span style="color: #008000"> </span><span style="color: #0451A5">size.height</span><span style="color: #000000">=</span><span style="color: #A31515">200</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">`Top Brands`</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.11.02@2x.png" style="" alt="">
+      <h2>
+        <a id="malloy-renders-view-settings-with-overrides" class="header-link anchor" href="#malloy-renders-view-settings-with-overrides">
+          Malloy renders view settings with overrides
+        </a>
+      </h2>
+    <p>Visual tags can be saved with view definitions in a model. In this case, we have a <strong>Sales by Month Chart</strong> view in our <strong>order_items</strong> model that has already been configured with bar chart settings. We can re-use this bar chart view, while also overriding tags to tweak any settings we want changed. Here, we use the bar chart as is with the expection of changing its size to the preset "spark" setting.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Brand</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">spark</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`Sales by Month Chart`</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.13.30@2x.png" style="width:600px;" alt="">
+      <h2>
+        <a id="malloy-renders-charts-at-all-different-sizes" class="header-link anchor" href="#malloy-renders-charts-at-all-different-sizes">
+          Malloy renders charts at all different sizes
+        </a>
+      </h2>
+    <p>Besides default and custom sizing, Malloy provides preset sizes to make it quick and easy to explore data at different scales on the fly. Depending on the size of the visualization and the amount of data, Malloy tweaks the display of the chart to best support analysis.</p>
+<p>In our model, we have a <strong>top_brands_bar</strong> view that is already configured as a bar chart. We can explore Malloy's preset sizes by nesting the view multiple times, overriding the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5"># size</span></span></code> tag on each column.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Customer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">isTopCustomer</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`default`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">spark</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`spark`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">xs</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`xs`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">sm</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`sm`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">md</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`md`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">lg</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`lg`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">xl</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`xl`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">2xl</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">`2xl`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">top_brands_bar</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.15.23.gif" style="" alt="">
+      <h2>
+        <a id="malloy-renders-deeply-nested-charts" class="header-link anchor" href="#malloy-renders-deeply-nested-charts">
+          Malloy renders deeply nested charts
+        </a>
+      </h2>
+    <p>All of the charting features mentioned above work no matter how deeply nested a visualization is. In this example, we deeply nest the <strong>Sales by Month Chart</strong> as a spark. Despite being deeply nested, it still ensures that all instances of the chart in the column conform to the same set of visual properties and scaling.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">order_items</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">City</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span><span style="color: #000000">, </span><span style="color: #001080">Quantity</span><span style="color: #000000">, </span><span style="color: #001080">`Gross Margin`</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">`Key Brands`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">Brand</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">Sales</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5"># size</span><span style="color: #000000">=</span><span style="color: #A31515">spark</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">`Sales by Month Chart`</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><img class="table-post-img" src="CleanShot 2024-02-08 at 08.18.41@2x.png" style="" alt="">
+      <h2>
+        <a id="whats-next" class="header-link anchor" href="#whats-next">
+          Whats Next
+        </a>
+      </h2>
+    <p>Our next generation renderer is still a work in progress, and we are actively working on expanding the chart types, interactions, customization, and scaling. If you want to try it out early, use the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0451A5">## renderer_next</span></span></code> model tag and give us your feedback in <a href="/slack">our Slack community!</a></p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2024-01-28-bigquery-jobs"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2024-02-29-hierarchical-viz"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

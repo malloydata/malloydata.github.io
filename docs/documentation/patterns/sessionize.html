@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sessionize - Map/Reduce | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/about_rendering.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/about_rendering">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_legacy docs
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/legacy_renderer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Legacy Docs
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/legacy_renderer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Legacy Renderer
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="transform.html"><img src="/img/previous.svg" alt="previous"/>Transform Data</a>
+  </div>
+  <div class="item">
+      <a href="dim_index.html">Dimensional Indexes<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="sessionized-data-map-reduce" class="header-link anchor" href="#sessionized-data-map-reduce">
+          Sessionized Data - Map/Reduce
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/sessionize.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Flight event data contains <em>dep_time</em>, <em>carrier</em>, <em>origin</em>, <em>destination</em> and <em>tail_num</em>  (the plane that made the flight).  The query below takes the flight event data and maps it into sessions of <em>flight_date</em>, <em>carrier</em>, and <em>tail_num</em>.  For each session, a nested list of <em>flight_legs</em> by the aircraft on that day.  The flight legs are numbered.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/sessionize.malloynb#C2" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">carrier</span><span style="color: #000000"> = </span><span style="color: #A31515">&#39;WN&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">and</span><span style="color: #000000"> </span><span style="color: #001080">dep_time</span><span style="color: #000000"> ? </span><span style="color: #098658">@2002-03-03</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">} -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">calculate</span><span style="color: #000000">: </span><span style="color: #001080">session_id</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">row_number</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">flight_date</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">dep_time</span><span style="color: #000000">.</span><span style="color: #0000FF">day</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">carrier</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">tail_num</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">max_delay</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">max</span><span style="color: #000000">(</span><span style="color: #001080">dep_delay</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">total_distance</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">distance</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">flight_legs</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">calculate</span><span style="color: #000000">: </span><span style="color: #001080">flght_leg</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">row_number</span><span style="color: #000000">() </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">tail_num</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">dep_minute</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">dep_time</span><span style="color: #000000">.</span><span style="color: #0000FF">minute</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">origin</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">destination</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">dep_delay</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">arr_delay</span></span>
+<span class="line"><span style="color: #000000">  } </span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer large">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="4da14721-5711-462c-955d-f6a40103b0ee">
+        <script>(()=>{var e=document.getElementById("4da14721-5711-462c-955d-f6a40103b0ee"),a=document.createElement("malloy-render");a.modelDef={name:"",exports:[],contents:{},queryList:[{type:"query",structRef:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],parameters:{},filterList:[{node:"filterCondition",code:"carrier = 'WN' and dep_time ? @2002-03-03",e:{node:"and",kids:{left:{node:"=",kids:{left:{node:"field",path:["carrier"],sql:'base."carrier"'},right:{node:"stringLiteral",literal:"WN",sql:"'WN'"}},sql:"(base.\"carrier\"='WN')"},right:{node:"and",kids:{left:{node:">=",kids:{left:{node:"field",path:["dep_time"],sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2002-03-03 00:00:00",typeDef:{type:"timestamp",timeframe:"day"},sql:"TIMESTAMP '2002-03-03 00:00:00'"}},sql:"(base.\"dep_time\">=TIMESTAMP '2002-03-03 00:00:00')"},right:{node:"<",kids:{left:{node:"field",path:["dep_time"],sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2002-03-04 00:00:00",typeDef:{type:"timestamp",timeframe:"day"},sql:"TIMESTAMP '2002-03-04 00:00:00'"}},sql:"(base.\"dep_time\"<TIMESTAMP '2002-03-04 00:00:00')"}},sql:"((base.\"dep_time\">=TIMESTAMP '2002-03-03 00:00:00') and (base.\"dep_time\"<TIMESTAMP '2002-03-04 00:00:00'))"}}},expressionType:"scalar",fieldUsage:[{path:["carrier"]},{path:["dep_time"]},{path:["dep_time"]}]}]},pipeline:[{type:"reduce",queryFields:[{type:"number",name:"session_id",e:{node:"function_call",overload:{returnType:{type:"number",expressionType:"scalar_analytic",evalSpace:"input"},params:[],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},standardsql:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},duckdb:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},snowflake:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},trino:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},presto:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},mysql:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0}}},name:"row_number",kids:{args:[]},expressionType:"scalar_analytic"},expressionType:"scalar_analytic",code:"row_number()"},{type:"timestamp",name:"flight_date",timeframe:"day",e:{node:"trunc",e:{node:"field",path:["dep_time"],typeDef:{type:"timestamp"}},units:"day"},fieldUsage:[{path:["dep_time"]}],expressionType:"scalar",code:"dep_time.day"},{type:"fieldref",path:["carrier"]},{type:"fieldref",path:["tail_num"]},{type:"fieldref",path:["flight_count"]},{type:"number",numberType:"integer",name:"max_delay",e:{node:"aggregate",function:"max",e:{node:"field",path:["dep_delay"]}},fieldUsage:[{path:["dep_delay"]}],expressionType:"aggregate",code:"max(dep_delay)"},{type:"number",numberType:"integer",name:"total_distance",e:{node:"aggregate",function:"sum",e:{node:"field",path:["distance"]}},fieldUsage:[{path:["distance"]}],expressionType:"aggregate",code:"distance.sum()"},{type:"turtle",name:"flight_legs",pipeline:[{type:"reduce",queryFields:[{type:"number",name:"flght_leg",e:{node:"function_call",overload:{returnType:{type:"number",expressionType:"scalar_analytic",evalSpace:"input"},params:[],dialect:{postgres:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},standardsql:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},duckdb:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},snowflake:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},trino:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},presto:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0},mysql:{e:{node:"genericSQLExpr",kids:{args:[]},src:["ROW_NUMBER(",")"]},needsWindowOrderBy:!0}}},name:"row_number",kids:{args:[]},expressionType:"scalar_analytic"},expressionType:"scalar_analytic",code:"row_number()",drillView:"flight_legs"},{type:"fieldref",path:["tail_num"],drillView:"flight_legs"},{type:"timestamp",name:"dep_minute",timeframe:"minute",e:{node:"trunc",e:{node:"field",path:["dep_time"],typeDef:{type:"timestamp"}},units:"minute"},fieldUsage:[{path:["dep_time"]}],expressionType:"scalar",code:"dep_time.minute",drillView:"flight_legs"},{type:"fieldref",path:["origin"],drillView:"flight_legs"},{type:"fieldref",path:["destination"],drillView:"flight_legs"},{type:"fieldref",path:["dep_delay"],drillView:"flight_legs"},{type:"fieldref",path:["arr_delay"],drillView:"flight_legs"}],orderBy:[{field:"dep_minute"}],filterList:[],fieldUsage:[{path:["tail_num"]},{path:["dep_time"]},{path:["origin"]},{path:["destination"]},{path:["dep_delay"]},{path:["arr_delay"]}]}],annotation:{},fieldUsage:[{path:["tail_num"]},{path:["dep_time"]},{path:["origin"]},{path:["destination"]},{path:["dep_delay"]},{path:["arr_delay"]}]}],filterList:[],fieldUsage:[{path:["dep_time"]},{path:["carrier"]},{path:["tail_num"]},{path:["flight_count"]},{path:["dep_delay"]},{path:["distance"]},{path:["tail_num"]},{path:["dep_time"]},{path:["origin"]},{path:["destination"]},{path:["dep_delay"]},{path:["arr_delay"]}],defaultOrderBy:!0,orderBy:[{field:"flight_date",dir:"desc"}]}],annotation:{notes:[],blockNotes:[{text:"#(docs) size=large limit=5000\n"}]}}],dependencies:{},references:[{type:"fieldReference",definition:{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},text:"carrier"},{type:"fieldReference",definition:{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},text:"dep_time"},{type:"fieldReference",definition:{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},text:"dep_time"},{type:"fieldReference",definition:{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},text:"carrier"},{type:"fieldReference",definition:{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},text:"tail_num"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},text:"flight_count"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},text:"dep_delay"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},text:"distance"},{type:"fieldReference",definition:{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},text:"tail_num"},{type:"fieldReference",definition:{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},text:"dep_time"},{type:"fieldReference",definition:{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},text:"origin"},{type:"fieldReference",definition:{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},text:"destination"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},text:"dep_delay"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},text:"arr_delay"}],imports:[]},a.queryResult={lastStageName:"__stage1",malloy:"",sql:'WITH __stage0 AS (\n  SELECT\n    group_set,\n    DATE_TRUNC(\'day\', base."dep_time") as "flight_date__0",\n    base."carrier" as "carrier__0",\n    base."tail_num" as "tail_num__0",\n    CASE WHEN group_set=0 THEN ROW_NUMBER() OVER(PARTITION BY group_set  ORDER BY  DATE_TRUNC(\'day\', base."dep_time") desc NULLS LAST ) END as "session_id__0",\n    CASE WHEN group_set=0 THEN\n      COUNT(1)\n      END as "flight_count__0",\n    CASE WHEN group_set=0 THEN\n      max(base."dep_delay")\n      END as "max_delay__0",\n    CASE WHEN group_set=0 THEN\n      COALESCE(SUM(base."distance"),0)\n      END as "total_distance__0",\n    CASE WHEN group_set=1 THEN\n      base."tail_num"\n      END as "tail_num__1",\n    CASE WHEN group_set=1 THEN\n      DATE_TRUNC(\'minute\', base."dep_time")\n      END as "dep_minute__1",\n    CASE WHEN group_set=1 THEN\n      base."origin"\n      END as "origin__1",\n    CASE WHEN group_set=1 THEN\n      base."destination"\n      END as "destination__1",\n    CASE WHEN group_set=1 THEN\n      base."dep_delay"\n      END as "dep_delay__1",\n    CASE WHEN group_set=1 THEN\n      base."arr_delay"\n      END as "arr_delay__1",\n    CASE WHEN group_set=1 THEN ROW_NUMBER() OVER(PARTITION BY group_set, DATE_TRUNC(\'day\', base."dep_time"), base."carrier", base."tail_num"  ORDER BY  CASE WHEN group_set=1 THEN\n      DATE_TRUNC(\'minute\', base."dep_time")\n      END ASC NULLS LAST ) END as "flght_leg__1"\n  FROM \'../data/flights.parquet\' as base\n  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,1,1)) as group_set  ) as group_set\n  WHERE ((base."carrier"=\'WN\') and ((base."dep_time">=TIMESTAMP \'2002-03-03 00:00:00\') and (base."dep_time"<TIMESTAMP \'2002-03-04 00:00:00\')))\n  AND ((group_set NOT IN (1) OR (group_set IN (1) AND (base."carrier"=\'WN\') and ((base."dep_time">=TIMESTAMP \'2002-03-03 00:00:00\') and (base."dep_time"<TIMESTAMP \'2002-03-04 00:00:00\')))))\n  GROUP BY 1,2,3,4,9,10,11,12,13,14\n)\nSELECT\n  MAX(CASE WHEN group_set=0 THEN "session_id__0" END) as "session_id",\n  "flight_date__0" as "flight_date",\n  "carrier__0" as "carrier",\n  "tail_num__0" as "tail_num",\n  MAX(CASE WHEN group_set=0 THEN "flight_count__0" END) as "flight_count",\n  MAX(CASE WHEN group_set=0 THEN "max_delay__0" END) as "max_delay",\n  MAX(CASE WHEN group_set=0 THEN "total_distance__0" END) as "total_distance",\n  COALESCE(LIST({\n    "flght_leg": "flght_leg__1", \n    "tail_num": "tail_num__1", \n    "dep_minute": "dep_minute__1", \n    "origin": "origin__1", \n    "destination": "destination__1", \n    "dep_delay": "dep_delay__1", \n    "arr_delay": "arr_delay__1"}  ORDER BY  "dep_minute__1" ASC NULLS LAST) FILTER (WHERE group_set=1),[]) as "flight_legs"\nFROM __stage0\nGROUP BY 2,3,4\nORDER BY 2 desc NULLS LAST\n',dependenciesToMaterialize:{},structs:[{type:"query_result",name:"__stage1",fields:[{name:"session_id",type:"number",resultMetadata:{sourceField:"session_id",sourceExpression:"row_number()",sourceClasses:["session_id"],referenceId:"0a97ce69-7e29-4f3f-a35c-b8ec685c60bb",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:5,character:13},end:{line:5,character:39}}}},{name:"flight_date",type:"timestamp",timeframe:"day",resultMetadata:{sourceField:"flight_date",sourceExpression:"dep_time.day",sourceClasses:["flight_date"],referenceId:"673f0cd6-0feb-4aee-8677-c8df5a8bfff5",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:7,character:4},end:{line:7,character:31}}}},{name:"carrier",type:"string",resultMetadata:{sourceField:"carrier",sourceClasses:["carrier"],referenceId:"7119c8ce-2f91-4892-a25e-b78d8b1e7bc9",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}}},{name:"tail_num",type:"string",resultMetadata:{sourceField:"tail_num",sourceClasses:["tail_num"],referenceId:"d724b937-06dc-4c5f-a577-616bbd982f8a",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}}},{name:"flight_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"flight_count",sourceExpression:"count()",sourceClasses:["flight_count"],referenceId:"b3bec181-8cd7-4bbe-b2fc-dffffe4a06d1",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:3,character:11},end:{line:3,character:34}}}},{name:"max_delay",numberType:"integer",type:"number",resultMetadata:{sourceField:"max_delay",sourceExpression:"max(dep_delay)",sourceClasses:["max_delay"],referenceId:"3a85c74b-c42e-4f3c-be84-111af5093406",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:12,character:6},end:{line:12,character:33}}}},{name:"total_distance",numberType:"integer",type:"number",resultMetadata:{sourceField:"total_distance",sourceExpression:"distance.sum()",sourceClasses:["total_distance"],referenceId:"1a717838-d69d-440b-86eb-9b861f80b56e",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:13,character:6},end:{line:13,character:38}}}},{type:"array",name:"flight_legs",fields:[{name:"flght_leg",type:"number",resultMetadata:{sourceField:"flght_leg",sourceExpression:"row_number()",sourceClasses:["flght_leg"],referenceId:"37a8c351-aa86-4a42-81d5-b8d16a6303f8",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:16,character:15},end:{line:16,character:40}}},drillView:"flight_legs"},{name:"tail_num",type:"string",resultMetadata:{sourceField:"tail_num",sourceClasses:["tail_num"],referenceId:"d724b937-06dc-4c5f-a577-616bbd982f8a",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}},drillView:"flight_legs"},{name:"dep_minute",type:"timestamp",timeframe:"minute",resultMetadata:{sourceField:"dep_minute",sourceExpression:"dep_time.minute",sourceClasses:["dep_minute"],referenceId:"f1a6a305-44a2-4df5-abf4-21ba132163e9",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:19,character:6},end:{line:19,character:35}}},drillView:"flight_legs"},{name:"origin",type:"string",resultMetadata:{sourceField:"origin",sourceClasses:["origin"],referenceId:"f3e0daae-a0b0-46e5-84de-30a0093ae3d6",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}},drillView:"flight_legs"},{name:"destination",type:"string",resultMetadata:{sourceField:"destination",sourceClasses:["destination"],referenceId:"869e6889-b2a0-41c2-ab01-af0ea93bd825",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}},drillView:"flight_legs"},{name:"dep_delay",numberType:"integer",type:"number",resultMetadata:{sourceField:"dep_delay",sourceClasses:["dep_delay"],referenceId:"c613887c-37c0-478b-bb89-89d501ac7045",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}},drillView:"flight_legs"},{name:"arr_delay",numberType:"integer",type:"number",resultMetadata:{sourceField:"arr_delay",sourceClasses:["arr_delay"],referenceId:"ec9b3308-68b0-4eb5-8d5d-33aff04a1eda",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:1,character:5},end:{line:1,character:44}}},drillView:"flight_legs"}],dialect:"duckdb",connection:"duckdb",resultMetadata:{sourceField:"flight_legs",filterList:[{node:"filterCondition",code:"carrier = 'WN' and dep_time ? @2002-03-03",e:{node:"and",kids:{left:{node:"=",kids:{left:{node:"field",path:["carrier"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:9},end:{line:2,character:16}}},sql:'base."carrier"'},right:{node:"stringLiteral",literal:"WN",sql:"'WN'"}},sql:"(base.\"carrier\"='WN')"},right:{node:"and",kids:{left:{node:">=",kids:{left:{node:"field",path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}},sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2002-03-03 00:00:00",typeDef:{type:"timestamp",timeframe:"day"},sql:"TIMESTAMP '2002-03-03 00:00:00'"}},sql:"(base.\"dep_time\">=TIMESTAMP '2002-03-03 00:00:00')"},right:{node:"<",kids:{left:{node:"field",path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}},sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2002-03-04 00:00:00",typeDef:{type:"timestamp",timeframe:"day"},sql:"TIMESTAMP '2002-03-04 00:00:00'"}},sql:"(base.\"dep_time\"<TIMESTAMP '2002-03-04 00:00:00')"}},sql:"((base.\"dep_time\">=TIMESTAMP '2002-03-03 00:00:00') and (base.\"dep_time\"<TIMESTAMP '2002-03-04 00:00:00'))"}}},expressionType:"scalar",fieldUsage:[{path:["carrier"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:9},end:{line:2,character:16}}}},{path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}}},{path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}}}]}],sourceClasses:["flight_legs"],fieldKind:"struct",orderBy:[{field:"dep_minute"}],drillable:!0},annotation:{},elementTypeDef:{type:"record_element"},join:"many"}],dialect:"duckdb",connection:"duckdb",resultMetadata:{sourceField:"ignoreme",filterList:[{node:"filterCondition",code:"carrier = 'WN' and dep_time ? @2002-03-03",e:{node:"and",kids:{left:{node:"=",kids:{left:{node:"field",path:["carrier"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:9},end:{line:2,character:16}}},sql:'base."carrier"'},right:{node:"stringLiteral",literal:"WN",sql:"'WN'"}},sql:"(base.\"carrier\"='WN')"},right:{node:"and",kids:{left:{node:">=",kids:{left:{node:"field",path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}},sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2002-03-03 00:00:00",typeDef:{type:"timestamp",timeframe:"day"},sql:"TIMESTAMP '2002-03-03 00:00:00'"}},sql:"(base.\"dep_time\">=TIMESTAMP '2002-03-03 00:00:00')"},right:{node:"<",kids:{left:{node:"field",path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}},sql:'base."dep_time"'},right:{node:"timeLiteral",literal:"2002-03-04 00:00:00",typeDef:{type:"timestamp",timeframe:"day"},sql:"TIMESTAMP '2002-03-04 00:00:00'"}},sql:"(base.\"dep_time\"<TIMESTAMP '2002-03-04 00:00:00')"}},sql:"((base.\"dep_time\">=TIMESTAMP '2002-03-03 00:00:00') and (base.\"dep_time\"<TIMESTAMP '2002-03-04 00:00:00'))"}}},expressionType:"scalar",fieldUsage:[{path:["carrier"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:9},end:{line:2,character:16}}}},{path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}}},{path:["dep_time"],at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:2,character:28},end:{line:2,character:36}}}}]}],sourceClasses:["ignoreme"],fieldKind:"struct",orderBy:[{field:"flight_date",dir:"desc"}],drillable:!0}}],sourceExplore:"duckdb:../data/flights.parquet",connectionName:"duckdb",annotation:{notes:[],blockNotes:[{text:"#(docs) size=large limit=5000\n",at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/patterns/sessionize.malloynb",range:{start:{line:0,character:0},end:{line:0,character:30}}}}]},result:[{session_id:4,flight_date:"2002-03-03T00:00:00.000Z",carrier:"WN",tail_num:"N641SW",flight_count:7,max_delay:10,total_distance:3105,flight_legs:[{flght_leg:1,tail_num:"N641SW",dep_minute:"2002-03-03T09:15:00.000Z",origin:"OAK",destination:"ONT",dep_delay:0,arr_delay:-1},{flght_leg:2,tail_num:"N641SW",dep_minute:"2002-03-03T10:50:00.000Z",origin:"ONT",destination:"OAK",dep_delay:0,arr_delay:0},{flght_leg:3,tail_num:"N641SW",dep_minute:"2002-03-03T12:35:00.000Z",origin:"OAK",destination:"PDX",dep_delay:10,arr_delay:5},{flght_leg:4,tail_num:"N641SW",dep_minute:"2002-03-03T14:25:00.000Z",origin:"PDX",destination:"OAK",dep_delay:0,arr_delay:-3},{flght_leg:5,tail_num:"N641SW",dep_minute:"2002-03-03T16:37:00.000Z",origin:"OAK",destination:"LAX",dep_delay:7,arr_delay:0},{flght_leg:6,tail_num:"N641SW",dep_minute:"2002-03-03T18:15:00.000Z",origin:"LAX",destination:"ELP",dep_delay:0,arr_delay:7},{flght_leg:7,tail_num:"N641SW",dep_minute:"2002-03-03T21:30:00.000Z",origin:"ELP",destination:"MAF",dep_delay:0,arr_delay:0}]},{session_id:6,flight_date:"2002-03-03T00:00:00.000Z",carrier:"WN",tail_num:"N628SW",flight_count:7,max_delay:13,total_distance:2786,flight_legs:[{flght_leg:1,tail_num:"N628SW",dep_minute:"2002-03-03T08:00:00.000Z",origin:"OAK",destination:"LAX",dep_delay:0,arr_delay:-7},{flght_leg:2,tail_num:"N628SW",dep_minute:"2002-03-03T10:00:00.000Z",origin:"LAX",destination:"OAK",dep_delay:0,arr_delay:5},{flght_leg:3,tail_num:"N628SW",dep_minute:"2002-03-03T11:45:00.000Z",origin:"OAK",destination:"GEG",dep_delay:10,arr_delay:0},{flght_leg:4,tail_num:"N628SW",dep_minute:"2002-03-03T13:55:00.000Z",origin:"GEG",destination:"SEA",dep_delay:0,arr_delay:-5},{flght_leg:5,tail_num:"N628SW",dep_minute:"2002-03-03T15:25:00.000Z",origin:"SEA",destination:"RNO",dep_delay:0,arr_delay:-12},{flght_leg:6,tail_num:"N628SW",dep_minute:"2002-03-03T17:30:00.000Z",origin:"RNO",destination:"LAS",dep_delay:0,arr_delay:-10},{flght_leg:7,tail_num:"N628SW",dep_minute:"2002-03-03T19:23:00.000Z",origin:"LAS",destination:"PHX",dep_delay:13,arr_delay:20}]},{session_id:1,flight_date:"2002-03-03T00:00:00.000Z",carrier:"WN",tail_num:"N391SW",flight_count:5,max_delay:50,total_distance:4179,flight_legs:[{flght_leg:1,tail_num:"N391SW",dep_minute:"2002-03-03T07:50:00.000Z",origin:"BWI",destination:"PVD",dep_delay:0,arr_delay:0},{flght_leg:2,tail_num:"N391SW",dep_minute:"2002-03-03T09:44:00.000Z",origin:"PVD",destination:"TPA",dep_delay:14,arr_delay:19},{flght_leg:3,tail_num:"N391SW",dep_minute:"2002-03-03T13:50:00.000Z",origin:"TPA",destination:"PVD",dep_delay:35,arr_delay:48},{flght_leg:4,tail_num:"N391SW",dep_minute:"2002-03-03T17:08:00.000Z",origin:"PVD",destination:"BNA",dep_delay:38,arr_delay:61},{flght_leg:5,tail_num:"N391SW",dep_minute:"2002-03-03T19:40:00.000Z",origin:"BNA",destination:"HOU",dep_delay:50,arr_delay:60}]},{session_id:3,flight_date:"2002-03-03T00:00:00.000Z",carrier:"WN",tail_num:"N735SA",flight_count:9,max_delay:25,total_distance:3790,flight_legs:[{flght_leg:1,tail_num:"N735SA",dep_minute:"2002-03-03T07:15:00.000Z",origin:"OAK",destination:"LAS",dep_delay:0,arr_delay:-10},{flght_leg:2,tail_num:"N735SA",dep_minute:"2002-03-03T09:00:00.000Z",origin:"LAS",destination:"SMF",dep_delay:0,arr_delay:5},{flght_leg:3,tail_num:"N735SA",dep_minute:"2002-03-03T11:00:00.000Z",origin:"SMF",destination:"SAN",dep_delay:15,arr_delay:10},{flght_leg:4,tail_num:"N735SA",dep_minute:"2002-03-03T12:45:00.000Z",origin:"SAN",destination:"LAS",dep_delay:20,arr_delay:17},{flght_leg:5,tail_num:"N735SA",dep_minute:"2002-03-03T14:14:00.000Z",origin:"LAS",destination:"SLC",dep_delay:19,arr_delay:19},{flght_leg:6,tail_num:"N735SA",dep_minute:"2002-03-03T16:55:00.000Z",origin:"SLC",destination:"PHX",dep_delay:25,arr_delay:10},{flght_leg:7,tail_num:"N735SA",dep_minute:"2002-03-03T18:53:00.000Z",origin:"PHX",destination:"SLC",dep_delay:18,arr_delay:10},{flght_leg:8,tail_num:"N735SA",dep_minute:"2002-03-03T20:45:00.000Z",origin:"SLC",destination:"RNO",dep_delay:15,arr_delay:10},{flght_leg:9,tail_num:"N735SA",dep_minute:"2002-03-03T21:27:00.000Z",origin:"RNO",destination:"PDX",dep_delay:12,arr_delay:5}]},{session_id:2,flight_date:"2002-03-03T00:00:00.000Z",carrier:"WN",tail_num:"N723SW",flight_count:4,max_delay:5,total_distance:5162,flight_legs:[{flght_leg:1,tail_num:"N723SW",dep_minute:"2002-03-03T08:40:00.000Z",origin:"PHX",destination:"PVD",dep_delay:0,arr_delay:-16},{flght_leg:2,tail_num:"N723SW",dep_minute:"2002-03-03T15:55:00.000Z",origin:"PVD",destination:"PHX",dep_delay:0,arr_delay:-30},{flght_leg:3,tail_num:"N723SW",dep_minute:"2002-03-03T20:20:00.000Z",origin:"PHX",destination:"SAN",dep_delay:5,arr_delay:-12},{flght_leg:4,tail_num:"N723SW",dep_minute:"2002-03-03T21:00:00.000Z",origin:"SAN",destination:"PHX",dep_delay:0,arr_delay:0}]},{session_id:5,flight_date:"2002-03-03T00:00:00.000Z",carrier:"WN",tail_num:"N791SW",flight_count:5,max_delay:25,total_distance:4814,flight_legs:[{flght_leg:1,tail_num:"N791SW",dep_minute:"2002-03-03T08:00:00.000Z",origin:"TPA",destination:"LAS",dep_delay:0,arr_delay:12},{flght_leg:2,tail_num:"N791SW",dep_minute:"2002-03-03T10:37:00.000Z",origin:"LAS",destination:"MDW",dep_delay:17,arr_delay:22},{flght_leg:3,tail_num:"N791SW",dep_minute:"2002-03-03T16:45:00.000Z",origin:"MDW",destination:"STL",dep_delay:25,arr_delay:25},{flght_leg:4,tail_num:"N791SW",dep_minute:"2002-03-03T18:15:00.000Z",origin:"STL",destination:"MCO",dep_delay:20,arr_delay:10},{flght_leg:5,tail_num:"N791SW",dep_minute:"2002-03-03T22:05:00.000Z",origin:"MCO",destination:"FLL",dep_delay:20,arr_delay:20}]}],totalRows:6},e.appendChild(a)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;session_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T00:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;max_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;total_distance&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3105</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_legs&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T09:15:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ONT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T10:50:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ONT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T12:35:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PDX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T14:25:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PDX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-3</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T16:37:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T18:15:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ELP&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N641SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T21:30:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ELP&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MAF&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;session_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T00:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;max_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">13</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;total_distance&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2786</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_legs&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T08:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-7</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T10:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T11:45:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;GEG&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T13:55:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;GEG&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SEA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-5</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T15:25:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SEA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;RNO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-12</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T17:30:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;RNO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N628SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T19:23:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">13</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">20</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;session_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T00:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N391SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;max_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">50</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;total_distance&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4179</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_legs&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N391SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T07:50:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;BWI&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PVD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N391SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T09:44:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PVD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;TPA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">14</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">19</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N391SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T13:50:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;TPA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PVD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">35</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">48</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N391SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T17:08:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PVD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;BNA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">38</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">61</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N391SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T19:40:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;BNA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;HOU&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">50</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">60</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;session_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T00:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">9</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;max_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;total_distance&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3790</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_legs&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T07:15:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OAK&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T09:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SMF&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T11:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SMF&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SAN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">15</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T12:45:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SAN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">20</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">17</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T14:14:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SLC&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">19</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">19</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T16:55:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SLC&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T18:53:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SLC&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">18</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">8</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T20:45:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SLC&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;RNO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">15</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">9</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N735SA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T21:27:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;RNO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PDX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">12</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;session_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T00:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N723SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;max_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;total_distance&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5162</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_legs&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N723SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T08:40:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PVD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-16</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N723SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T15:55:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PVD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-30</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N723SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T20:20:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SAN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">-12</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N723SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T21:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SAN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;PHX&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;session_id&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_date&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T00:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;carrier&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N791SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;max_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;total_distance&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4814</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_legs&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N791SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T08:00:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;TPA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">12</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N791SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T10:37:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;LAS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MDW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">17</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">22</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N791SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T16:45:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MDW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;STL&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N791SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T18:15:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;STL&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MCO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">20</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">10</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;N791SW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;2002-03-03T22:05:00.000Z&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MCO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;FLL&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">20</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #098658">20</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    DATE_TRUNC(</span><span style="color: #A31515">&#39;day&#39;</span><span style="color: #000000">, base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_date__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    base.</span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;carrier__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    base.</span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;tail_num__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #795E26">ROW_NUMBER</span><span style="color: #000000">() </span><span style="color: #0000FF">OVER</span><span style="color: #000000">(</span><span style="color: #0000FF">PARTITION</span><span style="color: #000000"> </span><span style="color: #0000FF">BY</span><span style="color: #000000"> group_set  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  DATE_TRUNC(</span><span style="color: #A31515">&#39;day&#39;</span><span style="color: #000000">, base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000"> ) </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;session_id__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">max</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;dep_delay&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;max_delay__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #795E26">SUM</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;distance&quot;</span><span style="color: #000000">),</span><span style="color: #098658">0</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_distance__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;tail_num&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;tail_num__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      DATE_TRUNC(</span><span style="color: #A31515">&#39;minute&#39;</span><span style="color: #000000">, base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;dep_minute__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;origin&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;origin__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;destination&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;destination__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;dep_delay&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;dep_delay__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;arr_delay&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;arr_delay__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #795E26">ROW_NUMBER</span><span style="color: #000000">() </span><span style="color: #0000FF">OVER</span><span style="color: #000000">(</span><span style="color: #0000FF">PARTITION</span><span style="color: #000000"> </span><span style="color: #0000FF">BY</span><span style="color: #000000"> group_set, DATE_TRUNC(</span><span style="color: #A31515">&#39;day&#39;</span><span style="color: #000000">, base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">), base.</span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000">, base.</span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000">  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      DATE_TRUNC(</span><span style="color: #A31515">&#39;minute&#39;</span><span style="color: #000000">, base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000"> ) </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flght_leg__1&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> ((base.</span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000">=</span><span style="color: #A31515">&#39;WN&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">and</span><span style="color: #000000"> ((base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&gt;=</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2002-03-03 00:00:00&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">and</span><span style="color: #000000"> (base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&lt;</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2002-03-04 00:00:00&#39;</span><span style="color: #000000">)))</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">AND</span><span style="color: #000000"> ((group_set </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">OR</span><span style="color: #000000"> (group_set </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">AND</span><span style="color: #000000"> (base.</span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000">=</span><span style="color: #A31515">&#39;WN&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">and</span><span style="color: #000000"> ((base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&gt;=</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2002-03-03 00:00:00&#39;</span><span style="color: #000000">) </span><span style="color: #0000FF">and</span><span style="color: #000000"> (base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">&lt;</span><span style="color: #0000FF">TIMESTAMP</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;2002-03-04 00:00:00&#39;</span><span style="color: #000000">)))))</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">3</span><span style="color: #000000">,</span><span style="color: #098658">4</span><span style="color: #000000">,</span><span style="color: #098658">9</span><span style="color: #000000">,</span><span style="color: #098658">10</span><span style="color: #000000">,</span><span style="color: #098658">11</span><span style="color: #000000">,</span><span style="color: #098658">12</span><span style="color: #000000">,</span><span style="color: #098658">13</span><span style="color: #000000">,</span><span style="color: #098658">14</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;session_id__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;session_id&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #A31515">&quot;flight_date__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_date&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #A31515">&quot;carrier__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;carrier&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #A31515">&quot;tail_num__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;max_delay__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;max_delay&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_distance__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;total_distance&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;flght_leg&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;flght_leg__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;tail_num&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;tail_num__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;dep_minute&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;dep_minute__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;origin&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;origin__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;destination&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;destination__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;dep_delay&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;dep_delay__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;arr_delay&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;arr_delay__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;dep_minute__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_legs&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">3</span><span style="color: #000000">,</span><span style="color: #098658">4</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div></div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

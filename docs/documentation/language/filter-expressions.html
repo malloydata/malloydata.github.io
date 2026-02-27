@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/about_rendering.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/about_rendering">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_legacy docs
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/legacy_renderer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Legacy Docs
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/legacy_renderer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Legacy Renderer
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+  </div>
+  <div class="item">
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="malloy-filter-expressions" class="header-link anchor" href="#malloy-filter-expressions">
+          Malloy Filter Expressions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/filter-expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Malloy includes specialized sub-languages for filtering <a href="#string-filter-expressions">string</a>, <a href="#numeric-filter-expressions">number</a>, <a href="#temporal-filter-expressions">date</a>, <a href="#temporal-filter-expressions">timestamp</a> or <a href="#boolean-filter-expressions">boolean</a> data. There is a specialized language for each data type designed to create concise, powerful, and readable data filters.</p>
+<p>A filter expression is a special <a href="#more-about-f-strings">"f-string"</a>, starting with <code>f'</code> and ending with <code>'</code></p>
+<p>A filter expression is applied to a value with the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">~</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!~</span></span></code> operators. The result of a filter expression comparison will be a boolean value.  Here are examples of a filter expressions in Malloy for each data type.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">is_primary_color</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">color</span><span style="color: #000000"> ~ </span><span style="color: #001080">f</span><span style="color: #A31515">&#39;red,green,blue&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">one_digit</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">num_val</span><span style="color: #000000"> ~ </span><span style="color: #001080">f</span><span style="color: #A31515">&#39;(1,9)&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">did_not_happen</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">have_pictures</span><span style="color: #000000"> ~ </span><span style="color: #001080">f</span><span style="color: #A31515">&#39;false&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">happened_this_week</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">event_timestamp</span><span style="color: #000000"> ~ </span><span style="color: #001080">f</span><span style="color: #A31515">&#39;this week&#39;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">total_this_quarter</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">num_val</span><span style="color: #000000">.</span><span style="color: #795E26">sum</span><span style="color: #000000">() { </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span><span style="color: #000000"> ~ </span><span style="color: #001080">f</span><span style="color: #A31515">&#39;this quarter&#39;</span><span style="color: #000000"> }</span></span></pre></div><div class="title-row">
+        
+      <h1>
+        <a id="string-filter-expressions" class="header-link anchor" href="#string-filter-expressions">
+          String Filter Expressions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/filter-expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      
+      <h2>
+        <a id="examples-of-string-filter-expressions" class="header-link anchor" href="#examples-of-string-filter-expressions">
+          Examples of String Filter Expressions
+        </a>
+      </h2>
+    <table>
+<thead>
+<tr>
+<th><strong>String Filter Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>correct</code></td>
+
+<td>Is the string <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">correct</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>happy%</code></td>
+
+<td>Starts with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">happy</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>%joy</code></td>
+
+<td>Ends with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">joy</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>%love%</code></td>
+
+<td>Contains <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">love</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>abc_</code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">abc</span></span></code> followed by any character</td>
+</tr>
+
+<tr>
+<td><code>null</code></td>
+
+<td>Is a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> value</td>
+</tr>
+
+<tr>
+<td><code>\null</code></td>
+
+<td>Is the string <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>ten\%</code></td>
+
+<td>Is the string <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">ten</span><span style="color: #000000">%</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>empty</code></td>
+
+<td>Is the empty string or is <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>The <code>\</code> character is used to escape any special meaning</p>
+</li></ul>
+
+      <h2>
+        <a id="negation-in-string-filter-expressions" class="header-link anchor" href="#negation-in-string-filter-expressions">
+          Negation in String Filter Expressions
+        </a>
+      </h2>
+    <table>
+<thead>
+<tr>
+<th><strong>Negated Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-mistake</code></td>
+
+<td>Is not the string <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">mistake</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>-empty</code></td>
+
+<td>Is not an empty string</td>
+</tr>
+
+<tr>
+<td><code>-%anger</code></td>
+
+<td>Does not end with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">anger</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>-null</code></td>
+
+<td>Is not a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> value</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>A <code>-</code> before a string expression means "not"</p>
+</li></ul>
+
+      <h2>
+        <a id="combining-string-filter-expressions" class="header-link anchor" href="#combining-string-filter-expressions">
+          Combining String Filter Expressions
+        </a>
+      </h2>
+    <p>There are three seperators that can be used to combine string filter expressions: <code>,</code> (the comma operator), <code>;</code> (the 'and' operator), <code>|</code> (the 'or' operator)
+Also groups of string clauses can use <code>(</code> and <code>)</code> for grouping.</p>
+<p>A string of clauses seperated by <code>,</code> will have all the positive matches or'd together (included), and all the negative matches anded (excluded)</p>
+<table>
+<thead>
+<tr>
+<th><strong>Combined Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>red,blue,green</code></td>
+
+<td>Is one of the primary colors</td>
+</tr>
+
+<tr>
+<td><code>red | blue | green</code></td>
+
+<td>Is one of the primary colors</td>
+</tr>
+
+<tr>
+<td><code>joy%,-%sadness%</td>
+
+<td>Starts with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">joy</span></span></code> and does not contains <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sadness</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>joy% ; -%sadness%</td>
+
+<td>Starts with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">joy</span></span></code> and does not contains <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sadness</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>\ % , %\_</code></td>
+
+<td>Starts with space or ends with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">_</span></span></code></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>White space at the beginning or end of a clause is ignored</p>
+</li>
+<li><p>You will need to use <code>\</code> (backslash) to escape ...</p>
+<ul>
+<li><p>Spaces at the beginning or end of a match</p>
+</li>
+<li><p>Any of <code>,</code> <code>|</code> <code>;</code> </code>\</code> <code>(</code> <code>)</code></p>
+</li>
+<li><p>The match charcacters <code>%</code> and <code>_</code></p>
+</li>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">\</span><span style="color: #0000FF">null</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">\</span><span style="color: #001080">empty</span></span></code></p>
+</li></ul>
+</li></ul>
+<div class="title-row">
+        
+      <h1>
+        <a id="numeric-filter-expressions" class="header-link anchor" href="#numeric-filter-expressions">
+          Numeric Filter Expressions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/filter-expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <table>
+<thead>
+<tr>
+<th><strong>Numeric Filter Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>42</code></td>
+
+<td>Equals 42</td>
+</tr>
+
+<tr>
+<td><code>= 42</code></td>
+
+<td>Equals 42</td>
+</tr>
+
+<tr>
+<td><code>!= 42</code></td>
+
+<td>Not Equal 42</td>
+</tr>
+
+<tr>
+<td><code>> 42</code></td>
+
+<td>Could also be <code><</code> <code><=</code> <code>>=</code></td>
+</tr>
+
+<tr>
+<td><code>(1 to 5)</code></td>
+
+<td>1, 2, 3, 4, or 5</td>
+</tr>
+
+<tr>
+<td><code>[1 to 5]</code></td>
+
+<td>2, 3, or 4</td>
+</tr>
+
+<tr>
+<td><code>null</code></td>
+
+<td>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> value</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>In <code>to</code> ranges the <code>()</code> characters indicate inclusion of the endpoints, and <code>[]</code> indicate exclusion.</p>
+</li></ul>
+
+      <h2>
+        <a id="negation-in-numeric-filter-expressions" class="header-link anchor" href="#negation-in-numeric-filter-expressions">
+          Negation in Numeric Filter Expressions
+        </a>
+      </h2>
+    <table>
+<thead>
+<tr>
+<th><strong>Negated Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>not 21</code></td>
+
+<td>Does not equal 21</td>
+</tr>
+
+<tr>
+<td><code>not (1,2,3)</code></td>
+
+<td>Less than 1 or greater than 3</td>
+</tr>
+
+<tr>
+<td><code>not null</code></td>
+
+<td>Is not a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> value</td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="combining-numeric-filter-expressions" class="header-link anchor" href="#combining-numeric-filter-expressions">
+          Combining Numeric Filter Expressions
+        </a>
+      </h2>
+    <p>Numeric filters can be combined with <code>and</code> and <code>or</code> operators and grouped with <code>(</code> and <code>)</code></p>
+<p>Filters using <code>=</code> and <code>!=</code> can have a list of values separated by <code>,</code></p>
+<table>
+<thead>
+<tr>
+<th><strong>Combined Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>= 2,4,6,8</code></td>
+
+<td>Equals one of 2,4,6 or 8</td>
+</tr>
+
+<tr>
+<td><code>2,4,6,8</code></td>
+
+<td>Equals one of 2,4,6 or 8</td>
+</tr>
+
+<tr>
+<td><code>!= 1,3,5,7</code></td>
+
+<td>Does not equal any of 1,3,5,7</td>
+</tr>
+
+<tr>
+<td><code>> 10 and != 15</code></td>
+
+<td>Greater than 10 and not equal 15</td>
+</tr>
+
+<tr>
+<td><code>(0 to 4) or (5 to 9)</code></td>
+
+<td>Exclude between for and 5</td>
+</tr>
+</tbody></table>
+<div class="title-row">
+        
+      <h1>
+        <a id="temporal-filter-expressions" class="header-link anchor" href="#temporal-filter-expressions">
+          Temporal Filter Expressions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/filter-expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      
+      <h2>
+        <a id="temporal-units" class="header-link anchor" href="#temporal-units">
+          Temporal Units
+        </a>
+      </h2>
+    <p>Malloy has a temporal filter language for operation on <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">date</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code> data. The first type of temporal filters are filters which describe a unit of time.
+Expressions which take a time extent can use <code>year</code>, <code>quarter</code>, <code>month</code>, <code>week</code>, <code>day</code>, <code>hour</code>, or <code>minute</code>, and any of those can have an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">s</span></span></code> (as in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">years</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">days</span></span></code>)</p>
+<table>
+<thead>
+<tr>
+<th><strong>Temporal Unit Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>now</code></td>
+
+<td>The current time</td>
+</tr>
+
+<tr>
+<td><code>last week</code></td>
+
+<td>The sunday week which ended before the current day</td>
+</tr>
+
+<tr>
+<td><code>next month</code></td>
+
+<td>The next month</td>
+</tr>
+
+<tr>
+<td><code>this quarter</code></td>
+
+<td>The quarter containing the current day</td>
+</tr>
+
+<tr>
+<td><code>today</code></td>
+
+<td>The current day</td>
+</tr>
+
+<tr>
+<td><code>yesterday</code></td>
+
+<td>The day before the current day</td>
+</tr>
+
+<tr>
+<td><code>tomorrow</code></td>
+
+<td>The day after the current day</td>
+</tr>
+
+<tr>
+<td><code>2 days ago</code></td>
+
+<td>The day before yesterday</td>
+</tr>
+
+<tr>
+<td><code>1 week from now</code></td>
+
+<td>Same as seven days from now</td>
+</tr>
+
+<tr>
+<td><code>monday</code></td>
+
+<td>The most recently passed monday</td>
+</tr>
+
+<tr>
+<td><code>last monday</code></td>
+
+<td>The most recently passed monday</td>
+</tr>
+
+<tr>
+<td><code>next friday</code></td>
+
+<td>The first friday in the future</td>
+</tr>
+</tbody></table>
+
+      <h3>
+        <a id="temporal-literals" class="header-link anchor" href="#temporal-literals">
+          Temporal Literals
+        </a>
+      </h3>
+    <p>A literal is also a temporal unit, describing a period of time with a beginning and an implied duration.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Literal</strong></th>
+
+<th><strong>Begins</strong></th>
+
+<th><strong>Duration</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>2025</code></td>
+
+<td><code>2025-01-01 00:00:00</code></td>
+
+<td>1 year</td>
+</tr>
+
+<tr>
+<td><code>2025-Q1</code></td>
+
+<td><code>2025-01-01 00:00:00</code></td>
+
+<td>3 months</td>
+</tr>
+
+<tr>
+<td><code>2025-01</code></td>
+
+<td><code>2025-01-01 00:00:00</code></td>
+
+<td>1 month</td>
+</tr>
+
+<tr>
+<td><code>2025-01-05-WK</code></td>
+
+<td><code>2025-01-05 00:00:00</code></td>
+
+<td>7 days</td>
+</tr>
+
+<tr>
+<td><code>2025-01-01</code></td>
+
+<td><code>2025-01-01 00:00:00</code></td>
+
+<td>1 day</td>
+</tr>
+
+<tr>
+<td><code>2025-01-01 10</code></td>
+
+<td><code>2025-01-01 10:00:00</code></td>
+
+<td>1 hour</td>
+</tr>
+
+<tr>
+<td><code>2025-01-01 10:30</code></td>
+
+<td><code>2025-01-01 10:30:00</code></td>
+
+<td>1 minute</td>
+</tr>
+
+<tr>
+<td><code>2025-01-01 10:30:05</code></td>
+
+<td><code>2025-01-01 10:30:00:05</code></td>
+
+<td><em>none</em></td>
+</tr>
+
+<tr>
+<td><code>2025-01-01 10:30:05.33</code></td>
+
+<td><code>2025-01-01 10:30:00:05.33</code></td>
+
+<td><em>none</em></td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="temporal-ranges" class="header-link anchor" href="#temporal-ranges">
+          Temporal Ranges
+        </a>
+      </h2>
+    <p>There are a other ways to describe a range, many of which start with a temporal unit. A range
+includes the beginning, and extends up to, but not including the end.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Temporal Range Expression</strong></th>
+
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>before tuesday</code></td>
+
+<td>Before the beginning of a temporal unit</td>
+</tr>
+
+<tr>
+<td><code>through 2025-Q1 </code></td>
+
+<td>"Before and during" any temporal unit</td>
+</tr>
+
+<tr>
+<td><code>after next month</code></td>
+
+<td>After the end of any temporal unit</td>
+</tr>
+
+<tr>
+<td><code>starting next week</code></td>
+
+<td>"On or after" any temporal unit</td>
+</tr>
+
+<tr>
+<td><code>last monday to next friday</code></td>
+
+<td>Using two units to specify a range</td>
+</tr>
+
+<tr>
+<td><code>2 weeks ago for 2 days</code></td>
+
+<td>Can combine a unit and a duration</td>
+</tr>
+
+<tr>
+<td><code>last 3 days</code></td>
+
+<td>3 days of data, does not include today</td>
+</tr>
+
+<tr>
+<td><code>next 2 weeks</code></td>
+
+<td>2 weeks of data, does not include today</td>
+</tr>
+
+<tr>
+<td><code>2 days</code></td>
+
+<td>2 days of data, yesterday and today</td>
+</tr>
+
+<tr>
+<td><code>null</code></td>
+
+<td>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> value</td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="combining-temporal-filter-expressions" class="header-link anchor" href="#combining-temporal-filter-expressions">
+          Combining Temporal Filter Expressions
+        </a>
+      </h2>
+    <p>Temporal filter expressions can be combined with <code>and</code> and <code>or</code> operators and grouped with <code>(</code> and <code>)</code></p>
+<div class="title-row">
+        
+      <h1>
+        <a id="boolean-filter-expressions" class="header-link anchor" href="#boolean-filter-expressions">
+          Boolean Filter Expressions
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/filter-expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Because a boolean value might equal NULL, the true <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code> filters treat <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> as a false value. The other filters (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">=</span><span style="color: #0000FF">true</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">=</span><span style="color: #0000FF">false</span></span></code>) maintain the SQL semantic where a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> value input produces a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code> output.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Boolean Filter Expression</strong></th>
+
+<th>True Input</th>
+
+<th>False Input</th>
+
+<th>Null Input</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>true</code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>=true</code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>false</code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>=false</code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NULL</span></span></code></td>
+</tr>
+
+<tr>
+<td><code>null</code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">false</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">true</span></span></code></td>
+</tr>
+</tbody></table>
+<p>Boolean filters are negated with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span></span></code>. There are no combination or grouping operators.</p>
+<div class="title-row">
+        
+      <h1>
+        <a id="more-about-f-strings" class="header-link anchor" href="#more-about-f-strings">
+          More About F-Strings
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/language/filter-expressions.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Escaping is different inside of a f-string than it is inside of a normal string. The backslash character does escape, but it will also be part of the resulting string. In most other strings, in order for the string to contain a backlash you must write two backslashes.
+This will only matter for <a href="#string-filter-expressions">string filter expressions</a> which use <code>\</code>.</p>
+<p>F-strings can also be written <code>f"..."</code> or <code>f`...`</code> if one of those quotation choices produces an easier to read expression</p>
+<p>There are also tripled versions of each f-string, <code>f'''...'''</code>, <code>f"""..."""</code> and <code>f```...```</code></p>
+<ul>
+<li><p><code>f"Don't need to quote the apostrophe"</code></p>
+</li>
+<li><p><code>f`Don't need to quote the " either`</code></p>
+</li>
+<li><p><code>f'''Or here, can use ` ' and " without quoting them'''</code></p>
+</li></ul>
+</div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

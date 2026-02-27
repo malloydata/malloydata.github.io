@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Introducing the Malloy Command Line Interface</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <a href="/blog"><span class="subtitle">Blog</span></a>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="content">
+          <div class="document-outer blog">
+            
+            <div class="blog-header linear-navigation">
+              <div class="item">
+                <a href="/blog"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />All Posts</a
+                >
+              </div>
+              <div class="edit-link">
+                <a
+                  class="edit-link"
+                  target="_blank"
+                  href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-08-25-malloy-cli/index.malloynb#C1"
+                  >VSCode
+                  <img
+                    src="/img/open_notebook.svg"
+                    alt="document"
+                /></a>
+              </div>
+            </div>
+             <div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="introducing-the-malloy-command-line-interface" class="header-link anchor" href="#introducing-the-malloy-command-line-interface">
+          Introducing the Malloy Command Line Interface
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/blog/2023-08-25-malloy-cli/index.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Lightweight, powerful, concise data transformation</p>
+<p><em>August 25, 2023 by lloyd tabb and Carlin Eng</em></p>
+<p><br/><br/><br/></p>
+<p>Today we’re excited to announce the launch of the <a href="https://malloydata.github.io/documentation/malloy_cli/index">Malloy Command Line Interface</a> (CLI). One of the primary jobs of SQL is transforming datasets. The most basic way to do this is by issuing SQL queries on a command line. The Malloy CLI serves this function, but offers simplicity and reusability in calculations that SQL lacks. With Malloy, metric calculations can be saved as part of a data model and reused in queries that calculate roll-ups at varying levels of granularity or slice across different dimensions. This reduces duplicate code, making data pipelines much easier to read, understand, and maintain.</p>
+<p>Let’s take a look at a simple example. The <a href="https://support.google.com/analytics/answer/7029846">Google Analytics 4 (GA4) schema</a> is notoriously difficult to query. The schema contains 23 columns, 11 of which are “record” types with nested data. Three of those record columns contain further nested types. Some of these nested types contain columns named “key” and “value”, so the schema can’t be inferred without actually querying the data:</p>
+<img src="ga4_schema.webp"/><p>This data needs to be transformed before it is usable by normal people. The Malloy model we define below does all this toilsome work; for example, transforming the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code> data from microseconds to an actual timestamp data type, or wrangling session IDs from the unhelpfully named <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">event_params</span></span></code> column:</p>
+<img src="events.webp" class="no-shadow"/><p>Isn’t the same thing achievable with SQL views? We could certainly write the same transformation logic to unpack <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">event_params</span></span></code> with SQL, but things get more interesting when we start aggregating the data. Suppose we want to compute the conversion rate as the count of users who made a purchase divided by all users. In the model above, the logic for this metric is encapsulated into a named measure called <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">conversion_rate</span></span></code>. The business wants to see conversion rates sliced by different dimensions: date, month, and platform. In SQL, to generate each of these slices, the aggregation logic for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">conversion_rate</span></span></code> would need to be duplicated for each view:</p>
+<img src="conversion_rate.webp" class="no-shadow"/><p>With Malloy, we can simply reference the named measure with each query. There’s a single place to define the measure, and that measure can be used to calculate roll-ups across any arbitrary set of dimensions. We can embed these queries inside of SQL DDL statements in a script:</p>
+<img src="malloysql_ddl.webp" class="no-shadow"/><p>Now we use the Malloy CLI to execute this script and create the views inside of our database:</p>
+<img src="use_cli.webp"/><p>The Malloy code is much more concise, readable, and maintainable. If the definition of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">conversion_rate</span></span></code> changes, it only needs to be updated in a single place: the events model. Contrast this with the SQL equivalent. The code is verbose, and any change to the underlying business logic requires an update to every single <code>CREATE VIEW</code> statement.</p>
+<p>The Malloy CLI is relatively simple in its functionality today, but it still unlocks the power of Malloy for many users. We’ll be looking to build more advanced functionality into this tool to make it even more useful. Getting started is easy – head over to <a href="https://github.com/malloydata/malloy-cli/releases">Github Releases</a> to grab the latest binary for your platform, and check out our <a href="https://malloydata.github.io/documentation/malloy_cli/index">documentation</a> for detailed usage information. If you have any feedback or feature requests, don’t hesitate to join our community <a href="/slack">Slack channel</a> and drop us a note.</p>
+</div> 
+            <div class="blog-footer linear-navigation">
+              <div class="item">
+                <a href="/blog//2023-06-15-malloy-roadmap"
+                  ><img
+                    src="/img/previous.svg"
+                    alt="previous"
+                  />Previous Post</a
+                >
+              </div>
+              <div class="item">
+                <a href="/blog//2023-10-03-malloy-four"
+                  >Next Post<img
+                    src="/img/next.svg"
+                    alt="previous" /></a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>

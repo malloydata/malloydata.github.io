@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SQL Expressions | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <style>
+      malloy-render::part(table-container) {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_results
+                class="sidebar-section-title {% unless /documentation/visualizations/about_rendering.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Results
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/about_rendering">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=rendering_legacy docs
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/legacy_renderer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Rendering Legacy Docs
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/legacy_renderer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Legacy Renderer
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="joins.html"><img src="/img/previous.svg" alt="previous"/>Join INNER/RIGHT/FULL</a>
+  </div>
+  <div class="item">
+      <a href="window.html">Window Partitions<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document">
+      <h2>
+        <a id="sql-expressions" class="header-link anchor" href="#sql-expressions">
+          SQL Expressions
+        </a>
+      </h2>
+    <p>Malloy allows you to call native database functions using <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!</span><span style="color: #001080">type</span></span></code>. For example if you wanted to call the duckdb function bit_length that returns a number, in Malloy you couild write <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">bitlength</span><span style="color: #000000">!</span><span style="color: #267F99">number</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;this string)</span></span></code>.</p>
+<p>Sometimes the SQL expression you want to write can't be expressed this way.  For example in DUCKDB, the extract function looks like.</p>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">extract</span><span style="color: #000000">(</span><span style="color: #001080">part</span><span style="color: #000000"> </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #267F99">date</span><span style="color: #000000">)</span></span></code></p>
+<p>In order to make Malloy write an expression like this you can escape to a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sql_</span><span style="color: #000000">&lt;</span><span style="color: #001080">type</span><span style="color: #000000">&gt;</span></span></code> function.  In the string parameter you can reference dimensions using the substitution operator <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">${</span><span style="color: #001080">dimension_name</span><span style="color: #000000">}</span></span></code>.</p>
+<p>SQL functions are</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">sql_string</span></span>
+<span class="line"><span style="color: #000000">sql_number</span></span>
+<span class="line"><span style="color: #000000">sql_date</span></span>
+<span class="line"><span style="color: #000000">sql_boolean</span></span></pre></div><div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/experiments/sql_expressions.malloynb#C2" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental{sql_functions}</span></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #001080">dep_year</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">sql_number</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;&quot;&quot; extract(&#39;year&#39; from ${dep_time}) &quot;&quot;&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/experiments/sql_expressions.malloynb#C3" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights</span><span style="color: #000000"> -&gt; </span><span style="color: #001080">dep_year</span><span style="color: #000000"> + </span><span style="color: #001080">flight_count</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="4989b1ab-fa15-489b-b2f7-113172111c08">
+        <script>(()=>{var e=document.getElementById("4989b1ab-fa15-489b-b2f7-113172111c08"),t=document.createElement("malloy-render");t.modelDef={name:"",exports:["flights"],contents:{flights:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"number",name:"dep_year",e:{node:"genericSQLExpr",kids:{args:[{node:"field",path:["dep_time"],sql:'base."dep_time"'}]},src:["extract('year' from ",") "]},expressionType:"scalar",code:'sql_number(""" extract(\'year\' from ${dep_time}) """)'},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],parameters:{},as:"flights",modelAnnotation:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}},queryList:[{type:"query",structRef:"flights",sourceArguments:{},pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["dep_year"]},{type:"fieldref",path:["flight_count"]}]}],modelAnnotation:{inherits:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}],dependencies:{},annotation:{inherits:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},references:[{type:"exploreReference",text:"flights",definition:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"number",name:"dep_year",e:{node:"genericSQLExpr",kids:{args:[{node:"field",path:["dep_time"]}]},src:["extract('year' from ",") "]},expressionType:"scalar",code:'sql_number(""" extract(\'year\' from ${dep_time}) """)'},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],parameters:{},as:"flights",modelAnnotation:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}},{type:"fieldReference",definition:{type:"number",name:"dep_year",e:{node:"genericSQLExpr",kids:{args:[{node:"field",path:["dep_time"]}]},src:["extract('year' from ",") "]},expressionType:"scalar",code:'sql_number(""" extract(\'year\' from ${dep_time}) """)'},text:"dep_year"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},text:"flight_count"}],imports:[]},t.queryResult={lastStageName:"__stage0",malloy:"",sql:'SELECT \n   extract(\'year\' from base."dep_time")  as "dep_year",\n   COUNT(1) as "flight_count"\nFROM \'../data/flights.parquet\' as base\nGROUP BY 1\nORDER BY 2 desc NULLS LAST\n',dependenciesToMaterialize:{},structs:[{type:"query_result",name:"__stage0",fields:[{name:"dep_year",type:"number",resultMetadata:{sourceField:"dep_year",sourceExpression:'sql_number(""" extract(\'year\' from ${dep_time}) """)',sourceClasses:["dep_year"],referenceId:"762fabb3-4898-4d0f-ac63-2ae238011eba",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/experiments/sql_expressions.malloynb",range:{start:{line:3,character:8},end:{line:3,character:72}}}},{name:"flight_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"flight_count",sourceExpression:"count()",sourceClasses:["flight_count"],referenceId:"405f5992-8ee4-4bb8-a28f-eeca1471ee3e",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/experiments/sql_expressions.malloynb",range:{start:{line:4,character:13},end:{line:4,character:36}}}}],dialect:"duckdb",primaryKey:"dep_year",connection:"duckdb",resultMetadata:{sourceField:"ignoreme",filterList:[],sourceClasses:["ignoreme"],fieldKind:"struct",drillable:!0},modelAnnotation:{notes:[{text:"##! experimental{sql_functions}\n",at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/experiments/sql_expressions.malloynb",range:{start:{line:0,character:0},end:{line:0,character:32}}}}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}],sourceExplore:"flights",sourceArguments:{},connectionName:"duckdb",result:[{dep_year:2005,flight_count:71789},{dep_year:2004,flight_count:68397},{dep_year:2003,flight_count:58676},{dep_year:2002,flight_count:49648},{dep_year:2001,flight_count:49175}],totalRows:5},e.appendChild(t)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dep_year&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2005</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">71789</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dep_year&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2004</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">68397</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dep_year&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2003</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">58676</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dep_year&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2002</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">49648</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;dep_year&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2001</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">49175</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   extract(</span><span style="color: #A31515">&#39;year&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">from</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;dep_time&quot;</span><span style="color: #000000">)  </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;dep_year&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="reference-the-sql-alias" class="header-link anchor" href="#reference-the-sql-alias">
+          Reference the SQL Alias
+        </a>
+      </h2>
+    <p>Sometimes you want to access a field directly in SQL, for example, arrays are unnested when referenced in Malloy.  You might want to access a column directly. In this case <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">${</span><span style="color: #001080">TABLE</span><span style="color: #000000">}</span></span></code> returns the alias for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">flights2</span></span></code> in the SQL query.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/experiments/sql_expressions.malloynb#C5" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">flights2</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">c</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">sql_string</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;&quot;&quot; ${TABLE}.carrier &quot;&quot;&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span><span style="color: #001080">flight_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">flights2</span><span style="color: #000000"> -&gt; </span><span style="color: #001080">c</span><span style="color: #000000"> + </span><span style="color: #001080">flight_count</span></span></pre><div class="result-outer small">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="c24e3164-447d-42f5-92cf-1ca7c9eecdf4">
+        <script>(()=>{var e=document.getElementById("c24e3164-447d-42f5-92cf-1ca7c9eecdf4"),t=document.createElement("malloy-render");t.modelDef={name:"",exports:["flights","flights2"],contents:{flights:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"number",name:"dep_year",e:{node:"genericSQLExpr",kids:{args:[{node:"field",path:["dep_time"],sql:'base."dep_time"'}]},src:["extract('year' from ",") "]},expressionType:"scalar",code:'sql_number(""" extract(\'year\' from ${dep_time}) """)'},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],parameters:{},as:"flights",modelAnnotation:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}},flights2:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"string",name:"c",e:{node:"genericSQLExpr",kids:{args:[{node:"source-reference",sql:"base"}]},src:["",".carrier "]},expressionType:"scalar",code:'sql_string(""" ${TABLE}.carrier """)'},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],parameters:{},as:"flights2",modelAnnotation:{inherits:{inherits:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}},queryList:[{type:"query",structRef:"flights2",sourceArguments:{},pipeline:[{type:"reduce",queryFields:[{type:"fieldref",path:["c"]},{type:"fieldref",path:["flight_count"]}]}],modelAnnotation:{inherits:{inherits:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}],dependencies:{},annotation:{inherits:{inherits:{notes:[{text:"##! experimental{sql_functions}\n"}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},references:[{type:"exploreReference",text:"flights2",definition:{type:"table",name:"duckdb:../data/flights.parquet",dialect:"duckdb",tablePath:"../data/flights.parquet",connection:"duckdb",fields:[{type:"string",name:"carrier",fieldUsage:[{path:["carrier"]}]},{type:"string",name:"origin",fieldUsage:[{path:["origin"]}]},{type:"string",name:"destination",fieldUsage:[{path:["destination"]}]},{type:"string",name:"flight_num",fieldUsage:[{path:["flight_num"]}]},{type:"number",numberType:"integer",name:"flight_time",fieldUsage:[{path:["flight_time"]}]},{type:"string",name:"tail_num",fieldUsage:[{path:["tail_num"]}]},{type:"timestamp",name:"dep_time",fieldUsage:[{path:["dep_time"]}]},{type:"timestamp",name:"arr_time",fieldUsage:[{path:["arr_time"]}]},{type:"number",numberType:"integer",name:"dep_delay",fieldUsage:[{path:["dep_delay"]}]},{type:"number",numberType:"integer",name:"arr_delay",fieldUsage:[{path:["arr_delay"]}]},{type:"number",numberType:"integer",name:"taxi_out",fieldUsage:[{path:["taxi_out"]}]},{type:"number",numberType:"integer",name:"taxi_in",fieldUsage:[{path:["taxi_in"]}]},{type:"number",numberType:"integer",name:"distance",fieldUsage:[{path:["distance"]}]},{type:"string",name:"cancelled",fieldUsage:[{path:["cancelled"]}]},{type:"string",name:"diverted",fieldUsage:[{path:["diverted"]}]},{type:"number",numberType:"integer",name:"id2",fieldUsage:[{path:["id2"]}]},{type:"string",name:"c",e:{node:"genericSQLExpr",kids:{args:[{node:"source-reference"}]},src:["",".carrier "]},expressionType:"scalar",code:'sql_string(""" ${TABLE}.carrier """)'},{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"}],parameters:{},as:"flights2"}},{type:"fieldReference",definition:{type:"string",name:"c",e:{node:"genericSQLExpr",kids:{args:[{node:"source-reference"}]},src:["",".carrier "]},expressionType:"scalar",code:'sql_string(""" ${TABLE}.carrier """)'},text:"c"},{type:"fieldReference",definition:{type:"number",numberType:"integer",name:"flight_count",e:{node:"aggregate",function:"count",e:{node:""}},fieldUsage:[],expressionType:"aggregate",code:"count()"},text:"flight_count"}],imports:[]},t.queryResult={lastStageName:"__stage0",malloy:"",sql:'SELECT \n   base.carrier  as "c",\n   COUNT(1) as "flight_count"\nFROM \'../data/flights.parquet\' as base\nGROUP BY 1\nORDER BY 2 desc NULLS LAST\n',dependenciesToMaterialize:{},structs:[{type:"query_result",name:"__stage0",fields:[{name:"c",type:"string",resultMetadata:{sourceField:"c",sourceExpression:'sql_string(""" ${TABLE}.carrier """)',sourceClasses:["c"],referenceId:"167df598-5fe9-464e-bad1-ca62ce8d2102",fieldKind:"dimension"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/experiments/sql_expressions.malloynb",range:{start:{line:2,character:4},end:{line:2,character:45}}}},{name:"flight_count",numberType:"integer",type:"number",resultMetadata:{sourceField:"flight_count",sourceExpression:"count()",sourceClasses:["flight_count"],referenceId:"73408aee-d946-44ad-8343-a680de67f14e",filterList:[],fieldKind:"measure"},location:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/experiments/sql_expressions.malloynb",range:{start:{line:3,character:11},end:{line:3,character:34}}}}],dialect:"duckdb",primaryKey:"c",connection:"duckdb",resultMetadata:{sourceField:"ignoreme",filterList:[],sourceClasses:["ignoreme"],fieldKind:"struct",drillable:!0},modelAnnotation:{inherits:{inherits:{notes:[{text:"##! experimental{sql_functions}\n",at:{url:"file:///home/runner/work/malloydata.github.io/malloydata.github.io/src/documentation/experiments/sql_expressions.malloynb",range:{start:{line:0,character:0},end:{line:0,character:32}}}}],id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"},id:"7bc8b555-a156-503d-a7a0-2ad9d1332ca5"}}],sourceExplore:"flights2",sourceArguments:{},connectionName:"duckdb",result:[{c:"WN",flight_count:88751},{c:"US",flight_count:37683},{c:"AA",flight_count:34577},{c:"NW",flight_count:33580},{c:"UA",flight_count:32757}],totalRows:5},e.appendChild(t)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;c&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WN&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">88751</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;c&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;US&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">37683</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;c&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">34577</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;c&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NW&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">33580</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;c&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;UA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;flight_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">32757</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   base.carrier  </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;c&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;flight_count&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/flights.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div></div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+    <script src="/js/generated/malloy-render-0.0.282.js"></script>
+  </body>
+</html>
