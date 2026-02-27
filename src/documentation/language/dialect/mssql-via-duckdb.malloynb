@@ -1,0 +1,82 @@
+>>>markdown
+# MSSQL via DuckDB
+
+Malloy can query Microsoft SQL Server through DuckDB's
+[mssql community extension](https://duckdb.org/community_extensions/extensions/mssql).
+This extension uses the native TDS protocol to connect directly to SQL Server—no
+ODBC or JDBC drivers required.
+
+Because the connection runs through DuckDB, Malloy uses the **DuckDB dialect** for
+SQL generation, and DuckDB handles translating queries to SQL Server where needed.
+
+## How It Works
+
+DuckDB's `mssql` extension ATTACHes a SQL Server database, making its schemas and
+tables appear in DuckDB's catalog. Malloy then queries these tables through its
+standard DuckDB connection.
+
+## Configuration
+
+MSSQL via DuckDB is configured as a `duckdb` connection in your `malloy-config.json`.
+The `additionalExtensions` field automatically installs and loads the mssql extension,
+and `setupSQL` ATTACHes to your SQL Server and sets the default catalog and schema:
+
+```json
+{
+  "connections": {
+    "mssql": {
+      "is": "duckdb",
+      "additionalExtensions": "mssql",
+      "setupSQL": "ATTACH 'Server=myserver;Port=1433;Database=mydb;User Id=myuser;Password=secret;TrustServerCertificate=true' AS mydb (TYPE mssql);\nUSE mydb.dbo"
+    }
+  }
+}
+```
+
+The `setupSQL` runs once per session. The `USE` must include both catalog and
+schema (e.g., `mydb.dbo`) — `USE mydb` alone is not sufficient.
+
+See [Configuration](../../setup/config.malloynb) for more details on `malloy-config.json`.
+
+Once configured, query SQL Server tables like any other Malloy source:
+
+```malloy
+source: orders is mssql.table('dbo.orders')
+
+run: orders -> {
+  group_by: status
+  aggregate: order_count is count()
+}
+```
+
+## Authentication
+
+The connection string supports standard SQL Server authentication parameters.
+See the [mssql extension documentation](https://github.com/hugr-lab/mssql-extension)
+for the full list of supported connection string options, including:
+
+- SQL Server authentication (User Id / Password)
+- Encrypted connections (TLS/SSL)
+- Azure SQL Database
+
+**Note:** The mssql extension's "interactive" authentication mode prints a
+URL to stdout that you must visit to complete login. This does not work
+with the VS Code extension, which has no visible stdout. Use
+username/password or other non-interactive authentication methods instead.
+
+## Limitations
+
+- **DuckDB dialect**: Malloy generates DuckDB SQL, which the extension translates
+  for SQL Server. Some DuckDB-specific functions or syntax may not push down to
+  SQL Server.
+- **No nested/array data**: SQL Server does not support array or nested struct
+  columns, so Malloy features that depend on these (e.g., nested sources from
+  JSON arrays) are not available.
+- **Extension maturity**: The mssql extension is a community extension and may
+  not cover all SQL Server edge cases.
+
+## External Resources
+
+* [DuckDB mssql Extension (Community Extensions)](https://duckdb.org/community_extensions/extensions/mssql)
+* [mssql Extension GitHub](https://github.com/hugr-lab/mssql-extension)
+* [DuckDB ATTACH Documentation](https://duckdb.org/docs/sql/statements/attach)
