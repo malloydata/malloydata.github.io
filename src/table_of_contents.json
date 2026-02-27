@@ -231,6 +231,10 @@
             {
               "title": "PostgreSQL",
               "link": "/language/dialect/postgres.malloynb"
+            },
+            {
+              "title": "MSSQL via DuckDB",
+              "link": "/language/dialect/mssql-via-duckdb.malloynb"
             }
           ]
         }
