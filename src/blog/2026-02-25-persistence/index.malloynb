@@ -120,7 +120,7 @@ Many connections work with no configuration at all — if a connection name matc
 
 - **Project config**: Put a `malloy-config.json` in your project root (it can be as minimal as `{}`) to anchor the manifest to your project. VS Code finds it automatically; the CLI needs `--config .`.
 
-See the [persistence documentation](https://docs.malloydata.dev/experiments/persistence.malloynb) for the full setup guide.
+See the [persistence documentation](https://docs.malloydata.dev/documentation/experiments/persistence) for the full setup guide.
 
 ## How It Works Under the Hood
 
@@ -160,12 +160,12 @@ The key API surfaces:
 
 A builder application owns everything else: which models to scan, when to rebuild, how to handle partial failures, where to store manifests, how to manage environments. The foundation provides the "what" (these sources need building, in this order, and here's how to record what you built). Your application provides the "when," "where," and "how."
 
-For a concrete starting point, [`simple_builder.ts`](https://github.com/malloydata/malloy/blob/main/scripts/simple_builder.ts) is a skeleton builder application that shows how to find what needs building, build it, and record the results in a manifest. It's a good place to start if you want to build your own persistence layer.
+For a concrete starting point, [`simple-builder.ts`](https://github.com/malloydata/malloy/blob/main/scripts/simple-builder.ts) is a skeleton builder application that shows how to find what needs building, build it, and record the results in a manifest. It's a good place to start if you want to build your own persistence layer.
 
 For the full persistence design, see [WN-0022: Persistent Sources](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0022-persistence/wn-0022.md). For the shared configuration system that underpins both the simple workflow and custom applications, see [WN-0023: Shared Configuration](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0023-connection-config/wn-0023.md).
 
 ## Try It
 
-Persistence is experimental — enable it with `##! experimental.persistence` and let us know what you think. The [documentation](https://docs.malloydata.dev/experiments/persistence.malloynb) covers setup and usage. The WN specs linked above cover the design in full. And if you're building something interesting on the persistence API, we'd love to hear about it.
+Persistence is experimental — enable it with `##! experimental.persistence` and let us know what you think. The [documentation](https://docs.malloydata.dev/documentation/experiments/persistence) covers setup and usage. The WN specs linked above cover the design in full. And if you're building something interesting on the persistence API, we'd love to hear about it.
 
 >>>markdown
