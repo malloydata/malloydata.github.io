@@ -14,6 +14,7 @@ Malloy connects to a variety of databases. This page provides an overview of sup
 | [PostgreSQL](../language/dialect/postgres.malloynb) | `postgres` | Standard credentials |
 | [MySQL](../language/dialect/mysql.malloynb) | `mysql` | Standard credentials |
 | [Trino / Presto](../language/dialect/presto-trino.malloynb) | `trino` / `presto` | Server URL + optional auth |
+| [MSSQL via DuckDB](../language/dialect/mssql-via-duckdb.malloynb) | `duckdb` | Query SQL Server through DuckDB's [mssql extension](https://duckdb.org/community_extensions/extensions/mssql) |
 
 ---
 
@@ -93,3 +94,4 @@ Each database has unique capabilities and limitations. See the dialect documenta
 - [PostgreSQL](../language/dialect/postgres.malloynb) - String aggregation extensions, limited bigint precision
 - [MySQL](../language/dialect/mysql.malloynb) - Boolean type workarounds, full bigint precision
 - [Trino / Presto](../language/dialect/presto-trino.malloynb) - HyperLogLog, array operations, limited bigint precision
+- [MSSQL via DuckDB](../language/dialect/mssql-via-duckdb.malloynb) - Query SQL Server through DuckDB's mssql extension, no nested/array data
