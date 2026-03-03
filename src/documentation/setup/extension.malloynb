@@ -66,7 +66,12 @@ Click any connection to open the connection editor, or use the **+** button to c
 
 Place a `malloy-config.json` file in the root of your project (workspace root). The extension detects it automatically and picks up changes whenever you save. In multi-root workspaces, each workspace root can have its own file with independent connection namespaces.
 
-The extension also reads [persistence manifests](../experiments/persistence.malloynb) from the config's `manifestPath` directory. When the builder (`malloy-cli build`) writes a manifest, VS Code picks it up automatically — no restart needed.
+The extension also reads [persistence manifests](../experiments/persistence.malloynb) from the config's `manifestPath` directory. When the builder (`malloy-cli build`) writes a manifest, VS Code picks it up on the next compile — no restart needed.
+
+**Using with `malloy-cli build`:** Both tools need to share the same config file so they read and write the same manifest. There are two ways to set this up:
+
+- **Global config (simplest):** Point the `malloy.globalConfigDirectory` setting at `~/.config/malloy` (or your platform's config directory). The CLI uses this location by default — no flags needed. Both tools share the manifest automatically.
+- **Project config:** Put `malloy-config.json` at your project root. The extension finds it automatically. Pass `--config .` to the CLI. Both tools share the project-local manifest.
 
 See **[Configuration](config.malloynb)** for the full config file format, connection type properties, manifest path, setup SQL, and environment variables.
 
