@@ -149,10 +149,18 @@ Since the builder is a command-line tool, you can schedule refreshes however you
 
 ### Using persisted tables in VS Code
 
-Once the builder has written the manifest, VS Code picks it up automatically — no restart needed. Queries against persistent sources use the persisted tables instead of recomputing.
+Once the builder has written the manifest, VS Code picks it up on the next compile — no restart needed. Queries against persistent sources use the persisted tables instead of recomputing.
 
 To verify, compile a query (without running it) and check the generated SQL. With a manifest, you'll see `FROM by_carrier` instead of an inlined subquery.
 
 If VS Code and the builder are reading different config files, they'll have different manifests. Make sure both point at the same `malloy-config.json` (see [Setup](#setup) above).
+
+### Strict mode
+
+By default, if a `#@ persist` source is missing from the manifest (e.g., it hasn't been built yet), queries fall through to computing the result inline — the same as if no manifest existed. This is convenient during development but risky in production, where an unbuilt table might mean an unexpectedly expensive query.
+
+The builder creates manifests with `strict` mode enabled. When strict mode is on, a missing manifest entry for a `#@ persist` source causes an error instead of falling through. This catches configuration problems early — if a table should have been built but wasn't, you find out at compile time.
+
+If you need to disable strict mode (e.g., during development when only some tables are built), you can edit `malloy-manifest.json` and set `"strict": false`. The builder will not overwrite this setting on subsequent builds.
 >>>markdown
 

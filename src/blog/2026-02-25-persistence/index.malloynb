@@ -132,7 +132,7 @@ Because the BuildID is content-addressed, incremental builds fall out naturally.
 
 ### Manifests: The Bridge Between Builder and Runtime
 
-The manifest is a simple data structure: a map from BuildID to information about the built table (connection, table name, when it was built). A builder writes it. The runtime reads it. That's the entire contract.
+The manifest is a simple data structure: a map from BuildID to table name, plus an optional `strict` flag that controls error behavior when entries are missing. A builder writes it. The runtime reads it. That's the entire contract.
 
 This simplicity is the point. The manifest is just a JSON file. How it's stored and shared is up to you — it could be a file on disk, a blob in cloud storage, a row in a database. The runtime doesn't care where it came from.
 
@@ -144,7 +144,7 @@ Because the manifest is optional, persistence supports very different experience
 
 **Partial manifest (incremental builds):** Some sources are pre-built, others expand inline. The compiler doesn't care which sources are in the manifest and which aren't. This lets a builder do incremental work — build what's missing, skip what's fresh.
 
-**Full manifest with `strictPersist` (production):** The `strictPersist` option tells the compiler to fail if any persistent source is *missing* from the manifest. This catches configuration errors — if a table should have been built but wasn't, you find out at compile time rather than by accidentally running an expensive query in production.
+**Full manifest with `strict` mode (production):** When a manifest has `strict: true`, the compiler fails if any persistent source is *missing* from the manifest. This catches configuration errors — if a table should have been built but wasn't, you find out at compile time rather than by accidentally running an expensive query in production. The builder sets `strict` in the manifest file; an application can override it with `manifest.strict = false` if needed.
 
 ## Building a Sophisticated Persistence Application
 
