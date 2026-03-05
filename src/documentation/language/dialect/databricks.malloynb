@@ -1,0 +1,67 @@
+>>>markdown
+# Databricks
+
+Databricks uses the [Databricks SQL Connector](https://docs.databricks.com/en/dev-tools/nodejs-sql-driver.html) to connect to Databricks SQL warehouses and clusters.
+
+## Connection Configuration
+
+In `malloy-config.json`:
+
+```json
+{
+  "connections": {
+    "databricks": {
+      "is": "databricks",
+      "host": "my-workspace.cloud.databricks.com",
+      "path": "/sql/1.0/warehouses/abc123",
+      "token": {"env": "DATABRICKS_TOKEN"}
+    }
+  }
+}
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `host` | string | Databricks workspace hostname (e.g. `my-workspace.cloud.databricks.com`) |
+| `path` | string | SQL warehouse HTTP path (e.g. `/sql/1.0/warehouses/abc123`) |
+| `token` | secret | Personal access token (optional if using OAuth) |
+| `oauthClientId` | string | OAuth M2M client ID (optional) |
+| `oauthClientSecret` | secret | OAuth M2M client secret (optional) |
+| `defaultCatalog` | string | Default Unity Catalog name (optional) |
+| `defaultSchema` | string | Default schema name (optional) |
+| `setupSQL` | text | Connection setup SQL ([see configuration docs](../../setup/config.malloynb#setup-sql)) |
+
+Authentication is either **personal access token** (`token`) or **OAuth M2M** (`oauthClientId` + `oauthClientSecret`).
+
+## Table References
+
+The `.table()` method accepts a one-, two-, or three-segment path: `table`, `schema.table`, or `catalog.schema.table`. If the catalog or schema is omitted, the configured defaults (or workspace defaults) are used.
+
+```malloy
+source: flights is databricks.table('malloytest.flights')
+source: orders is databricks.table('my_catalog.analytics.orders')
+```
+
+## Limitations
+
+- **`string_agg` ordering**: Databricks does not support `ORDER BY` inside `COLLECT_LIST`/`COLLECT_SET`, so `string_agg` and `string_agg_distinct` do not support the `order_by` modifier.
+- **`TIMESTAMP_NTZ`**: Databricks' `TIMESTAMP_NTZ` (timestamp without timezone) maps to `sql native` in Malloy. Use explicit casting to `timestamp` when needed.
+
+# Functions
+
+## Useful Functions not in the database function library
+
+    string_agg_distinct
+
+## Database Functions
+
+Malloy code can, in addition to the [Malloy Standard Functions](../functions.malloynb), reference
+any of the listed functions here without needing to use [Raw SQL Functions](../functions.malloynb#raw-sql-functions).
+
+    string_agg
+    repeat
+    reverse
+
+# External Resources
+
+* [Databricks SQL Reference](https://docs.databricks.com/en/sql/language-manual/index.html)

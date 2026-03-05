@@ -58,6 +58,21 @@ The `is` field identifies the connection type. All other fields are type-specifi
 | `billingProjectId` | string | Billing project (if different) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
+### `databricks` — Databricks
+
+| Parameter | Type | Description |
+|---|---|---|
+| `host` | string | Workspace hostname (e.g. `my-workspace.cloud.databricks.com`) |
+| `path` | string | SQL warehouse HTTP path (e.g. `/sql/1.0/warehouses/abc123`) |
+| `token` | secret | Personal access token (optional if using OAuth) |
+| `oauthClientId` | string | OAuth M2M client ID |
+| `oauthClientSecret` | secret | OAuth M2M client secret |
+| `defaultCatalog` | string | Default Unity Catalog name |
+| `defaultSchema` | string | Default schema name |
+| `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+
+Authentication: provide either `token` or the `oauthClientId` + `oauthClientSecret` pair.
+
 ### `postgres` — PostgreSQL
 
 | Parameter | Type | Description |
