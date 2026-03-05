@@ -50,7 +50,7 @@ There are two ways to configure database connections:
 1. **`malloy-config.json`** (recommended) — a project-level config file checked into source control
 2. **VS Code Settings** — user-level configuration via the Connections sidebar
 
-When both exist, config file connections take priority. Settings connections are used as a fallback for any connection names not defined in the config file.
+When both exist, config file connections take priority. Settings connections are used as a fallback for any connection names not defined in the config file. For example, if `malloy-config.json` defines a `duckdb` connection but not `bigquery`, the config file's `duckdb` is used while `bigquery` falls through to VS Code settings.
 
 ### Connections Sidebar
 

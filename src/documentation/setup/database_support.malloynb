@@ -41,7 +41,7 @@ source: orders is bigquery.table('my-project.analytics.orders')
 source: users is postgres.table('public.users')
 ```
 
-The connection name (e.g., `duckdb`, `bigquery`, `postgres`) maps to a configured connection. You can name connections whatever you want—they don't need to match the database type:
+The connection name (e.g., `duckdb`, `bigquery`, `postgres`) maps to a configured connection. You can name connections whatever you want—they don't need to match the database type. However, if a connection name matches a database type (e.g., `duckdb`, `bigquery`), a default connection is created automatically when no explicit config exists:
 
 ```malloy
 // Using a custom connection name

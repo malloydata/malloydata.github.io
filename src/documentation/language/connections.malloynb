@@ -17,7 +17,7 @@ There are currently two connection methods, `.table()` and `.sql()`.
 
 ## Table Connection Method
 
-The `.table()` connection method is used to reference a table or view in a database. It accepts a single string representing a table. The exact semantics of how that string is resolved into a table schema depend on the database and application. 
+The `.table()` connection method is used to reference a table or view in a database. It accepts a single string representing a table. The exact semantics of how that string is resolved depend on the database and application. 
 
 In the official Malloy connection implementations, the behavior is as follows:
 
@@ -31,7 +31,7 @@ In Databricks, the string passed to the `.table()` connection method can be a on
 
 ### DuckDB
 
-In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.malloynb).
+In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of a CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.malloynb).
 
 ### Postgres
 

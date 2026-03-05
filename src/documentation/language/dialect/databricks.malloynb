@@ -44,7 +44,7 @@ source: orders is databricks.table('my_catalog.analytics.orders')
 
 ## Limitations
 
-- **`string_agg` ordering**: Databricks does not support `ORDER BY` inside `COLLECT_LIST`/`COLLECT_SET`, so `string_agg` and `string_agg_distinct` do not support the `order_by` modifier.
+- **`string_agg` ordering**: Databricks does not support ordering within aggregate collection functions, so `string_agg` and `string_agg_distinct` do not support the `order_by` modifier.
 - **`TIMESTAMP_NTZ`**: Databricks' `TIMESTAMP_NTZ` (timestamp without timezone) maps to `sql native` in Malloy. Use explicit casting to `timestamp` when needed.
 
 # Functions

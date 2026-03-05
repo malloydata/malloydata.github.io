@@ -72,7 +72,7 @@ See these notebooks for inspiration:
 
 ## Importing Models
 
-A typical notebook has two cells: an import cell and a query cell.
+A typical notebook starts with an import cell followed by one or more query cells.
 
 **Cell 1 — Import your model:**
 >>>malloy

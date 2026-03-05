@@ -43,7 +43,7 @@ The `#@ persist` annotation is metadata, not a language keyword. It lives in Mal
 
 ### Inheritance
 
-Persistence flows through `extend`. If the base data is worth persisting, derived versions usually are too:
+Persistence flows through `extend`. When you extend a persistent source, the extension reads from the same pre-built table — it just adds computed fields on top:
 
 ```malloy
 #@ persist name=by_carrier
@@ -52,12 +52,12 @@ source: by_carrier is flights -> {
   aggregate: flight_count is count()
 }
 
-// Also persistent — inherits from by_carrier
+// Reads from the pre-built by_carrier table, adds a computed field
 source: enriched is by_carrier extend {
   dimension: upper_carrier is upper(carrier)
 }
 
-// Break the chain when you need to
+// Opt out: recomputes the query instead of using the pre-built table
 #@ -persist
 source: scratch is by_carrier extend { ... }
 ```
@@ -116,7 +116,7 @@ To verify it's working, compile a query without running it and check the SQL. Yo
 
 Many connections work with no configuration at all — if a connection name matches a registered database type, Malloy creates one with default settings. For persistence, the main thing you need to decide is where the manifest lives:
 
-- **Global config** (simplest): The CLI reads `~/.config/malloy/malloy-config.json` by default and writes the manifest next to it. Point VS Code's `malloy.globalConfigDirectory` at the same directory, and both tools share the same manifest. No flags needed.
+- **Global config** (simplest): The CLI reads `~/.config/malloy/malloy-config.json` by default and writes the manifest next to it. Point VS Code's `malloy.globalConfigDirectory` at the same directory, and both tools share the same manifest. No flags needed. If you're just getting started, this is the easiest path.
 
 - **Project config**: Put a `malloy-config.json` in your project root (it can be as minimal as `{}`) to anchor the manifest to your project. VS Code finds it automatically; the CLI needs `--config .`.
 
@@ -144,7 +144,7 @@ Because the manifest is optional, persistence supports very different experience
 
 **Partial manifest (incremental builds):** Some sources are pre-built, others expand inline. The compiler doesn't care which sources are in the manifest and which aren't. This lets a builder do incremental work — build what's missing, skip what's fresh.
 
-**Full manifest with `strict` mode (production):** When a manifest has `strict: true`, the compiler fails if any persistent source is *missing* from the manifest. This catches configuration errors — if a table should have been built but wasn't, you find out at compile time rather than by accidentally running an expensive query in production. The builder sets `strict` in the manifest file; an application can override it with `manifest.strict = false` if needed.
+**Full manifest with `strict` mode (production):** When a manifest has `strict: true`, the compiler fails if any persistent source is *missing* from the manifest. This catches configuration errors — if a table should have been built but wasn't, you find out at compile time rather than by accidentally running an expensive query in production. The builder sets `strict` in the manifest file; an application using the API can override this programmatically if needed.
 
 ## Building a Sophisticated Persistence Application
 

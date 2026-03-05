@@ -146,14 +146,14 @@ All connection types support a `setupSQL` parameter. This is a multi-line text f
 
 Each statement must end with `;` at the end of a line. Statements can span multiple lines. Only one statement-ending `;` is allowed per line.
 
-**Legal** — each statement ends with `;` on its own line:
+**Correct** — each statement ends with `;` on its own line:
 ```
 SET search_path TO analytics;
 CREATE TEMP TABLE foo
   AS SELECT 1;
 ```
 
-**Illegal** — two statements on the same line:
+**Incorrect** — two statements on the same line:
 ```
 SET search_path TO analytics; CREATE TEMP TABLE foo AS SELECT 1;
 ```
