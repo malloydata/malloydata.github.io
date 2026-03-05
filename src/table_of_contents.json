@@ -219,6 +219,10 @@
               "link": "/language/dialect/bigquery.malloynb"
             },
             {
+              "title": "Databricks",
+              "link": "/language/dialect/databricks.malloynb"
+            },
+            {
               "title": "Presto / Trino",
               "link": "/language/dialect/presto-trino.malloynb"
             },

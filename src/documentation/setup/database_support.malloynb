@@ -10,6 +10,7 @@ Malloy connects to a variety of databases. This page provides an overview of sup
 | [DuckDB](../language/dialect/duckdb.malloynb) | `duckdb` | Built-in, no setup required. Reads Parquet, CSV, JSON files |
 | [MotherDuck](../language/dialect/duckdb.malloynb) | `duckdb` | Cloud-hosted DuckDB |
 | [BigQuery](../language/dialect/bigquery.malloynb) | `bigquery` | OAuth or service account authentication |
+| [Databricks](../language/dialect/databricks.malloynb) | `databricks` | Personal access token or OAuth M2M |
 | [Snowflake](../language/dialect/snowflake.malloynb) | `snowflake` | Password or RSA key authentication |
 | [PostgreSQL](../language/dialect/postgres.malloynb) | `postgres` | Standard credentials |
 | [MySQL](../language/dialect/mysql.malloynb) | `mysql` | Standard credentials |
@@ -74,6 +75,7 @@ Each database supports [Malloy Standard Functions](../language/functions.malloyn
 |----------|-------------------|
 | DuckDB | [DuckDB Functions](https://duckdb.org/docs/sql/functions/overview) |
 | BigQuery | [BigQuery Functions](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators) |
+| Databricks | [Databricks Functions](https://docs.databricks.com/en/sql/language-manual/sql-ref-functions-builtin.html) |
 | Snowflake | [Snowflake Functions](https://docs.snowflake.com/en/sql-reference-functions) |
 | PostgreSQL | [PostgreSQL Functions](https://www.postgresql.org/docs/current/functions.html) |
 | MySQL | [MySQL Functions](https://dev.mysql.com/doc/refman/8.0/en/functions.html) |
@@ -90,6 +92,7 @@ Each database has unique capabilities and limitations. See the dialect documenta
 
 - [DuckDB](../language/dialect/duckdb.malloynb) - File-based queries, approximate counts, full bigint precision
 - [BigQuery](../language/dialect/bigquery.malloynb) - HyperLogLog, approximate counts, full bigint precision
+- [Databricks](../language/dialect/databricks.malloynb) - Unity Catalog, SQL warehouses, full bigint precision
 - [Snowflake](../language/dialect/snowflake.malloynb) - HyperLogLog, TOML credential file support, full bigint precision
 - [PostgreSQL](../language/dialect/postgres.malloynb) - String aggregation extensions, limited bigint precision
 - [MySQL](../language/dialect/mysql.malloynb) - Boolean type workarounds, full bigint precision

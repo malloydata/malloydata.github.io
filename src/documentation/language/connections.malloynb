@@ -25,6 +25,10 @@ In the official Malloy connection implementations, the behavior is as follows:
 
 In BigQuery, the string passed to the `.table()` connection method can be a two- or three-segment path including the (optional) project ID, dataset ID, and table name, e.g. `bigquery.table('project-id.dataset-id.table-name')` or `bigquery.table('dataset-id.table-name')`. If the project ID is left off, the default project ID for the connection will be used, or else the system default if none is set on the connection.
 
+### Databricks
+
+In Databricks, the string passed to the `.table()` connection method can be a one-, two-, or three-segment path: `table`, `schema.table`, or `catalog.schema.table`. If the catalog or schema is omitted, the configured defaults (or workspace defaults) are used.
+
 ### DuckDB
 
 In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.malloynb).
