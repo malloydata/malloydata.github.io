@@ -1,5 +1,5 @@
 >>>markdown
-# Installing the CLI
+# CLI Setup
 
 The [Malloy CLI](https://github.com/malloydata/malloy-cli) is a command-line interface for running `.malloysql` and `.malloy` files. Use it to automate transformations, build pipelines, or compile Malloy queries to SQL.
 

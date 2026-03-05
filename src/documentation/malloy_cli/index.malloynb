@@ -1,7 +1,7 @@
 >>>markdown
 # About the Malloy CLI
 
-The [Malloy CLI](https://github.com/malloydata/malloy-cli) is a command-line interface for running `.malloysql` and `.malloy` files. It can be used to automate transformations, build simple pipelines, or even integrate compiled Malloy SQL into other applications.
+The [Malloy CLI](https://github.com/malloydata/malloy-cli) is a command-line interface for running `.malloysql` and `.malloy` files and building persistent tables. It can be used to automate transformations, build simple pipelines, or even integrate compiled Malloy SQL into other applications.
 
 ## Installation
 
@@ -25,7 +25,7 @@ If a connection name in your model matches a registered database type (DuckDB, B
 
 ## Usage
 
-The main commands of the CLI are `run` and `compile` — `run` executes queries and returns results, whereas `compile` returns SQL for a query or many queries.
+The main commands of the CLI are `run`, `compile`, and `build` — `run` executes queries and returns results, `compile` returns SQL for a query or many queries, and `build` creates persistent tables from `#@ persist` sources.
 
 The CLI has detailed usage information for each command. You can get general help with `malloy-cli --help`, and command-specific help and options with `malloy-cli {command} --help`
 

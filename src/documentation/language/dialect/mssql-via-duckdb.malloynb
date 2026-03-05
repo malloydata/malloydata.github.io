@@ -34,7 +34,7 @@ and `setupSQL` ATTACHes to your SQL Server and sets the default catalog and sche
 ```
 
 The `setupSQL` runs once per session. The `USE` must include both catalog and
-schema (e.g., `mydb.dbo`) — `USE mydb` alone is not sufficient.
+schema (e.g., `mydb.dbo`) so that DuckDB can resolve unqualified table names. `USE mydb` alone sets only the catalog, leaving the schema ambiguous.
 
 See [Configuration](../../setup/config.malloynb) for more details on `malloy-config.json`.
 

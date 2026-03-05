@@ -10,7 +10,7 @@ This is based on our experience. We're sharing it to start a conversation. We ho
 
 ## The Malloy Experience
 
-Starting from zero experience with LLMs we discovered that if you fill a conversation context with all information about the Malloy repository, the result is a context with very little room for exploration and problem solving. In our experience, the results of LLM assisted coding are much better when carefully feeding the LLM a context focused on the problem at hand. Over time we found there were particular areas of the code where it made sense to gather the information the LLM gleaned, and some guidance from a human who is very familiar with the code, into a context-unit which would be re-usable and shareable.
+Starting from zero experience with LLMs, we discovered that filling a conversation context with all information about the Malloy repository leaves very little room for exploration and problem solving. Results are much better when you carefully feed the LLM context focused on the problem at hand. Over time, we found it made sense to gather the information the LLM gleaned — along with guidance from a human familiar with the code — into reusable, shareable context units.
 
 As we review pull requests, we continue to update our contexts, and this is gradually making pull request reviews cleaner. If our scheme of `CONTEXT.md` maintenance were generally known and recognized by the LLMs used by contributors, it would make it easier for external contributors to make solid contributions to our repository.
 
@@ -22,11 +22,11 @@ We distribute `CONTEXT.md` files throughout the repository tree. Each file descr
 
   - Our main repository is a monorepo, with multiple sub-components (Compiler, Renderer, API, etc.) so
     a single context file doesn't make sense for these individual components.
-  - Keeps individual context files smaller, allows an LLM assisted activity to read the appropriate context
+  - Keeps individual context files smaller. Allows an LLM-assisted activity to read the appropriate context
     to finish a task without reading all documentation for the project. Scales well to larger projects.
   - Keeps the naming/location of these files LLM-agnostic
   - Humans and LLMs are always pair programming, so both humans and LLMs need to be able to
-    both review code changes, and update and maintain context files for the code.
+    review code changes and update and maintain context files for the code.
 
 In our repository it looks something like this:
 
