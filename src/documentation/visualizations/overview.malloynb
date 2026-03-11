@@ -42,17 +42,49 @@ run: duckdb.table('../data/flights.parquet') ->  {
 }
 >>>markdown
 
-Malloy's renderering library uses the [Vega-Lite](https://vega.github.io/vega-lite/) for charting, allowing visualization of results. Malloy's rendering library is a separate layer from Malloy's data access layer.:
+Malloy's rendering library uses [Vega-Lite](https://vega.github.io/vega-lite/) for charting. The rendering library is a separate layer from Malloy's data access layer.
 
-## Rendering tags
+## Tag Quick Reference
 
-* [Number](numbers.malloynb) - number formatting, percentages, duration, and bytes
-* [Pivoted Tables](pivots.malloynb)
-* [Transposed Tables](transpose.malloynb)
-* [Dashboards](dashboards.malloynb) 
-* [Lists](lists.malloynb)
-* [Bar Charts](bar_charts.malloynb) - various forms of column charts 
-* [Line Charts](charts_line_chart.malloynb) 
-* [Scatter Charts](scatter_charts.malloynb)
-* [Shape Maps](shape_maps.malloynb)
-* [Segment Maps](segment_maps.malloynb)
+### Charts
+
+| Tag | Description | Key Properties |
+|-----|-------------|----------------|
+| [`# bar_chart`](bar_charts.malloynb) | Bar chart | `.stack`, `.size`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
+| [`# line_chart`](charts_line_chart.malloynb) | Line chart | `.zero_baseline`, `.size`, `.interpolate`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
+| [`# scatter_chart`](scatter_charts.malloynb) | Scatter plot | Uses field order: x, y, color, size, shape |
+| [`# shape_map`](shape_maps.malloynb) | Choropleth map (US states) | Uses field order: state, value |
+| [`# segment_map`](segment_maps.malloynb) | Segment map (US) | Uses field order: lat1, lon1, lat2, lon2, color |
+
+### Layout & Structure
+
+| Tag | Description | Key Properties |
+|-----|-------------|----------------|
+| [`# dashboard`](dashboards.malloynb) | Dashboard layout | `.table.max_height`, `# break` on nested views |
+| `# table` | Table (default) | `.size=fill`, `# column { width, height, word_break }` |
+| [`# pivot`](pivots.malloynb) | Pivot nested query into columns | `.dimensions` |
+| [`# transpose`](transpose.malloynb) | Swap rows and columns | `.limit` |
+| [`# list`](lists.malloynb) | Comma-separated list | First non-hidden field |
+| [`# list_detail`](lists.malloynb) | List with detail values | First two non-hidden fields |
+| `# flatten` | Flatten nested record into parent columns | On `nest:` without `group_by` |
+
+### Field Formatting
+
+| Tag | Description | Example |
+|-----|-------------|---------|
+| [`# number`](numbers.malloynb) | Number format | `# number="$#,##0"`, `# number=1m`, `# number=auto` |
+| [`# percent`](numbers.malloynb) | Percentage | `# percent` |
+| [`# currency`](numbers.malloynb) | Currency format | `# currency`, `# currency=usd2m`, `# currency=eur` |
+| [`# duration`](numbers.malloynb) | Duration format | `# duration=seconds`, `# duration.terse` |
+| [`# link`](links.malloynb) | Hyperlink | `# link { url_template="https://...$$" field=id }` |
+| [`# image`](links.malloynb) | Render as image | `# image { height=40px alt.field=name }` |
+
+### Utilities
+
+| Tag | Description |
+|-----|-------------|
+| `# hidden` | Hide field from rendering |
+| `# label` | Override display name, e.g. `# label="Total Sales"` |
+| `# description` | Tooltip description (used in `# big_value`) |
+| `# tooltip` | Include nested view in parent chart tooltip |
+| `# break` | Layout break in dashboards |

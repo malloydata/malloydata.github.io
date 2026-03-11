@@ -2,7 +2,15 @@
 
 # Shape Maps
 
-The plugin currently supports US maps and state names. The model and data styles for the subsequent examples are:
+The plugin currently supports US maps and state names.
+
+## Field Order
+
+Fields are assigned by position:
+1. **state** — state name (matched to US state shapes)
+2. **value** — numeric or string value for coloring (optional)
+
+The model and data styles for the subsequent examples are:
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   primary_key: code

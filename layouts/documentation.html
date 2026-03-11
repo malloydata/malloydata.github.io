@@ -10,8 +10,12 @@
       href="{{ site.baseurl }}/img/favicon.ico"
     />
     {{> ga.html }}
+    <script src="{{ site.baseurl }}/js/generated/malloy-render-{{ site.malloyRenderVersion }}.js"></script>
     <style>
-      malloy-render::part(table-container) {
+      .result-inner .malloy-render {
+        width: 100%;
+      }
+      .result-inner .table-container {
         width: 100%;
       }
     </style>
@@ -66,6 +70,5 @@
     </div>
     {{> banner.html }}
     <script src="{{ site.baseurl }}/js/banner.js"></script>
-    <script src="{{ site.baseurl }}/js/generated/malloy-render-{{ site.malloyRenderVersion }}.js"></script>
   </body>
 </html>

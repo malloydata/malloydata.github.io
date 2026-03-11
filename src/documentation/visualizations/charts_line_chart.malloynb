@@ -1,9 +1,25 @@
 >>>markdown
 # Line Charts
 
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.zero_baseline` | Force y-axis to include zero (default: `false`) | `# line_chart { zero_baseline=true }` |
+| `.size` | Chart size preset: `spark`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` | `# line_chart { size=spark }` |
+| `.interpolate` | Line interpolation mode | `# line_chart { interpolate=step }` |
+| `.x` | Field for x-axis | `# line_chart { x=sale_date }` |
+| `.x.independent` | Independent x-axis in nested charts | `# line_chart { x.independent }` |
+| `.y` | Field(s) for y-axis | `# line_chart { y=value }` or `{ y=['A','B'] }` |
+| `.y.independent` | Independent y-axis in nested charts | `# line_chart { y.independent }` |
+| `.series` | Field for multiple lines | `# line_chart { series=category }` |
+| `.series.limit` | Max series shown (default: 12). Implies `y.independent` | `# line_chart { series.limit=5 }` |
+| `.series.independent` | Independent series colors in nested charts | `# line_chart { series.independent }` |
+| `.title` | Chart title | `# line_chart { title='Trend' }` |
+| `.subtitle` | Chart subtitle | `# line_chart { subtitle='Daily' }` |
+
 The examples below all use the following semantic model.
 >>>malloy
-## renderer_next
 source: flights is duckdb.table('../data/flights.parquet') extend {
   where: dep_time = @2001
   join_one: carriers is duckdb.table('../data/carriers.parquet') 
@@ -33,7 +49,7 @@ run: flights -> {
 
 ## Multi line line_chart
 
-There are two modes to generate mulitple lines in a chart.  You can group by an additional parameter (that shows the results as lines) or you can explicitly tag the y-axis parameters.
+There are two modes to generate multiple lines in a chart.  You can group by an additional parameter (that shows the results as lines) or you can explicitly tag the y-axis parameters.
 
 The third parameter in a line chart adds a line for each dimension found.  
 >>>malloy

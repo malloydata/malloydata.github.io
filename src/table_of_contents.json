@@ -298,16 +298,7 @@
       ]
     },
     {
-      "title": "Rendering Results",
-      "items": [
-        {
-          "title": "Overview",
-          "link": "/visualizations/about_rendering.malloynb"
-        }
-      ]
-    },
-    {
-      "title": "Rendering Legacy Docs",
+      "title": "Visualizations",
       "items": [
         {
           "title": "Overview",
@@ -356,10 +347,6 @@
         {
           "title": "Segment Maps",
           "link": "/visualizations/segment_maps.malloynb"
-        },
-        {
-          "title": "Legacy Renderer",
-          "link": "/visualizations/legacy_renderer.malloynb"
         }
       ]
     },

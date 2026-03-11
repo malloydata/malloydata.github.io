@@ -2,6 +2,8 @@
 # Lists
 Tables with one or two elements can be rendered as lists.  Lists improve information density.
 
+`# list` renders the first non-hidden field of a nested query as a comma-separated list. `# list_detail` uses the first two fields to render items as `value (detail)`.
+
 The examples below use the following models
 
 >>>malloy

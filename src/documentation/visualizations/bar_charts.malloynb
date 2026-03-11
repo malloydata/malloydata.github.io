@@ -3,6 +3,25 @@
 
 Malloy can create simple bar charts and bar charts with series breakdowns, either stacked or grouped.
 
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.stack` | Stack bars when series is present | `# bar_chart.stack` |
+| `.size` | Chart size preset: `spark`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` | `# bar_chart { size=lg }` |
+| `.size.width` | Specific pixel width | `# bar_chart { size.width=300 }` |
+| `.size.height` | Specific pixel height | `# bar_chart { size.height=220 }` |
+| `.x` | Field for x-axis (category) | `# bar_chart { x=field_name }` |
+| `.x.limit` | Max categories shown | `# bar_chart { x.limit=10 }` |
+| `.x.independent` | Independent x-axis in nested charts | `# bar_chart { x.independent }` |
+| `.y` | Field(s) for y-axis | `# bar_chart { y=total_sales }` or `{ y=['Sales','Cost'] }` |
+| `.y.independent` | Independent y-axis in nested charts | `# bar_chart { y.independent }` |
+| `.series` | Field for grouping/coloring | `# bar_chart { series=category }` |
+| `.series.limit` | Max series shown (default: 20) | `# bar_chart { series.limit=5 }` |
+| `.series.independent` | Independent series colors in nested charts | `# bar_chart { series.independent }` |
+| `.title` | Chart title | `# bar_chart { title='My Title' }` |
+| `.subtitle` | Chart subtitle | `# bar_chart { subtitle='Details' }` |
+
 The examples below all use the following semantic model.
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {

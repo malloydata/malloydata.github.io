@@ -46,7 +46,7 @@ div.main {
   display: flex;
 }
 
-div.header {
+div.top > div.header {
   display: flex;
   gap: 5px;
   min-height: 52px;
@@ -361,6 +361,27 @@ table tr td {
   border-top: 0;
 }
 
+/* Reset site table styles inside rendered Malloy results */
+div.result-inner table {
+  border: none;
+  border-radius: 0;
+  border-collapse: initial;
+  border-spacing: initial;
+  width: auto;
+  overflow: visible;
+}
+
+div.result-inner table td,
+div.result-inner table th {
+  border: none;
+  padding: initial;
+}
+
+div.document div.result-inner table th {
+  font-weight: initial;
+  font-size: initial;
+}
+
 div.document p {
   font-size: 14px;
   line-height: 20px;
@@ -532,7 +553,7 @@ div.result-inner {
   font-size: 14px;
 }
 
-div.document div.result-inner table {
+div.document div.result-inner > table {
   margin-top: -1px;
   margin-bottom: 0;
 }
@@ -615,7 +636,7 @@ div.document td pre:not(:first-child) {
   margin-top: 10px;
 }
 
-.result-inner td {
+.result-inner > table td {
   line-height: 16px;
 }
 

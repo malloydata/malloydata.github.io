@@ -22,7 +22,6 @@
  */
 
 import Uglify from "uglify-js";
-import { DataStyles, HTMLView } from "@malloydata/render";
 import {
   Runtime,
   URLReader,
@@ -30,14 +29,15 @@ import {
   Result,
   ModelDef,
   annotationToTag,
+  API,
 } from "@malloydata/malloy";
+import { validateRenderTags } from "@malloydata/render-validator";
 import { DuckDBConnection } from "@malloydata/db-duckdb";
 import path from "path";
 import { promises as fs } from "fs";
 import { performance } from "perf_hooks";
 import { timeString } from "./utils";
 import { log } from "./log";
-import { JSDOM } from "jsdom";
 import { highlight } from "./highlighter";
 
 const MODELS_PATH = path.resolve("./models");
@@ -68,7 +68,7 @@ interface RunOptions {
   source?: string;
   size?: string;
   pageSize?: number;
-  dataStyles: DataStyles;
+  dataStyles: Record<string, unknown>;
   showAs?: "html" | "json" | "sql";
   queryName?: string;
   exploreName?: string;
@@ -187,6 +187,15 @@ export async function runCode(
   } else {
     runnable = runtime.loadQuery(fullCode);
   }
+  const preparedResult = await runnable.getPreparedResult();
+  const renderLogs = validateRenderTags(preparedResult.toStableResult());
+  const renderErrors = renderLogs.filter((l) => l.severity === "error");
+  if (renderErrors.length > 0) {
+    throw new Error(
+      `Render tag validation errors:\n${renderErrors.map((e) => e.message).join("\n")}`
+    );
+  }
+
   const queryResult = await runnable.run({
     rowLimit: options.pageSize || 5,
   });
@@ -201,50 +210,25 @@ export async function runCode(
   return renderResult(queryResult, options);
 }
 
-// Simple check to prevent dropping sources named "location"
-const isLocation = (value: unknown) => {
-  return value && typeof value === "object" && "url" in value;
-};
-
-const stripLocation = (modelDef: ModelDef): ModelDef => {
-  return JSON.parse(JSON.stringify(modelDef), (key, value) => {
-    if (["location", "at"].includes(key) && isLocation(value)) {
-      return undefined;
-    } else {
-      return value;
-    }
-  });
-};
-
 async function renderResult(
   queryResult: Result,
   options: RunOptions
 ): Promise<string> {
   const showAs = options.showAs || "html";
-  const isNextRenderer = !queryResult.modelTag.has("renderer_legacy");
   const resultContainerId = crypto.randomUUID();
-  let htmlResult = "";
-  if (isNextRenderer) {
-    const script = /* javascript */ `
+  const stableResult = API.util.wrapResult(queryResult);
+  const script = /* javascript */ `
     (function() {
-      const modelDef = ${JSON.stringify(stripLocation(queryResult._modelDef))};
-      const queryResult = ${JSON.stringify(queryResult._queryResult)};
+      const result = ${JSON.stringify(stableResult)};
       const element = document.getElementById("${resultContainerId}");
-      const malloyRender = document.createElement("malloy-render");
-      malloyRender.modelDef = modelDef;
-      malloyRender.queryResult = queryResult;
-      element.appendChild(malloyRender);
+      const renderer = new window.index.MalloyRenderer();
+      const viz = renderer.createViz();
+      viz.setResult(result);
+      viz.render(element);
     })();`;
-    htmlResult += `<script>${Uglify.minify(script).code}</script>`;
-  } else {
-    const document = new JSDOM().window.document;
-    const element = await new HTMLView(document).render(queryResult, {
-      dataStyles: {},
-    });
-    htmlResult = element.outerHTML;
-  }
+  const htmlResult = `<script>${Uglify.minify(script).code}</script>`;
   const jsonResult = await highlight(
-    JSON.stringify(queryResult.data.toObject(), null, 2),
+    JSON.stringify(queryResult.data.toJSON(), null, 2),
     "json"
   );
   const sqlResult = await highlight(queryResult.sql, "sql");
@@ -340,6 +324,15 @@ export async function runNotebookCode(
       : tags.has("json")
       ? "json"
       : "html";
+    const preparedResult = await runnable.getPreparedResult();
+    const renderLogs = validateRenderTags(preparedResult.toStableResult());
+    const renderErrors = renderLogs.filter((l) => l.severity === "error");
+    if (renderErrors.length > 0) {
+      throw new Error(
+        `Render tag validation errors:\n${renderErrors.map((e) => e.message).join("\n")}`
+      );
+    }
+
     const queryResult = await runnable.run({
       rowLimit: options.pageSize || 5,
     });
