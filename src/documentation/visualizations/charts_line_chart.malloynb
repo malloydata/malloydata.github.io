@@ -97,3 +97,58 @@ run: flights -> {
   limit: 5
 }
 >>>markdown
+
+## Step Interpolation
+
+Use `interpolate=step` to render lines with step-style transitions instead of smooth connections:
+>>>malloy
+#(docs) size=large limit=5000
+# line_chart { interpolate=step }
+run: flights -> {
+  group_by: departure_month is dep_time.month
+  aggregate: flight_count
+  order_by: departure_month
+}
+>>>markdown
+
+## Independent Axes in Nested Charts
+
+When line charts are nested inside a table, they share the same y-axis scale by default. This can hide patterns in rows with smaller values. Use `y.independent` to give each nested chart its own scale:
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  # line_chart
+  nest: shared_axis is {
+    group_by: departure_month is dep_time.month
+    aggregate: flight_count
+    order_by: departure_month
+  }
+  # line_chart { y.independent }
+  nest: independent_axis is {
+    group_by: departure_month is dep_time.month
+    aggregate: flight_count
+    order_by: departure_month
+  }
+  limit: 5
+}
+>>>markdown
+
+## Sparklines
+
+Line charts at `size=spark` render as compact sparklines, useful inside tables or big value cards:
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  # line_chart { size=spark }
+  nest: trend is {
+    group_by: departure_month is dep_time.month
+    aggregate: flight_count
+    order_by: departure_month
+  }
+  limit: 10
+}
+>>>markdown

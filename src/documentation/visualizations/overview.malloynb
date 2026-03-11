@@ -52,6 +52,7 @@ Malloy's rendering library uses [Vega-Lite](https://vega.github.io/vega-lite/) f
 |-----|-------------|----------------|
 | [`# bar_chart`](bar_charts.malloynb) | Bar chart | `.stack`, `.size`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
 | [`# line_chart`](charts_line_chart.malloynb) | Line chart | `.zero_baseline`, `.size`, `.interpolate`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
+| [`# big_value`](big_values.malloynb) | Metric card | `.size`, `.sparkline`, `.comparison_field`, `.down_is_good` |
 | [`# scatter_chart`](scatter_charts.malloynb) | Scatter plot | Uses field order: x, y, color, size, shape |
 | [`# shape_map`](shape_maps.malloynb) | Choropleth map (US states) | Uses field order: state, value |
 | [`# segment_map`](segment_maps.malloynb) | Segment map (US) | Uses field order: lat1, lon1, lat2, lon2, color |
@@ -61,7 +62,7 @@ Malloy's rendering library uses [Vega-Lite](https://vega.github.io/vega-lite/) f
 | Tag | Description | Key Properties |
 |-----|-------------|----------------|
 | [`# dashboard`](dashboards.malloynb) | Dashboard layout | `.table.max_height`, `# break` on nested views |
-| `# table` | Table (default) | `.size=fill`, `# column { width, height, word_break }` |
+| [`# table`](tables.malloynb) | Table (default) | `.size=fill`, `# column { width, height, word_break }` |
 | [`# pivot`](pivots.malloynb) | Pivot nested query into columns | `.dimensions` |
 | [`# transpose`](transpose.malloynb) | Swap rows and columns | `.limit` |
 | [`# list`](lists.malloynb) | Comma-separated list | First non-hidden field |
@@ -76,6 +77,7 @@ Malloy's rendering library uses [Vega-Lite](https://vega.github.io/vega-lite/) f
 | [`# percent`](numbers.malloynb) | Percentage | `# percent` |
 | [`# currency`](numbers.malloynb) | Currency format | `# currency`, `# currency=usd2m`, `# currency=eur` |
 | [`# duration`](numbers.malloynb) | Duration format | `# duration=seconds`, `# duration.terse` |
+| [`# data_volume`](numbers.malloynb) | Data size format | `# data_volume=bytes`, `# data_volume=mb` |
 | [`# link`](links.malloynb) | Hyperlink | `# link { url_template="https://...$$" field=id }` |
 | [`# image`](links.malloynb) | Render as image | `# image { height=40px alt.field=name }` |
 

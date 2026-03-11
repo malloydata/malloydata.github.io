@@ -305,12 +305,24 @@
           "link": "/visualizations/overview.malloynb"
         },
         {
-          "title": "Numbers",
-          "link": "/visualizations/numbers.malloynb"
+          "title": "Dashboards",
+          "link": "/visualizations/dashboards.malloynb"
         },
         {
-          "title": "Links",
-          "link": "/visualizations/links.malloynb"
+          "title": "Bar Charts",
+          "link": "/visualizations/bar_charts.malloynb"
+        },
+        {
+          "title": "Line Charts",
+          "link": "/visualizations/charts_line_chart.malloynb"
+        },
+        {
+          "title": "Big Value Cards",
+          "link": "/visualizations/big_values.malloynb"
+        },
+        {
+          "title": "Tables",
+          "link": "/visualizations/tables.malloynb"
         },
         {
           "title": "Pivoted Tables",
@@ -321,20 +333,8 @@
           "link": "/visualizations/transpose.malloynb"
         },
         {
-          "title": "Dashboards",
-          "link": "/visualizations/dashboards.malloynb"
-        },
-        {
           "title": "Lists",
           "link": "/visualizations/lists.malloynb"
-        },
-        {
-          "title": "Bar Charts",
-          "link": "/visualizations/bar_charts.malloynb"
-        },
-        {
-          "title": "Line Charts",
-          "link": "/visualizations/charts_line_chart.malloynb"
         },
         {
           "title": "Scatter Charts",
@@ -347,6 +347,14 @@
         {
           "title": "Segment Maps",
           "link": "/visualizations/segment_maps.malloynb"
+        },
+        {
+          "title": "Numbers",
+          "link": "/visualizations/numbers.malloynb"
+        },
+        {
+          "title": "Links",
+          "link": "/visualizations/links.malloynb"
         }
       ]
     },

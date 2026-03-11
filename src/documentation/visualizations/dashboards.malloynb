@@ -41,3 +41,38 @@ In such cases, the `# dashboard` renderer is useful for making the results easie
 run: airports -> by_state_and_county
 >>>markdown
 
+## Dashboards with Big Value Cards
+
+Nest a `# big_value` view inside a dashboard to show KPI cards alongside tables and charts:
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  join_one: carriers is duckdb.table('../data/carriers.parquet')
+    on carrier = carriers.code
+  measure: flight_count is count()
+}
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  nest:
+    # big_value
+    kpis is {
+      aggregate:
+        # label="Flights"
+        flight_count
+        # label="Destinations"
+        dest_count is count(destination)
+    }
+    # break
+    top_destinations is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 5
+    }
+  limit: 5
+}
+>>>markdown
+
+Use `# break` on a nested view to force the next item to a new row in the dashboard layout.
+

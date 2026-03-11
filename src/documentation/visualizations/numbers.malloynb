@@ -115,6 +115,24 @@ The `# number=big` renderer formats large numbers with abbreviated notation and 
 - **Q** for quadrillions (1,000,000,000,000,000)
 >>>markdown
 
+## Data Volume
+
+The `# data_volume` tag formats numbers as human-readable data sizes. Specify the input unit (`bytes`, `kb`, `mb`, `gb`, `tb`) and the renderer automatically scales to the most appropriate unit:
+>>>malloy
+#(docs) size=small limit=5000
+run: duckdb.sql('SELECT 1 as one') -> {
+  select:
+    # data_volume=bytes
+    small_file is 3758
+    # data_volume=kb
+    medium_file is 3758
+    # data_volume=mb
+    large_file is 3758096
+    # data_volume=gb
+    huge_file is 3758096384
+}
+>>>markdown
+
 ## Durations
 
 The `# duration` renderer interprets a value as a number of seconds and renders it as a human-adjusted duration. Other units can be specified like `# duration="minutes"`, with possible units of `"nanoseconds"`, `"microseconds"`, `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, and `"days"`.

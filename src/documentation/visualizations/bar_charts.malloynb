@@ -161,3 +161,38 @@ run: flights -> {
   }
 }
 >>>markdown
+
+## Sparklines
+
+Bar charts at `size=spark` render as compact sparklines, useful inside tables:
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  # bar_chart { size=spark }
+  nest: by_hour is {
+    group_by: hour_of_day is hour(dep_time)
+    aggregate: flight_count
+  }
+  limit: 10
+}
+>>>markdown
+
+## Independent Axes in Nested Charts
+
+When bar charts are nested inside a table, they share the same y-axis scale by default. Use `y.independent` to give each nested chart its own scale:
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  # bar_chart { y.independent }
+  nest: top_destinations is {
+    group_by: destination
+    aggregate: flight_count
+    limit: 5
+  }
+  limit: 5
+}
+>>>markdown
