@@ -1,7 +1,14 @@
 >>>markdown
 # Dashboards
 
-The `dashboard` style can be invoked on something that will render as a table `# dashboard` tag. When a query is rendered as a dashboard, dimensions aligned at the top, and agregates and nested queries float within the dashboard.
+The `dashboard` style can be invoked on something that will render as a table `# dashboard` tag. When a query is rendered as a dashboard, dimensions aligned at the top, and aggregates and nested queries float within the dashboard.
+
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.table.max_height` | Max pixel height for tables in tiles | `# dashboard { table.max_height=400 }` |
+| `# break` | Layout break (on a nested view) | Forces next item to a new row |
 
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {

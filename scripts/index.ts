@@ -300,8 +300,8 @@ function outputMalloyRender() {
   const outputFile = `malloy-render-${DEFAULT_CONTEXT.site.malloyRenderVersion}.js`;
   fs.copyFileSync(
     path.join(
-      "__dirname",
-      "../node_modules/@malloydata/render/dist/webcomponent/malloy-render.umd.js"
+      __dirname,
+      "../node_modules/@malloydata/render/dist/module/index.umd.js"
     ),
     path.join(JS_OUT_PATH, outputFile)
   );

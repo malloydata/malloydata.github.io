@@ -1,6 +1,6 @@
 >>>markdown
 # Malloy Renders Nested Data
-A preview of our new nested data renderer
+A preview of the nested data renderer
 
 *February 8, 2024 by Speros Kokenes*
 <br/><br/><br/>
@@ -8,7 +8,7 @@ A preview of our new nested data renderer
 
 When I first encountered Malloy in the wild, the aspect that stood out the most to me was how effortlessly it allows working with nested data. Nested data can be used as both an input and an output in Malloy queries to easily ask complicated questions that require inspecting complex relationships.
 
- But as a dataviz practioner, Malloy's nested outputs presented a new challenge to me: how do you visualize complex data structures in a consumable way? Since that first encounter, I've joined the Malloy team to work on this problem alongside some great thinkers. Below is a preview of where we are taking Malloy's rendering capabilities, which are available under the experimental `## renderer_next` model annotation.
+ But as a dataviz practioner, Malloy's nested outputs presented a new challenge to me: how do you visualize complex data structures in a consumable way? Since that first encounter, I've joined the Malloy team to work on this problem alongside some great thinkers. Below is a look at Malloy's rendering capabilities.
 >>>markdown
 <style>
   .table-post-img {
@@ -215,4 +215,4 @@ run: order_items -> {
 <img class="table-post-img" src="CleanShot 2024-02-08 at 08.18.41@2x.png" style="" alt="">
 
 ## Whats Next
-Our next generation renderer is still a work in progress, and we are actively working on expanding the chart types, interactions, customization, and scaling. If you want to try it out early, use the `## renderer_next` model tag and give us your feedback in [our Slack community!](/slack)
+We are actively working on expanding chart types, interactions, customization, and scaling. We'd love to hear your feedback in [our Slack community!](/slack)

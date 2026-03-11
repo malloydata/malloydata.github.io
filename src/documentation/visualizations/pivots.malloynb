@@ -1,12 +1,18 @@
 >>>markdown
 # Pivoting Results
-Malloy's rederer has flexible and powerful way of pivoting data. 
+Malloy's renderer has a flexible and powerful way of pivoting data.
+
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.dimensions` | Which fields to use as pivot dimensions (default: all `group_by` fields) | `# pivot { dimensions=[region] }` |
+
+Maximum 30 pivot columns.
 
 ## Nesting first
 Malloy's ability to nest queries allows you to compute two levels of queries simultaneously.  The query below first groups airports by `state` and then groups by the type of facility (`fac_type`).  For each state we see count of all the facilities.
 >>>malloy
-## renderer_legacy
-
 run: duckdb.table('../data/airports.parquet') -> {
   group_by: state
   aggregate: facility_count is count()
@@ -81,7 +87,7 @@ run: flights -> {
 }
 >>>markdown
 
-## The Pivot with multiple aggreagtes
+## The Pivot with multiple aggregates
 
 Pivots can have multiple aggregates. In this case we show `flight_count` and `total_distance` for each of the states.
 >>>malloy

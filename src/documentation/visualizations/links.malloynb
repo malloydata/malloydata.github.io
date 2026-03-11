@@ -1,7 +1,26 @@
 >>>markdown
 # Links
 
-Results can annotated so the results are be rendered with links to external urls. 
+Results can be annotated so they are rendered with links to external URLs.
+
+## Properties
+
+### `# link`
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.url_template` | URL template (`$$` replaced by value) | `# link { url_template="https://example.com/$$" }` |
+| `.field` | Use another field's value for the URL | `# link { field=product_id url_template="https://...$$" }` |
+
+### `# image`
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.height` | Image height | `# image { height=40px }` |
+| `.width` | Image width | `# image { width=100px }` |
+| `.alt` | Alt text | `# image { alt=Logo }` |
+| `.alt.field` | Use another field for alt text | `# image { alt.field=product_name }` |
+
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   measure: flight_count is count()
@@ -19,7 +38,7 @@ run: flights -> {
 }
 >>>markdown
 ## Link url_template, append to the end
-Often the think you want on the template is at the end of the string.  Create links to flightsfrom.com.
+Often the thing you want on the template is at the end of the string.  Create links to flightsfrom.com.
 >>>malloy
 run: flights -> {
     # link {url_template='https://www.flightsfrom.com/'}
@@ -28,7 +47,7 @@ run: flights -> {
     limit: 5
 }
 >>>markdown
-## Link url_template, substition
+## Link url_template, substitution
 Sometimes the variable part of the link needs to be substitued in the middle
 of the string.  In this case, the output columns value inserted where $$ appears in the url_template.
 

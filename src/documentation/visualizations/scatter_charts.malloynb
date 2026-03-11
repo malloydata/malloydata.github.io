@@ -1,7 +1,16 @@
 >>>markdown
 # Scatter Charts
 
-Scatter charts compare two numeric values. 
+Scatter charts compare two numeric values.
+
+## Field Order
+
+Fields are assigned by position:
+1. **x-axis** — first field
+2. **y-axis** — second field
+3. **color** — third field (optional)
+4. **size** — fourth field (optional)
+5. **shape** — fifth field (optional)
 
 Model for this example
 >>>malloy

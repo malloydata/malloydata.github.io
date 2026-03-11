@@ -3,6 +3,33 @@
 
 Malloy's render provides a variety of ways to render numeric values.  Tagging a number will change how the number is displayed in the result set but the underlying value doesn't change.
 
+## Number Format Tags
+
+| Tag | Description | Examples |
+|-----|-------------|---------|
+| `# number` | Custom number format | `# number="$#,##0"`, `# number=1m`, `# number=auto`, `# number=id` |
+| `# percent` | Format as percentage | `# percent` |
+| `# currency` | Currency format | `# currency`, `# currency=usd2m`, `# currency=eur` |
+| `# duration` | Duration format | `# duration=seconds`, `# duration=minutes`, `# duration.terse` |
+
+### `# number` shorthand
+
+Pattern: `# number={decimals}{scale}` where scale is `k`, `m`, `b`, `t`, `q`, or `auto`.
+
+### `# currency` shorthand
+
+Pattern: `# currency={code}{decimals}{scale}` — e.g. `# currency=usd2m` for "$42.54m".
+
+Codes: `usd` ($), `eur` (€), `gbp` (£). Scale and suffix options match `# number`.
+
+### `# duration` properties
+
+| Property | Description |
+|----------|-------------|
+| `=unit` | Input unit: `nanoseconds`, `milliseconds`, `seconds` (default), `minutes`, `hours`, `days` |
+| `.terse` | Abbreviated units (ns, µs, ms, s, m, h, d) |
+| `.number` | SSF format for numeric parts: `# duration { number="0.0" }` |
+
 The following examples that follow use the Malloy semantic data model below.
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {

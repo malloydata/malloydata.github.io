@@ -1,7 +1,18 @@
 >>>markdown
 # Segment Maps
 
-The plugin currently supports US maps. Segment maps take as input 4 columns: start latitude , start longitude, end latitude, and  end longitude of the segment.  The model and data styles for the subsequent examples are:
+The plugin currently supports US maps. Segment maps take as input 4 columns: start latitude, start longitude, end latitude, and end longitude of the segment.
+
+## Field Order
+
+Fields are assigned by position:
+1. **start latitude**
+2. **start longitude**
+3. **end latitude**
+4. **end longitude**
+5. **color** — numeric or string value (optional)
+
+The model and data styles for the subsequent examples are:
 
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
@@ -39,7 +50,7 @@ run: flights -> routes_map + { where: dep_time = @2003-02 and origin = 'ORD' }
 By calling the configured map as a nested query, a trellis is formed.
 
 >>>malloy
-#(docs) size=lage
+#(docs) size=large
 run: flights -> {
   where: dep_time = @2003-02 and origin = 'ORD'
   group_by: carrier
