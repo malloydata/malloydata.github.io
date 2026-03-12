@@ -1,0 +1,110 @@
+>>>markdown
+# Model-Level Rendering Options
+
+Malloy supports model-level annotations (using `##`) that configure rendering defaults across an entire model. These are set at the top of a file, outside any source or query.
+
+## Chart Defaults
+
+Use `## viz.<chart_type>.defaults.*` to set default properties for all charts of a given type in the model. Individual charts can still override these defaults.
+
+In this example, all line charts default to independent y-axes. The third nested chart explicitly overrides back to shared axes:
+>>>malloy
+## viz.line_chart.defaults.y.independent=true
+
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  join_one: carriers is duckdb.table('../data/carriers.parquet')
+    on carrier = carriers.code
+  measure:
+    flight_count is count()
+    aircraft_count is count(tail_num)
+}
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  // This chart inherits y.independent=true from the model default
+  # line_chart
+  nest: default_independent is {
+    group_by: dep_month is dep_time.month
+    aggregate: flight_count
+    limit: 12
+  }
+  // This chart explicitly overrides back to shared axes
+  # line_chart { y.independent=false }
+  nest: shared_axes is {
+    group_by: dep_month is dep_time.month
+    aggregate: flight_count
+    limit: 12
+  }
+  limit: 3
+}
+>>>markdown
+
+The same pattern works for other chart types:
+
+```
+## viz.bar_chart.defaults.stack
+## viz.bar_chart.defaults.y.independent=true
+```
+
+## The `# viz=` Shorthand
+
+Instead of `# bar_chart` or `# line_chart`, you can use the `# viz=` shorthand. All chart properties work the same way:
+>>>malloy
+#(docs) size=large limit=5000
+# viz=bar { title='Flights by Carrier' subtitle='Top 10' }
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  limit: 10
+}
+>>>markdown
+
+## Theme Properties
+
+Use `## theme.*` at the model level to customize the appearance of rendered results. Individual views can override with `# theme.*`.
+>>>malloy
+## theme.tableHeaderColor=darkblue
+
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  measure: airport_count is count()
+}
+>>>malloy
+#(docs) size=small limit=5000
+run: airports -> {
+  group_by: state
+  aggregate: airport_count
+  limit: 5
+}
+>>>markdown
+
+A view can override the model-level theme:
+>>>malloy
+#(docs) size=small limit=5000
+# theme.tableHeaderColor=darkred
+run: airports -> {
+  group_by: state
+  aggregate: airport_count
+  limit: 5
+}
+>>>markdown
+
+### Available Theme Properties
+
+| Property | Description | Example values |
+|----------|-------------|----------------|
+| `tableBodyColor` | Text color for table body cells | `blue`, `#333`, `rgb(0,0,0)` |
+| `tableHeaderColor` | Text color for table headers | `gray`, `#666` |
+| `tableBodyWeight` | Font weight for table body | `normal`, `bold`, `400` |
+| `tableHeaderWeight` | Font weight for table headers | `bold`, `600` |
+| `tableFontSize` | Font size for tables | `12px`, `0.9em` |
+| `tableRowHeight` | Row height for tables | `24px`, `2em` |
+| `tableBackground` | Background color for tables | `white`, `#f5f5f5` |
+| `tableBorder` | Border style for table cells | `1px solid #ccc` |
+| `tableGutterSize` | Spacing between table sections | `8px` |
+| `tablePinnedBackground` | Background for pinned columns | `#fafafa` |
+| `tablePinnedBorder` | Border for pinned column edges | `2px solid #ddd` |
+| `fontFamily` | Font family for all rendered output | `monospace`, `'Helvetica Neue'` |
+| `background` | Overall background color | `white`, `transparent` |
+>>>markdown

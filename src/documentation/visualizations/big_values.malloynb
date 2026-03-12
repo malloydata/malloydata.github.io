@@ -1,0 +1,229 @@
+>>>markdown
+# Big Value Cards
+
+The `# big_value` tag renders aggregate values as prominent metric cards, ideal for KPIs and summary statistics. Big values support number formatting, comparison indicators, sparklines, and documentation tooltips.
+
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.size` | Card size: `sm`, `md`, `lg` | `# big_value { size=lg }` |
+| `.sparkline` | Name of a hidden nested view to use as sparkline | `# big_value { sparkline=trend }` |
+| `.comparison_field` | Field to compare against (shows delta) | `# big_value { comparison_field=sales }` |
+| `.comparison_label` | Label for the comparison | `# big_value { comparison_label='vs Prior' }` |
+| `.down_is_good` | Invert color logic (green for decrease) | `# big_value { down_is_good=true }` |
+| `# description` | Tooltip documentation on the card | `# description="Help text here"` |
+| `# label` | Override the display name | `# label="Total Revenue"` |
+| `# hidden` | Hide the comparison field from display | Required on comparison fields |
+
+The examples below all use the following semantic model.
+>>>malloy
+source: orders is duckdb.table('../data/order_items.parquet') extend {
+  dimension: order_month is created_at.month
+  measure:
+    order_count is count()
+    # currency
+    total_sales is sale_price.sum()
+    # currency
+    avg_order is sale_price.avg()
+}
+>>>markdown
+
+## Basic Big Value
+
+Tag a query with `# big_value` and include only aggregate fields. Each measure becomes a card:
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    order_count
+    total_sales
+    avg_order
+}
+>>>markdown
+
+## Formatted Metrics
+
+Big value cards respect number formatting tags like `# currency`, `# percent`, and `# number`:
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    # label="Orders"
+    order_count
+
+    # label="Revenue"
+    total_sales
+
+    # label="Avg Order"
+    avg_order
+
+    # label="Fulfillment Rate"
+    # percent
+    fulfillment is count() { where: status = 'Complete' } / count()
+}
+>>>markdown
+
+## Comparison Indicators
+
+To show a delta (percentage change) next to a metric, add a hidden comparison field that references it. The comparison field's value is the "prior" value — the renderer computes the percentage change automatically.
+
+When the current value is higher than the comparison value, the delta shows green (up is good). When lower, it shows red.
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    # label="Current Sales"
+    # description="Total revenue from all orders"
+    total_sales
+
+    // Simulating a "prior period" value for comparison
+    # big_value { comparison_field=total_sales comparison_label='vs Prior Period' }
+    # hidden
+    prior_sales is sale_price.sum() * 0.85
+}
+>>>markdown
+
+### Down is Good
+
+For cost metrics where a decrease is positive, set `down_is_good=true`. This inverts the color logic so decreases show green:
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    # label="Avg Shipping Cost"
+    # currency
+    # description="Average cost per order. Lower is better."
+    current_cost is avg(sale_price * 0.15)
+
+    # big_value { comparison_field=current_cost comparison_label='vs Budget' down_is_good=true }
+    # hidden
+    budget_cost is avg(sale_price * 0.15) * 1.10
+}
+>>>markdown
+
+## Sparklines
+
+Sparklines add a small trend chart to a big value card. Define a hidden nested view with a chart tag, then reference it by name using the `sparkline` property.
+
+### Line Sparkline
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    # label="Total Revenue"
+    # big_value { sparkline=trend }
+    total_sales
+
+  # line_chart { size=spark }
+  # hidden
+  nest: trend is {
+    group_by: order_month
+    aggregate: total_sales
+    order_by: order_month
+    limit: 24
+  }
+}
+>>>markdown
+
+### Bar Sparkline
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    # label="Order Volume"
+    # big_value { sparkline=volume_trend }
+    order_count
+
+  # bar_chart { size=spark }
+  # hidden
+  nest: volume_trend is {
+    group_by: order_month
+    aggregate: order_count
+    order_by: order_month
+    limit: 12
+  }
+}
+>>>markdown
+
+## Full Example
+
+Combining comparison, sparkline, and documentation in a single big value:
+>>>malloy
+#(docs) size=large limit=5000
+# big_value
+run: orders -> {
+  aggregate:
+    # description="Total revenue from all orders. Updated daily."
+    # label="Total Revenue"
+    # big_value { sparkline=trend }
+    total_sales
+
+    # big_value { comparison_field=total_sales comparison_label='vs Last Year' }
+    # hidden
+    prior_revenue is sale_price.sum() * 0.85
+
+  # line_chart { size=spark }
+  # hidden
+  nest: trend is {
+    group_by: order_month
+    aggregate: total_sales
+    order_by: order_month
+    limit: 24
+  }
+}
+>>>markdown
+
+## Size Variants
+>>>malloy
+#(docs) size=large limit=5000
+# big_value { size=lg }
+run: orders -> {
+  aggregate:
+    # label="Large Cards"
+    total_sales
+    avg_order
+}
+>>>malloy
+#(docs) size=large limit=5000
+# big_value { size=sm }
+run: orders -> {
+  aggregate:
+    # label="Small Cards"
+    total_sales
+    avg_order
+}
+>>>markdown
+
+## Big Values in Dashboards
+
+Big values work inside dashboards as nested views. This lets you combine KPI cards with tables and charts:
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: orders -> {
+  group_by: status
+  nest:
+    # big_value
+    kpis is {
+      aggregate:
+        # label="Orders"
+        order_count
+        # label="Revenue"
+        total_sales
+    }
+    # break
+    by_month is {
+      group_by: order_month
+      aggregate: total_sales
+      order_by: order_month desc
+      limit: 6
+    }
+}
+>>>markdown

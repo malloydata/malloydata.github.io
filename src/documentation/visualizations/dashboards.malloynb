@@ -1,7 +1,7 @@
 >>>markdown
 # Dashboards
 
-The `dashboard` style can be invoked on something that will render as a table `# dashboard` tag. When a query is rendered as a dashboard, dimensions aligned at the top, and aggregates and nested queries float within the dashboard.
+The `# dashboard` tag renders a query result as a dashboard layout. Dimensions appear at the top, while aggregates and nested views float within the dashboard.
 
 ## Properties
 
@@ -39,5 +39,80 @@ In such cases, the `# dashboard` renderer is useful for making the results easie
 #(docs) size=large limit=5000
 # dashboard
 run: airports -> by_state_and_county
+>>>markdown
+
+## Custom Labels
+
+Use `# label` on aggregates or nested views to customize how they appear in the dashboard:
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: airports -> {
+  group_by: state
+  # currency
+  aggregate:
+    # label='Total Airports'
+    airport_count
+  nest:
+    # label='Facility Breakdown'
+    by_fac_type is {
+      group_by: fac_type
+      aggregate: airport_count
+    }
+  limit: 5
+}
+>>>markdown
+
+## Layout Breaks
+
+By default, nested views in a dashboard flow side by side. Use `# break` on a nested view to force it onto a new row:
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: airports -> {
+  group_by: state
+  aggregate: airport_count
+  nest:
+    # break
+    by_fac_type is {
+      group_by: fac_type
+      aggregate: airport_count
+    }
+  limit: 5
+}
+>>>markdown
+
+## Dashboards with Charts
+
+Nested views inside a dashboard can use any visualization tag. This lets you combine KPI cards, tables, and charts in a single view:
+>>>malloy
+#(docs) size=large limit=5000
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  join_one: carriers is duckdb.table('../data/carriers.parquet')
+    on carrier = carriers.code
+  measure: flight_count is count()
+}
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  nest:
+    # big_value
+    kpis is {
+      aggregate:
+        # label="Flights"
+        flight_count
+    }
+    # break
+    # bar_chart
+    by_destination is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 10
+    }
+  limit: 3
+}
 >>>markdown
 

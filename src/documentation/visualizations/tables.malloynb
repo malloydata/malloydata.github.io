@@ -1,0 +1,99 @@
+>>>markdown
+# Tables
+
+Tables are the default rendering for query results. While tables work without any tags, there are several options for controlling column display, table width, and nested data.
+
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `# table.size=fill` | Stretch table to fill container width | `# table.size=fill` |
+| `# column { width }` | Set column width (`sm`, `md`, `lg`, or pixel value) | `# column { width=lg }` |
+| `# column { word_break }` | Control text wrapping (`break_all`, `normal`) | `# column { word_break=break_all }` |
+| `# flatten` | Flatten a nested record into parent columns | On `nest:` without `group_by` |
+| `# hidden` | Hide a field from display | `# hidden` |
+| `# label` | Override column header text | `# label="Display Name"` |
+
+The examples below all use the following semantic model.
+>>>malloy
+source: airports is duckdb.table('../data/airports.parquet') extend {
+  dimension: name is concat(code, ' - ', full_name)
+  measure: airport_count is count()
+}
+
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  join_one: orig is airports on origin = orig.code
+  join_one: dest is airports on destination = dest.code
+  join_one: carriers is duckdb.table('../data/carriers.parquet')
+    on carrier = carriers.code
+  measure: flight_count is count()
+}
+>>>markdown
+
+## Column Width
+
+Use the `# column` tag to control the width of individual columns. Width can be a preset (`sm`, `md`, `lg`) or a pixel value:
+>>>malloy
+#(docs) size=medium limit=5000
+run: flights -> {
+  group_by:
+    carrier
+    # column { width=lg }
+    orig.name
+  aggregate: flight_count
+  limit: 10
+}
+>>>markdown
+
+## Full Width Tables
+
+By default, tables size to their content. Use `# table.size=fill` to stretch the table to fill its container:
+>>>malloy
+#(docs) size=large limit=5000
+# table.size=fill
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  limit: 10
+}
+>>>markdown
+
+## Nested Tables
+
+Nested queries render as expandable sub-tables within each row:
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  nest: top_destinations is {
+    group_by: destination
+    aggregate: flight_count
+    limit: 5
+  }
+  limit: 5
+}
+>>>markdown
+
+## Flattened Records
+
+The `# flatten` tag collapses a nested record into the parent table as additional columns. This is useful for showing filtered aggregates side by side:
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  nest:
+    # flatten
+    to_sfo is {
+      aggregate: flight_count
+      where: destination = 'SFO'
+    }
+    # flatten
+    to_lax is {
+      aggregate: flight_count
+      where: destination = 'LAX'
+    }
+  limit: 10
+}
+>>>markdown
