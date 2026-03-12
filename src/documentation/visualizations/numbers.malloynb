@@ -11,26 +11,9 @@ Malloy's render provides a variety of ways to render numeric values.  Tagging a 
 | `# percent` | Format as percentage | `# percent` |
 | `# currency` | Currency format | `# currency`, `# currency=usd2m`, `# currency=eur` |
 | `# duration` | Duration format | `# duration=seconds`, `# duration=minutes`, `# duration.terse` |
+| `# data_volume` | Storage size format | `# data_volume=bytes`, `# data_volume=mb` |
 
-### `# number` shorthand
-
-Pattern: `# number={decimals}{scale}` where scale is `k`, `m`, `b`, `t`, `q`, or `auto`.
-
-### `# currency` shorthand
-
-Pattern: `# currency={code}{decimals}{scale}` — e.g. `# currency=usd2m` for "$42.54m".
-
-Codes: `usd` ($), `eur` (€), `gbp` (£). Scale and suffix options match `# number`.
-
-### `# duration` properties
-
-| Property | Description |
-|----------|-------------|
-| `=unit` | Input unit: `nanoseconds`, `milliseconds`, `seconds` (default), `minutes`, `hours`, `days` |
-| `.terse` | Abbreviated units (ns, µs, ms, s, m, h, d) |
-| `.number` | SSF format for numeric parts: `# duration { number="0.0" }` |
-
-The following examples that follow use the Malloy semantic data model below.
+The examples on this page use the following semantic model.
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
   dimension: name is concat(code, ' - ', full_name)
@@ -58,35 +41,35 @@ run: flights -> {
 
 ## # number
 
-Malloy uses LookML's (Excel) string definitions for formatting numbers.
+Malloy uses LookML-style format strings (similar to Excel custom number formats) for formatting numbers.
 >>>markdown
 ```malloy
 # number="0"             # Integer (123)
 # number="*00#"          # Integer zero-padded to 3 places (001)
-# number="0 \" String\"" # Integer followed by a string (123 String)
-                              #   Note \"String\" can be replaced with any other word
+# number='0 "String"'    # Integer followed by a string (123 String)
+                              #   Note "String" can be replaced with any other word
 
 # number="0.##"          # Number up to 2 decimals (1. or 1.2 or 1.23)
 # number="0.00"          # Number with exactly 2 decimals (1.23)
 # number="*00#.00"       # Number zero-padded to 3 places and exactly 2 decimals (001.23)
 # number="#,##0"         # Number with comma between thousands (1,234)
 # number="#,##0.00"      # Number with comma between thousands and 2 decimals (1,234.00)
-# number="0.000,,\" M\"" # Number in millions with 3 decimals (1.234 M)
+# number='0.000,,"M"'    # Number in millions with 3 decimals (1.234 M)
                               #   Note division by 1 million happens automatically
-# number="0.000,\" K\""  # Number in thousands with 3 decimals (1.234 K)
+# number='0.000,"K"'     # Number in thousands with 3 decimals (1.234 K)
                               #   Note division by 1 thousand happens automatically
 
 # number="$0"            # Dollars with 0 decimals ($123)
 # number="$0.00"         # Dollars with 2 decimals ($123.00)
-# number="\"€\"0"        # Euros with 0 decimals (€123)
+# number='"€"0'          # Euros with 0 decimals (€123)
 # number="$#,##0.00"     # Dollars with comma btwn thousands and 2 decimals ($1,234.00)
 # number="$#.00;($#.00)" # Dollars with 2 decimals, positive values displayed
                               #   normally, negative values wrapped in parenthesis
 
-# number="0\%"           # Display as percent with 0 decimals (1 becomes 1%)
-# number="0.00\%"        # Display as percent with 2 decimals (1 becomes 1.00%)
+# number='0\%'           # Display as percent with 0 decimals (1 becomes 1%)
+# number='0.00\%'        # Display as percent with 2 decimals (1 becomes 1.00%)
 # number="0%"            # Convert to percent with 0 decimals (.01 becomes 1%)
-# format="0.00%"         # Convert to percent with 2 decimals (.01 becomes 1.00%)
+# number="0.00%"         # Convert to percent with 2 decimals (.01 becomes 1.00%)
 ```
 >>>malloy
 #(docs) size=small limit=5000
@@ -115,20 +98,162 @@ The `# number=big` renderer formats large numbers with abbreviated notation and 
 - **Q** for quadrillions (1,000,000,000,000,000)
 >>>markdown
 
+### `# number` shorthand
+
+Pattern: `# number={decimals}{scale}` where scale is `k`, `m`, `b`, `t`, `q`, or `auto`.
+
+| Shorthand | Description | Example output |
+|-----------|-------------|----------------|
+| `# number=1k` | 1 decimal, scale to thousands | `42.5k` |
+| `# number=1m` | 1 decimal, scale to millions | `42.5m` |
+| `# number=auto` | Auto-select scale based on magnitude | `42.5m` or `1.2k` |
+| `# number=id` | Raw number with no comma separators | `123456` |
+| `# number=big` | Abbreviated with 1 decimal (legacy) | `42.5M` |
+
+>>>malloy
+#(docs) size=small limit=5000
+# transpose
+run: flights -> {
+  aggregate:
+    # number=1k
+    thousands is flight_count
+    # number=1m
+    millions is flight_count * 1000
+    # number=auto
+    auto_scaled is flight_count * 1000
+    # number=id
+    as_id is flight_count
+}
+>>>markdown
+
+### `# number` verbose syntax
+
+For finer control, use the verbose object syntax:
+
+```
+# number { scale=m decimals=1 suffix=word }
+```
+
+| Property | Values | Description |
+|----------|--------|-------------|
+| `scale` | `k`, `m`, `b`, `t`, `q`, `auto` | Divide by this magnitude |
+| `decimals` | `0`, `1`, `2`, ... | Number of decimal places |
+| `suffix` | `word`, `scientific`, `letter` | Suffix style after the number |
+
+Suffix styles:
+- **`word`**: full word (e.g. "42.5 million")
+- **`scientific`**: scientific notation style
+- **`letter`**: single uppercase letter (e.g. "42.5M")
+
+>>>malloy
+#(docs) size=small limit=5000
+# transpose
+run: flights -> {
+  aggregate:
+    # number { scale=m decimals=1 suffix=word }
+    word_style is flight_count * 1000
+
+    # number { scale=m decimals=2 suffix=scientific }
+    scientific_style is flight_count * 1000
+
+    # number { scale=m decimals=1 suffix=letter }
+    letter_style is flight_count * 1000
+}
+>>>markdown
+
+## # currency
+
+### `# currency` shorthand
+
+Pattern: `# currency={code}{decimals}{scale}` — e.g. `# currency=usd2m` for "$42.5m".
+
+Codes: `usd` ($), `eur` (€), `gbp` (£). Scale and suffix options match `# number`.
+
+### `# currency` verbose syntax
+
+For finer control, use the verbose object syntax:
+
+```
+# currency { scale=m decimals=2 suffix=finance }
+```
+
+| Property | Values | Description |
+|----------|--------|-------------|
+| `scale` | `k`, `m`, `b`, `t`, `q`, `auto` | Divide by this magnitude |
+| `decimals` | `0`, `1`, `2`, ... | Number of decimal places |
+| `suffix` | `finance`, `word`, `none`, `auto` | Suffix style |
+
+Suffix styles:
+- **`finance`**: financial notation (e.g. "$42.54MM")
+- **`word`**: full word (e.g. "$42.5 million")
+- **`none`**: no suffix, just the scaled number
+- **`auto`**: automatically choose a suffix
+
+>>>malloy
+#(docs) size=small limit=5000
+# transpose
+run: flights -> {
+  aggregate:
+    # currency=usd1m
+    usd_shorthand is flight_count * 1000
+
+    # currency { scale=m decimals=2 suffix=finance }
+    finance_style is flight_count * 1000
+
+    # currency { scale=m decimals=1 suffix=word }
+    word_style is flight_count * 1000
+
+    # currency { scale=k suffix=none }
+    no_suffix is flight_count
+}
+>>>markdown
+
 ## Durations
 
 The `# duration` renderer interprets a value as a number of seconds and renders it as a human-adjusted duration. Other units can be specified like `# duration="minutes"`, with possible units of `"nanoseconds"`, `"microseconds"`, `"milliseconds"`, `"seconds"`, `"minutes"`, `"hours"`, and `"days"`.
+
+### `# duration` properties
+
+| Property | Description |
+|----------|-------------|
+| `=unit` | Input unit: `nanoseconds`, `milliseconds`, `seconds` (default), `minutes`, `hours`, `days` |
+| `.terse` | Abbreviated units (ns, µs, ms, s, m, h, d) |
+| `.number` | SSF format for numeric parts: `# duration { number="0.0" }` |
+
 >>>malloy
 #(docs) size=small limit=5000
 run: flights -> {
   group_by: dep_date is dep_time.day
   # duration="minutes"
-  aggregate: 
+  aggregate:
     longest_flight_time is max(flight_time)
     total_flight_time is flight_time.sum()
   aggregate:
-    flight_count    
+    flight_count
   limit: 20
 }
 >>>markdown
 
+## Data Volume
+
+The `# data_volume` tag formats numbers as human-readable storage sizes. Specify the unit of the input value:
+
+| Tag | Input unit | Example output |
+|-----|-----------|----------------|
+| `# data_volume = bytes` | Bytes | `3.7 KB` |
+| `# data_volume = kb` | Kilobytes | `3.7 MB` |
+| `# data_volume = mb` | Megabytes | `3.6 GB` |
+| `# data_volume = gb` | Gigabytes | `3.5 TB` |
+| `# data_volume = tb` | Terabytes | `3.4 PB` |
+
+Values are automatically scaled to the most readable unit.
+>>>malloy
+#(docs) size=small limit=5000
+run: flights -> {
+  aggregate:
+    # data_volume = bytes
+    total_bytes is flight_count * 1024
+    # data_volume = mb
+    total_mb is flight_count * 256
+}
+>>>markdown
