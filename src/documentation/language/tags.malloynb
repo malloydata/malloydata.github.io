@@ -63,15 +63,15 @@ A quick overview of the syntax of properties and values in the Malloy Tag Langua
   * ( for example `# hidden` could mean to set a property called `hidden` on an object )
 * `tName=tVal`
   * Sets the property tName to exist, and have the value `tVal`
-  * ( for example `# color=red` set set the color property to te string `red`)
+  * ( for example `# color=red` sets the color property to the string `red`)
   * You can also use quotes to assign values as as `# name="John J. Johnson"`
   * `"` and `'` can be used to quote strings
   * To assign a property name which needs quoting, use `` `my long property name`=red ``
   * `tName=[val1, val2]` The value of a property can be a list of values
 * `-tName` unset the property tName
-  * ( `-hidden` to remove the `hidden` property from and object)
-* `tName { p1=v1 p2=v2 }` `tName` is a collection of sub properties
-  * An example might look like `barchart { bgColor=white fgColor=red }`
+  * ( `-hidden` to remove the `hidden` property from an object)
+* `tName: { p1=v1 p2=v2 }` `tName` is a collection of sub properties
+  * An example might look like `barchart: { bgColor=white fgColor=red }`
 
 ### Advanced Property Syntax
 
@@ -79,8 +79,8 @@ A quick overview of the syntax of properties and values in the Malloy Tag Langua
    and a list of sub properties with values.
 * `tName=value` Assign new value to tName but delete any existing properties
 * `tName=value {...}` Assign a new value to `tName` but do not erase the sub properties like `tName=value` would
-* `tName={ p1=v1 p2=v2 p3 }` Assign new properties to tName, but delete any existing value.
-* `tName { p1=v1 p2=v2 p3 }` Add properties to existing properties of tName, preserve value
+* `tName: { p1=v1 p2=v2 p3 }` Replace properties and delete any existing value
+* `tName { p1=v1 p2=v2 p3 }` Merge properties into existing properties, preserve value
 * `tName=...{ p1=v1 p2=v2 p3 }` Assign new properties to tName, but keep the existing value
 * `tName.p1=value` Assign a value to one specific property of tName, value of tName and other properties are preserved.
 * `tName.p1=value { pp1=v1 pp2=v2 }` The value of a property can also have properties
