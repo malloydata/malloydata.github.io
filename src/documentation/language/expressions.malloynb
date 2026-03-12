@@ -124,15 +124,14 @@ run: flights -> {
 ## Type Cast
 Type cast may be accomplished with the `::` operator.
 
-<!-- * `total_distance::string` -->
-<!-- * `some_date::timestamp` -->
-
 Type casting may be accomplished with the `::type` syntax.
 >>>malloy
 run: flights -> {
   aggregate: distance_summary is concat(total_distance::string, ' miles')
 }
 >>>markdown
+
+The cast type can also be a compound type: an array type like `number[]` or `string[]`, a record type like `{name :: string, age :: number}`, or a nested combination like `{name :: string, scores :: number[]}[]`.
 
 ## Safe Type Cast
 
