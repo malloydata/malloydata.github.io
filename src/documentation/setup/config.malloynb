@@ -125,6 +125,30 @@ Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. S
 | `user` | string | Username. Default: `{env: "TRINO_USER"}` |
 | `password` | password | Password. Default: `{env: "TRINO_PASSWORD"}` |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+| `source` | string | Source name sent to Trino (appears in query tracking) |
+| `ssl` | json | TLS/SSL configuration object |
+| `session` | json | Session properties as `{"key": "value"}` pairs |
+| `extraCredential` | json | Extra credentials as `{"key": "value"}` pairs |
+| `extraHeaders` | json | Additional HTTP headers as `{"key": "value"}` pairs |
+
+The `ssl`, `session`, `extraCredential`, and `extraHeaders` properties accept JSON objects that are passed directly to the underlying [trino-client](https://github.com/trinodb/trino-js-client) library. For example, to connect to a Trino server with a self-signed certificate:
+
+```json
+{
+  "connections": {
+    "my_trino": {
+      "is": "trino",
+      "server": "https://trino.example.com",
+      "catalog": "hive",
+      "user": "analyst",
+      "password": {"env": "TRINO_PASSWORD"},
+      "ssl": {"rejectUnauthorized": false}
+    }
+  }
+}
+```
+
+Because these properties use the `json` type, `{"env": "..."}` inside them is treated as literal data, not as an environment variable reference.
 
 ### `presto` — Presto
 
