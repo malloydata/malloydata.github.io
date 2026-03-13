@@ -54,17 +54,17 @@ When both exist, config file connections take priority. Settings connections are
 
 ### Connections Sidebar
 
-The **Malloy Connections** sidebar shows all configured connections grouped by source:
+The **Malloy Connections** sidebar shows the effective connections for the file you are currently editing, grouped by source:
 
-- **Config** — Connections from discovered `malloy-config.json` files. These are read-only in the editor; edit the JSON file directly to make changes.
+- **Config** — Connections from the `malloy-config.json` that applies to the active file. These are read-only in the editor; click the file icon on the group header to open the JSON file for editing.
 - **Settings** — User-defined connections from VS Code settings. Editable through the connection editor. If a settings connection has the same name as a config connection, it appears as "(shadowed)" since the config version takes priority.
 - **Defaults** — One entry per supported database type, using built-in defaults. Click to create a new settings connection from the default.
 
-Click any connection to open the connection editor, or use the **+** button to create a new connection.
+The sidebar updates automatically as you switch between files, so it always reflects the connections that would be used if you ran a query from the current file. Click any connection to open the connection editor, or use the **+** button to create a new connection.
 
 ### Project Configuration: `malloy-config.json`
 
-Place a `malloy-config.json` file in the root of your project (workspace root). The extension detects it automatically and picks up changes whenever you save. In multi-root workspaces, each workspace root can have its own file with independent connection namespaces.
+Place a `malloy-config.json` file in your project directory. The extension finds the config that applies to the current file by walking up from the file's directory toward the workspace root. It uses the first `malloy-config.json` it encounters. This means you can place a config file at the workspace root for project-wide connections, or in a subdirectory to override connections for files in that subtree. In multi-root workspaces, each workspace root has its own independent config search.
 
 The extension also reads [persistence manifests](../experiments/persistence.malloynb) from the config's `manifestPath` directory. When the builder (`malloy-cli build`) writes a manifest, VS Code picks it up on the next compile — no restart needed.
 
