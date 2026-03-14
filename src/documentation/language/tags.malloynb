@@ -17,6 +17,35 @@ Annotations which start `##` are collected with the file or "model" and annotati
 view: how_many is things -> { aggregate: total_count is count() }
 ```
 
+## Block Annotations
+
+For longer annotations that span multiple lines, use block annotation syntax. Object block annotations start with `#|` and end with `|#`. Model block annotations start with `##|` and end with `|##`.
+
+```malloy
+source: flights is duckdb.table('flights.parquet') extend {
+  #|
+    bar_chart
+    size=xl
+    color=blue
+  |#
+  dimension: carrier_name is carrier
+}
+```
+
+The closing `|#` (or `|##`) must be at the same indentation level as the opening `#|` (or `##|`). Indentation is automatically stripped based on the column position of the opener — so the content above is equivalent to writing three separate annotations `# bar_chart`, `# size=xl`, and `# color=blue`. Tabs in the indentation area are not allowed — use spaces.
+
+Block annotations can also include a routing prefix, just like single-line annotations:
+
+```malloy
+#|(docs)
+  This is a multi-line documentation annotation.
+  It can contain as much text as needed.
+|#
+source: my_source is duckdb.table('my_table')
+```
+
+## Annotation Distribution
+
 An object annotation which happens before a definition list is distributed to each member of the list, but each member can also have their own unique annotations
 
 ```malloy
