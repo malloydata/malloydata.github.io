@@ -427,6 +427,10 @@
         {
           "title": "Persistence",
           "link": "/experiments/persistence.malloynb"
+        },
+        {
+          "title": "Types and Virtual Sources",
+          "link": "/experiments/virtual_sources.malloynb"
         }
       ]
     }
