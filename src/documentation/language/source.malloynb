@@ -12,6 +12,7 @@ A source can be any of the following:
 | [A SQL table or SQL view](#sources-from-tables-or-views)| `duckdb.table('data/flights.parquet')` |
 | [A Malloy query](#sources-from-malloy-queries) | `flights -> { group_by: carrier }` |
 | [A SQL query](#sources-from-sql-queries) | `duckdb.sql("""select 1 as one""")` |
+| [A virtual source](../experiments/virtual_sources.malloynb) _(experimental)_ | `duckdb.virtual('name')::type` |
 
 A source can be used directly in a query:
 >>>malloy

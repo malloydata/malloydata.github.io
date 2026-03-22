@@ -1,0 +1,188 @@
+>>>markdown
+## Types and Virtual Sources
+
+Malloy's `type:` declaration and `::` type operator introduce two related capabilities:
+
+- **Type declarations on table sources** make a source self-describing — the schema lives in the `.malloy` file, not just the database. An LLM can reason about the source without a connection, a CI pipeline can validate without credentials, and a human can see the fields without running a query.
+
+- **Virtual sources** define a source with no underlying table. The type declaration *is* the schema. The actual table is resolved at query time through a mapping, making it possible to write models against tables that don't exist yet or to point the same model at different tables in different environments.
+
+This is an experimental feature. Enable it with `##! experimental.virtual_source` at the top of your `.malloy` file.
+
+See [WN-0024 (Type Declarations and Virtual Sources)](https://github.com/malloydata/whatsnext/blob/main/wns/WN-0024-schema-and-virtual-sources/wn-0024.md) for the full design.
+
+### Declaring Types
+
+A `type:` declaration is a top-level statement, like `source:` or `query:`. It defines a named collection of typed fields:
+
+```malloy
+##! experimental.virtual_source
+
+type: store is {
+  id :: number,
+  name :: string,
+  street :: string,
+  city :: string,
+  state :: string
+}
+```
+
+A type has no connection to any database and no behavior on its own. It becomes meaningful when applied to a source.
+
+### Supported Types
+
+Type declarations support the full range of Malloy types:
+
+| Type | Example |
+|------|---------|
+| Basic types | `x :: string`, `y :: number`, `z :: boolean`, `d :: date`, `t :: timestamp` |
+| Timestamp with timezone | `t :: timestamptz` |
+| Arrays | `tags :: string[]`, `scores :: number[]` |
+| Inline records | `address :: { street :: string, city :: string }` |
+| Named types | `location :: address` |
+| Arrays of records | `items :: { name :: string, qty :: number }[]` |
+| SQL native types | `big_id :: "BIGINT"`, `geo :: "GEOGRAPHY"` |
+
+SQL native types are written as quoted strings, for database-specific types that don't have a Malloy equivalent.
+
+### Composing Types
+
+Types can reference other named types, allowing nested structures to be composed from reusable pieces:
+
+```malloy
+type: address is {
+  street :: string,
+  city :: string,
+  state :: string,
+  zip :: string
+}
+
+type: store is {
+  id :: number,
+  name :: string,
+  location :: address
+}
+```
+
+A type can also incorporate the fields of another type using `extend`:
+
+```malloy
+type: cigar_store is store extend {
+  humidor_capacity :: number,
+  walk_in :: boolean
+}
+```
+
+This produces a type with all the fields of `store` plus the new fields. There is no subtype relationship — the result is a flat bag of fields.
+
+### Applying Types to Table Sources
+
+The `::` type operator on a source expression declares the **complete expected schema** of that source:
+
+```malloy
+##! experimental.virtual_source
+
+type: airport_fields is {
+  code :: string,
+  city :: string,
+  state :: string,
+  elevation :: number
+}
+
+source: airports is duckdb.table('airports.parquet')::airport_fields
+```
+
+When applied to a table source, the type:
+
+1. **Hides undeclared fields.** Columns not listed in the type are marked `hidden`. They still exist — joins and expressions can reference them — but they won't appear in query output or auto-complete.
+
+2. **Validates types.** If a declared field exists but its type doesn't match the actual column, the compiler reports an error.
+
+3. **Validates existence.** If a declared field doesn't exist in the table at all, the compiler reports an error.
+
+Dimensions, measures, and joins defined in an `extend` block are unaffected — the type only governs intrinsic (table-derived) fields.
+
+#### Multiple Types
+
+You can apply several types at once with parentheses:
+
+```malloy
+type: id_fields is { id :: number, name :: string }
+type: metric_fields is { revenue :: number, cost :: number }
+
+source: report is duckdb.table('report.parquet')::(id_fields, metric_fields)
+```
+
+This is equivalent to creating a single type that extends the others.
+
+#### Narrowing a Source
+
+Because `::` always means "the complete expected schema," you can narrow an existing source by applying a smaller type:
+
+```malloy
+##! experimental.virtual_source
+
+type: full_schema is { id :: number, name :: string, city :: string }
+type: narrow_schema is { id :: number, name :: string }
+
+source: a is duckdb.virtual('x')::full_schema
+
+// b has all of a's fields, but only id and name are public
+source: b is a::narrow_schema
+```
+
+### Virtual Sources
+
+A virtual source uses `connection.virtual('name')` instead of `connection.table('path')`. There is no underlying table — the type *defines* the fields:
+
+```malloy
+##! experimental.virtual_source
+
+type: user_facts_fields is {
+  user_id :: string,
+  signup_date :: date,
+  lifetime_value :: number,
+  segment :: string
+}
+
+source: user_facts is duckdb.virtual('user_facts')::user_facts_fields
+```
+
+Virtual sources can be extended like any other source:
+
+```malloy
+source: user_facts_model is duckdb.virtual('user_facts')::user_facts_fields extend {
+  dimension: signup_year is year(signup_date)
+  measure: total_ltv is lifetime_value.sum()
+  measure: user_count is count()
+}
+```
+
+#### Resolving Virtual Sources at Query Time
+
+At query time, the application provides a **virtual map** that resolves virtual names to actual table paths. For example, the same model can point at different tables in different environments:
+
+```malloy
+##! experimental.virtual_source
+
+type: feature_fields is { user_id :: string, feature_vec :: string }
+
+// The model is the same everywhere
+source: features is bq.virtual('features')::feature_fields
+
+// Dev:  bq → features → "dev.features_sample"
+// Prod: bq → features → "prod.ml_features_v3"
+// Test: bq → features → "test_fixtures.features_small"
+```
+
+If a virtual source is used in a query and no map entry exists, the compiler produces an error — there is no fallback, because a virtual source has no SQL of its own.
+
+### Summary
+
+| Source Type | Type Behavior | Fields Come From |
+|-------------|---------------|------------------|
+| `table()` without `::` | All table columns are public | Database |
+| `table()::type` | Declared columns public, rest hidden, types validated | Database (validated) |
+| `virtual()::type` | Declared columns are the only fields | Type declaration |
+| `virtual()` without `::` | Empty source (legal but useless) | Nothing |
+>>>markdown

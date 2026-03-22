@@ -41,6 +41,19 @@ In Postgres, the string passed to the `.table()` connection method can be a two-
 
 The `.sql()` connection method is used to define a source or query based on a SQL query. See the [SQL Sources](./sql_sources.malloynb) section for more information.
 
+## Virtual Connection Method _(experimental)_
+
+The `.virtual()` connection method defines a source with no underlying table. The string argument is a logical name that is resolved to an actual table at query time through a virtual map. Virtual sources require a `type:` declaration applied with the `::` operator to define their fields.
+
+```malloy
+##! experimental.virtual_source
+
+type: order_fields is { order_id :: string, order_date :: date, total :: number }
+source: orders is duckdb.virtual('orders')::order_fields
+```
+
+See [Types and Virtual Sources](../experiments/virtual_sources.malloynb) for details. Enable with `##! experimental.virtual_source`.
+
 ---
 
 ## Configuring Connections
