@@ -1,5 +1,5 @@
 >>>markdown
-# Timestamp Operations
+# Timestamp and Date Operations
 
 ## Truncation
 
@@ -10,7 +10,7 @@ For truncation to a time unit (timeframe), use the period (`.`) operator followe
 `expr.minute` | 2021-08-06 00:36
 `expr.hour`   | 2021-08-06 00:00
 `expr.day`    | 2021-08-06 00:00
-`expr.week`   | 2021-08-01 00:00 _(the week containing the 10th)_
+`expr.week`   | 2021-08-01 00:00 _(the week containing the 6th)_
 `expr.month`  | 2021-08-01 00:00
 `expr.quarter` | 2021-06-01 00:00
 `expr.year`   | 2021-01-01 00:00
@@ -19,14 +19,14 @@ For truncation to a time unit (timeframe), use the period (`.`) operator followe
 
 ## Extraction
 
-To extract an integer from a component of a timestamp, malloy uses the time unit (timeframe) in the form of a funtion call.
+To extract an integer from a component of a timestamp, malloy uses the time unit (timeframe) in the form of a function call.
 
 The "Result" column uses a value of `@2021-08-06 00:55:05` for `expr`.
 
 expression | meaning | result
 ---- | ---- | ----
 `day_of_year(expr)` | day of year, 1-365 | 218
-`day(expr)` | day of month 1-31 | 5
+`day(expr)` | day of month 1-31 | 6
 `day_of_week(expr)` | day of week 1-7 | 6 _(Note: 1 represents Sunday)_
 `week(expr)` | week in year, 1-53 | 31
 `quarter(expr)` | quarter in year 1-4 | 3
@@ -63,3 +63,29 @@ expression | meaning
 `timestamptz_value::timestamp` | Converts timestamptz to timestamp in the query timezone
 
 * See [Timezones](timezones.malloynb) for more information on how timezones interact with casting.
+
+## Arithmetic
+
+Add or subtract a duration from a timestamp or date using `+` or `-` with a number and time unit.
+
+expression | result (expr = @2021-02-24 03:05:06)
+---- | ----
+`expr + 10 seconds` | 2021-02-24 03:05:16
+`expr - 6 seconds` | 2021-02-24 03:05:00
+`expr + 10 minutes` | 2021-02-24 03:15:06
+`expr + 10 hours` | 2021-02-24 13:05:06
+`expr + 3 days` | 2021-02-27 03:05:06
+`expr - 2 weeks` | 2021-02-10 03:05:06
+`expr + 9 months` | 2021-11-24 03:05:06
+`expr + 2 quarters` | 2021-08-24 03:05:06
+`expr + 10 years` | 2031-02-24 03:05:06
+
+The supported time units are `seconds`, `minutes`, `hours`, `days`, `weeks`, `months`, `quarters`, and `years`. Both singular and plural forms are accepted (e.g. `1 day` or `3 days`).
+
+Date arithmetic works on both timestamps and dates. The units `seconds`, `minutes`, and `hours` can only be used with timestamps — using them with a date value will produce a compile error.
+
+This is commonly used with `now` for relative time filters:
+
+```
+where: event_date > now - 30 days
+```
