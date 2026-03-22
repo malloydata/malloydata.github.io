@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bucketing with &#x27;Other&#x27; | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <script src="/js/generated/malloy-render-0.0.359.js"></script>
+    <style>
+      .result-inner .malloy-render {
+        width: 100%;
+      }
+      .result-inner .table-container {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/mcp_agents.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/databricks.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/databricks.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/databricks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Databricks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=visualizations
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/tables.html,/documentation/visualizations/big_values.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/model_options.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Visualizations
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/tables">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/big_values">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Big Values
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links / Images
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/model_options">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Model Options
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html,/documentation/experiments/virtual_sources.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/virtual_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Types and Virtual Sources
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="nested_subtotals.html"><img src="/img/previous.svg" alt="previous"/>Nested Subtotals</a>
+  </div>
+  <div class="item">
+      <a href="autobin.html">Auto-binning Histograms<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="bucketing-with-other-" class="header-link anchor" href="#bucketing-with-other-">
+          Bucketing with 'Other'
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/other.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>Often you want to limit the number of group-by values in a table, and bucket everything else into an 'other' category.</p>
+<p>In the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">top_states_by_eleveation</span></span></code> query below, we have a query with two stages. The first stage calculates the top states and nests the data to be aggregated. The second pipeline stage produces the actual aggregation.</p>
+<div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/other.malloynb#C2" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">airports</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;../data/airports.parquet&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">measure</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">airport_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">avg_elevation</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">elevation</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">view</span><span style="color: #000000">: </span><span style="color: #001080">top_states_by_elevation</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">state</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span><span style="color: #001080">avg_elevation</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">calculate</span><span style="color: #000000">: </span><span style="color: #001080">is_other</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #795E26">row_number</span><span style="color: #000000">() &gt; </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">data</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000">  {  </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">code</span><span style="color: #000000">, </span><span style="color: #001080">elevation</span></span>
+<span class="line"><span style="color: #000000">    }</span></span>
+<span class="line"><span style="color: #000000">  } -&gt; {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">state</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">pick</span><span style="color: #000000"> </span><span style="color: #001080">state</span><span style="color: #000000"> </span><span style="color: #0000FF">when</span><span style="color: #000000"> </span><span style="color: #0000FF">not</span><span style="color: #000000"> </span><span style="color: #001080">is_other</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">else</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;OTHER&#39;</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">avg_elevation</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #001080">elevation</span><span style="color: #000000">.</span><span style="color: #795E26">avg</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">airport_count</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #795E26">count</span><span style="color: #000000">()</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0451A5"># hidden</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #001080">sort</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">data</span><span style="color: #000000">.</span><span style="color: #795E26">count</span><span style="color: #000000">() {</span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #0000FF">not</span><span style="color: #000000"> </span><span style="color: #001080">is_other</span><span style="color: #000000"> }</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #AF00DB">order_by</span><span style="color: #000000">: </span><span style="color: #001080">sort</span><span style="color: #000000"> </span><span style="color: #AF00DB">desc</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div>
+      <h2>
+        <a id="basic-query" class="header-link anchor" href="#basic-query">
+          Basic Query
+        </a>
+      </h2>
+    <div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/other.malloynb#C4" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">airports</span><span style="color: #000000"> -&gt; </span><span style="color: #001080">top_states_by_elevation</span></span></pre><div class="result-outer large">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="864441ed-d273-4425-945c-4e7c47cc6cd8">
+        <script>(()=>{var e=document.getElementById("864441ed-d273-4425-945c-4e7c47cc6cd8"),n=(new window.index.MalloyRenderer).createViz();n.setResult({schema:{fields:[{kind:"dimension",name:"state",type:{kind:"string_type"},annotations:[{value:'#(malloy) reference_id = "7a868a2d-6b82-4bea-8fbf-0676783fe441" drill_expression.code = "pick state when not is_other\\n      else \'OTHER\'"\n'}]},{kind:"dimension",name:"avg_elevation",type:{kind:"number_type",subtype:"decimal"},annotations:[{value:'#(malloy) reference_id = "c0927731-4440-497d-a032-30a2a72d7c9b" calculation\n'}]},{kind:"dimension",name:"airport_count",type:{kind:"number_type",subtype:"integer"},annotations:[{value:'#(malloy) reference_id = "57c956af-2e0c-4def-9fee-4c1d6575cdaa" calculation\n'}]},{kind:"dimension",name:"sort",type:{kind:"number_type",subtype:"integer"},annotations:[{value:"# hidden\n"},{value:'#(malloy) reference_id = "b4fe3d14-f1a6-4249-931c-57dbca7e54ce" calculation\n'}]}]},data:{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:6255.863529411765,subtype:"decimal"},{kind:"number_cell",number_value:425,subtype:"integer"},{kind:"number_cell",number_value:425,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NM"},{kind:"number_cell",number_value:5419.635359116022,subtype:"decimal"},{kind:"number_cell",number_value:181,subtype:"integer"},{kind:"number_cell",number_value:181,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"UT"},{kind:"number_cell",number_value:5066,subtype:"decimal"},{kind:"number_cell",number_value:140,subtype:"integer"},{kind:"number_cell",number_value:140,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NV"},{kind:"number_cell",number_value:4029.9765625,subtype:"decimal"},{kind:"number_cell",number_value:128,subtype:"integer"},{kind:"number_cell",number_value:128,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"WY"},{kind:"number_cell",number_value:5619.365217391304,subtype:"decimal"},{kind:"number_cell",number_value:115,subtype:"integer"},{kind:"number_cell",number_value:115,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:910.3459902148479,subtype:"decimal"},{kind:"number_cell",number_value:18781,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]},connection_name:"duckdb",annotations:[{value:"#(docs) size=large limit=5000\n"},{value:"#(malloy) drillable ordered_by = [{ sort = desc }]\n"},{value:"#(malloy) source.name = airports\n"},{value:"#(malloy) query_name = top_states_by_elevation\n"}],sql:'WITH __stage0 AS (\n  SELECT\n    group_set,\n    base."state" as "state__0",\n    CASE WHEN group_set=0 THEN\n      AVG(base."elevation")\n      END as "avg_elevation__0",\n    (CASE WHEN group_set=0 THEN ROW_NUMBER() OVER(PARTITION BY group_set  ORDER BY  CASE WHEN group_set=0 THEN\n      AVG(base."elevation")\n      END desc NULLS LAST ) END)>5 as "is_other__0",\n    CASE WHEN group_set=1 THEN\n      base."code"\n      END as "code__1",\n    CASE WHEN group_set=1 THEN\n      base."elevation"\n      END as "elevation__1"\n  FROM \'../data/airports.parquet\' as base\n  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,1,1)) as group_set  ) as group_set\n  GROUP BY 1,2,5,6\n)\n, __stage1 AS (\n  SELECT\n    "state__0" as "state",\n    MAX(CASE WHEN group_set=0 THEN "avg_elevation__0" END) as "avg_elevation",\n    MAX(CASE WHEN group_set=0 THEN "is_other__0" END) as "is_other",\n    COALESCE(LIST({\n      "code": "code__1", \n      "elevation": "elevation__1"}  ORDER BY  "code__1" ASC NULLS LAST) FILTER (WHERE group_set=1),[]) as "data"\n  FROM __stage0\n  GROUP BY 1\n)\nSELECT \n   CASE WHEN COALESCE(NOT base."is_other",TRUE) THEN base."state" ELSE \'OTHER\' END as "state",\n   AVG(data_0."elevation") as "avg_elevation",\n   COUNT(DISTINCT base."state" || \'x\' || data_0_outer.__row_id) as "airport_count",\n   COUNT(DISTINCT CASE WHEN COALESCE(NOT base."is_other",TRUE) THEN base."state" || \'x\' || data_0_outer.__row_id END) as "sort"\nFROM __stage1 as base\nLEFT JOIN LATERAL UNNEST(base."data") WITH ORDINALITY as data_0_outer(data_0, __row_id) ON true\nGROUP BY 1\nORDER BY 4 desc NULLS LAST\n'}),n.render(e)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6255.863529411765</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">425</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">425</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NM&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5419.635359116022</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">181</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">181</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;UT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5066</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">140</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">140</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NV&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4029.9765625</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">128</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">128</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WY&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5619.365217391304</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">115</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">115</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">910.3459902148479</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">18781</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    base.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">AVG</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    (</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #795E26">ROW_NUMBER</span><span style="color: #000000">() </span><span style="color: #0000FF">OVER</span><span style="color: #000000">(</span><span style="color: #0000FF">PARTITION</span><span style="color: #000000"> </span><span style="color: #0000FF">BY</span><span style="color: #000000"> group_set  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">AVG</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000"> ) </span><span style="color: #0000FF">END</span><span style="color: #000000">)&gt;</span><span style="color: #098658">5</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;is_other__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;code&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;code__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;elevation&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;elevation__1&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/airports.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">5</span><span style="color: #000000">,</span><span style="color: #098658">6</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">, __stage1 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;state__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;is_other__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;is_other&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;code&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;code__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;elevation__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;code__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;data&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #0000FF">NOT</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;is_other&quot;</span><span style="color: #000000">,TRUE) </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">ELSE</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;OTHER&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">AVG</span><span style="color: #000000">(data_0.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000"> || </span><span style="color: #A31515">&#39;x&#39;</span><span style="color: #000000"> || data_0_outer.__row_id) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">   </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #0000FF">NOT</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;is_other&quot;</span><span style="color: #000000">,TRUE) </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000"> || </span><span style="color: #A31515">&#39;x&#39;</span><span style="color: #000000"> || data_0_outer.__row_id </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;sort&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage1 </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL UNNEST(base.</span><span style="color: #A31515">&quot;data&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">WITH</span><span style="color: #000000"> ORDINALITY </span><span style="color: #0000FF">as</span><span style="color: #000000"> data_0_outer(data_0, __row_id) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> true</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">4</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div>
+      <h2>
+        <a id="nested-query" class="header-link anchor" href="#nested-query">
+          Nested Query
+        </a>
+      </h2>
+    <div class="code-wrapper"><a href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/patterns/other.malloynb#C6" target="_blank" class="open_notebook"><img src="/img/open_notebook.svg" alt="document"/></a><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">run</span><span style="color: #000000">: </span><span style="color: #001080">airports</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">group_by</span><span style="color: #000000">: </span><span style="color: #001080">`Facility Type`</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">fac_type</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">aggregate</span><span style="color: #000000">: </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">airport_count</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">avg_elevation</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">nest</span><span style="color: #000000">: </span><span style="color: #001080">top_states_by_elevation</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre><div class="result-outer large">
+    <div class="result-controls-bar">
+      <span class="result-label">QUERY RESULTS</span>
+      <div class="result-controls">
+        <button class="result-control" selected data-result-kind="html">HTML</button>
+        <button class="result-control"  data-result-kind="json">JSON</button>
+        <button class="result-control"  data-result-kind="sql">SQL</button>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="html" selected>
+      <div class="result-inner" id="882bfdce-93b4-441c-b472-2c6774ae63b0">
+        <script>(()=>{var e=document.getElementById("882bfdce-93b4-441c-b472-2c6774ae63b0"),n=(new window.index.MalloyRenderer).createViz();n.setResult({schema:{fields:[{kind:"dimension",name:"Facility Type",type:{kind:"string_type"},annotations:[{value:'#(malloy) reference_id = "d87b0b8e-577d-4a93-9e04-190f493e3f29" drill_expression { kind = field_reference name = fac_type code = fac_type }\n'}]},{kind:"dimension",name:"airport_count",type:{kind:"number_type",subtype:"integer"},annotations:[{value:'#(malloy) reference_id = "bc76bf07-018e-4e19-b98a-7f047a5f30db" calculation drill_expression { kind = field_reference name = airport_count }\n'}]},{kind:"dimension",name:"avg_elevation",type:{kind:"number_type",subtype:"decimal"},annotations:[{value:'#(malloy) reference_id = "a13cf5db-e23e-4faa-8995-e5df76de65af" calculation drill_expression { kind = field_reference name = avg_elevation }\n'}]},{kind:"dimension",name:"top_states_by_elevation",type:{kind:"array_type",element_type:{kind:"record_type",fields:[{name:"state",annotations:[{value:'#(malloy) reference_id = "351e8f5c-ece8-4cf5-ae73-0a57cec61136" drill_expression.code = "pick state when not is_other\\n      else \'OTHER\'"\n'}],type:{kind:"string_type"}},{name:"avg_elevation",annotations:[{value:'#(malloy) reference_id = "c021cf62-3978-4a37-91bf-3bd07d9a5457" calculation\n'}],type:{kind:"number_type",subtype:"decimal"}},{name:"airport_count",annotations:[{value:'#(malloy) reference_id = "297d0537-516d-421e-9a76-9c0184fdfd2e" calculation\n'}],type:{kind:"number_type",subtype:"integer"}},{name:"sort",annotations:[{value:'#(malloy) reference_id = "981466cc-0590-41ed-8435-4a50140d19c2" calculation\n'},{value:"# hidden\n"}],type:{kind:"number_type",subtype:"integer"}}]}},annotations:[{value:"#(malloy) \n"}]}]},data:{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"AIRPORT"},{kind:"number_cell",number_value:13925,subtype:"integer"},{kind:"number_cell",number_value:1237.0441651705567,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:5873.0642570281125,subtype:"decimal"},{kind:"number_cell",number_value:249,subtype:"integer"},{kind:"number_cell",number_value:249,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NM"},{kind:"number_cell",number_value:5467.63870967742,subtype:"decimal"},{kind:"number_cell",number_value:155,subtype:"integer"},{kind:"number_cell",number_value:155,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"UT"},{kind:"number_cell",number_value:5257.18556701031,subtype:"decimal"},{kind:"number_cell",number_value:97,subtype:"integer"},{kind:"number_cell",number_value:97,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NV"},{kind:"number_cell",number_value:4384.041237113402,subtype:"decimal"},{kind:"number_cell",number_value:97,subtype:"integer"},{kind:"number_cell",number_value:97,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"WY"},{kind:"number_cell",number_value:5570.0329670329675,subtype:"decimal"},{kind:"number_cell",number_value:91,subtype:"integer"},{kind:"number_cell",number_value:91,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:1017.9730281051677,subtype:"decimal"},{kind:"number_cell",number_value:13236,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"HELIPORT"},{kind:"number_cell",number_value:5135,subtype:"integer"},{kind:"number_cell",number_value:950.5125608568646,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:6816.569696969697,subtype:"decimal"},{kind:"number_cell",number_value:165,subtype:"integer"},{kind:"number_cell",number_value:165,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"UT"},{kind:"number_cell",number_value:4634.720930232558,subtype:"decimal"},{kind:"number_cell",number_value:43,subtype:"integer"},{kind:"number_cell",number_value:43,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"MT"},{kind:"number_cell",number_value:3756.310344827586,subtype:"decimal"},{kind:"number_cell",number_value:29,subtype:"integer"},{kind:"number_cell",number_value:29,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NM"},{kind:"number_cell",number_value:5170.76,subtype:"decimal"},{kind:"number_cell",number_value:25,subtype:"integer"},{kind:"number_cell",number_value:25,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"WY"},{kind:"number_cell",number_value:5806.416666666667,subtype:"decimal"},{kind:"number_cell",number_value:24,subtype:"integer"},{kind:"number_cell",number_value:24,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:655.6607547948031,subtype:"decimal"},{kind:"number_cell",number_value:4849,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"SEAPLANE BASE"},{kind:"number_cell",number_value:473,subtype:"integer"},{kind:"number_cell",number_value:488.82241014799155,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"ID"},{kind:"number_cell",number_value:1884.6,subtype:"decimal"},{kind:"number_cell",number_value:5,subtype:"integer"},{kind:"number_cell",number_value:5,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"MT"},{kind:"number_cell",number_value:3194,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NM"},{kind:"number_cell",number_value:4201,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NE"},{kind:"number_cell",number_value:1946,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"SD"},{kind:"number_cell",number_value:1600,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:448.49892008639307,subtype:"decimal"},{kind:"number_cell",number_value:463,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"ULTRALIGHT"},{kind:"number_cell",number_value:125,subtype:"integer"},{kind:"number_cell",number_value:806.144,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"AZ"},{kind:"number_cell",number_value:2025.7142857142858,subtype:"decimal"},{kind:"number_cell",number_value:7,subtype:"integer"},{kind:"number_cell",number_value:7,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NY"},{kind:"number_cell",number_value:1530,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CA"},{kind:"number_cell",number_value:1335,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:8110,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"MT"},{kind:"number_cell",number_value:3540,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:617.9285714285714,subtype:"decimal"},{kind:"number_cell",number_value:112,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"STOLPORT"},{kind:"number_cell",number_value:86,subtype:"integer"},{kind:"number_cell",number_value:1375.046511627907,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:6211.666666666667,subtype:"decimal"},{kind:"number_cell",number_value:6,subtype:"integer"},{kind:"number_cell",number_value:6,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"MT"},{kind:"number_cell",number_value:3776,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CA"},{kind:"number_cell",number_value:4040.5,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"AZ"},{kind:"number_cell",number_value:4772,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NV"},{kind:"number_cell",number_value:4900,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:752.418918918919,subtype:"decimal"},{kind:"number_cell",number_value:74,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"GLIDERPORT"},{kind:"number_cell",number_value:37,subtype:"integer"},{kind:"number_cell",number_value:1611.4054054054054,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:7061.666666666667,subtype:"decimal"},{kind:"number_cell",number_value:3,subtype:"integer"},{kind:"number_cell",number_value:3,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NY"},{kind:"number_cell",number_value:1484.5,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"KS"},{kind:"number_cell",number_value:2088.5,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"AZ"},{kind:"number_cell",number_value:3539,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"NV"},{kind:"number_cell",number_value:4300,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:737.5185185185185,subtype:"decimal"},{kind:"number_cell",number_value:27,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"BALLOONPORT"},{kind:"number_cell",number_value:12,subtype:"integer"},{kind:"number_cell",number_value:1047.25,subtype:"decimal"},{kind:"array_cell",array_value:[{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"IL"},{kind:"number_cell",number_value:811.5,subtype:"decimal"},{kind:"number_cell",number_value:2,subtype:"integer"},{kind:"number_cell",number_value:2,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"KS"},{kind:"number_cell",number_value:1250,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OH"},{kind:"number_cell",number_value:1164,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"MI"},{kind:"number_cell",number_value:980,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"CO"},{kind:"number_cell",number_value:5050,subtype:"decimal"},{kind:"number_cell",number_value:1,subtype:"integer"},{kind:"number_cell",number_value:1,subtype:"integer"}]},{kind:"record_cell",record_value:[{kind:"string_cell",string_value:"OTHER"},{kind:"number_cell",number_value:416.6666666666667,subtype:"decimal"},{kind:"number_cell",number_value:6,subtype:"integer"},{kind:"number_cell",number_value:0,subtype:"integer"}]}]}]}]},connection_name:"duckdb",annotations:[{value:"#(docs) size=large limit=5000\n"},{value:"#(malloy) drillable ordered_by = [{ airport_count = desc }]\n"},{value:"#(malloy) source.name = airports\n"},{value:"#(malloy) query_name = __stage3\n"}],sql:'WITH __stage0 AS (\n  SELECT\n    group_set,\n    base."fac_type" as "Facility Type__0",\n    CASE WHEN group_set=0 THEN\n      COUNT(1)\n      END as "airport_count__0",\n    CASE WHEN group_set=0 THEN\n      AVG(base."elevation")\n      END as "avg_elevation__0",\n    CASE WHEN group_set IN (1,2) THEN\n      base."state"\n      END as "state__1",\n    CASE WHEN group_set=1 THEN\n      AVG(base."elevation")\n      END as "avg_elevation__1",\n    (CASE WHEN group_set=1 THEN ROW_NUMBER() OVER(PARTITION BY group_set, base."fac_type"  ORDER BY  CASE WHEN group_set=1 THEN\n      AVG(base."elevation")\n      END desc NULLS LAST ) END)>5 as "is_other__1",\n    CASE WHEN group_set=2 THEN\n      base."code"\n      END as "code__2",\n    CASE WHEN group_set=2 THEN\n      base."elevation"\n      END as "elevation__2"\n  FROM \'../data/airports.parquet\' as base\n  CROSS JOIN (SELECT UNNEST(GENERATE_SERIES(0,2,1)) as group_set  ) as group_set\n  GROUP BY 1,2,5,8,9\n)\n, __stage1 AS (\n  SELECT \n    CASE WHEN group_set=2 THEN 1 ELSE group_set END as group_set,\n    "Facility Type__0" as "Facility Type__0",\n    FIRST("airport_count__0") FILTER (WHERE "airport_count__0" IS NOT NULL) as "airport_count__0",\n    FIRST("avg_elevation__0") FILTER (WHERE "avg_elevation__0" IS NOT NULL) as "avg_elevation__0",\n    CASE WHEN group_set IN (1,2) THEN\n      "state__1"\n      END as "state__1",\n    FIRST("avg_elevation__1") FILTER (WHERE "avg_elevation__1" IS NOT NULL) as "avg_elevation__1",\n    FIRST("is_other__1") FILTER (WHERE "is_other__1" IS NOT NULL) as "is_other__1",\n    COALESCE(LIST({\n      "code": "code__2", \n      "elevation": "elevation__2"}  ORDER BY  "code__2" ASC NULLS LAST) FILTER (WHERE group_set=2),[]) as "data__1"\n  FROM __stage0\n  GROUP BY 1,2,5\n)\nSELECT\n  "Facility Type__0" as "Facility Type",\n  MAX(CASE WHEN group_set=0 THEN "airport_count__0" END) as "airport_count",\n  MAX(CASE WHEN group_set=0 THEN "avg_elevation__0" END) as "avg_elevation",\n  (WITH __stage2 AS (\n    SELECT \n       CASE WHEN COALESCE(NOT base."is_other",TRUE) THEN base."state" ELSE \'OTHER\' END as "state",\n       AVG(data_0."elevation") as "avg_elevation",\n       COUNT(DISTINCT base."__distinct_key" || \'x\' || data_0_outer.__row_id) as "airport_count",\n       COUNT(DISTINCT CASE WHEN COALESCE(NOT base."is_other",TRUE) THEN base."__distinct_key" || \'x\' || data_0_outer.__row_id END) as "sort"\n    FROM (SELECT GEN_RANDOM_UUID() as "__distinct_key", x.*  FROM (SELECT UNNEST(COALESCE(LIST({\n      "state": "state__1", \n      "avg_elevation": "avg_elevation__1", \n      "is_other": "is_other__1", \n      "data": "data__1"}  ORDER BY  "avg_elevation__1" DESC NULLS LAST) FILTER (WHERE group_set=1),[])) as base) as x) as base\n    LEFT JOIN LATERAL UNNEST(base."data") WITH ORDINALITY as data_0_outer(data_0, __row_id) ON true\n    GROUP BY 1\n    ORDER BY 4 desc NULLS LAST\n  )\n  SELECT LIST(STRUCT_PACK("state","avg_elevation","airport_count","sort") ORDER BY sort desc) FROM __stage2\n  ) as "top_states_by_elevation"\nFROM __stage1\nGROUP BY 1\nORDER BY 2 desc NULLS LAST\n'}),n.render(e)})();</script>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="json" >
+      <div class="result-inner">
+        <pre><pre class="language-json" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">[</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AIRPORT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">13925</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1237.0441651705567</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5873.0642570281125</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">249</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">249</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NM&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5467.63870967742</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">155</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">155</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;UT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5257.18556701031</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">97</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">97</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NV&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4384.041237113402</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">97</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">97</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WY&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5570.0329670329675</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">91</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">91</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1017.9730281051677</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">13236</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;HELIPORT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5135</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">950.5125608568646</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6816.569696969697</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">165</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">165</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;UT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4634.720930232558</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">43</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">43</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3756.310344827586</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">29</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">29</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NM&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5170.76</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">25</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;WY&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5806.416666666667</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">24</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">24</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">655.6607547948031</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4849</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SEAPLANE BASE&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">473</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">488.82241014799155</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ID&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1884.6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3194</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NM&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4201</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NE&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1946</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;SD&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1600</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">448.49892008639307</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">463</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;ULTRALIGHT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">125</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">806.144</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AZ&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2025.7142857142858</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NY&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1530</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1335</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">8110</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3540</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">617.9285714285714</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">112</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;STOLPORT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">86</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1375.046511627907</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6211.666666666667</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3776</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4040.5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AZ&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4772</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NV&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4900</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">752.418918918919</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">74</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;GLIDERPORT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">37</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1611.4054054054054</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">7061.666666666667</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NY&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1484.5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;KS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2088.5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;AZ&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">3539</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;NV&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">4300</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">737.5185185185185</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">27</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">  {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;Facility Type&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;BALLOONPORT&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">12</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1047.25</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0451A5">&quot;top_states_by_elevation&quot;</span><span style="color: #000000">: [</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;IL&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">811.5</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">2</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;KS&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1250</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OH&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1164</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;MI&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">980</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;CO&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">5050</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">      },</span></span>
+<span class="line"><span style="color: #000000">      {</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;OTHER&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #098658">416.6666666666667</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;airport_count&quot;</span><span style="color: #000000">: </span><span style="color: #098658">6</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">        </span><span style="color: #0451A5">&quot;sort&quot;</span><span style="color: #000000">: </span><span style="color: #098658">0</span></span>
+<span class="line"><span style="color: #000000">      }</span></span>
+<span class="line"><span style="color: #000000">    ]</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">]</span></span></pre></pre>
+      </div>
+    </div>
+    <div class="result-middle" data-result-kind="sql" >
+      <div class="result-inner">
+        <pre><pre class="language-sql" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage0 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">    group_set,</span></span>
+<span class="line"><span style="color: #000000">    base.</span><span style="color: #A31515">&quot;fac_type&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;Facility Type__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">AVG</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">) </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;state&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">AVG</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    (</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #795E26">ROW_NUMBER</span><span style="color: #000000">() </span><span style="color: #0000FF">OVER</span><span style="color: #000000">(</span><span style="color: #0000FF">PARTITION</span><span style="color: #000000"> </span><span style="color: #0000FF">BY</span><span style="color: #000000"> group_set, base.</span><span style="color: #A31515">&quot;fac_type&quot;</span><span style="color: #000000">  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #795E26">AVG</span><span style="color: #000000">(base.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000"> ) </span><span style="color: #0000FF">END</span><span style="color: #000000">)&gt;</span><span style="color: #098658">5</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;is_other__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;code&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;code__2&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      base.</span><span style="color: #A31515">&quot;elevation&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;elevation__2&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;../data/airports.parquet&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">CROSS</span><span style="color: #000000"> </span><span style="color: #0000FF">JOIN</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(GENERATE_SERIES(</span><span style="color: #098658">0</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">1</span><span style="color: #000000">)) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">5</span><span style="color: #000000">,</span><span style="color: #098658">8</span><span style="color: #000000">,</span><span style="color: #098658">9</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #000000">, __stage1 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000"> </span><span style="color: #0000FF">ELSE</span><span style="color: #000000"> group_set </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> group_set,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #A31515">&quot;Facility Type__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;Facility Type__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">FIRST</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;airport_count__0&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">IS</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">NULL</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">FIRST</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">IS</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">NULL</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set </span><span style="color: #0000FF">IN</span><span style="color: #000000"> (</span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">) </span><span style="color: #0000FF">THEN</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;state__1&quot;</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">FIRST</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;avg_elevation__1&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">IS</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">NULL</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">FIRST</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;is_other__1&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;is_other__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">IS</span><span style="color: #000000"> </span><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #0000FF">NULL</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;is_other__1&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;code&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;code__2&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;elevation__2&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;code__2&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">ASC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">2</span><span style="color: #000000">),[]) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;data__1&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage0</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span><span style="color: #098658">2</span><span style="color: #000000">,</span><span style="color: #098658">5</span></span>
+<span class="line"><span style="color: #000000">)</span></span>
+<span class="line"><span style="color: #0000FF">SELECT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #A31515">&quot;Facility Type__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;Facility Type&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #795E26">MAX</span><span style="color: #000000">(</span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> group_set=</span><span style="color: #098658">0</span><span style="color: #000000"> </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation__0&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  (</span><span style="color: #0000FF">WITH</span><span style="color: #000000"> __stage2 </span><span style="color: #0000FF">AS</span><span style="color: #000000"> (</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> </span></span>
+<span class="line"><span style="color: #000000">       </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #0000FF">NOT</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;is_other&quot;</span><span style="color: #000000">,TRUE) </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">ELSE</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;OTHER&#39;</span><span style="color: #000000"> </span><span style="color: #0000FF">END</span><span style="color: #000000"> </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">       </span><span style="color: #795E26">AVG</span><span style="color: #000000">(data_0.</span><span style="color: #A31515">&quot;elevation&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;avg_elevation&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">       </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;__distinct_key&quot;</span><span style="color: #000000"> || </span><span style="color: #A31515">&#39;x&#39;</span><span style="color: #000000"> || data_0_outer.__row_id) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;airport_count&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">       </span><span style="color: #795E26">COUNT</span><span style="color: #000000">(</span><span style="color: #0000FF">DISTINCT</span><span style="color: #000000"> </span><span style="color: #0000FF">CASE</span><span style="color: #000000"> </span><span style="color: #0000FF">WHEN</span><span style="color: #000000"> </span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(</span><span style="color: #0000FF">NOT</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;is_other&quot;</span><span style="color: #000000">,TRUE) </span><span style="color: #0000FF">THEN</span><span style="color: #000000"> base.</span><span style="color: #A31515">&quot;__distinct_key&quot;</span><span style="color: #000000"> || </span><span style="color: #A31515">&#39;x&#39;</span><span style="color: #000000"> || data_0_outer.__row_id </span><span style="color: #0000FF">END</span><span style="color: #000000">) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;sort&quot;</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> GEN_RANDOM_UUID() </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;__distinct_key&quot;</span><span style="color: #000000">, x.*  </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> (</span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> UNNEST(</span><span style="color: #795E26">COALESCE</span><span style="color: #000000">(LIST({</span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;state__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;avg_elevation&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;avg_elevation__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;is_other&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;is_other__1&quot;</span><span style="color: #000000">, </span></span>
+<span class="line"><span style="color: #000000">      </span><span style="color: #A31515">&quot;data&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;data__1&quot;</span><span style="color: #000000">}  </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000">  </span><span style="color: #A31515">&quot;avg_elevation__1&quot;</span><span style="color: #000000"> </span><span style="color: #0000FF">DESC</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span><span style="color: #000000">) </span><span style="color: #0000FF">FILTER</span><span style="color: #000000"> (</span><span style="color: #0000FF">WHERE</span><span style="color: #000000"> group_set=</span><span style="color: #098658">1</span><span style="color: #000000">),[])) </span><span style="color: #0000FF">as</span><span style="color: #000000"> base) </span><span style="color: #0000FF">as</span><span style="color: #000000"> x) </span><span style="color: #0000FF">as</span><span style="color: #000000"> base</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">LEFT JOIN</span><span style="color: #000000"> LATERAL UNNEST(base.</span><span style="color: #A31515">&quot;data&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">WITH</span><span style="color: #000000"> ORDINALITY </span><span style="color: #0000FF">as</span><span style="color: #000000"> data_0_outer(data_0, __row_id) </span><span style="color: #0000FF">ON</span><span style="color: #000000"> true</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">4</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"><span style="color: #000000">  )</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">SELECT</span><span style="color: #000000"> LIST(STRUCT_PACK(</span><span style="color: #A31515">&quot;state&quot;</span><span style="color: #000000">,</span><span style="color: #A31515">&quot;avg_elevation&quot;</span><span style="color: #000000">,</span><span style="color: #A31515">&quot;airport_count&quot;</span><span style="color: #000000">,</span><span style="color: #A31515">&quot;sort&quot;</span><span style="color: #000000">) </span><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> sort </span><span style="color: #0000FF">desc</span><span style="color: #000000">) </span><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage2</span></span>
+<span class="line"><span style="color: #000000">  ) </span><span style="color: #0000FF">as</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;top_states_by_elevation&quot;</span></span>
+<span class="line"><span style="color: #0000FF">FROM</span><span style="color: #000000"> __stage1</span></span>
+<span class="line"><span style="color: #0000FF">GROUP BY</span><span style="color: #000000"> </span><span style="color: #098658">1</span></span>
+<span class="line"><span style="color: #0000FF">ORDER BY</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000"> </span><span style="color: #0000FF">desc</span><span style="color: #000000"> NULLS </span><span style="color: #0000FF">LAST</span></span>
+<span class="line"></span></pre></pre>
+      </div>
+    </div>
+  </div></div></div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+  </body>
+</html>
