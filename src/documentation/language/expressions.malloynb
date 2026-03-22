@@ -20,6 +20,7 @@ the same syntax users are familiar with. However, Malloy also introduces several
 | [Pick expressions](#pick-expressions)<br/>Malloy's take on <code>CASE</code> statements  | `pick 'S' when size < 3 else 'L'`<br/> |
 | [Time ranges](#time-ranges)<br/>Ranges with start and end or duration |  `start_time for 3 hours`<br/>`@2003 for 10 months` <br/> `@2003 to @2005` |
 | [Numeric ranges](#numeric-ranges)<br/>Numeric ranges with start and end | `10 to 20` |
+| [Time arithmetic](timestamp-operations.malloynb#arithmetic)<br/>Add or subtract durations from times | `event_time + 3 days`<br/>`now - 30 days` |
 | [Time truncation](#time-truncation) | `event_time.quarter` <br/> `now.year` |
 | [Time extraction](#time-extraction)<br/>Extract one part of a time value | `day_of_year(event_time)` <br/> `minute(now)` |
 | [Interval extraction](#interval-extraction)<br/>Extract the interval between two times  | `days(created_at to shipped_at)` |
