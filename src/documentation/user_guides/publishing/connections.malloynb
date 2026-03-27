@@ -86,7 +86,7 @@ my-analytics/
 
 ## DuckDB with Attached Databases
 
-DuckDB can federate queries to external databases (BigQuery, Snowflake, PostgreSQL) using attached databases. This lets you query cloud data warehouses through DuckDB.
+DuckDB can federate queries to external databases (BigQuery, Snowflake, PostgreSQL, GCS, S3) using attached databases. This lets you query cloud data warehouses through DuckDB.
 
 **Attach BigQuery:**
 
@@ -180,6 +180,71 @@ source: events is duckdb.table('my_bq.my_dataset.events')
                   "databaseName": "analytics",
                   "userName": "readonly_user",
                   "password": "my_password"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**Attach GCS:**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": [
+        {
+          "name": "duckdb",
+          "type": "duckdb",
+          "duckdbConnection": {
+            "attachedDatabases": [
+              {
+                "name": "my_gcs_storage",
+                "type": "gcs",
+                "gcsConnection": {
+                  "keyId": "gcs-hmac-access-key-id",
+                  "secret": "gcs-hmac-secret-key"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "packages": [...]
+    }
+  ]
+}
+```
+
+**Attach S3:**
+
+```json
+{
+  "projects": [
+    {
+      "name": "default",
+      "connections": [
+        {
+          "name": "duckdb",
+          "type": "duckdb",
+          "duckdbConnection": {
+            "attachedDatabases": [
+              {
+                "name": "my_s3_storage",
+                "type": "s3",
+                "s3Connection": {
+                  "accessKeyId": "aws-access-key-id",
+                  "secretAccessKey": "aws-secret-access-key",
+                  "region": "us-east-1", //Default us-east-1
+                  "endpoint": "optional-endpoint",
+                  "sessionToken": "optional-session-token"
                 }
               }
             ]
