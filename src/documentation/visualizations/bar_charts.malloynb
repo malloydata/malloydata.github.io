@@ -19,6 +19,7 @@ Malloy can create simple bar charts and bar charts with series breakdowns, eithe
 | `.series` | Field for grouping/coloring | `# bar_chart { series=category }` |
 | `.series.limit` | Max series shown (default: 20) | `# bar_chart { series.limit=5 }` |
 | `.series.independent` | Independent series colors in nested charts | `# bar_chart { series.independent }` |
+| `.horizontal` | Render bars horizontally (categories on y-axis) | `# bar_chart { horizontal }` |
 | `.title` | Chart title | `# bar_chart { title='My Title' }` |
 | `.subtitle` | Chart subtitle | `# bar_chart { subtitle='Details' }` |
 
@@ -136,6 +137,55 @@ run: flights -> {
     to_oak_flight_count
 }
 >>>markdown
+
+## Horizontal Bar Charts
+
+Use the `horizontal` property to render bars left-to-right instead of bottom-to-top. Categories appear on the y-axis and values on the x-axis:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart { horizontal }
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+}
+>>>markdown
+Horizontal mode works with series breakdowns:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart { horizontal }
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: carriers.nickname, destination
+  aggregate: flight_count
+}
+>>>markdown
+And with stacked bars:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart.stack { horizontal }
+run: flights -> {
+  where: destination ? 'SFO' | 'OAK' | 'SJC'
+  group_by: carriers.nickname, destination
+  aggregate: flight_count
+}
+>>>markdown
+
+## Hidden Dimensions
+
+Use `# hidden` on a dimension to exclude it from the chart's automatic channel assignment (x-axis, series) while keeping it in the query data. This is useful when you want to include a dimension for `order_by` without rendering it on the chart:
+>>>malloy
+#(docs) size=large limit=5000
+# bar_chart
+run: flights -> {
+  group_by:
+    # hidden
+    carrier
+    carriers.nickname
+  aggregate: flight_count
+  order_by: carrier
+}
+>>>markdown
+The `carrier` code is used to control sort order, but only `nickname` appears on the chart. A hidden field with an explicit channel tag (e.g., `# hidden # x`) will still be assigned to that channel.
 
 ## Nested Bar Charts
 Bar charts can be used inside of nested queries:
