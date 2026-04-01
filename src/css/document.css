@@ -114,27 +114,28 @@ div.sidebar {
 
 /* Top-level section groups */
 .sidebar-section {
-  margin-bottom: 12px;
+  margin-bottom: 4px;
   padding: 8px;
   background-color: #fafafa;
   border-radius: 8px;
 }
 
-/* Nested sections - darker background */
+/* Nested sections - indented, no extra background */
 .sidebar-section .sidebar-section {
-  margin-left: -4px;
-  margin-right: -4px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding: 8px;
-  background-color: #f0f0f0;
-  border-radius: 6px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 0 0 0 8px;
+  background-color: transparent;
+  border-left: 2px solid #e0e0e0;
+  border-radius: 0;
 }
 
 .sidebar-section .sidebar-section .sidebar-section-title {
   font-size: 11px;
   font-weight: 600;
-  color: #888;
+  color: #999;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -169,7 +170,8 @@ div.sidebar div.sidebar-item a:hover {
 }
 
 div.sidebar div.sidebar-item.active a {
-  background-color: #85b0f730;
+  background-color: #85b0f760;
+  font-weight: 600;
 }
 
 div.sidebar-section-title {

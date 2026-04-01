@@ -56,7 +56,7 @@ function isSectionItem(item: SectionItem | Section): item is SectionItem {
 function enrichTableOfContents(sections: Section[]): EnrichedSection[] {
   return sections.map((section) => {
     return {
-      id: section.title.toLowerCase().replace(" ", "_"),
+      id: section.title.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/(^_|_$)/g, ""),
       title: section.title,
       items: section.items.map((item) => {
         if (isSectionItem(item)) {
@@ -101,11 +101,7 @@ function renderSection(section: EnrichedSection | EnrichedSectionItem): string {
   } else {
     return `<div class="sidebar-section">
       <div id=${section.id}
-        class="sidebar-section-title {% unless ${extractItems(
-          section.items
-        ).map(
-          (item) => (item as EnrichedSectionItem).compareLink
-        )} contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+        class="sidebar-section-title collapsed"
       >
         ${section.title}
         <img class="chevron-open" src="{{ site.baseurl }}/img/section_open.svg" alt="section open"/>

@@ -34,14 +34,14 @@ function toggleTab(tabElement) {
 
 function getCollapseState() {
   try {
-    return JSON.parse(localStorage.getItem("collapse_state")) || {};
+    return JSON.parse(sessionStorage.getItem("collapse_state")) || {};
   } catch (_error) {
     return {};
   }
 }
 
 function setCollapseState(collapseState) {
-  localStorage.setItem("collapse_state", JSON.stringify(collapseState));
+  sessionStorage.setItem("collapse_state", JSON.stringify(collapseState));
 }
 
 function setCollapsed(id, isCollapsed) {
@@ -58,6 +58,7 @@ function getCollapsed(id) {
 
 Array.from(document.getElementsByClassName("sidebar-section-title")).forEach(
   (element) => {
+    // Restore session state
     if (!getCollapsed(element.id)) {
       element.classList.remove("collapsed");
     }
@@ -65,8 +66,24 @@ Array.from(document.getElementsByClassName("sidebar-section-title")).forEach(
   }
 );
 
+// Expand all ancestor sections of the active page (after restoring session state)
+var activeItem = document.querySelector(".sidebar-item.active");
+if (activeItem) {
+  var parent = activeItem.parentElement;
+  while (parent) {
+    if (parent.classList && parent.classList.contains("sidebar-section")) {
+      var title = parent.querySelector(":scope > .sidebar-section-title");
+      if (title && title.classList.contains("collapsed")) {
+        title.classList.remove("collapsed");
+        setCollapsed(title.id, false);
+      }
+    }
+    parent = parent.parentElement;
+  }
+}
+
 const sidebarElement = document.getElementById("sidebar");
 sidebarElement.addEventListener("scroll", () => {
-  localStorage.setItem("sidebar_scroll_position", sidebarElement.scrollTop);
+  sessionStorage.setItem("sidebar_scroll_position", sidebarElement.scrollTop);
 });
-sidebarElement.scrollTop = localStorage.getItem("sidebar_scroll_position") || 0;
+sidebarElement.scrollTop = sessionStorage.getItem("sidebar_scroll_position") || 0;
