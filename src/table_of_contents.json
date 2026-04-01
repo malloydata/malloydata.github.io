@@ -132,84 +132,137 @@
       "title": "Language Reference",
       "items": [
         {
-          "title": "Models",
-          "link": "/language/statement.malloynb"
-        },
-        {
-          "title": "Sources",
-          "link": "/language/source.malloynb"
-        },
-        {
-          "title": "Queries",
-          "link": "/language/query.malloynb"
-        },
-        {
-          "title": "Views",
-          "link": "/language/views.malloynb"
-        },
-        {
-          "title": "Data Types",
-          "link": "/language/datatypes.malloynb"
-        },
-        {
-          "title": "Fields",
-          "link": "/language/fields.malloynb"
-        },
-        {
-          "title": "Aggregates",
-          "link": "/language/aggregates.malloynb"
-        },
-        {
-          "title": "Expressions",
-          "link": "/language/expressions.malloynb"
-        },
-        {
-          "title": "Functions",
-          "link": "/language/functions.malloynb"
-        },
-        {
-          "title": "Filters",
-          "link": "/language/filters.malloynb"
-        },
-        {
-          "title": "Calculations (window functions)",
-          "link": "/language/calculations_windows.malloynb"
-        },
-        {
-          "title": "Ordering and Limiting",
-          "link": "/language/order_by.malloynb"
-        },
-        {
-          "title": "Joins",
-          "link": "/language/join.malloynb"
-        },
-        {
-          "title": "Nested Views",
-          "link": "/language/nesting.malloynb"
-        },
-        {
-          "title": "SQL Sources",
-          "link": "/language/sql_sources.malloynb"
-        },
-        {
-          "title": "Imports",
-          "link": "/language/imports.malloynb"
-        },
-        {
-          "title": "Connections",
-          "link": "/language/connections.malloynb"
-        },
-        {
-          "title": "Tags",
-          "link": "/language/tags.malloynb"
-        },
-        {
           "title": "Quick Reference",
           "link": "/language/quick_reference.html"
         },
         {
-          "title": "Change Log",
-          "link": "/language/changelog.malloynb"
+          "title": "Core Concepts",
+          "items": [
+            {
+              "title": "Models",
+              "link": "/language/statement.malloynb"
+            },
+            {
+              "title": "Sources",
+              "link": "/language/source.malloynb"
+            },
+            {
+              "title": "Queries",
+              "link": "/language/query.malloynb"
+            },
+            {
+              "title": "Views",
+              "link": "/language/views.malloynb"
+            },
+            {
+              "title": "Fields",
+              "link": "/language/fields.malloynb"
+            }
+          ]
+        },
+        {
+          "title": "Data & Types",
+          "items": [
+            {
+              "title": "Data Types",
+              "link": "/language/datatypes.malloynb"
+            },
+            {
+              "title": "Time Ranges",
+              "link": "/language/time-ranges.malloynb"
+            },
+            {
+              "title": "Timestamp Operations",
+              "link": "/language/timestamp-operations.malloynb"
+            },
+            {
+              "title": "Timezones",
+              "link": "/language/timezones.malloynb"
+            },
+            {
+              "title": "Null Handling",
+              "link": "/language/null-handling.malloynb"
+            }
+          ]
+        },
+        {
+          "title": "Expressions & Functions",
+          "items": [
+            {
+              "title": "Expressions",
+              "link": "/language/expressions.malloynb"
+            },
+            {
+              "title": "Functions",
+              "link": "/language/functions.malloynb"
+            },
+            {
+              "title": "Filters",
+              "link": "/language/filters.malloynb"
+            },
+            {
+              "title": "Filter Expressions",
+              "link": "/language/filter-expressions.malloynb"
+            }
+          ]
+        },
+        {
+          "title": "Aggregation & Analysis",
+          "items": [
+            {
+              "title": "Aggregates",
+              "link": "/language/aggregates.malloynb"
+            },
+            {
+              "title": "Ungrouped Aggregates",
+              "link": "/language/ungrouped-aggregates.malloynb"
+            },
+            {
+              "title": "Calculations (window functions)",
+              "link": "/language/calculations_windows.malloynb"
+            },
+            {
+              "title": "Evaluation Spaces",
+              "link": "/language/eval_space.malloynb"
+            },
+            {
+              "title": "Ordering and Limiting",
+              "link": "/language/order_by.malloynb"
+            }
+          ]
+        },
+        {
+          "title": "Composition",
+          "items": [
+            {
+              "title": "Joins",
+              "link": "/language/join.malloynb"
+            },
+            {
+              "title": "Nested Views",
+              "link": "/language/nesting.malloynb"
+            },
+            {
+              "title": "SQL Sources",
+              "link": "/language/sql_sources.malloynb"
+            },
+            {
+              "title": "Imports",
+              "link": "/language/imports.malloynb"
+            },
+            {
+              "title": "Connections",
+              "link": "/language/connections.malloynb"
+            },
+            {
+              "title": "Tags",
+              "link": "/language/tags.malloynb"
+            },
+            {
+              "title": "HyperLogLog",
+              "link": "/language/hyperloglog.malloynb"
+            }
+          ]
         },
         {
           "title": "Dialects",
@@ -241,6 +294,10 @@
               "link": "/language/dialect/mssql-via-duckdb.malloynb"
             }
           ]
+        },
+        {
+          "title": "Change Log",
+          "link": "/language/changelog.malloynb"
         }
       ]
     },
@@ -407,10 +464,6 @@
         {
           "title": "SQL Expressions",
           "link": "/experiments/sql_expressions.malloynb"
-        },
-        {
-          "title": "Window Partitions",
-          "link": "/experiments/window.malloynb"
         },
         {
           "title": "Parameters",

@@ -1,6 +1,8 @@
 >>>markdown
 ## SQL Expressions
 
+_This feature requires the experimental flag `##! experimental{sql_functions}` at the top of your model._
+
 Malloy allows you to call native database functions using `!type`. For example if you wanted to call the duckdb function bit_length that returns a number, in Malloy you couild write `bitlength!number("this string)`.
 
 Sometimes the SQL expression you want to write can't be expressed this way.  For example in DUCKDB, the extract function looks like.
@@ -8,7 +10,7 @@ Sometimes the SQL expression you want to write can't be expressed this way.  For
   `extract(part from date)`
 
 
-In order to make Malloy write an expression like this you can escape to a `sql_<type>` function.  In the string parameter you can reference dimensions using the substitution operator `${dimension_name}`. 
+In order to make Malloy write an expression like this you can escape to a `sql_<type>` function.  In the string parameter you can reference dimensions using the substitution operator `${dimension_name}`.
 
 SQL functions are
 

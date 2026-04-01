@@ -8,7 +8,7 @@ We value feedback during the experimental phase.  Please make sure you let us kn
 Below is a list of currently running experiments and how to turn them on.
 
 * `##! experimental.join_types` - [Additional Join Type](joins.malloynb)
-* `##! experimental { function_order_by partition_by aggregate_limit }` - [ordering and partitioning in calculations](window.malloynb)
+* `##! experimental { function_order_by partition_by aggregate_limit }` - [ordering and partitioning in calculations](../language/calculations_windows.malloynb)
 * `##! experimental.sql_functions` - [Write expression in SQL](sql_expressions.malloynb)
 * `##! experimental.parameters` - [Declare sources with parameters](parameters.malloynb)
 * `##! experimental.composite_sources` - [Create composite sources backed by multiple cube tables or source definitions](composite_sources.malloynb)
