@@ -1,14 +1,27 @@
 >>>markdown
 # Dashboards
 
-The `# dashboard` tag renders a query result as a dashboard layout. Dimensions appear at the top, while aggregates and nested views float within the dashboard.
+The `# dashboard` tag renders a query result as a dashboard layout. Dimensions appear at the top as section headers, while aggregates render as KPI cards and nested views render as charts or tables within a responsive 12-column grid.
 
 ## Properties
 
+### View-Level Properties
+
 | Property | Description | Example |
 |----------|-------------|---------|
-| `.table.max_height` | Max pixel height for tables in tiles | `# dashboard { table.max_height=400 }` |
-| `# break` | Layout break (on a nested view) | Forces next item to a new row |
+| `columns` | Force N equal columns instead of 12-col grid | `# dashboard { columns = 3 }` |
+| `gap` | Gap spacing in pixels between items | `# dashboard { gap = 24 }` |
+| `table.max_height` | Max pixel height for tables in tiles | `# dashboard { table.max_height = 400 }` |
+
+### Item-Level Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `# span` | Grid column span (1–12) | `# span = 6` |
+| `# break` | Force item to a new row | `# break` |
+| `# label` | Custom display label | `# label = 'Total Revenue'` |
+| `# subtitle` | Subtitle text below item title | `# subtitle = "Top 10 brands"` |
+| `# borderless` | Remove card styling (shadow/border) | `# borderless` |
 
 >>>malloy
 source: airports is duckdb.table('../data/airports.parquet') extend {
@@ -41,71 +54,125 @@ In such cases, the `# dashboard` renderer is useful for making the results easie
 run: airports -> by_state_and_county
 >>>markdown
 
-## Custom Labels
+## KPI Cards
 
-Use `# label` on aggregates or nested views to customize how they appear in the dashboard:
->>>malloy
-#(docs) size=large limit=5000
-# dashboard
-run: airports -> {
-  group_by: state
-  # currency
-  aggregate:
-    # label='Total Airports'
-    airport_count
-  nest:
-    # label='Facility Breakdown'
-    by_fac_type is {
-      group_by: fac_type
-      aggregate: airport_count
-    }
-  limit: 5
-}
->>>markdown
+Aggregate measures in a dashboard automatically render as styled KPI cards with centered labels and values. Each measure gets a default width of 3 columns (fitting 4 per row):
 
-## Layout Breaks
-
-By default, nested views in a dashboard flow side by side. Use `# break` on a nested view to force it onto a new row:
->>>malloy
-#(docs) size=large limit=5000
-# dashboard
-run: airports -> {
-  group_by: state
-  aggregate: airport_count
-  nest:
-    # break
-    by_fac_type is {
-      group_by: fac_type
-      aggregate: airport_count
-    }
-  limit: 5
-}
->>>markdown
-
-## Dashboards with Charts
-
-Nested views inside a dashboard can use any visualization tag. This lets you combine KPI cards, tables, and charts in a single view:
 >>>malloy
 #(docs) size=large limit=5000
 source: flights is duckdb.table('../data/flights.parquet') extend {
   join_one: carriers is duckdb.table('../data/carriers.parquet')
     on carrier = carriers.code
   measure: flight_count is count()
+  measure: total_distance is distance.sum()
 }
 >>>malloy
 #(docs) size=large limit=5000
 # dashboard
 run: flights -> {
   group_by: carriers.nickname
-  aggregate: flight_count
+  aggregate:
+    flight_count
+    total_distance
+  limit: 3
+}
+>>>markdown
+
+### Borderless KPIs
+
+Use `# borderless` to remove card styling from individual items. This works on any item type — measures, tables, or charts:
+
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate:
+    # borderless
+    flight_count
+    # borderless
+    total_distance
+  limit: 3
+}
+>>>markdown
+
+## Custom Labels and Subtitles
+
+Use `# label` on aggregates or nested views to customize how they appear in the dashboard. Labels default to converting `snake_case` field names to Title Case. Use `# subtitle` to add descriptive text below a title:
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate:
+    # label='Total Flights'
+    flight_count
   nest:
-    # big_value
-    kpis is {
-      aggregate:
-        # label="Flights"
-        flight_count
+    # subtitle="Top 10 destinations by flight count"
+    by_destination is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 10
     }
+  limit: 3
+}
+>>>markdown
+
+## Layout Control
+
+### Grid Spans
+
+Dashboards use a 12-column grid. Use `# span = N` to control how many columns an item occupies. Items without an explicit span get smart defaults based on their type:
+
+- **Measures (KPIs):** span 3 (4 per row)
+- **Nested views (tables/charts):** span 4–12 depending on the number of columns
+
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate:
+    # span = 4
+    flight_count
+    # span = 4
+    total_distance
+  nest:
+    # span = 6
+    # bar_chart
+    by_destination is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 10
+    }
+    # span = 6
+    top_routes is {
+      group_by: destination
+      aggregate:
+        flight_count
+        total_distance
+      limit: 10
+    }
+  limit: 3
+}
+>>>markdown
+
+### Row Breaks
+
+By default, items flow left-to-right and wrap when they exceed 12 columns. Use `# break` to force an item onto a new row:
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate:
+    # span = 4
+    flight_count
+    # span = 4
+    total_distance
+  nest:
     # break
+    # span = 12
     # bar_chart
     by_destination is {
       group_by: destination
@@ -115,4 +182,129 @@ run: flights -> {
   limit: 3
 }
 >>>markdown
+
+### Equal Columns Mode
+
+Instead of the 12-column grid, you can force a fixed number of equal-width columns with `# dashboard { columns = N }`:
+
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard { columns = 3 }
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate:
+    flight_count
+    total_distance
+  nest:
+    by_destination is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 5
+    }
+  limit: 3
+}
+>>>markdown
+
+### Custom Gap
+
+Use the `gap` property to control spacing between items:
+
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard { gap = 24 }
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate:
+    # span = 6
+    flight_count
+    # span = 6
+    total_distance
+  limit: 3
+}
+>>>markdown
+
+## Dashboards with Charts
+
+Nested views inside a dashboard can use any visualization tag. This lets you combine KPI cards, tables, and charts in a single view:
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count
+  nest:
+    # span = 6
+    # big_value
+    kpis is {
+      aggregate:
+        # label="Flights"
+        flight_count
+    }
+    # span = 6
+    # bar_chart
+    # subtitle="Top 10 destinations"
+    by_destination is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 10
+    }
+    # break
+    # span = 12
+    # subtitle="Top destinations by flight count and distance"
+    route_detail is {
+      group_by: destination
+      aggregate:
+        flight_count
+        total_distance
+      limit: 10
+    }
+  limit: 3
+}
+>>>markdown
+
+### Chart Height
+
+Control chart height using `size.height` on the chart tag:
+
+>>>malloy
+#(docs) size=large limit=5000
+# dashboard
+run: flights -> {
+  group_by: carriers.nickname
+  nest:
+    # span = 12
+    # bar_chart { size.height = 400 }
+    # subtitle="Taller chart (400px)"
+    by_destination is {
+      group_by: destination
+      aggregate: flight_count
+      limit: 15
+    }
+  limit: 3
+}
+>>>markdown
+
+## Responsive Behavior
+
+Dashboards automatically adapt to container width:
+
+- **Below 600px:** All items collapse to a single column
+- **Below 900px:** Items are capped at 6 columns (half width)
+- **Above 900px:** Full 12-column grid
+
+This ensures dashboards look good on mobile, tablet, and desktop without any extra configuration.
+
+## Default Sizing
+
+When no explicit `# span` is set, the dashboard assigns intelligent defaults:
+
+| Item type | Default span | Rationale |
+|-----------|-------------|-----------|
+| Measure (KPI) | 3 | Fits 4 KPIs per row |
+| Nest with 1–3 columns | 4 | Compact tables/charts |
+| Nest with 4–5 columns | 6 | Medium tables |
+| Nest with 6–8 columns | 8 | Wide tables |
+| Nest with 9+ columns or nested charts | 8–12 | Weighted by content |
+
+Nested views that themselves contain sub-nests (e.g., a table with an embedded bar chart column) are weighted more heavily — each sub-nest counts as 3 columns in the span calculation, while scalar columns count as 1.
 
