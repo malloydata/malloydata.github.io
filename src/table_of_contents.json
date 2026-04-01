@@ -45,10 +45,6 @@
           "title": "Getting Started",
           "items": [
             {
-              "title": "Quickstart",
-              "link": "/user_guides/basic.malloynb"
-            },
-            {
               "title": "Querying a Semantic Model",
               "link": "/user_guides/querying_a_model.malloynb"
             },
@@ -197,16 +193,8 @@
               "link": "/language/expressions.malloynb"
             },
             {
-              "title": "Apply Operator",
-              "link": "/language/apply.malloynb"
-            },
-            {
               "title": "Functions",
               "link": "/language/functions.malloynb"
-            },
-            {
-              "title": "Custom Functions",
-              "link": "/language/new_functions.malloynb"
             },
             {
               "title": "Filters",
@@ -257,10 +245,6 @@
             {
               "title": "SQL Sources",
               "link": "/language/sql_sources.malloynb"
-            },
-            {
-              "title": "SQL Blocks",
-              "link": "/language/sql_blocks.malloynb"
             },
             {
               "title": "Imports",
@@ -367,10 +351,6 @@
         {
           "title": "Dimensional Indexes",
           "link": "/patterns/dim_index.malloynb"
-        },
-        {
-          "title": "API / JSON Results",
-          "link": "/patterns/apijson.malloynb"
         }
       ]
     },
