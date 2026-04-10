@@ -26,10 +26,34 @@ The file contains a `connections` object where each key is a connection name and
 
 The `is` field identifies the connection type. All other fields are type-specific parameters documented below.
 
-### Where the config file lives
+### Default connections
 
-- **VS Code Extension** — place `malloy-config.json` in your workspace root. The extension detects it automatically and picks up changes on save. In multi-root workspaces, each root can have its own file. You can also set a global fallback directory via the `malloy.globalConfigDirectory` setting (e.g. `~/.config/malloy`) — this is used when no workspace config file exists.
-- **Malloy CLI** — `~/.config/malloy/malloy-config.json`. See the [CLI setup](cli.malloynb) for details.
+Setting `includeDefaultConnections` to `true` automatically creates a connection for every registered database type that you haven't already listed. Each gets the type's name as its connection name and picks up any registered property defaults:
+
+```json
+{
+  "includeDefaultConnections": true,
+  "connections": {
+    "warehouse": {
+      "is": "duckdb",
+      "databasePath": "./data.db"
+    }
+  }
+}
+```
+
+In this example, you get your explicit `warehouse` connection plus auto-generated connections for `bigquery`, `postgres`, `snowflake`, etc. — each with default settings. A generated connection is skipped if its type or name collides with one you already listed.
+
+### Config file discovery
+
+Both VS Code and the CLI discover config files automatically. Starting from the Malloy file you're working with, Malloy walks up through parent directories until it reaches the project root, looking for `malloy-config.json` at each level. The first one found is used.
+
+You can also place a `malloy-config-local.json` alongside `malloy-config.json` for developer-specific overrides (credentials, local paths) that shouldn't be checked into git. When both files exist at the same directory level, they are merged: `connections` entries are deep-merged by name (local wins on conflicts), while all other sections (`manifestPath`, `includeDefaultConnections`, etc.) are replaced wholesale by the local file's value.
+
+Add `malloy-config-local.json` to your `.gitignore`:
+```
+malloy-config-local.json
+```
 
 ---
 
@@ -40,7 +64,7 @@ The `is` field identifies the connection type. All other fields are type-specifi
 | Parameter | Type | Description |
 |---|---|---|
 | `databasePath` | file | Path to .db file (default: `:memory:`) |
-| `workingDirectory` | string | Working directory for relative paths |
+| `workingDirectory` | string | Working directory for relative paths. Default: the project root (the directory discovery walked up to) |
 | `motherDuckToken` | secret | MotherDuck auth token. Default: `{env: "MOTHERDUCK_TOKEN"}` |
 | `additionalExtensions` | string | Comma-separated DuckDB extensions to load (e.g. `"spatial,fts"`). Built-in: json, httpfs, icu |
 | `readOnly` | boolean | Open database read-only |
@@ -110,6 +134,7 @@ Authentication: provide either `token` or the `oauthClientId` + `oauthClientSecr
 | `privateKeyPath` | file | Path to private key (.pem/.key) |
 | `privateKeyPass` | password | Private key passphrase |
 | `timeoutMs` | number | Query timeout in ms |
+| `schemaSampleTimeoutMs` | number | Timeout for the query that samples variant columns to detect their schema (default 15000) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.

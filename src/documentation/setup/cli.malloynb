@@ -26,7 +26,15 @@ malloy-cli --help
 
 ## Configure Connections
 
-The CLI stores its own configuration separately from VS Code in `~/.config/malloy/malloy-config.json`. See **[Configuration](config.malloynb)** for the full config file format, connection type properties, environment variables, and default connections.
+The CLI looks for configuration in one of three ways, depending on how you invoke it:
+
+| Flag | Behavior |
+|------|----------|
+| _(neither)_ | Uses the global config at `~/.config/malloy/malloy-config.json` |
+| `--config <path>` | Uses that specific config file (or directory containing `malloy-config.json`). No walk-up discovery. |
+| `--project-dir <dir>` | Walks up from your current directory to `<dir>` looking for `malloy-config.json`, the same way the VS Code extension discovers config. |
+
+See **[Configuration](config.malloynb)** for the full config file format, connection type properties, environment variables, and default connections.
 
 **Migrating from an older version:** If you have an existing `~/.config/malloy/config.json`, the CLI will automatically migrate it to the new `malloy-config.json` format on first run.
 
@@ -83,9 +91,18 @@ malloy-cli connections create postgres pg host=localhost port=5432 databaseName=
 
 If a connection name in your model matches a registered database type (DuckDB, BigQuery, Postgres, Snowflake, Trino, or Presto), the CLI creates one with default settings automatically. For example, `duckdb.table('data.parquet')` works out of the box. Some database types rely on environment variables for their defaults (e.g. `SNOWFLAKE_ACCOUNT`, `TRINO_SERVER`) — see the [Configuration](config.malloynb) reference for the full list of defaults per connection type.
 
+**Note:** When using `--project-dir`, default connections are _not_ automatically included. Only connections explicitly listed in the config file are available — if your model references a connection that isn't configured, it will fail. This matches the VS Code extension behavior where the project config is authoritative.
+
 ### DuckDB Working Directory
 
-When a DuckDB connection does not have `workingDirectory` set in the config, the CLI automatically resolves relative table paths (like `duckdb.table('data.csv')`) relative to the `.malloy` or `.malloysql` file being run. If you set `workingDirectory` explicitly, that value is used instead.
+When a DuckDB connection does not have `workingDirectory` set in the config, relative table paths (like `duckdb.table('data.csv')`) are resolved based on the config mode:
+
+| Mode | Relative paths resolve from |
+|------|-----------------------------|
+| `--project-dir` | The project root directory |
+| `--config` or default | The current working directory |
+
+If you set `workingDirectory` explicitly in the config, that value is always used instead.
 
 ---
 
@@ -142,9 +159,13 @@ See **[Persistence](../experiments/persistence.malloynb)** for full details on s
 ### Global Options
 
 ```bash
-# Use a project-level config instead of the global default
+# Use a specific config file or directory
 malloy-cli --config . run model.malloy
 malloy-cli --config /path/to/malloy-config.json build
+
+# Use project-dir for VS Code-compatible config discovery
+malloy-cli --project-dir . run model.malloy
+malloy-cli --project-dir /path/to/project build
 
 # Get help
 malloy-cli --help

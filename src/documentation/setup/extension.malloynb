@@ -45,26 +45,36 @@ The Malloy Extension also works in VS Code Web environments like github.dev. Pre
 
 ## Configuring Connections
 
-There are two ways to configure database connections:
+There are three sources of connection configuration, resolved in priority order:
 
-1. **`malloy-config.json`** (recommended) — a project-level config file checked into source control
-2. **VS Code Settings** — user-level configuration via the Connections sidebar
+1. **Project config** (`malloy-config.json`) — a config file discovered by walking up from the active file to the workspace root
+2. **Global config** — a `malloy-config.json` in the directory specified by the `malloy.globalConfigDirectory` setting
+3. **Settings + Defaults** — user-level connections from VS Code settings, plus built-in defaults for each supported database type
 
-When both exist, config file connections take priority. Settings connections are used as a fallback for any connection names not defined in the config file. For example, if `malloy-config.json` defines a `duckdb` connection but not `bigquery`, the config file's `duckdb` is used while `bigquery` falls through to VS Code settings.
+The first source that exists wins — **sources do not merge across levels**. If a project `malloy-config.json` exists, it is fully authoritative: settings connections and defaults are not used at all. To include defaults alongside your config file connections, add `"includeDefaultConnections": true` to your config file.
+
+Within a project config, you can also create a `malloy-config-local.json` in the same directory. Local config connections are deep-merged into the project config by connection name, allowing you to keep credentials or machine-specific overrides out of source control.
 
 ### Connections Sidebar
 
-The **Malloy Connections** sidebar shows the effective connections for the file you are currently editing, grouped by source:
+The **Malloy Connections** sidebar shows the effective connections for the file you are currently editing. It works with both `.malloy` files and `.malloynb` notebook files.
 
-- **Config** — Connections from the `malloy-config.json` that applies to the active file. These are read-only in the editor; click the file icon on the group header to open the JSON file for editing.
-- **Settings** — User-defined connections from VS Code settings. Editable through the connection editor. If a settings connection has the same name as a config connection, it appears as "(shadowed)" since the config version takes priority.
+When a config file applies (project or global), the sidebar shows a single **Config** group with the config file path in the header. Click the file icon on the group header to open the JSON file for editing. Config connections open in a read-only view.
+
+When no config file applies, the sidebar shows:
+
+- **Settings** — User-defined connections from VS Code settings. Editable through the connection editor.
 - **Defaults** — One entry per supported database type, using built-in defaults. Click to create a new settings connection from the default.
 
-The sidebar updates automatically as you switch between files, so it always reflects the connections that would be used if you ran a query from the current file. Click any connection to open the connection editor, or use the **+** button to create a new connection.
+The sidebar updates automatically as you switch between files, so it always reflects the connections that would be used if you ran a query from the current file.
 
 ### Project Configuration: `malloy-config.json`
 
 Place a `malloy-config.json` file in your project directory. The extension finds the config that applies to the current file by walking up from the file's directory toward the workspace root. It uses the first `malloy-config.json` it encounters. This means you can place a config file at the workspace root for project-wide connections, or in a subdirectory to override connections for files in that subtree. In multi-root workspaces, each workspace root has its own independent config search.
+
+**Local overrides:** Place a `malloy-config-local.json` alongside a project `malloy-config.json` to override specific connections without modifying the shared config. Connections in the local file are merged by name into the project config. Add `malloy-config-local.json` to `.gitignore` to keep credentials out of source control. Local configs are only merged for discovered project configs, not global configs.
+
+The extension watches for changes to `malloy-config.json` and `malloy-config-local.json` — edits take effect on the next query without reloading VS Code.
 
 The extension also reads [persistence manifests](../experiments/persistence.malloynb) from the config's `manifestPath` directory. When the builder (`malloy-cli build`) writes a manifest, VS Code picks it up on the next compile — no restart needed.
 
@@ -100,8 +110,7 @@ Config file connections open in a read-only view. You can still test them, but e
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| `malloy.globalConfigDirectory` | Directory containing a global `malloy-config.json`, used as a fallback when no workspace config file exists (e.g. `~/.config/malloy`) | `""` |
-| `malloy.projectConnectionsOnly` | Only use workspace config file connections — hides global config, settings, and defaults | `false` |
+| `malloy.globalConfigDirectory` | Directory containing a global `malloy-config.json`, used when no project config file is found (e.g. `~/.config/malloy`) | `""` |
 
 ---
 
@@ -112,13 +121,14 @@ Config file connections open in a read-only view. You can still test them, but e
 DuckDB runs locally with zero configuration. It reads Parquet, CSV, and JSON files.
 
 ```malloy
-// Local files (relative to .malloy file)
+// Local files (relative to workspace root)
 source: flights is duckdb.table('data/flights.parquet')
-source: users is duckdb.table('../users.csv')
 
 // URLs
 source: remote_data is duckdb.table('https://example.com/data.parquet')
 ```
+
+Relative file paths in DuckDB are resolved from the **workspace root**, not from the directory of the `.malloy` file. This means `duckdb.table('data/flights.parquet')` reads `<workspace>/data/flights.parquet` regardless of where the Malloy file is located in the project.
 
 ### MotherDuck
 
