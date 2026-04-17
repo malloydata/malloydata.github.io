@@ -69,6 +69,45 @@ malloy-config-local.json
 | `additionalExtensions` | string | Comma-separated DuckDB extensions to load (e.g. `"spatial,fts"`). Built-in: json, httpfs, icu |
 | `readOnly` | boolean | Open database read-only |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+| `filesystemPolicy` | string | `"open"` (default) or `"sandboxed"`. See [restricted execution](#restricted-execution) |
+| `networkPolicy` | string | `"open"` (default) or `"closed"`. See [restricted execution](#restricted-execution) |
+| `allowedDirectories` | json | Array of directories DuckDB may read/write |
+| `enableExternalAccess` | boolean | DuckDB's `enable_external_access` setting |
+| `lockConfiguration` | boolean | Lock DuckDB config after setup |
+| `autoloadKnownExtensions` | boolean | DuckDB `autoload_known_extensions` |
+| `autoinstallKnownExtensions` | boolean | DuckDB `autoinstall_known_extensions` |
+| `allowCommunityExtensions` | boolean | DuckDB `allow_community_extensions` |
+| `allowUnsignedExtensions` | boolean | DuckDB `allow_unsigned_extensions` |
+| `tempFileEncryption` | boolean | DuckDB `temp_file_encryption` |
+| `threads` | number | DuckDB `threads` |
+| `memoryLimit` | string | DuckDB `memory_limit` (e.g. `"1GB"`) |
+| `tempDirectory` | string | DuckDB `temp_directory` |
+| `extensionDirectory` | string | DuckDB `extension_directory` |
+
+#### Restricted execution
+
+For untrusted code, Malloy offers two policy knobs:
+
+- `filesystemPolicy: "sandboxed"` — confines DuckDB to `allowedDirectories` (defaults to `workingDirectory`), keeps `tempDirectory` inside it, locks configuration, encrypts temp files, isolates secrets. POSIX only.
+- `networkPolicy: "closed"` — forces `enableExternalAccess=false`, blocks `httpfs` and `INSTALL`, rejects remote `databasePath` and `motherDuckToken`.
+
+The reviewed strict recipe uses both; each axis can also stand alone when an external boundary covers the other.
+
+```json
+{
+  "connections": {
+    "duckdb": {
+      "is": "duckdb",
+      "databasePath": "data/app.duckdb",
+      "workingDirectory": {"config": "rootDirectory"},
+      "filesystemPolicy": "sandboxed",
+      "networkPolicy": "closed"
+    }
+  }
+}
+```
+
+Policies set a floor, not a ceiling. `allowedDirectories` and `tempDirectory` can be set explicitly to customize the sandbox. Other policy-controlled settings accept matching values but reject weaker ones — connection creation fails closed. `setupSQL`, `additionalExtensions`, `motherDuckToken`, and remote `databasePath` are incompatible with a restricted policy; to use any of them, drop the policy and configure DuckDB directly. Policies do not set resource limits — configure `threads`, `memoryLimit`, timeouts, and host quotas separately.
 
 ### `bigquery` — Google BigQuery
 
@@ -76,6 +115,7 @@ malloy-config-local.json
 |---|---|---|
 | `projectId` | string | GCP project ID |
 | `serviceAccountKeyPath` | file | Path to service account JSON key |
+| `serviceAccountKey` | json | Service account key as a JSON object (alternative to file path) |
 | `location` | string | Dataset location |
 | `maximumBytesBilled` | string | Byte billing cap |
 | `timeoutMs` | string | Query timeout in ms |
@@ -132,9 +172,12 @@ Authentication: provide either `token` or the `oauthClientId` + `oauthClientSecr
 | `database` | string | Database. Default: `{env: "SNOWFLAKE_DATABASE"}` |
 | `schema` | string | Schema. Default: `{env: "SNOWFLAKE_SCHEMA"}` |
 | `privateKeyPath` | file | Path to private key (.pem/.key) |
+| `privateKey` | password | Private key PEM string (alternative to file path) |
 | `privateKeyPass` | password | Private key passphrase |
 | `timeoutMs` | number | Query timeout in ms |
-| `schemaSampleTimeoutMs` | number | Timeout for the query that samples variant columns to detect their schema (default 15000) |
+| `schemaSampleTimeoutMs` | number | Variant schema sample timeout in ms (default 15000) |
+| `schemaSampleRowLimit` | number | Row limit for variant schema sample (default 1000) |
+| `schemaSampleFullScanMaxBytes` | number | Tables at or below this byte size are full-scanned instead of sampled |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
