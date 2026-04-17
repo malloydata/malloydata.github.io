@@ -69,9 +69,8 @@ malloy-config-local.json
 | `additionalExtensions` | string | Comma-separated DuckDB extensions to load (e.g. `"spatial,fts"`). Built-in: json, httpfs, icu |
 | `readOnly` | boolean | Open database read-only |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
-| `filesystemPolicy` | string | `"open"` (default) or `"sandboxed"`. See [restricted execution](#restricted-execution) |
-| `networkPolicy` | string | `"open"` (default) or `"closed"`. See [restricted execution](#restricted-execution) |
-| `allowedDirectories` | json | Array of directories DuckDB may read/write |
+| `securityPolicy` | string | `"none"` (default), `"local"`, or `"sandboxed"`. See [restricted execution](#restricted-execution) |
+| `allowedDirectories` | json | Array of directories DuckDB may read/write. Enforced when `securityPolicy` is `"sandboxed"` |
 | `enableExternalAccess` | boolean | DuckDB's `enable_external_access` setting |
 | `lockConfiguration` | boolean | Lock DuckDB config after setup |
 | `autoloadKnownExtensions` | boolean | DuckDB `autoload_known_extensions` |
@@ -86,12 +85,17 @@ malloy-config-local.json
 
 #### Restricted execution
 
-For untrusted code, Malloy offers two policy knobs:
+For untrusted code, Malloy offers a single `securityPolicy` property with three levels:
 
-- `filesystemPolicy: "sandboxed"` — confines DuckDB to `allowedDirectories` (defaults to `workingDirectory`), keeps `tempDirectory` inside it, locks configuration, encrypts temp files, isolates secrets. POSIX only.
-- `networkPolicy: "closed"` — forces `enableExternalAccess=false`, blocks `httpfs` and `INSTALL`, rejects remote `databasePath` and `motherDuckToken`.
+- `"none"` — no security policy applied. Ordinary DuckDB behavior. This is the default.
+- `"local"` — no network access. DuckDB cannot reach the network, but local filesystem access is not sandboxed to specific directories. Appropriate when the host already provides filesystem isolation (e.g. a container boundary).
+- `"sandboxed"` — no network access AND filesystem confined to `allowedDirectories` (defaults to `workingDirectory`). The reviewed strict recipe for untrusted Malloy. POSIX only.
 
-The reviewed strict recipe uses both; each axis can also stand alone when an external boundary covers the other.
+Both `"local"` and `"sandboxed"` force `enableExternalAccess=false`, block `httpfs` and `INSTALL`, reject remote `databasePath` and `motherDuckToken`, lock configuration, and encrypt temp files. `"sandboxed"` additionally enforces directory containment and derives a safe `tempDirectory` inside the sandbox.
+
+DuckDB's `enable_external_access` is a single toggle that gates both filesystem reach and network reach. `allowed_directories` only takes effect when external access is disabled. This is why `securityPolicy` is a single axis — the underlying DuckDB mechanism does not support independent filesystem and network control.
+
+The reviewed strict recipe:
 
 ```json
 {
@@ -100,14 +104,13 @@ The reviewed strict recipe uses both; each axis can also stand alone when an ext
       "is": "duckdb",
       "databasePath": "data/app.duckdb",
       "workingDirectory": {"config": "rootDirectory"},
-      "filesystemPolicy": "sandboxed",
-      "networkPolicy": "closed"
+      "securityPolicy": "sandboxed"
     }
   }
 }
 ```
 
-Policies set a floor, not a ceiling. `allowedDirectories` and `tempDirectory` can be set explicitly to customize the sandbox. Other policy-controlled settings accept matching values but reject weaker ones — connection creation fails closed. `setupSQL`, `additionalExtensions`, `motherDuckToken`, and remote `databasePath` are incompatible with a restricted policy; to use any of them, drop the policy and configure DuckDB directly. Policies do not set resource limits — configure `threads`, `memoryLimit`, timeouts, and host quotas separately.
+Policies set a floor, not a ceiling. `allowedDirectories` and `tempDirectory` can be set explicitly to customize the sandbox. Other policy-controlled settings accept matching values but reject weaker ones — connection creation fails closed. `setupSQL`, `additionalExtensions`, `motherDuckToken`, and remote `databasePath` are incompatible with any restricted policy; to use them, keep `securityPolicy` at `"none"` and configure DuckDB directly. Policies do not set resource limits — configure `threads`, `memoryLimit`, timeouts, and host quotas separately.
 
 ### `bigquery` — Google BigQuery
 
