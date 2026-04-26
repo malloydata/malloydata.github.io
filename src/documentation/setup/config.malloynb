@@ -182,6 +182,9 @@ Authentication: provide either `token` or the `oauthClientId` + `oauthClientSecr
 | `schemaSampleRowLimit` | number | Row limit for variant schema sample (default 1000) |
 | `schemaSampleFullScanMaxBytes` | number | Tables at or below this byte size are full-scanned instead of sampled |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+| `poolMin` | number | Minimum pooled connections kept warm (default 1) |
+| `poolMax` | number | Maximum pooled connections (default 1) |
+| `poolTestOnBorrow` | boolean | Validate each connection when checked out of the pool (default true) |
 
 Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
 
