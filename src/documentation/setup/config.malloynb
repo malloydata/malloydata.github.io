@@ -139,6 +139,8 @@ Malloy exposes two parameters that let you choose how a connection participates 
 
 `readOnly` and `shareable` compose: `shareable: true` plus `readOnly: true` means the file is attached read-only and released between operations, so other read-only readers and intermittent writers in other processes can all coexist. Neither flag does anything for `:memory:` databases (no file lock to release) or for MotherDuck / remote URLs (no local file at all).
 
+**`shareable` and `setupSQL` interaction.** Shareable mode reserves the alias `malloy_db` and runs `ATTACH '<databasePath>' AS malloy_db; USE malloy_db.main` internally. Don't use `ATTACH` against `databasePath` or the `malloy_db` alias from `setupSQL` — those collide. Other `ATTACH` statements in `setupSQL` (different file, different alias) are fine, but they run once at connection setup and are not released on idle, so any file you attach that way keeps its lock for the lifetime of the connection. If you need a secondary file to be release-on-idle too, give it its own malloy connection with `shareable: true` instead of attaching it via `setupSQL`.
+
 ### `bigquery` — Google BigQuery
 
 | Parameter | Type | Description |
