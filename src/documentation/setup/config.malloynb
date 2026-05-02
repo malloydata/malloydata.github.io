@@ -67,7 +67,8 @@ malloy-config-local.json
 | `workingDirectory` | string | Working directory for relative paths. Default: the project root (the directory discovery walked up to) |
 | `motherDuckToken` | secret | MotherDuck auth token. Default: `{env: "MOTHERDUCK_TOKEN"}` |
 | `additionalExtensions` | string | Comma-separated DuckDB extensions to load (e.g. `"spatial,fts"`). Built-in: json, httpfs, icu |
-| `readOnly` | boolean | Open database read-only |
+| `readOnly` | boolean | Open database read-only — see [Concurrency](#concurrency) |
+| `shareable` | boolean | Release the file between operations so other tools can use it — see [Concurrency](#concurrency) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 | `securityPolicy` | string | `"none"` (default), `"local"`, or `"sandboxed"`. See [restricted execution](#restricted-execution) |
 | `allowedDirectories` | json | Array of directories DuckDB may read/write. Enforced when `securityPolicy` is `"sandboxed"` |
@@ -111,6 +112,32 @@ The reviewed strict recipe:
 ```
 
 Policies set a floor, not a ceiling. `allowedDirectories` and `tempDirectory` can be set explicitly to customize the sandbox. Other policy-controlled settings accept matching values but reject weaker ones — connection creation fails closed. `setupSQL`, `additionalExtensions`, `motherDuckToken`, and remote `databasePath` are incompatible with any restricted policy; to use them, keep `securityPolicy` at `"none"` and configure DuckDB directly. Policies do not set resource limits — configure `threads`, `memoryLimit`, timeouts, and host quotas separately.
+
+#### Concurrency
+
+DuckDB's native file format has limited concurrency support, and the limits are enforced by an OS-level file lock that DuckDB takes when it opens the database. Once VS Code (or any other Malloy host) opens a `.duckdb` file in the default mode, the lock is held for as long as that connection is alive — and a second tool, like `malloy-cli` running in your terminal, will fail to open the same file with `IO Error: Could not set lock on file`.
+
+The DuckDB project [documents this directly](https://duckdb.org/docs/stable/connect/concurrency): writing to a DuckDB file from multiple processes is not supported, and only one writer at a time is allowed. Multiple processes can read the same file concurrently, but only when every connection is opened read-only. There is no built-in read-write coordination across processes.
+
+Malloy exposes two parameters that let you choose how a connection participates in this single-writer model.
+
+**`readOnly: true`** opens the file with DuckDB's `access_mode = 'READ_ONLY'`. Multiple processes can simultaneously open the same file in read-only mode, and they can coexist with any number of other read-only readers — but the file cannot be written to from any process while a read-only connection is open. Use this when the database is a published artifact (a built warehouse, a snapshot file) that the connection only needs to read.
+
+**`shareable: true`** is for the case where the file *does* need to be written to — by `malloy-cli build`, by a notebook running queries, by the DuckDB CLI, or by another Malloy host — but only one writer at a time. With `shareable: true`, the connection holds the file open only for the duration of each operation. Between operations the file is released, so another tool can take its turn. Internally, the connection's primary database is bound to `:memory:` and the real file is bracketed with `ATTACH` / `DETACH` around each operation; you write SQL exactly as if the file were the primary database. This adds a small per-operation overhead (a few milliseconds for the `ATTACH`) but lets you have VS Code open on a project while you run `malloy-cli build` in a terminal against the same `.duckdb` file.
+
+```json
+{
+  "connections": {
+    "warehouse": {
+      "is": "duckdb",
+      "databasePath": "data/warehouse.duckdb",
+      "shareable": true
+    }
+  }
+}
+```
+
+`readOnly` and `shareable` compose: `shareable: true` plus `readOnly: true` means the file is attached read-only and released between operations, so other read-only readers and intermittent writers in other processes can all coexist. Neither flag does anything for `:memory:` databases (no file lock to release) or for MotherDuck / remote URLs (no local file at all).
 
 ### `bigquery` — Google BigQuery
 
