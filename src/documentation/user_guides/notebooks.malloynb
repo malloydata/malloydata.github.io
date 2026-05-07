@@ -118,88 +118,95 @@ my-analytics/
 
 ## Interactive Filters
 
-Notebooks can include interactive dropdown filters that allow viewers to filter query results dynamically. When a user selects filter values, all queries in the notebook automatically re-execute with those filters applied.
+Notebooks can expose interactive filter controls that let viewers narrow query results dynamically. When a user changes a filter value, Publisher rewrites each query with a `where:` clause on the server and re-executes the affected cells.
 
 > **Note:** Interactive filters are rendered when viewing notebooks via [Publisher](publishing/publishing.malloynb) or the Publisher SDK. They are not currently displayed in VS Code—that capability is coming soon.
 
 ### How It Works
 
-1. **Annotate dimensions** in your Malloy source files to mark them as filterable
-2. **Add a `##(filters)` annotation** in your notebook to specify which dimensions appear as filter controls
-3. When published, the notebook displays filter dropdowns that users can interact with
+Filters are declared on the **source** using `#(filter)` annotations. Publisher parses these annotations, exposes filter metadata through its API, renders widgets above the notebook, and injects matching `where:` clauses into queries at execution time. Any notebook that imports the source automatically inherits its filters—no notebook-level configuration is required.
 
-### Step 1: Annotate Filterable Dimensions
+### Declaring Filters
 
-In your Malloy source file, add `#(filter)` annotations to dimensions you want to expose as filters:
+Place one or more `#(filter)` annotations immediately above a source definition:
 
 ```malloy
-source: flights is duckdb.table('data/flights.parquet') extend {
-  dimension:
-    // Multi-select dropdown for string values
-    #(filter) {"type": "Star"}
-    origin_code is origin
-
-    // Date range picker
-    #(filter) {"type": "DateMinMax"}
-    flight_departure is dep_time
-
-  join_one: carriers with carrier
-}
-
-source: carriers is duckdb.table('data/carriers.parquet') extend {
-  dimension:
-    #(filter) {"type": "Star"}
-    nickname is nickname_old
+#(filter) name=Manufacturer dimension=Manufacturer type=in
+#(filter) name=Subject dimension=Subject type=like
+#(filter) name=Major_Recall dimension="Major Recall" type=equal
+#(filter) name=Recall_After dimension="Report Received Date" type=greater_than
+#(filter) name=Recall_Before dimension="Report Received Date" type=less_than
+source: recalls is duckdb.table('data/auto_recalls.csv') extend {
+  measure:
+    recall_count is count()
 }
 ```
+
+### Annotation Syntax
+
+```
+#(filter) [name=NAME] dimension=DIMENSION type=TYPE [implicit] [required]
+```
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `name` | No | Unique identifier for the filter, used as the API parameter key. Defaults to the dimension name. |
+| `dimension` | Yes | The dimension the filter targets. Quote with `"..."` if it contains spaces. |
+| `type` | Yes | Comparator type (see below). |
+| `implicit` | No | Flag. Hides the filter from the UI and API summaries—useful for row-level security. |
+| `required` | No | Flag. The server returns a 400 error if a required filter has no value at query time. |
 
 ### Filter Types
 
-| Type | UI Component | Use Case |
-|------|--------------|----------|
-| `Star` | Multi-select dropdown | String fields with discrete values |
-| `MinMax` | Numeric input | Numeric fields |
-| `DateMinMax` | Date range picker | Date/timestamp fields |
-| `Boolean` | Toggle selector | Boolean fields |
+| Type | Malloy Clause | Use Case |
+|------|---------------|----------|
+| `equal` | `dimension = 'value'` | Exact match on a single value |
+| `in` | `dimension ? 'a' \| 'b' \| 'c'` | Match any of multiple values |
+| `like` | `dimension ~ '%value%'` | Substring / pattern matching |
+| `greater_than` | `dimension > value` | Range filter (after, minimum) |
+| `less_than` | `dimension < value` | Range filter (before, maximum) |
 
-### Step 2: Add Notebook Filter Annotation
+### Multiple Filters on the Same Dimension
 
-In your notebook, add a `##(filters)` annotation in the code cell that imports your model. The annotation lists which dimensions should appear as filters using `source.dimension` format:
+Give each filter a unique `name` to declare multiple controls over the same dimension. This is the standard pattern for date ranges:
 
 ```malloy
-##(filters) ["flights.origin_code", "carriers.nickname", "flights.flight_departure"]
-import {flights, carriers} from 'flights.malloy'
+#(filter) name=Start_Date dimension="Created At" type=greater_than
+#(filter) name=End_Date dimension="Created At" type=less_than
 ```
 
-The filter type for each dimension is determined by the `#(filter)` annotation on that dimension in the source file.
+Each filter operates independently and maps to its own API parameter.
+
+### Widget Rendering
+
+Publisher selects the widget type based on the underlying dimension's Malloy data type:
+
+| Dimension Type | Widget |
+|---------------|--------|
+| `string` (with `in` or `like`) | Searchable multi-select or text input |
+| `boolean` | Toggle / dropdown |
+| `date` / `timestamp` | Date picker |
+| `number` | Numeric input |
+
+Implicit filters are hidden from the UI but still applied server-side.
 
 ### Custom Labels
 
-By default, filters display the dimension field name. You can customize the label using the `# label="..."` annotation in your source file:
+By default, filter widgets display the dimension name. Use the `# label="..."` annotation on the dimension to customize it:
 
 ```malloy
 source: recalls is duckdb.table('data/recalls.csv') extend {
   dimension:
-    #(filter) {"type": "Star"}
     # label="Vehicle Manufacturer"
     Manufacturer is Manufacturer_old
 }
 ```
 
-### Match Types
-
-Each filter type supports different match types that users can select:
-
-| Filter Type | Available Match Types |
-|------------|----------------------|
-| Star | Equals, Contains |
-| MinMax | Equals, Less Than, Greater Than, Between |
-| DateMinMax | Equals, Before, After, Between |
-| Boolean | Equals (True/False) |
-
 ### Example
 
-See the [Carrier Analysis notebook](https://github.com/credibledata/malloy-samples/blob/main/faa/carrier_analysis.malloynb#L4) and [Auto Recalls notebook](https://github.com/credibledata/malloy-samples/blob/main/auto_recalls/README.malloynb#L10) for working examples of interactive filters.
+See the [Auto Recalls notebook](https://github.com/credibledata/malloy-samples/blob/main/auto_recalls/README.malloynb) for a working example of interactive filters.
+
+For the full specification—including API details, bypass filters, and MCP tool integration—see the [Publisher filter documentation](https://github.com/malloydata/publisher/blob/main/docs/filters.md).
 
 ---
 
