@@ -11,6 +11,8 @@ Enable the parameters experiment with:
 
 This feature is still in development. Feedback is appreciated via [Slack](/slack) or [the dedicated GitHub discussion](https://github.com/malloydata/malloy/discussions/1409).
 
+> See also: [Givens](givens.malloynb) for model-wide parameters supplied at run time. Source parameters and givens are complementary — different scopes, different binding sites.
+
 **TL;DR**:
 - Sources can be parameterized like `source: my_source(param::string is "default") is ...`
 - Sources with parameters can be invoked like `run: my_source(param is "value") -> { ... }`
