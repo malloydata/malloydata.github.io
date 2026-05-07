@@ -431,6 +431,10 @@
         {
           "title": "Types and Virtual Sources",
           "link": "/experiments/virtual_sources.malloynb"
+        },
+        {
+          "title": "Givens (Model Parameters)",
+          "link": "/experiments/givens.malloynb"
         }
       ]
     }
