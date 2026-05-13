@@ -68,6 +68,66 @@ A given's name appears in four places:
 
 `$` appears **only** at expression references. The other three sites use the bare name. The disambiguation problem the sigil solves only exists inside expressions, where given names compete with field names, source names, and other identifiers; declarations, imports, and supply sites already sit in syntactic positions where only a given makes sense.
 
+## Array givens and `in`
+
+When a given has array type, an expression `expr in $ARR` tests `expr` against the runtime-bound array. `not in $ARR` is the standard negation.
+
+```malloy
+given:
+  ALLOWED_STATES :: string[]
+  URGENT_STATUSES :: string[]
+
+source: orders extend {
+  where: state in $ALLOWED_STATES
+  dimension: is_urgent is order_status in $URGENT_STATUSES
+}
+```
+
+The left-hand side must have the same basic type as the array's element type — `string in $string[]`, `number in $number[]`, etc. Mismatches are translate-time errors.
+
+The array's contents reach SQL embedded in a generated `IN (...)` clause. An empty array, or one bound to `null`, collapses to the obvious result: `IN` becomes `FALSE`, `NOT IN` becomes `TRUE`.
+
+To *derive* a value from an array — typically a boolean gate — without embedding the array in row-position SQL, see [Inline givens](#inline-givens) below.
+
+## Inline givens
+
+An **inline** given is evaluated at bind time, before SQL is emitted. Its default expression runs against the resolved given values and produces a literal — boolean, number, string — and that literal is what reaches SQL.
+
+```malloy
+given:
+  CAPABILITIES :: string[]
+  inline CAN_READ_ORDERS :: boolean is 'read_orders' in $CAPABILITIES
+  inline CAN_MUTATE :: boolean
+    is 'write_orders' in $CAPABILITIES or 'admin' in $CAPABILITIES
+
+source: orders extend {
+  where: $CAN_READ_ORDERS   // SQL sees: WHERE ... AND TRUE  (or FALSE)
+}
+```
+
+This is the **row-level access control gate** pattern. The host supplies a capability list as a regular given; an inline given derives a boolean from that list; the boolean — not the list — is what reaches SQL. The query planner sees a constant predicate, and the underlying capability list never crosses into row-position SQL.
+
+`inline` is a modifier on the declaration. An inline given is computed, not supplied — its derived value is a translation-time intermediate and isn't surfaced as a public API. It does not appear in `Model.givens` or `PreparedQuery.givens` (a caller shouldn't be invited to override a derived value), and the host doesn't bind it through `Runtime` either.
+
+### Rules
+
+- An inline given must have a default. A modifier with no `is` clause is a translate-time error.
+- The default can use:
+  - Boolean and comparison operators: `and`, `or`, `not`, `=`, `!=`, `<`, `<=`, `>`, `>=`
+  - The [`in $array`](#array-givens-and-in) test against another given
+  - Literals (string, number, boolean, null, array) and references to other givens
+- The default cannot call SQL functions, reference fields, or use any operator outside the list above. Disallowed operators are reported at translate time.
+
+The allowed operator surface intentionally covers the capability/role-gate use case and will grow as concrete needs appear.
+
+### When to reach for inline
+
+| You have | Use |
+|---|---|
+| A value the host computes per request that reaches SQL as-is | A regular given |
+| An array the host supplies, tested per row | A regular array given with [`in $array`](#array-givens-and-in) |
+| A value derived from other givens that should reach SQL as a literal | An inline given |
+
 ## Imports and surfacing
 
 Each model has a flat **given namespace** — the names its caller uses to supply values. Givens behave like every other top-level named thing under [import](../language/imports.malloynb):
@@ -291,6 +351,8 @@ class PreparedQuery {
 `Model.givens` returns every supplyable given the model surfaces, keyed by caller-facing surface name. Drives whole-model parameter-editor UIs.
 
 `PreparedQuery.givens` returns the subset **this specific query** references — a strict subset of `Model.givens`. Drives "run this query" forms that prompt only for the givens this query touches, not every given in the model.
+
+Both views exclude [inline givens](#inline-givens) — they're computed, not supplied.
 
 Each entry is a `Given` wrapper:
 
