@@ -39,6 +39,20 @@ import {
 import { DocumentPosition, DocumentRange, ModelDef } from "@malloydata/malloy";
 import { DocsError } from "./errors.js";
 
+function plainTextFromMarkdown(nodes: Markdown[]): string {
+  return nodes
+    .map((node) => {
+      if ("value" in node && typeof node.value === "string") {
+        return node.type === "html" ? "" : node.value;
+      }
+      if ("children" in node && Array.isArray(node.children)) {
+        return plainTextFromMarkdown(node.children as Markdown[]);
+      }
+      return "";
+    })
+    .join("");
+}
+
 /*
  * A Renderer is capable of converting a parsed `Markdown` document into HTML,
  * given that it exists at a given `path`.
@@ -202,7 +216,7 @@ class Renderer {
   protected async heading(content: Markdown[], level: 1 | 2 | 3 | 4 | 5 | 6) {
     const text = await this.children(content);
     this.registerTitle(text, level);
-    const escapedText = hashForHeading(text);
+    const escapedText = hashForHeading(plainTextFromMarkdown(content));
     this.hashes.push(escapedText);
     // TODO handle ambiguous hashes?
 
