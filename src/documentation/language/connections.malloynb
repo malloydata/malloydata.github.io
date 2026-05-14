@@ -25,17 +25,41 @@ In the official Malloy connection implementations, the behavior is as follows:
 
 In BigQuery, the string passed to the `.table()` connection method can be a two- or three-segment path including the (optional) project ID, dataset ID, and table name, e.g. `bigquery.table('project-id.dataset-id.table-name')` or `bigquery.table('dataset-id.table-name')`. If the project ID is left off, the default project ID for the connection will be used, or else the system default if none is set on the connection.
 
+To use a BigQuery wildcard table, the segment containing the wildcard must be backtick-quoted inside the string, e.g. `` bigquery.table('`my-project.analytics.events_*`') ``.
+
 ### Databricks
 
 In Databricks, the string passed to the `.table()` connection method can be a one-, two-, or three-segment path: `table`, `schema.table`, or `catalog.schema.table`. If the catalog or schema is omitted, the configured defaults (or workspace defaults) are used.
 
 ### DuckDB
 
-In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of a CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) are also allowed: see [an example here](../patterns/apijson.malloynb).
+In DuckDB, the `.table()` method accepts the path (relative to the Malloy file) of a CSV, JSON, or Parquet file containing the table data, e.g. `duckdb.table('data/users.csv')` or `duckdb.table('../../users.parquet')`. URLs to such files (or APIs) and glob patterns (`duckdb.table('data/*.parquet')`) are also allowed; see [an example here](../patterns/apijson.malloynb). DuckDB also accepts dotted identifier paths (`schema.table`) for tables defined inside the database.
+
+If Malloy doesn't recognize the argument as a file path, wrap it in literal single quotes — `` duckdb.table("'/actual/path'") `` — to pass the quoted string straight through to DuckDB.
+
+### MySQL
+
+In MySQL, the string passed to the `.table()` connection method can be a one- or two-segment path: `table` or `database.table`. If the database is omitted, the connection's default database is used.
 
 ### Postgres
 
 In Postgres, the string passed to the `.table()` connection method can be a two- or three-segment path including the (optional) database ID, schema name, and table name, e.g. `postgres.table('database-id.schema-name.table-name')` or `postgres.table('schema-name.table-name')`. If the database ID is left off, the default database for the connection will be used, or else the system default if none is set on the connection.
+
+### Snowflake
+
+In Snowflake, the string passed to the `.table()` connection method can be a one-, two-, or three-segment path: `table`, `schema.table`, or `database.schema.table`. Omitted segments fall back to the connection's configured database and schema.
+
+### Trino / Presto
+
+In Trino and Presto, the string passed to the `.table()` connection method can be a one-, two-, or three-segment path: `table`, `schema.table`, or `catalog.schema.table`. Omitted segments fall back to the connection's configured catalog and schema.
+
+### Quoting and reserved words
+
+To use a reserved word or a name containing special characters as a path segment, quote it with the dialect's identifier quote character: `"…"` for Postgres, Snowflake, and Trino/Presto; `` `…` `` for MySQL, Databricks, and BigQuery. For example:
+
+```malloy
+source: orders is postgres.table('public."order"')
+```
 
 ## SQL Connection Method
 
