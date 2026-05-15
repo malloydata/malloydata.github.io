@@ -172,6 +172,19 @@ services:
       retries: 3
 ```
 
+### Environment Variables
+
+Publisher reads runtime settings from environment variables. The most common ones are below; see the [Publisher README](https://github.com/malloydata/publisher#configuration) for the full list and matching CLI flags.
+
+| Env var | Default | Meaning |
+|---|---|---|
+| `PUBLISHER_PORT` | `4000` | REST + static-app HTTP port. |
+| `MCP_PORT` | `4040` | MCP HTTP port (for AI agents). |
+| `SERVER_ROOT` | `.` (cwd) | Directory containing `publisher.config.json`. |
+| `LOG_LEVEL` | `debug` | One of `error`, `warn`, `info`, `verbose`, `debug`, `silly`. |
+| `GOOGLE_APPLICATION_CREDENTIALS` | _unset_ | Fallback path to a GCP service-account JSON for BigQuery connections that don't include inline auth. Ignored when the connection config provides its own credentials. |
+| `PG_CONNECT_TIMEOUT_SECONDS` | `5` | Connection timeout (seconds) for Postgres-backed DuckLake manifest catalogs (`materializationStorage`). Bad credentials or an unreachable host return HTTP 422 in ~5s rather than hanging the publisher. No effect on user-facing Postgres connections or non-PG catalogs (SQLite, MySQL). |
+
 ---
 
 ## Verify It Works
