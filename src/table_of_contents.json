@@ -437,6 +437,15 @@
           "link": "/experiments/givens.malloynb"
         }
       ]
+    },
+    {
+      "title": "Roadmap",
+      "items": [
+        {
+          "title": "Roadmap",
+          "link": "/roadmap.malloynb"
+        }
+      ]
     }
   ]
 }
