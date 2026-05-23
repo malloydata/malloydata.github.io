@@ -155,14 +155,14 @@ on an object from the Malloy API which has annotations.
 
 ```typescript
 function myTagsAndDocs(t: Taggable): { tags: Tag, docs: string[] } {
-    const tagParse = t.tagParse({prefix: /^#\(myTags\)/});
-    if (tagParse.log) {
+    const tagParse = t.annotations.parseAsTag('myTags');
+    if (tagParse.log.length > 0) {
         // deal with syntax errors, or ignore them
         throw new Error('syntax errors in tag parse');
     }
     return {
         tags: tagParse.tag,
-        docs: t.getTaglines(/^#\(myDocs\)/),
+        docs: t.annotations.texts('myDocs'),
     };
 }
 
@@ -186,3 +186,10 @@ are ...
   inadvertantly affect metadata from other applications.
 * More formality on which annotations are tags, and what the "schema" is for a tagged
   annotation, allowing the IDE to assist in tagging complex objects.
+
+**Update, 2026-05:** The first two of these shipped. Multi-line block annotations
+(`#|...|#`) and a formal prefix grammar (the bracketed `#(myApp)` form, plus
+warnings for malformed prefixes) are now part of Malloy. The reading API also
+moved from `tagParse({prefix: RegExp})` to a route-based view — see the
+current [Annotation documentation](/documentation/language/tags) for the model
+as it stands. The schema-validation / IDE-assistance idea is still open.

@@ -1,25 +1,20 @@
 >>>markdown
 # Annotation
 
-Annotations are text strings collected with objects as a file is compiled. Annotations are intended to be a generally useful method for connecting meta-data about a model with the source code for a model.
+Annotations are text strings attached to objects when a Malloy file compiles. They carry metadata — display hints for the renderer, compiler flags, documentation strings, application-specific configuration. The compiler stores annotations verbatim and hands them back to whichever application asks; it does not interpret them.
 
-Annotations are strings of text in the model beginning with either `#` or `##` and immediately followed by some character(s) which define the "space" of the annotation. 
-
-Annotations which start `##` are collected with the file or "model" and annotations which only have one `#` are associated with the object being defined. An annotation starts at the `#` character and continues to the end of the line.
+Annotations start with `#` (attached to the object declared below) or `##` (attached to the entire model) and run to end-of-line:
 
 ```malloy
-// This is an annotation that applies to the entire model. The `!` prefix means it is a compiler annotation.
 ##! experimental.parameters
 
-// This is an annotation on a single view.
-// The ` ` (space) prefix means it is a renderer annotation 
 # bar_chart
 view: how_many is things -> { aggregate: total_count is count() }
 ```
 
-## Block Annotations
+## Block annotations
 
-For longer annotations that span multiple lines, use block annotation syntax. Object block annotations start with `#|` and end with `|#`. Model block annotations start with `##|` and end with `|##`.
+For annotations that span multiple lines, use the block form. Object block annotations are bracketed by `#|` and `|#`; model block annotations by `##|` and `|##`:
 
 ```malloy
 source: flights is duckdb.table('flights.parquet') extend {
@@ -32,24 +27,24 @@ source: flights is duckdb.table('flights.parquet') extend {
 }
 ```
 
-The closing `|#` (or `|##`) must be at the same indentation level as the opening `#|` (or `##|`). Indentation is automatically stripped based on the column position of the opener — so the content above is equivalent to writing three separate annotations `# bar_chart`, `# size=xl`, and `# color=blue`. Tabs in the indentation area are not allowed — use spaces.
+The closing `|#` (or `|##`) must be at the same indentation level as the opener. Body lines are then dedented by the longest leading-whitespace prefix they share — so the block above is equivalent to writing three separate annotations `# bar_chart`, `# size=xl`, `# color=blue`. Pasting flush-left content works too: a body line with no leading whitespace forces the common prefix to zero and nothing gets stripped.
 
-Block annotations can also include a routing prefix, just like single-line annotations:
+Block annotations can carry a route just like single-line ones:
 
 ```malloy
 #|(docs)
-  This is a multi-line documentation annotation.
-  It can contain as much text as needed.
+  This is multi-line documentation.
+  It can be as long as it needs to be.
 |#
 source: my_source is duckdb.table('my_table')
 ```
 
-## Annotation Distribution
+## Annotation distribution
 
-An object annotation which happens before a definition list is distributed to each member of the list, but each member can also have their own unique annotations
+An annotation that appears before a definition list is distributed to each member of the list. Each member can also carry its own annotations:
 
 ```malloy
-// Every measure in the list will render as a currency, but only 'pct' will render as a percent
+// Every measure renders as currency, but only `pct` also renders as percent
 # currency
 measure:
   max_x is max(x)
@@ -58,58 +53,86 @@ measure:
   min_x is min(x)
 ```
 
+## Prefix and route
+
+Everything from the marker (`#`/`##`/`#|`/`##|`) up to the first whitespace is the annotation's **prefix**. The prefix resolves to a **route** — a namespace key. The compiler validates the *shape* of the prefix and routes the annotation; it never parses what comes after.
+
+`#(docs) Hello` is an annotation with prefix `#(docs)` and content `Hello`. It's routed to `docs`. An application that has claimed the `docs` route reads the content; everything else ignores it.
+
+A non-empty prefix must match one of two shapes:
+
+* **Punctuation** — `#` followed by punctuation characters: `#!`, `##!`, `#@`, `#"`, `#:`. These are reserved for Malloy's internal use; the compiler knows the full set. An unrecognized punctuation prefix (`#%`, `#~`) emits a `reserved-route` warning.
+
+* **Bracketed name** — `#` followed by a bracket pair (`()`, `<>`, `[]`, or `{}`) with any non-matching-close characters inside. The route is the literal text inside the brackets. Bracket pair doesn't matter: `#(docs)`, `#<docs>`, `#[docs]`, `#{docs}` all resolve to the same route `docs`. Content is opaque, so `#(bar-chart)`, `#(my.app)`, and `#(https://example.com/ns)` all work as their literal strings.
+
+If the prefix is just `#` followed by whitespace (`# tag`, `## tag`), the route is the empty string — the default, used by the renderer.
+
+Anything else (a bare word `#NO_UI`, an unclosed bracket `#(docs`, trailing junk after the close `#((X)))`) emits a `malformed-route` warning. The warning is non-fatal; the annotation is still stored.
+
+### Routes Malloy itself claims
+
+| route | written as | who reads it |
+| --- | --- | --- |
+| `''` (empty) | `# tag` / `## tag` | the renderer |
+| `!` | `##! flag` | the compiler (compiler flags) |
+| `@` | `#@ directive` | the foundation persistence layer |
+| `"` | `#" markdown` | the explorer (description strings, rendered as markdown) |
+
+App routes use the bracketed form: `#(myApp) ...`. The route name is whatever the app claims. The Malloy [documentation site](https://malloydata.dev/) is the informal registry for claimed routes — claim yours there if you publish an app that reads annotations.
+
 # Tags
 
-The primary use of annotations in Malloy is for tags, which are simply a subset of the annotations strings which will be interpreted in simple programming language for setting key/value properties.
+Annotations whose route uses the empty form (`# tag`) or one of Malloy's punctuation-route forms speak the small property language described below — Malloy's **tag language**. This is what the renderer parses for display hints, what the compiler parses for `##!` flags, and what most apps will parse for their own routes (unless they choose otherwise — see "Bring your own payload" below).
 
-Tags are a general-purpose feature of Malloy that allow arbitrary metadata to be attached to various Malloy objects (queries, sources, fields, etc.). These are used by the Malloy rendering library within VSCode to decide how fields and queries should be rendered, but they can be parsed and interpreted differently in other applications.
-
-## Tag Prefixes
-The design of annotations is that the characters immediately following the `#` in an annotation will be available to applications to be able to add different types of annotations. Malloy itself uses the following annotation prefixes
-
-* `# ` and `## ` with a space as a prefix (e.g. `# percent` and `## bar_chart.size=xl`) The Malloy VSCode extension parses these as tags and uses these tags to render results
-* `##!` The malloy compiler uses these annotations as tags specifying compiler options
-*  `#"`  and `##"` Reserved for future documentation annotations
-* `#(docs)` and `##(docs)` Used by the malloy documentation site
-
-## Renderer Tags
-Annotations which do not start with `# ` or `## ` are not parsed as renderer tags, though an application may decide to parse annotations with some other prefix as as tags.
-
-None of these are render tags, even though they use the tag property language.
-
-* `#bar_chart` without a space after the `#` is not a render tag, it is a tag using an unrecognized `bar_chart` prefix
-* `##! disableWarnings` tags are parsed by the compiler and interpreted as compiler flags
-* `#(myApp) custom="application" values="here"` something like this could be used by an app to write custom tags
-
-For a thorough list of available Renderer Tags, refer to the [Render Tags Documentation](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/renderer_tags_overview.md) in the Malloy GitHub project.
-
-## Tag Property Language
-
-A quick overview of the syntax of properties and values in the Malloy Tag Language used by the renderer.
+A quick tour:
 
 * `tName`
-  * Sets the property `tName` to exist, but with no value
-  * ( for example `# hidden` could mean to set a property called `hidden` on an object )
+  * Sets the property `tName` to exist, with no value.
+  * Example: `# hidden`.
 * `tName=tVal`
-  * Sets the property tName to exist, and have the value `tVal`
-  * ( for example `# color=red` sets the color property to the string `red`)
-  * You can also use quotes to assign values as as `# name="John J. Johnson"`
-  * `"` and `'` can be used to quote strings
-  * To assign a property name which needs quoting, use `` `my long property name`=red ``
-  * `tName=[val1, val2]` The value of a property can be a list of values
-* `-tName` unset the property tName
-  * ( `-hidden` to remove the `hidden` property from an object)
-* `tName: { p1=v1 p2=v2 }` `tName` is a collection of sub properties
-  * An example might look like `barchart: { bgColor=white fgColor=red }`
+  * Sets `tName` to a value.
+  * Example: `# color=red`. Quote values that need spaces: `# name="John J. Johnson"`. Use backticks for property names that need quoting: `` `my long property name`=red ``.
+  * Lists: `tName=[val1, val2]`.
+* `-tName` removes the property `tName`.
+* `tName: { p1=v1 p2=v2 }` — `tName` is a collection of sub-properties.
+  * Example: `# barchart: { bgColor=white fgColor=red }`.
 
-### Advanced Property Syntax
+### Advanced property syntax
 
-* `tName=value { p1=v1 p2=v2 }` It is possible for a property have both a top level value
-   and a list of sub properties with values.
-* `tName=value` Assign new value to tName but delete any existing properties
-* `tName=value {...}` Assign a new value to `tName` but do not erase the sub properties like `tName=value` would
-* `tName: { p1=v1 p2=v2 p3 }` Replace properties and delete any existing value
-* `tName { p1=v1 p2=v2 p3 }` Merge properties into existing properties, preserve value
-* `tName=...{ p1=v1 p2=v2 p3 }` Assign new properties to tName, but keep the existing value
-* `tName.p1=value` Assign a value to one specific property of tName, value of tName and other properties are preserved.
-* `tName.p1=value { pp1=v1 pp2=v2 }` The value of a property can also have properties
+* `tName=value { p1=v1 p2=v2 }` — `tName` has both a value and sub-properties.
+* `tName=value` — assign a new value to `tName`, deleting any existing sub-properties.
+* `tName=value {...}` — assign a new value but keep existing sub-properties.
+* `tName: { p1=v1 p2=v2 }` — replace sub-properties, delete any existing value.
+* `tName { p1=v1 p2=v2 }` — merge sub-properties, preserve value.
+* `tName=...{ p1=v1 p2=v2 }` — assign new sub-properties, keep value.
+* `tName.p1=value` — set one nested property; other properties and the value of `tName` are preserved.
+* `tName.p1=value { pp1=v1 pp2=v2 }` — nested properties can themselves have properties.
+
+For the renderer's catalog of meaningful tag names, see the [Render Tags documentation](https://github.com/malloydata/malloy/blob/main/packages/malloy-render/docs/renderer_tags_overview.md).
+
+# Bring your own payload
+
+If your app's annotations aren't shaped like tags — for example, you want to embed JSON or markdown — claim a bracketed route and parse the content yourself. Malloy hands you the raw content plus source-location offsets so your parser's error messages can point back to the model file:
+
+```typescript
+// In the Malloy API
+for (const note of field.annotations.forRoute('myApp')) {
+  const content = note.rawText.slice(note.contentIndex);
+  try {
+    handleConfig(JSON.parse(content));
+  } catch (e) {
+    reportError(e.message, note.at);  // your error squigglies land in the model
+  }
+}
+```
+
+If your app *does* use the tag language on its route, the shorter call is:
+
+```typescript
+const tag = field.annotations.parseAsTag('myApp').tag;
+if (tag.has('hidden')) hide(field);
+```
+
+# Annotations are just text
+
+The compiler stores annotation text verbatim and routes by prefix. It does not validate content. A route is a *claim* — by claiming `(myApp)`, you take responsibility for what `#(myApp) ...` annotations mean in your part of the world. Other apps using other routes don't collide with you, and the renderer's default route stays out of your way unless you write `# ...` deliberately.

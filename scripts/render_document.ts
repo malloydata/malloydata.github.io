@@ -84,6 +84,7 @@ class Renderer {
     contents: {},
     queryList: [],
     dependencies: {},
+    sourceRegistry: {},
   };
 
   constructor(path: string) {
