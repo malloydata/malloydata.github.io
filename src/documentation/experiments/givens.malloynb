@@ -364,12 +364,11 @@ class Given {
   readonly default: ConstantExpr | undefined;  // undefined ⇒ caller must supply
   get location(): DocumentLocation | undefined;
 
-  tagParse(spec?: TagParseSpec): MalloyTagParse;
-  getTaglines(prefix?: RegExp): string[];
+  readonly annotations: Annotations;
 }
 ```
 
-Annotations on the declaration are accessible via `tagParse` / `getTaglines`, the same path used elsewhere in the foundation API.
+Annotations on the declaration are accessible via the `annotations` view — the same route-aware API used everywhere else in the foundation. See the [Annotation documentation](../language/tags.malloynb) for the prefix/route model and reader API.
 
 ## Givens vs. source parameters
 

@@ -264,8 +264,6 @@ async function renderResult(
   </div>`;
 }
 
-const DOCS_M_TAG_PREFIX = /##\(docs\)\s/;
-const DOCS_Q_TAG_PREFIX = /#\(docs\)\s/;
 
 export async function runNotebookCode(
   code: string,
@@ -292,14 +290,13 @@ export async function runNotebookCode(
     ._loadModelFromModelDef(modelDef)
     .extendModel(fakeURL);
   const model = await newModel.getModel();
-  // TODO this is a quick hack to make each snippet only use its own
-  // tags and not those from other cells, unsure if this is the right approach
-  // long term, but it prevents `##(docs) hidden` from affecting subsequent cells
+  // Synthetic Annotation with `notes` only (no `inherits`): each notebook
+  // cell sees only its own model annotations, not `##(docs) hidden` from
+  // prior cells. `annotationToTag` takes the synthetic value directly;
+  // `.annotations.parseAsTag('docs')` on the model would walk inherits.
   const modelTagParse = annotationToTag(
-    {
-      notes: model._modelDef?.annotation?.notes,
-    },
-    { prefix: DOCS_M_TAG_PREFIX }
+    { notes: model._modelDef?.annotation?.notes },
+    'docs'
   );
   const modelTags = modelTagParse.tag;
   const newModelDef = model._modelDef;
@@ -314,7 +311,7 @@ export async function runNotebookCode(
   if (hasQuery) {
     const runnable = newModel.loadFinalQuery();
     const query = await runnable.getPreparedQuery();
-    const tags = query.tagParse({ prefix: DOCS_Q_TAG_PREFIX }).tag;
+    const tags = query.annotations.parseAsTag('docs').tag;
     options.pageSize = tags.numeric("limit");
     options.size = tags.text("size");
     options.showAs = tags.has("html")
