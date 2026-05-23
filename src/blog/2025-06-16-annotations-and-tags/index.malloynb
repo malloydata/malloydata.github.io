@@ -191,5 +191,6 @@ are ...
 (`#|...|#`) and a formal prefix grammar (the bracketed `#(myApp)` form, plus
 warnings for malformed prefixes) are now part of Malloy. The reading API also
 moved from `tagParse({prefix: RegExp})` to a route-based view — see the
-current [Annotation documentation](/documentation/language/tags) for the model
-as it stands. The schema-validation / IDE-assistance idea is still open.
+current [Annotation documentation](../../documentation/language/tags.malloynb)
+for the model as it stands. The schema-validation / IDE-assistance idea is
+still open.
