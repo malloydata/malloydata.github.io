@@ -1,0 +1,115 @@
+>>>markdown
+# Theming Publisher
+
+Publisher renders Malloy charts, tables, and dashboard tiles with a theme that ships in both a light and a dark mode. You can customize it in four places, depending on how broad the change should be:
+
+| Level | Where it lives | Best for |
+|---|---|---|
+| Instance | top-level `theme` in `publisher.config.json` | the whole Publisher deployment (your company's brand) |
+| Environment | `theme` on a single entry under `environments[]` | a single team or tenant inside a shared Publisher |
+| Live (operator) | the in-app Theme Editor at `/settings/theme` | iterating on colors against real charts without restarting the server |
+| Per chart | `# theme.*` annotations on a view inside a `.malloy` file | one-off styling for a specific chart |
+
+Layers cascade lowest to highest. A per-chart annotation only overrides the keys it sets; everything else falls through to the editor (per environment), then the environment config, then the instance config, then Publisher's built-in defaults.
+
+## Instance theme
+
+The instance theme applies to every environment unless overridden. Add a `theme` object at the top of `publisher.config.json`:
+
+```jsonc
+{
+  "frozenConfig": false,
+  "theme": {
+    "defaultMode": "light",
+    "allowUserToggle": true,
+    "palette": {
+      "series": ["#14b3cb", "#e47404", "#1474a4"],
+      "background":            { "light": "#ffffff", "dark": "#1e293b" },
+      "tableHeader":           { "light": "#5d626b", "dark": "#cbd5e1" },
+      "tableHeaderBackground": { "light": "#f5fafc", "dark": "#1e293b" },
+      "tableBody":             { "light": "#727883", "dark": "#e2e8f0" },
+      "tile":                  { "light": "#f5fafc", "dark": "#0f172a" },
+      "tileTitle":             { "light": "#5d626b", "dark": "#94a3b8" },
+      "mapColor":              { "light": "#14b3cb", "dark": "#14b3cb" }
+    },
+    "font": { "family": "Inter, sans-serif", "size": 12 }
+  },
+  "environments": [ /* ... */ ]
+}
+```
+
+Every key is optional. `palette.series` and `font` are shared across modes; the rest take an explicit `{ light, dark }` pair so a viewer in dark mode sees the dark variant. `tile` and `tileTitle` style the dashboard tile container that wraps each chart, independent of the chart background itself. `mapColor` is the saturated end of the choropleth gradient on `# shape_map` and `# segment_map` visualizations.
+
+`defaultMode` accepts `"light"`, `"dark"`, or `"auto"`. With `"auto"`, Publisher follows the viewer's OS preference (`prefers-color-scheme`) until the viewer overrides it from the header toggle.
+
+`allowUserToggle` controls whether the sun/moon button appears in the app header. Set it to `false` to lock viewers into your `defaultMode`.
+
+## Environment theme
+
+A single environment can override any subset of the instance theme. The override is shallow-deep: top-level keys merge per key, and the `palette.background` / `palette.tableHeader` sub-objects merge per mode.
+
+```jsonc
+{
+  "theme": {
+    "palette": { "series": ["#14b3cb", "#e47404"] }
+  },
+  "environments": [
+    {
+      "name": "marketing",
+      "theme": {
+        "palette": { "series": ["#ff0080", "#ff6b00", "#ffd000"] }
+      },
+      "packages": [ /* ... */ ]
+    },
+    {
+      "name": "finance",
+      "packages": [ /* uses the instance palette */ ]
+    }
+  ]
+}
+```
+
+## In-app Theme Editor
+
+Editing JSON and restarting the server is fine for an initial setup, but most of the time you want to pick a color, see it on real charts, and pick again. Publisher ships an editor for that.
+
+Browse to `/settings/theme` while logged in as an operator. The page has a section for each part of the theme (background, tables, dashboard tiles, charts, maps, fonts) and a live preview pane that renders the current cascade with your in-progress edits applied. Changes are auto-saved to the server's runtime ThemeStore (a small SQLite-backed store next to your other persistent state) and take effect on the next render in any tab.
+
+The editor's writes layer on top of the environment-level theme, so different environments inside one Publisher can have different operator overrides. A Light/Dark toggle inside the editor switches which variant you're editing; the live preview shows that mode.
+
+When `publisher.config.json` has `frozenConfig: true`, the editor is read-only. This matches Publisher's behavior for every other runtime mutation: a frozen config is the only source of truth.
+
+## Per-chart annotations
+
+Inside a `.malloy` file, prefix a view with `# theme.*` tags to override the resolved theme just for that chart. All fields are optional.
+
+```malloy
+# theme.palette.series = ["#ff0080", "#ff6b00", "#ffd000"]
+# theme.palette.background.dark = "#080808"
+# theme.font.family = "Roboto"
+# theme.font.size = 13
+view: revenue_by_quarter is { /* ... */ }
+```
+
+Annotations with the wrong type are silently dropped. The chart still renders with the next theme layer down, so a typo never breaks a notebook.
+
+## Light and dark mode
+
+Publisher persists the viewer's choice in `localStorage` under the key `publisher:themeMode`. Clearing site data resets to the operator's `defaultMode`.
+
+Dark mode flips:
+
+- The app shell (sidebar, headers, content background).
+- The Malloy renderer's chart background, axis text, and dashboard tile chrome.
+- The table chrome (header, body text, borders, pinned background) via the `--malloy-render--*` CSS variables Publisher emits from the resolved theme.
+- The saturated end of choropleth and heatmap gradients via `palette.mapColor`.
+
+`palette.series` and `font` stay the same across modes by design: they're brand identity, and brands generally read the same in either mode. If you genuinely need different series colors per mode, override them in a per-chart annotation that targets just the chart you care about.
+
+## What's not theme-controlled (yet)
+
+- The Publisher app logo (use `headerProps.logoHeader` on the SDK's `MalloyPublisherApp` for that).
+- Per-package theme overrides. Use the environment level above the package, or a per-chart annotation below.
+- Importing a theme from an external file or URL.
+
+See the [Publisher README](https://github.com/malloydata/publisher/blob/main/README.md#theming) for the canonical config reference.

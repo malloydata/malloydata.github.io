@@ -104,7 +104,7 @@ That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or
 }
 ```
 
-See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and other databases.
+See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and other databases. To change the visual style of rendered charts and tables, see [Theming Publisher](theming.malloynb).
 
 ---
 
