@@ -1,5 +1,5 @@
 >>>markdown
-# Imports
+# Imports and Exports
 
 In order to reuse or extend a source from another file, you can include all the
 exported sources from another file using `import "path/to/some/file.malloy"`.
@@ -32,3 +32,56 @@ import { airports, spaceports is airports } from "airports.malloy"
 
 run: airports -> { aggregate: airport_count is count() }
 run: spaceports -> { aggregate: spaceport_count is count() }
+>>>markdown
+
+## Exports
+
+By default, every `source:`, `query:`, `given:`, and `type:` declared in a file is exported &mdash; that is, visible to anyone who imports the file. If you'd rather keep some definitions local (for example, helper sources used only as scaffolding for the things you actually publish), add an `export { ... }` statement listing only the names you want to expose:
+
+```malloy
+source: raw_flights is duckdb.table('flights.parquet')
+
+source: flights is raw_flights extend {
+  measure: flight_count is count()
+}
+
+export { flights }
+```
+
+After this, `flights` is exported but `raw_flights` is not. `raw_flights` is still usable inside the file &mdash; only its visibility from other files is affected.
+
+The syntax intentionally mirrors selective import:
+
+```malloy
+import { flights } from "flights.malloy"
+export { flights }
+```
+
+`export` is opt-in. A file with no `export` statement behaves exactly as before: everything declared is exported.
+
+Multiple `export` statements add together:
+
+```malloy
+source: a is duckdb.table('a.parquet')
+export { a }
+
+source: b is duckdb.table('b.parquet')
+export { b }
+// exports are now { a, b }
+```
+
+You can re-export an imported name. This is the natural way to build a curated library on top of another:
+
+```malloy
+import { customers is raw_customers } from "raw.malloy"
+source: orders is duckdb.table('orders.parquet')
+
+export { customers, orders }
+```
+
+### Rules
+
+- An `export` statement must appear after the definition of each name it lists. Forward references are an error.
+- Only sources, queries, givens, and user types can be exported. Connections cannot.
+- There is no rename on export &mdash; rename at the definition site if you need a different public name.
+- There is no `export *`. The way to "export everything" is to leave the `export` statement out entirely.
