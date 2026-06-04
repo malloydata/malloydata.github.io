@@ -16,3 +16,7 @@ Below is a list of currently running experiments and how to turn them on.
 * `##! experimental.persistence` - [Persist sources as tables with the CLI builder](persistence.malloynb)
 * `##! experimental.virtual_source` - [Declare types and define virtual sources with no underlying table](virtual_sources.malloynb)
 * `##! experimental.givens` - [Model-level parameters supplied at run time](givens.malloynb)
+
+## Where to put a compiler flag
+
+Compiler flags are **per-file**. If a file uses an experimental feature, put the `##!` annotations at the top of that file.
