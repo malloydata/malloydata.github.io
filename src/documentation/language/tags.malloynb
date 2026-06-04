@@ -53,6 +53,28 @@ measure:
   min_x is min(x)
 ```
 
+## Model annotations
+
+An annotation written with `##` belongs to the *model* — the whole file — rather than to the object declared below it. Like every annotation, it is just text: the compiler stores it and hands it back, and what it means is up to the application that reads it.
+
+Model annotations travel with a file's contents. When you `import` a file, its model annotations come along, just as its sources and queries do — even through a [selective import](imports.malloynb#selective-imports). When retrieving annotations, imported annotations are returned first:
+
+```malloy
+// lib.malloy
+##(myApp) appTheme=dark
+source: airports is duckdb.table('airports.parquet')
+```
+
+```malloy
+// report.malloy
+import "lib.malloy"
+##(myApp) appTheme=light
+// this model's (myApp) annotations, in order:
+//   appTheme=dark   (from lib.malloy)
+//   appTheme=light  (from this file)
+```
+
+
 ## Prefix and route
 
 Everything from the marker (`#`/`##`/`#|`/`##|`) up to the first whitespace is the annotation's **prefix**. The prefix resolves to a **route** — a namespace key. The compiler validates the *shape* of the prefix and routes the annotation; it never parses what comes after.

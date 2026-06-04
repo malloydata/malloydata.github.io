@@ -34,6 +34,10 @@ run: airports -> { aggregate: airport_count is count() }
 run: spaceports -> { aggregate: spaceport_count is count() }
 >>>markdown
 
+## Imported model annotations
+
+Importing a file, either entirely or using a selective `import { .. }`, also brings in that file's [`##` model annotations](tags.malloynb#model-annotations).
+
 ## Exports
 
 By default, every `source:`, `query:`, `given:`, and `type:` declared in a file is exported &mdash; that is, visible to anyone who imports the file. If you'd rather keep some definitions local (for example, helper sources used only as scaffolding for the things you actually publish), add an `export { ... }` statement listing only the names you want to expose:
