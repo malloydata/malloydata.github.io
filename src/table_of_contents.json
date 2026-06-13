@@ -91,6 +91,10 @@
               "link": "/user_guides/publishing/publisher_sdk.malloynb"
             },
             {
+              "title": "HTML Data Apps",
+              "link": "/user_guides/publishing/html_data_apps.malloynb"
+            },
+            {
               "title": "MCP for AI Agents",
               "link": "/user_guides/publishing/mcp_agents.malloynb"
             }
