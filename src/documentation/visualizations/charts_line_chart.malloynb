@@ -79,6 +79,23 @@ run: flights -> {
 }
 >>>markdown
 
+## Hidden Dimensions
+
+Use `# hidden` on a dimension to exclude it from automatic channel assignment while keeping it in the query data. This lets you include a dimension for `order_by` or other purposes without it appearing as an axis or series on the chart:
+>>>malloy
+#(docs) size=large limit=5000
+# line_chart
+run: flights -> {
+  group_by:
+    # hidden
+    dep_month is dep_time.month
+    departure_month is dep_time.month::string
+  aggregate: flight_count
+  order_by: dep_month
+}
+>>>markdown
+A hidden field with an explicit channel tag (e.g., `# hidden # x`) will still be assigned to that channel.
+
 ## Line Charts nested in tables
 
 When line charts are nested in tables the size is reduced.  Nested line charts increase the density of information provided by the result.
