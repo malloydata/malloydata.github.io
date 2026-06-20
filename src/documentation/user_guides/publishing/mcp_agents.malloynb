@@ -107,6 +107,33 @@ Publisher exposes these tools to AI agents:
 
 ---
 
+## Agent Retrieval Tools and Skills
+
+Alongside the core MCP server on `:4040`, Publisher runs a second MCP server for agents on `:4041` (set by `AGENT_MCP_PORT`). It serves two read-only retrieval tools plus the bundled agent skills, configured the same way as the core server but on the agent endpoint:
+
+```json
+{
+  "mcpServers": {
+    "malloy-publisher-agent": {
+      "url": "http://localhost:4041/mcp"
+    }
+  }
+}
+```
+
+### Retrieval tools
+
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `malloy_getContext` | `environmentName`, `packageName`, `query`, `sourceName` (optional), `limit` (optional) | Given a plain-English question, returns the model entities (sources, views, named queries, and dimension/measure fields) most relevant to it, each with its model path and `#(doc)` description. |
+| `malloy_searchDocs` | `query`, `limit` (optional) | Keyword search over a bundled index of the Malloy documentation, returning matching pages with a short excerpt and a link. |
+
+Use `malloy_getContext` in two phases: call it once with just a `query` to discover the most relevant sources and views, then optionally call it again with `sourceName` set to focus on the fields within one source. The `environmentName`, `packageName`, and `modelPath` it returns map directly onto `malloy_executeQuery`, so an agent can go from a question to a grounded query without guessing field names.
+
+### Skills as MCP prompts
+
+Publisher also ships a set of agent **skills**: short guides that teach an agent how to write Malloy, choose charts, and verify results. Skill-aware hosts (such as Claude Code and Claude Desktop) load the skill files directly. For hosts that only ingest MCP, the agent server also exposes each skill as an MCP prompt, so the same guidance is available either way: list them with `prompts/list` on the agent endpoint and fetch one with `prompts/get`.
+
 ## Example Prompts
 
 Once connected, try these prompts:
