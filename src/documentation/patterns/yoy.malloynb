@@ -6,13 +6,10 @@ There are a couple of different ways to go about this in Malloy.
 
 We can compare performance of different years using the same x and y-axes.  Line charts take the x-axis, y-axis and dimensional (color) axis as parameters.
 In this case, the x-axis is `month_of_year`, the y-axis is `flight_count` and the dimensional (color) axis is the year.
-
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
   measure: flight_count is count()
 }
->>>markdown
-
 >>>malloy
 #(docs) size=small limit=5000
 run: flights -> {
@@ -23,7 +20,6 @@ run: flights -> {
 >>>markdown
 
 By adding year as the third column, we can display different years on the same chart. Note the `# line_chart` tag above the query. This is a hint to the renderer to display the data as a line chart. Changing the definition of `flight_year` to `year(dep_time)::string` makes the line chart interpret the year as "categorical," giving distinct colors for each year rather than a gradient.
-
 >>>malloy
 #(docs) size=large limit=5000
 # line_chart
@@ -36,8 +32,6 @@ run: flights -> {
 
 ## Method 2: Filtered Aggregates
 Filters make it easy to reuse aggregate calculations for trends analysis.
-
-
 >>>malloy
 #(docs) size=large limit=5000
 run: flights -> {
@@ -55,7 +49,6 @@ run: flights -> {
 ## Method 3: Calculate with Lag
 
 The `calculate:` clause is Malloy's window function equivalent, and allows us to compute year over year calculations using the `lag` function:
-
 >>>malloy
 #(docs) size=large limit=5000
 run: flights -> {
@@ -71,7 +64,6 @@ run: flights -> {
 
 ## Bonus: Relative timeframes and expression reuse
 You might like to write queries that automatically adjust based on the current timeframe.  The query below uses date arithmetic to filter the data to time frames relative to now.  These measures probably aren't generally useful in the model so we use the `extend:` operation to add these measure so they are only locally accessable within the query.
-
 >>>malloy
 #(docs) size=medium limit=5000
 source: inventory_items is duckdb.table('../data/inventory_items.parquet') 
