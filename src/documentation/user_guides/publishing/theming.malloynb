@@ -1,20 +1,21 @@
 >>>markdown
 # Theming Publisher
 
-Publisher renders Malloy charts, tables, and dashboard tiles with a theme that ships in both a light and a dark mode. You can customize it in four places, depending on how broad the change should be:
+Publisher renders Malloy charts, tables, and dashboard tiles with a theme that ships in both a light and a dark mode. There is one instance theme for the whole Publisher, and you set it in one of three places depending on how broad the change should be:
 
 | Level | Where it lives | Best for |
 |---|---|---|
-| Instance | top-level `theme` in `publisher.config.json` | the whole Publisher deployment (your company's brand) |
-| Environment | `theme` on a single entry under `environments[]` | a single team or tenant inside a shared Publisher |
-| Live (operator) | the in-app Theme Editor at `/settings/theme` | iterating on colors against real charts without restarting the server |
+| Instance config | top-level `theme` in `publisher.config.json` | the whole Publisher deployment (your company's brand), checked into config |
+| Live (operator) | the in-app Theme Editor at `/settings/theme` | iterating on colors against real charts without editing JSON or restarting |
 | Per chart | `# theme.*` annotations on a view inside a `.malloy` file | one-off styling for a specific chart |
 
-Layers cascade lowest to highest. A per-chart annotation only overrides the keys it sets; everything else falls through to the editor (per environment), then the environment config, then the instance config, then Publisher's built-in defaults.
+The config `theme` and the in-app editor set the same instance theme: the config value is the boot seed, and the editor edits it live (see below). When a chart renders, the layers cascade so a per-chart annotation only overrides the keys it sets, everything else falls through to the instance theme, and anything still unset falls through to Publisher's built-in defaults.
+
+Note: per-environment themes (a `theme` on an entry under `environments[]`) are reserved in the config schema but not yet applied by any viewer, so leave them off for now. See "What's not theme-controlled yet" at the end.
 
 ## Instance theme
 
-The instance theme applies to every environment unless overridden. Add a `theme` object at the top of `publisher.config.json`:
+The instance theme applies to every environment and viewer. Add a `theme` object at the top of `publisher.config.json`:
 
 ```jsonc
 {
@@ -44,40 +45,19 @@ Every key is optional. `palette.series` and `font` are shared across modes; the 
 
 `allowUserToggle` controls whether the sun/moon button appears in the app header. Set it to `false` to lock viewers into your `defaultMode`.
 
-## Environment theme
-
-A single environment can override any subset of the instance theme. The override is shallow-deep: top-level keys merge per key, and the `palette.background` / `palette.tableHeader` sub-objects merge per mode.
-
-```jsonc
-{
-  "theme": {
-    "palette": { "series": ["#14b3cb", "#e47404"] }
-  },
-  "environments": [
-    {
-      "name": "marketing",
-      "theme": {
-        "palette": { "series": ["#ff0080", "#ff6b00", "#ffd000"] }
-      },
-      "packages": [ /* ... */ ]
-    },
-    {
-      "name": "finance",
-      "packages": [ /* uses the instance palette */ ]
-    }
-  ]
-}
-```
+The `theme` block seeds Publisher's runtime theme store the first time the server starts with an empty store. After that the store is the source of truth, so editing `theme` in `publisher.config.json` and restarting has no effect on later boots. To re-apply a config change, either start the server with `--init` (which drops the runtime store and re-seeds from config, the same way it re-seeds packages and environments) or use "Reset to defaults" in the Theme Editor below (which clears the saved theme and falls back to the config seed).
 
 ## In-app Theme Editor
 
-Editing JSON and restarting the server is fine for an initial setup, but most of the time you want to pick a color, see it on real charts, and pick again. Publisher ships an editor for that.
+Setting the theme in JSON is fine for the first-boot configuration, but most of the time you want to pick a color, see it on real charts, and pick again. Publisher ships an editor for that.
 
-Browse to `/settings/theme` while logged in as an operator. The page has a section for each part of the theme (background, tables, dashboard tiles, charts, maps, fonts) and a live preview pane that renders the current cascade with your in-progress edits applied. Changes are auto-saved to the server's runtime ThemeStore (a small SQLite-backed store next to your other persistent state) and take effect on the next render in any tab.
+Open `/settings/theme` in the Publisher app. The page has cards for Charts (series colors and the chart background), Maps, Tables (which also holds the dashboard-tile background and title), and Typography; each card shows an inline sample preview that reflects your in-progress edits. Changes are auto-saved to the server's runtime theme store (kept in the same DuckDB metadata store Publisher uses for its other runtime state). They apply to the editing tab immediately and to other viewers on their next page load.
 
-The editor's writes layer on top of the environment-level theme, so different environments inside one Publisher can have different operator overrides. A Light/Dark toggle inside the editor switches which variant you're editing; the live preview shows that mode.
+The editor edits the single instance theme, the same one `publisher.config.json` seeds. Saving replaces the stored theme, so your latest edit is what every environment and viewer of this Publisher sees. A Light/Dark toggle inside the editor switches which variant you're editing; the live preview shows that mode.
 
-When `publisher.config.json` has `frozenConfig: true`, the editor is read-only. This matches Publisher's behavior for every other runtime mutation: a frozen config is the only source of truth.
+When `publisher.config.json` has `frozenConfig: true`, the editor is read-only and the theme write endpoints (`PUT`/`DELETE /api/v0/theme`) are rejected, matching Publisher's behavior for every other runtime mutation. The theme is still served from the runtime store, so if you froze after editing, viewers see the last saved theme, not necessarily the config file's value.
+
+Note: open-source Publisher does not authenticate requests. The Theme Editor and its `PUT /api/v0/theme` endpoint are reachable by anyone who can reach the server, and a saved theme applies to every viewer. Run Publisher behind your own auth layer or on a trusted network, and set `frozenConfig: true` in any deployment where the theme must not be mutable at runtime.
 
 ## Per-chart annotations
 
@@ -102,14 +82,15 @@ Dark mode flips:
 - The app shell (sidebar, headers, content background).
 - The Malloy renderer's chart background, axis text, and dashboard tile chrome.
 - The table chrome (header, body text, borders, pinned background) via the `--malloy-render--*` CSS variables Publisher emits from the resolved theme.
-- The saturated end of choropleth and heatmap gradients via `palette.mapColor`.
+- The saturated end of choropleth gradients (`# shape_map` / `# segment_map`) via `palette.mapColor`. Rect-mark heatmaps keep their built-in orange/blue scheme regardless of `mapColor`.
 
 `palette.series` and `font` stay the same across modes by design: they're brand identity, and brands generally read the same in either mode. If you genuinely need different series colors per mode, override them in a per-chart annotation that targets just the chart you care about.
 
 ## What's not theme-controlled (yet)
 
-- The Publisher app logo (use `headerProps.logoHeader` on the SDK's `MalloyPublisherApp` for that).
-- Per-package theme overrides. Use the environment level above the package, or a per-chart annotation below.
+- Per-environment themes. `environments[].theme` is present in the config schema but not yet applied by any viewer, so today the single instance theme applies everywhere. Per-environment theming is a planned addition.
+- The Publisher app logo. The brand mark is a separate app-shell element (the app exposes a `logoHeader` prop for embedders), not part of the theme.
+- Per-package theme overrides. Use a per-chart annotation instead.
 - Importing a theme from an external file or URL.
 
 See the [Publisher README](https://github.com/malloydata/publisher/blob/main/README.md#theming) for the canonical config reference.
