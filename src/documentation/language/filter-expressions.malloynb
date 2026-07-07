@@ -32,6 +32,8 @@ dimension:
 | <code>\null</code> | Is the string `null` |
 | <code>ten\\%</code> | Is the string `ten%` |
 | <code>empty</code> | Is the empty string or is `NULL` |
+| <code>none</code> | Matches nothing (always false) |
+| <code>\none</code> | Is the string `none` |
 
 * The <code>\\</code> character is used to escape any special meaning
 
@@ -43,6 +45,7 @@ dimension:
 | <code>-empty</code> | Is not an empty string |
 | <code>-%anger</code> | Does not end with `anger` |
 | <code>-null</code> | Is not a `NULL` value |
+| <code>-none</code> | Matches everything (always true) |
 
 * A <code>-</code> before a string expression means "not"
 
@@ -66,7 +69,7 @@ A string of clauses seperated by <code>,</code> will have all the positive match
   * Spaces at the beginning or end of a match
   * Any of <code>,</code> <code>|</code> <code>;</code> </code>\\</code> <code>(</code> <code>)</code>
   * The match charcacters <code>%</code> and <code>_</code>
-  * `\null` or `\empty`
+  * `\null`, `\empty`, or `\none`
 
 # Numeric Filter Expressions
 
@@ -79,6 +82,7 @@ A string of clauses seperated by <code>,</code> will have all the positive match
 | <code>(1 to 5)</code> | 1, 2, 3, 4, or 5 |
 | <code>[1 to 5]</code> | 2, 3, or 4 |
 | <code>null</code> | The `NULL` value |
+| <code>none</code> | Matches nothing (always false) |
 
 
 * In <code>to</code> ranges the <code>()</code> characters indicate inclusion of the endpoints, and <code>[]</code> indicate exclusion.
@@ -90,6 +94,7 @@ A string of clauses seperated by <code>,</code> will have all the positive match
 | <code>not 21</code> | Does not equal 21 |
 | <code>not (1,2,3)</code> | Less than 1 or greater than 3 |
 | <code>not null</code> | Is not a `NULL` value |
+| <code>not none</code> | Matches everything (always true) |
 
 ## Combining Numeric Filter Expressions
 
@@ -161,6 +166,7 @@ includes the beginning, and extends up to, but not including the end.
 | <code>next 2 weeks</code> | 2 weeks of data, does not include today |
 | <code>2 days</code> | 2 days of data, yesterday and today |
 | <code>null</code> | The `NULL` value |
+| <code>none</code> | Matches nothing (always false) |
 
 ## Combining Temporal Filter Expressions
 
@@ -177,9 +183,10 @@ Because a boolean value might equal NULL, the true `true` and `false` filters tr
 | <code>false</code> | `false` | `true` | `false` |
 | <code>=false</code> | `false` | `true` | `NULL` |
 | <code>null</code> | `false` | `false` | `true` |
+| <code>none</code> | `false` | `false` | `false` |
 
 
-Boolean filters are negated with `not`. There are no combination or grouping operators.
+Boolean filters are negated with `not`, so `not none` matches everything (always true). There are no combination or grouping operators.
 
 
 # More About F-Strings
