@@ -178,6 +178,24 @@ Authentication: provide either `token` or the `oauthClientId` + `oauthClientSecr
 | `databaseName` | string | Database name |
 | `connectionString` | string | Full connection string (alternative) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+| `ssl` | json | TLS/SSL options passed to the `pg` driver |
+
+The `ssl` property accepts a JSON object passed directly to the underlying [node-postgres](https://node-postgres.com/) driver's TLS options (e.g. `ca`, `cert`, `key`, `servername`, `rejectUnauthorized`). For example, to verify the server certificate through a tunnel that forwards a remote database to a local port:
+
+```json
+{
+  "connections": {
+    "my_postgres": {
+      "is": "postgres",
+      "host": "127.0.0.1",
+      "databaseName": "analytics",
+      "ssl": {"servername": "db.example.com", "ca": "<PEM>"}
+    }
+  }
+}
+```
+
+`servername` only takes effect when `host` is an IP literal (e.g. `127.0.0.1`) — `pg` overwrites it with `host` for DNS-name hosts like `localhost`, so verifying through a tunnel means connecting via the loopback IP. Because `ssl` uses the `json` type, `{"env": "..."}` inside it is treated as literal data, not an environment-variable reference; do not place secret `key`/`passphrase` material in shared config.
 
 ### `mysql` — MySQL
 
