@@ -27,7 +27,7 @@ The REST API lets you:
 
 | Capability | Description |
 |------------|-------------|
-| **Browse models** | List projects, packages, and models available on the server |
+| **Browse models** | List environments, packages, and models available on the server |
 | **Get model schema** | Retrieve sources, measures, dimensions, and views defined in a model |
 | **Execute queries** | Run Malloy queries and get JSON results |
 | **Explore databases** | List schemas, tables, and columns from connected databases |
@@ -40,18 +40,16 @@ The REST API lets you:
 Run a query against a model:
 
 ```bash
-curl -X POST "http://localhost:4000/api/v0/projects/my-project/packages/ecommerce/queryResults/orders.malloy" \
+curl -X POST "http://localhost:4000/api/v0/environments/my-env/packages/ecommerce/models/orders.malloy/query" \
   -H "Content-Type: application/json" \
-  -d '{"query": "run: orders -> { aggregate: order_count, total_revenue }"}'
+  -d '{"query": "run: orders -> { aggregate: order_count, total_revenue }", "compactJson": true}'
 ```
 
-Response:
+Response — `result` is a JSON string. Parse it to get the rows. With `"compactJson": true` it's a plain array of row objects; omit it for the full Malloy result with type metadata used for rendering:
 
 ```json
 {
-  "result": [
-    { "order_count": 12345, "total_revenue": 1234567.89 }
-  ]
+  "result": "[{\"order_count\":12345,\"total_revenue\":1234567.89}]"
 }
 ```
 
@@ -64,11 +62,18 @@ Response:
 ```javascript
 async function fetchMetrics() {
   const response = await fetch(
-    'http://localhost:4000/api/v0/projects/prod/packages/analytics/queryResults/orders.malloy?query=' +
-    encodeURIComponent('run: orders -> { aggregate: total_revenue }')
+    'http://localhost:4000/api/v0/environments/prod/packages/analytics/models/orders.malloy/query',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: 'run: orders -> { aggregate: total_revenue }',
+        compactJson: true,
+      }),
+    }
   );
   const data = await response.json();
-  return data.result;
+  return JSON.parse(data.result);
 }
 ```
 

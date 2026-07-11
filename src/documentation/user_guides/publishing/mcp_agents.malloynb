@@ -94,16 +94,16 @@ Publisher exposes these tools to AI agents:
 
 | Tool | Parameters | Description |
 |------|------------|-------------|
-| `malloy_projectList` | — | List all available projects |
-| `malloy_packageList` | `projectName` | List packages in a project |
-| `malloy_packageGet` | `projectName`, `packageName` | Get models in a package |
-| `malloy_modelGetText` | `projectName`, `packageName`, `modelPath` | Get raw model source code |
+| `malloy_environmentList` | — | List all available environments |
+| `malloy_packageList` | `environmentName` | List packages in an environment |
+| `malloy_packageGet` | `environmentName`, `packageName` | Get models in a package |
+| `malloy_modelGetText` | `environmentName`, `packageName`, `modelPath` | Get raw model source code |
 
 ### Query Execution
 
 | Tool | Parameters | Description |
 |------|------------|-------------|
-| `malloy_executeQuery` | `projectName`, `packageName`, `modelPath`, `query` | Run a Malloy query, returns JSON results |
+| `malloy_executeQuery` | `environmentName`, `packageName`, `modelPath`, `query` | Run a Malloy query, returns JSON results |
 
 ---
 

@@ -15,7 +15,7 @@ Publisher uses `publisher.config.json` for database connections. This file lives
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -53,7 +53,7 @@ For packages with embedded parquet/CSV files, **no connection configuration is n
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "packages": [
@@ -92,7 +92,7 @@ DuckDB can federate queries to external databases (BigQuery, Snowflake, PostgreS
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -128,7 +128,7 @@ source: events is duckdb.table('my_bq.my_dataset.events')
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -162,7 +162,7 @@ source: events is duckdb.table('my_bq.my_dataset.events')
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -219,7 +219,7 @@ source: events is duckdb.table('my_bq.my_dataset.events')
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -248,7 +248,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -272,7 +272,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -299,7 +299,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -326,7 +326,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -355,7 +355,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -383,7 +383,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -411,7 +411,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -436,11 +436,11 @@ For Presto, use `"type": "presto"` with the same configuration options.
 
 ## Multi-Environment Configuration
 
-You can configure multiple projects for different environments:
+You can configure multiple environments (for example, staging and production):
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "staging",
       "connections": [
