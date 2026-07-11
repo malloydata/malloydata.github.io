@@ -46,7 +46,7 @@ npx @malloy-publisher/server --server_root .
 The `--server_root` should point to the directory that **contains** your package folder(s), not the package itself.
 
 ```
-projects/                    ← Run npx from HERE (--server_root .)
+my-data/                     ← Run npx from HERE (--server_root .)
 ├── publisher.config.json    ← Server configuration
 └── my-analytics/            ← This is your package
     ├── publisher.json
@@ -77,7 +77,7 @@ That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -166,7 +166,7 @@ services:
       - ./packages:/publisher/packages
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/v0/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -192,13 +192,13 @@ Publisher reads runtime settings from environment variables. The most common one
 ### Health Check
 
 ```bash
-curl http://localhost:4000/status
+curl http://localhost:4000/api/v0/status
 ```
 
-### List Projects
+### List Environments
 
 ```bash
-curl http://localhost:4000/api/v1/projects
+curl http://localhost:4000/api/v0/environments
 ```
 
 See the [REST API](rest_api.malloynb) documentation for all available endpoints.
@@ -216,13 +216,13 @@ See the [REST API](rest_api.malloynb) documentation for all available endpoints.
 
 ## State Persistence
 
-Publisher persists configuration changes in a local DuckDB database (`publisher.db`). This means changes made via the REST API—adding projects, packages, or connections—survive server restarts.
+Publisher persists configuration changes in a local DuckDB database (`publisher.db`). This means changes made via the REST API—adding environments, packages, or connections—survive server restarts.
 
 ### How It Works
 
 1. **First start**: Publisher reads `publisher.config.json` and syncs it to `publisher.db`
 2. **Subsequent starts**: Publisher loads from the database, ignoring config file changes
-3. **API changes**: Adding/removing projects, packages, or connections updates the database
+3. **API changes**: Adding/removing environments, packages, or connections updates the database
 
 ### Reinitializing from Config
 
@@ -247,7 +247,7 @@ By default, Publisher allows configuration changes via the API. To lock the conf
 ```json
 {
   "frozenConfig": true,
-  "projects": [...]
+  "environments": [...]
 }
 ```
 
