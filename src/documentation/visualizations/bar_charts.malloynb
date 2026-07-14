@@ -22,6 +22,8 @@ Malloy can create simple bar charts and bar charts with series breakdowns, eithe
 | `.title` | Chart title | `# bar_chart { title='My Title' }` |
 | `.subtitle` | Chart subtitle | `# bar_chart { subtitle='Details' }` |
 
+A `{ }` block attaches to the last segment of a dotted path, so `# bar_chart.stack { y=total_sales }` sets `y` on `stack` instead of on `bar_chart`, and the chart never reads it. To set both, put them in a single block: `# bar_chart { stack y=total_sales }`. See [Tags](../language/tags.malloynb) for the full property syntax.
+
 The examples below all use the following semantic model.
 >>>malloy
 source: flights is duckdb.table('../data/flights.parquet') extend {
