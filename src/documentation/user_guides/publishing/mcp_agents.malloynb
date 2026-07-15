@@ -17,6 +17,8 @@ npx @malloy-publisher/server --server_root /path/to/your/packages
 
 The AI sees all packages under your `server_root` directory. The MCP server starts automatically at `http://localhost:4040/mcp`.
 
+The endpoint does not require authentication, and Publisher binds `0.0.0.0` by default, so anyone who can reach port 4040 on your network can run `malloy_executeQuery` against the databases your models connect to. Bind it to loopback with `--host 127.0.0.1` for local-only use, and put an authenticating gateway in front before exposing it more widely.
+
 For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
 
 ### 2. Configure Your MCP Client
@@ -49,11 +51,15 @@ Some MCP clients (VS Code, Claude Desktop) require stdio-based commands instead 
 - Python 3.x installed
 - Malloy Publisher MCP Server running on `localhost:4040/mcp`
 
-### 1. Download the Bridge
+### 1. Get the Bridge
 
-[Download malloy_bridge.py](https://github.com/malloydata/publisher/blob/main/packages/server/dxt/malloy_bridge.py)
+The bridge ships inside [malloy_mcp.dxt](https://github.com/malloydata/publisher/blob/main/packages/server/malloy_mcp.dxt), a Desktop Extension bundle. Hosts that install `.dxt` extensions directly (such as Claude Desktop) can use that file as-is.
 
-Save it somewhere accessible, for example: `~/malloy_bridge.py`
+For any other host, the bundle is a zip: unpack it and save `malloy_bridge.py` somewhere accessible, for example `~/malloy_bridge.py`.
+
+```bash
+unzip malloy_mcp.dxt malloy_bridge.py -d ~/
+```
 
 ### 2. Configure Your MCP Client
 
@@ -88,51 +94,37 @@ Check `/tmp/malloy_bridge.log` for debugging information.
 
 ## MCP Tools
 
-Publisher exposes these tools to AI agents:
+Publisher serves these tools from the single MCP endpoint, alongside the bundled agent skills as prompts.
 
 ### Discovery
 
+`malloy_getContext` is the entry point. Every parameter is optional, so an agent can start with nothing and narrow down as it learns the names.
+
 | Tool | Parameters | Description |
 |------|------------|-------------|
-| `malloy_projectList` | — | List all available projects |
-| `malloy_packageList` | `projectName` | List packages in a project |
-| `malloy_packageGet` | `projectName`, `packageName` | Get models in a package |
-| `malloy_modelGetText` | `projectName`, `packageName`, `modelPath` | Get raw model source code |
+| `malloy_getContext` | all optional: `environmentName`, `packageName`, `query`, `sourceName`, `limit` | Progressively discover what is on the server, and the model entities most relevant to a plain-English question. |
+
+Call it with no arguments to list the environments and the packages in each, with an `environmentName` to list that environment's packages, with `environmentName` plus `packageName` to list that package's sources, and with `environmentName` plus `packageName` plus a plain-English `query` to get the sources, views, named queries, and dimension/measure fields most relevant to it, each with its model path and `#(doc)` description. Add `sourceName` alongside a `query` to focus retrieval on a single source.
+
+Each step needs the ones before it: `packageName` without `environmentName` is ignored, and you get the environment list back rather than an error.
+
+The `environmentName`, `packageName`, and `modelPath` it returns map directly onto `malloy_executeQuery`, so an agent can go from a question to a grounded query without guessing names.
 
 ### Query Execution
 
 | Tool | Parameters | Description |
 |------|------------|-------------|
-| `malloy_executeQuery` | `projectName`, `packageName`, `modelPath`, `query` | Run a Malloy query, returns JSON results |
+| `malloy_executeQuery` | required: `environmentName`, `packageName`, `modelPath`, and then either `query` or `queryName` plus `sourceName`. Optional: `filterParams`, `givens` | Run a Malloy query: ad hoc with `query`, or a named query or view with `queryName` plus the `sourceName` it belongs to. Exactly one of `query` and `queryName` is required. Returns JSON results. |
 
----
-
-## Agent Retrieval Tools and Skills
-
-Alongside the core MCP server on `:4040`, Publisher runs a second MCP server for agents on `:4041` (set by `AGENT_MCP_PORT`). It serves two read-only retrieval tools plus the bundled agent skills, configured the same way as the core server but on the agent endpoint:
-
-```json
-{
-  "mcpServers": {
-    "malloy-publisher-agent": {
-      "url": "http://localhost:4041/mcp"
-    }
-  }
-}
-```
-
-### Retrieval tools
+### Documentation Search
 
 | Tool | Parameters | Description |
 |------|------------|-------------|
-| `malloy_getContext` | `environmentName`, `packageName`, `query`, `sourceName` (optional), `limit` (optional) | Given a plain-English question, returns the model entities (sources, views, named queries, and dimension/measure fields) most relevant to it, each with its model path and `#(doc)` description. |
-| `malloy_searchDocs` | `query`, `limit` (optional) | Keyword search over a bundled index of the Malloy documentation, returning matching pages with a short excerpt and a link. |
-
-Use `malloy_getContext` in two phases: call it once with just a `query` to discover the most relevant sources and views, then optionally call it again with `sourceName` set to focus on the fields within one source. The `environmentName`, `packageName`, and `modelPath` it returns map directly onto `malloy_executeQuery`, so an agent can go from a question to a grounded query without guessing field names.
+| `malloy_searchDocs` | required: `query`. Optional: `limit` | Keyword search over a bundled index of the Malloy documentation, returning matching pages with a short excerpt and a link. |
 
 ### Skills as MCP prompts
 
-Publisher also ships a set of agent **skills**: short guides that teach an agent how to write Malloy, choose charts, and verify results. Skill-aware hosts (such as Claude Code and Claude Desktop) load the skill files directly. For hosts that only ingest MCP, the agent server also exposes each skill as an MCP prompt, so the same guidance is available either way: list them with `prompts/list` on the agent endpoint and fetch one with `prompts/get`.
+Publisher also ships a set of agent **skills**: short guides that teach an agent how to write Malloy, choose charts, and verify results. Skill-aware hosts (such as Claude Code and Claude Desktop) load the skill files directly. For hosts that only ingest MCP, the server also exposes each skill as an MCP prompt, so the same guidance is available either way: list them with `prompts/list` and fetch one with `prompts/get`.
 
 ## Example Prompts
 
