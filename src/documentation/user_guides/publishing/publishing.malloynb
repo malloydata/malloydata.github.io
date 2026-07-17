@@ -35,9 +35,28 @@ Create `publisher.json`:
 }
 ```
 
-### 2. Start Publisher
+### 2. List It in a Config File
 
-Navigate to the **parent directory** (the folder containing `my-analytics/`), then run:
+Publisher only serves packages that `publisher.config.json` lists, so create one in the **parent
+directory** (the folder containing `my-analytics/`):
+
+```json
+{
+  "frozenConfig": false,
+  "environments": [
+    {
+      "name": "default",
+      "packages": [
+        { "name": "my-analytics", "location": "./my-analytics" }
+      ]
+    }
+  ]
+}
+```
+
+### 3. Start Publisher
+
+From that same parent directory, run:
 
 ```bash
 npx @malloy-publisher/server --server_root .
@@ -46,7 +65,7 @@ npx @malloy-publisher/server --server_root .
 The `--server_root` should point to the directory that **contains** your package folder(s), not the package itself.
 
 ```
-projects/                    ← Run npx from HERE (--server_root .)
+my-workspace/                ← Run npx from HERE (--server_root .)
 ├── publisher.config.json    ← Server configuration
 └── my-analytics/            ← This is your package
     ├── publisher.json
@@ -65,19 +84,25 @@ Then open `http://localhost:4000` to explore the sample models.
 
 For alternative deployment methods (Docker, build from source), see [Deployment & Configuration](#deployment-configuration) below.
 
-### 3. Open Browser
+### 4. Open Browser
 
-Go to `http://localhost:4000` to browse and query your models.
+Go to `http://localhost:4000` to browse and query your models. If the package list is empty, the
+config did not load: check the startup log rather than the status endpoint, which reports `serving`
+either way.
 
-That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or `.json` files, you're done—no config file needed.
+That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or `.json` files, no
+connection configuration is needed on top of the config above, because every package gets its own
+DuckDB sandbox automatically.
 
-**Note:** If you edit a `.malloy` file while Publisher is running, restart it to pick up changes.
+**Note:** Publisher copies your package when it loads it, so editing a `.malloy` file does not change
+what a running server serves. Restart with `--init` to pick the edit up, or add `--watch-env default`
+when you start, which mounts the package in place and recompiles it as you edit.
 
-**Want to connect to a database?** Create `publisher.config.json` in the same directory:
+**Want to connect to a database?** Add a connection to the same `publisher.config.json`:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -110,14 +135,20 @@ See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and o
 
 ## Package Locations
 
-Publisher can load packages from various sources:
+A package's `location` can be any of these:
 
 **Local Filesystem**
-- Relative paths: `./package`, `../package`, `~/package`
+- Relative paths: `./package`, `../package`, `~/package` (relative paths resolve against `--server_root`)
 - Absolute paths: `/absolute/path/to/package`
 
 **GitHub**
 - `https://github.com/owner/repo/tree/branch/package-path`
+
+**Google Cloud Storage**
+- `gs://bucket/path/to/package`
+
+**Amazon S3**
+- `s3://bucket/path/to/package`
 
 ---
 
@@ -144,11 +175,15 @@ bun run start
 Mount your config and packages into the container:
 
 ```bash
-docker run -p 4000:4000 \
-  -v ./publisher.config.json:/publisher/publisher.config.json \
-  -v ./packages:/publisher/packages \
+docker run -p 4000:4000 -p 4040:4040 \
+  -v ./publisher.config.json:/publisher/publisher.config.json:ro \
+  -v ./packages:/publisher/my-packages \
   ms2data/malloy-publisher
 ```
+
+Mount your packages anywhere except `/publisher/packages`: that path holds the server's own code
+inside the image, and mounting over it breaks the container. Point each package's `location` at
+wherever you mounted them (`./my-packages/...` above).
 
 ### Docker Compose
 
@@ -162,19 +197,23 @@ services:
       - "4000:4000"
       - "4040:4040"  # MCP endpoint for AI agents
     volumes:
-      - ./publisher.config.json:/publisher/publisher.config.json
-      - ./packages:/publisher/packages
+      - ./publisher.config.json:/publisher/publisher.config.json:ro
+      - ./packages:/publisher/my-packages
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/v0/status"]
       interval: 30s
       timeout: 10s
       retries: 3
 ```
 
+The healthcheck must point at `/api/v0/status`. A bare `/status` is not a route: the web app's
+catch-all answers it with `200` and an HTML page, so `curl -f` succeeds no matter what state the
+server is in, and the healthcheck can never fail.
+
 ### Environment Variables
 
-Publisher reads runtime settings from environment variables. The most common ones are below; see the [Publisher README](https://github.com/malloydata/publisher#configuration) for the full list and matching CLI flags.
+Publisher reads runtime settings from environment variables. The most common ones are below; see the [configuration reference](https://github.com/malloydata/publisher/blob/main/docs/configuration.md) for the full list and matching CLI flags.
 
 | Env var | Default | Meaning |
 |---|---|---|
@@ -183,7 +222,6 @@ Publisher reads runtime settings from environment variables. The most common one
 | `SERVER_ROOT` | `.` (cwd) | Directory containing `publisher.config.json`. |
 | `LOG_LEVEL` | `debug` | One of `error`, `warn`, `info`, `verbose`, `debug`, `silly`. |
 | `GOOGLE_APPLICATION_CREDENTIALS` | _unset_ | Fallback path to a GCP service-account JSON for BigQuery connections that don't include inline auth. Ignored when the connection config provides its own credentials. |
-| `PG_CONNECT_TIMEOUT_SECONDS` | `5` | Connection timeout (seconds) for Postgres-backed DuckLake manifest catalogs (`materializationStorage`). Bad credentials or an unreachable host return HTTP 422 in ~5s rather than hanging the publisher. No effect on user-facing Postgres connections or non-PG catalogs (SQLite, MySQL). |
 
 ---
 
@@ -192,14 +230,20 @@ Publisher reads runtime settings from environment variables. The most common one
 ### Health Check
 
 ```bash
-curl http://localhost:4000/status
+curl http://localhost:4000/api/v0/status
 ```
 
-### List Projects
+### List Environments
 
 ```bash
-curl http://localhost:4000/api/v1/projects
+curl http://localhost:4000/api/v0/environments
 ```
+
+A `200` from either endpoint means the server is up, but it does not mean your packages loaded: a
+config that fails to load leaves Publisher reporting `"operationalState": "serving"` with an empty
+environment list. If a package is missing, count what `/api/v0/environments` returns before assuming
+the server is fine, and check the startup log for `Failed to load package` or
+`Error initializing environment`.
 
 See the [REST API](rest_api.malloynb) documentation for all available endpoints.
 
@@ -216,13 +260,13 @@ See the [REST API](rest_api.malloynb) documentation for all available endpoints.
 
 ## State Persistence
 
-Publisher persists configuration changes in a local DuckDB database (`publisher.db`). This means changes made via the REST API—adding projects, packages, or connections—survive server restarts.
+Publisher persists configuration changes in a local DuckDB database (`publisher.db`). This means changes made via the REST API—adding environments, packages, or connections—survive server restarts.
 
 ### How It Works
 
 1. **First start**: Publisher reads `publisher.config.json` and syncs it to `publisher.db`
 2. **Subsequent starts**: Publisher loads from the database, ignoring config file changes
-3. **API changes**: Adding/removing projects, packages, or connections updates the database
+3. **API changes**: Adding/removing environments, packages, or connections updates the database
 
 ### Reinitializing from Config
 
@@ -238,6 +282,11 @@ Use `--init` when:
 - You want to reset to the original configuration
 - You're troubleshooting configuration issues
 
+`--init` deletes `publisher_data/` and rebuilds it from the config file, without prompting. Anything
+that only exists in the database or in Publisher's copy of a package is discarded, including
+environments, packages, and connections added through the API or the UI. Keep your source packages
+outside `publisher_data/` (as the layout above does) and `--init` is safe to run.
+
 **Note:** On first run, Publisher automatically creates the database and syncs from `publisher.config.json`—no `--init` needed.
 
 ### Mutable vs Frozen Configuration
@@ -247,7 +296,7 @@ By default, Publisher allows configuration changes via the API. To lock the conf
 ```json
 {
   "frozenConfig": true,
-  "projects": [...]
+  "environments": [...]
 }
 ```
 
