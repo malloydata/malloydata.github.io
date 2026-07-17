@@ -83,7 +83,7 @@ async function fetchMetrics() {
     }
   );
   const body = await response.json();
-  return JSON.parse(body.result); // -> [{ total_revenue: 2098177.97 }]
+  return JSON.parse(body.result); // -> [{ total_revenue: 2098177.9700000403 }]
 }
 ```
 

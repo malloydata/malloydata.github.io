@@ -19,7 +19,6 @@ npx @malloy-publisher/server --server_root packages/server
 
 # In a new terminal, run the example app
 cd examples/data-app
-cp .env.example .env
 npm install
 npm run dev
 ```
@@ -76,7 +75,7 @@ import {
 
 function MyChart() {
   const embeddedQuery = createEmbeddedQueryResult({
-    query: "run: order_items -> { group_by: brand; aggregate: total_sales }",
+    query: "run: order_items -> { group_by: products.brand; aggregate: total_sales }",
     resourceUri: encodeResourceUri({
       environmentName: "examples",
       packageName: "storefront",

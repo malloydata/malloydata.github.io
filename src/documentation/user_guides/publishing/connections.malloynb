@@ -99,7 +99,7 @@ my-analytics/
 
 DuckDB can federate queries to external databases (BigQuery, Snowflake, PostgreSQL) using attached databases. This lets you query cloud data warehouses through DuckDB.
 
-**Note:** the connection name `duckdb` is reserved for the per-package sandbox described above, so an environment-level DuckDB connection needs a different name or the server refuses to start. These examples use `shared_duckdb`; reference that same name in your Malloy code.
+**Note:** the connection name `duckdb` is reserved for the per-package sandbox described above, so an environment-level DuckDB connection needs a different name. Using `duckdb` here does not stop the server: it logs the error, skips that whole environment, and carries on reporting `"operationalState": "serving"` with nothing loaded. These examples use `shared_duckdb`; reference that same name in your Malloy code.
 
 **Attach BigQuery:**
 

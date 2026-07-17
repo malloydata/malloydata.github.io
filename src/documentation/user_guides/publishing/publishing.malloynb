@@ -138,7 +138,7 @@ See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and o
 A package's `location` can be any of these:
 
 **Local Filesystem**
-- Relative paths: `./package`, `../package`, `~/package` (relative paths resolve against `--server_root`)
+- Relative paths: `./package`, `../package` (resolved against `--server_root`)
 - Absolute paths: `/absolute/path/to/package`
 
 **GitHub**
