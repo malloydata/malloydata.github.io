@@ -37,7 +37,7 @@ The REST API lets you:
 
 ## Quick Example
 
-Run a query against a model. The environment and package below are the samples Publisher serves out of the box, so this works as-is against a server started with `npx @malloy-publisher/server`:
+Run a query against a model. The environment and package below are the samples Publisher serves out of the box, so this works as-is against a server started with no arguments (`npx @malloy-publisher/server`). If you passed `--server_root` or `--config`, substitute your own environment, package and model names.
 
 ```bash
 curl -X POST "http://localhost:4000/api/v0/environments/examples/packages/storefront/models/storefront.malloy/query" \

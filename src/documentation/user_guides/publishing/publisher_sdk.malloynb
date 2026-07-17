@@ -137,7 +137,7 @@ If your React app runs on a different port/domain than Publisher, configure CORS
 export default defineConfig({
   server: {
     proxy: {
-      '/api': {
+      '/api/v0': {
         target: 'http://localhost:4000',
         changeOrigin: true,
       },

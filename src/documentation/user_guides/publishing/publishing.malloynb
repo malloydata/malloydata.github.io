@@ -208,8 +208,9 @@ services:
 ```
 
 The healthcheck must point at `/api/v0/status`. A bare `/status` is not a route: the web app's
-catch-all answers it with `200` and an HTML page, so `curl -f` succeeds no matter what state the
-server is in, and the healthcheck can never fail.
+catch-all answers it with `200` and an HTML page, so `curl -f` passes even when the API is not
+serving at all. Note that `/api/v0/status` returns `200` as soon as the server is up, including when
+no environment loaded, so this checks liveness rather than that your packages are being served.
 
 ### Environment Variables
 
@@ -242,8 +243,9 @@ curl http://localhost:4000/api/v0/environments
 A `200` from either endpoint means the server is up, but it does not mean your packages loaded: a
 config that fails to load leaves Publisher reporting `"operationalState": "serving"` with an empty
 environment list. If a package is missing, count what `/api/v0/environments` returns before assuming
-the server is fine, and check the startup log for `Failed to load package` or
-`Error initializing environment`.
+the server is fine, and check the startup log, where the cause is named: `Failed to load package`
+for one bad package, `Error initializing environment` when a whole environment is dropped, and
+`Error reading publisher.config.json` when the config itself could not be parsed.
 
 See the [REST API](rest_api.malloynb) documentation for all available endpoints.
 
