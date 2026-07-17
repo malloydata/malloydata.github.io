@@ -14,8 +14,8 @@ The fastest way to understand the SDK is to run the example data app:
 git clone https://github.com/malloydata/publisher.git
 cd publisher
 
-# Start the Publisher server
-npx @malloy-publisher/server --server_root ./malloy-samples
+# Start the Publisher server, serving the bundled example packages
+npx @malloy-publisher/server --server_root packages/server
 
 # In a new terminal, run the example app
 cd examples/data-app
@@ -27,10 +27,10 @@ npm run dev
 Open [http://localhost:5173](http://localhost:5173) to see a working dashboard with embedded Malloy visualizations.
 
 The example app demonstrates:
-- **Malloy Samples Dashboard** – Pre-configured charts from the names dataset
+- **Storefront dashboard** – A fixed grid of SDK tiles over the storefront model
 - **Single Embed** – Embedding a single query result
-- **Dynamic Dashboard** – Adding charts at runtime
-- **Interactive Dashboard** – Using raw data with custom Recharts visualizations
+- **Dynamic Dashboard** – Adding and arranging widgets at runtime
+- **Interactive** – Using raw data with custom Recharts visualizations
 
 ---
 
@@ -55,34 +55,40 @@ function App() {
 }
 ```
 
-By default, connects to `http://localhost:4000`. For production:
+By default the SDK talks to `/api/v0` on the same origin the page is served from. That is what you want when Publisher serves your app itself, and it is why the example app proxies `/api/v0` through Vite to port 4000. To point at a different server, pass `baseURL`:
 
 ```tsx
-<ServerProvider server="https://analytics.yourcompany.com/api/v0">
+<ServerProvider baseURL="https://analytics.yourcompany.com/api/v0">
   <YourDashboard />
 </ServerProvider>
 ```
 
 ### 2. EmbeddedQueryResult
 
-Renders a Malloy query result. The component picks the visualization automatically—tables for flat data, bar charts for single-dimension aggregates, or whatever [renderer tag](../../language/tags.malloynb) you specify in your model (e.g., `# line_chart`).
+Renders a Malloy query result. Results render as a table unless the query or the model carries a [renderer tag](../../language/tags.malloynb) (e.g. `# bar_chart`, `# line_chart`), which is what selects a visualization.
 
 ```tsx
-import { EmbeddedQueryResult } from "@malloy-publisher/sdk";
+import {
+  EmbeddedQueryResult,
+  createEmbeddedQueryResult,
+  encodeResourceUri,
+} from "@malloy-publisher/sdk";
 
 function MyChart() {
-  const embeddedQuery = JSON.stringify({
-    modelPath: "orders.malloy",
-    query: "run: orders -> { group_by: region; aggregate: total_revenue }",
-    optionalPackageName: "ecommerce",
-    optionalProjectName: "production"
+  const embeddedQuery = createEmbeddedQueryResult({
+    query: "run: order_items -> { group_by: brand; aggregate: total_sales }",
+    resourceUri: encodeResourceUri({
+      environmentName: "examples",
+      packageName: "storefront",
+      modelPath: "storefront.malloy",
+    }),
   });
 
   return <EmbeddedQueryResult embeddedQueryResult={embeddedQuery} />;
 }
 ```
 
-The `optionalPackageName` and `optionalProjectName` parameters are required when your Publisher serves multiple projects or packages—they tell the SDK which model to use.
+`resourceUri` is how you address a model: it names the environment, the package, and the model path. It is always required, not only when the server holds more than one package, and `createEmbeddedQueryResult` throws without it. Instead of writing the query inline, you can reference a view defined in the model by passing `queryName` together with `sourceName`.
 
 ---
 
@@ -113,10 +119,12 @@ my-data-app/
 │   │   └── widgets.json   # Saved embed configurations
 │   └── components/
 │       └── CustomChart.tsx
-├── .env                   # VITE_PUBLISHER_API=http://localhost:4000
 ├── package.json
-└── vite.config.ts
+└── vite.config.ts         # Proxies /api/v0 to the Publisher server
 ```
+
+There is no environment variable that points the SDK at a Publisher server. Either proxy `/api/v0` in
+`vite.config.ts` (below) or pass `baseURL` to `ServerProvider`.
 
 ---
 
@@ -142,7 +150,7 @@ export default defineConfig({
 Then use relative paths in ServerProvider:
 
 ```tsx
-<ServerProvider server="/api/v0">
+<ServerProvider baseURL="/api/v0">
 ```
 
 ---
