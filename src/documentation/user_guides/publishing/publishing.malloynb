@@ -191,9 +191,12 @@ Mount your packages anywhere except `/publisher/packages`: that path holds the s
 inside the image, and mounting over it breaks the container. Point each package's `location` at
 wherever you mounted them (`./my-packages/...` above).
 
-Publisher has no built-in authentication and binds all interfaces, and its API serves your
-connection configuration, database passwords included. Publish it only on a trusted network, or put
-your own authentication in front of it. The MCP port (4040) is unauthenticated too.
+Publisher has no built-in authentication and binds all interfaces. Anyone who can reach the port can
+read your connection configuration (database passwords included), run SQL through any connection, and
+by default add connections of their own, with those changes persisted to `publisher.db`. The DuckDB
+sandbox each package gets automatically will read files off the server's filesystem, so this applies
+even with no database configured. Publish Publisher only on a trusted network, or put your own
+authentication in front of it. The MCP port (4040) is unauthenticated too.
 
 ### Docker Compose
 
@@ -305,7 +308,11 @@ outside `publisher_data/` (as the layout above does) and `--init` is safe to run
 
 ### Mutable vs Frozen Configuration
 
-By default, Publisher allows configuration changes via the API. To lock the configuration (e.g., in production):
+By default, Publisher allows configuration changes via the API, and that default is unauthenticated:
+any caller who can reach the port can add or change a connection, and the change survives restarts.
+Set `frozenConfig: true` on any Publisher reachable beyond your own machine. It is the control that
+closes config writes (they return `403`), though it does not stop queries, so it is not a substitute
+for keeping the port off untrusted networks:
 
 ```json
 {
