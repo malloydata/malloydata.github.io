@@ -214,16 +214,18 @@ services:
       - ./packages:/publisher/my-packages
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000/api/v0/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
 ```
 
-The healthcheck must point at `/api/v0/status`. A bare `/status` is not a route: the web app's
-catch-all answers it with `200` and an HTML page, so `curl -f` passes even when the API is not
-serving at all. Note that `/api/v0/status` returns `200` as soon as the server is up, including when
-no environment loaded, so this checks liveness rather than that your packages are being served.
+Use `/health` for the container healthcheck, not `/status` and not `/api/v0/status`. A bare `/status`
+is not a route at all: the web app's catch-all answers it with `200` and an HTML page, so `curl -f`
+passes even when the API is not serving. `/api/v0/status` is a real endpoint, but its response
+includes your connection configuration, so a healthcheck pointed at it writes database passwords into
+the container's health log every interval. `/health` returns just `{"status":"UP"}`. Either way this
+checks that the server is up, not that your packages loaded.
 
 ### Environment Variables
 
@@ -244,7 +246,7 @@ Publisher reads runtime settings from environment variables. The most common one
 ### Health Check
 
 ```bash
-curl http://localhost:4000/api/v0/status
+curl http://localhost:4000/health
 ```
 
 ### List Environments
