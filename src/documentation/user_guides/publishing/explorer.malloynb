@@ -108,13 +108,13 @@ The Query Panel is where queries come together. It provides a structured, visual
 
 This menu lets you add fields by operation type:
 
-- Add Group By
-- Add Aggregate
-- Add Filter
-- Add View
+- Add group by
+- Add aggregate
+- Add filter
+- Add view
 - Limit
-- Order By
-- Add Blank Nested Query
+- Order by
+- Add blank nested query
 
 <img src="explorer-screenshots/query-panel-add-action.png" alt="Add Query Element" style="max-width: 675px;">
 
@@ -155,7 +155,7 @@ Hovering over a section shows additional ways to add elements.
 Malloy's nesting feature enables rich, multidimensional analysis—and Explorer gives you a no-code way to use it.
 
 To add a nested query:
-- Select **Nest Query** from the Query Panel **More Actions** menu
+- Select **Nest query** from the Query Panel **More Actions** menu
 - Or hover over a view in the Source Panel and select **Add as new nested query**
 
 <img src="explorer-screenshots/query-panel-more-nest.png" alt="Nest Action" style="max-width: 350px;">

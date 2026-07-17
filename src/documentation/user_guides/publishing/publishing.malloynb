@@ -95,8 +95,14 @@ connection configuration is needed on top of the config above, because every pac
 DuckDB sandbox automatically.
 
 **Note:** Publisher copies your package when it loads it, so editing a `.malloy` file does not change
-what a running server serves. Restart with `--init` to pick the edit up, or add `--watch-env default`
-when you start, which mounts the package in place and recompiles it as you edit.
+what a running server serves. Restart with `--init` to re-copy from source and pick the edit up.
+
+While you are iterating on a model, restart with `--init --watch-env default` instead: that mounts
+the package in place and recompiles it as you save. `--watch-env` needs `--init` here, because the
+in-place mount is only set up when Publisher has not already copied the package into
+`publisher_data/`. Adding `--watch-env` on its own to a server root you have already started does
+nothing, and does so quietly: `/api/v0/watch-mode/status` still reports `"enabled": true` while your
+edits are ignored.
 
 **Want to connect to a database?** Add a connection to the same `publisher.config.json`:
 
@@ -185,6 +191,10 @@ Mount your packages anywhere except `/publisher/packages`: that path holds the s
 inside the image, and mounting over it breaks the container. Point each package's `location` at
 wherever you mounted them (`./my-packages/...` above).
 
+Publisher has no built-in authentication and binds all interfaces, and its API serves your
+connection configuration, database passwords included. Publish it only on a trusted network, or put
+your own authentication in front of it. The MCP port (4040) is unauthenticated too.
+
 ### Docker Compose
 
 ```yaml
@@ -244,8 +254,10 @@ A `200` from either endpoint means the server is up, but it does not mean your p
 config that fails to load leaves Publisher reporting `"operationalState": "serving"` with an empty
 environment list. If a package is missing, count what `/api/v0/environments` returns before assuming
 the server is fine, and check the startup log, where the cause is named: `Failed to load package`
-for one bad package, `Error initializing environment` when a whole environment is dropped, and
-`Error reading publisher.config.json` when the config itself could not be parsed.
+for one bad package, `Error initializing environment` when a whole environment is dropped,
+`Failed to parse` when `publisher.config.json` is not valid JSON, and
+`Error reading publisher.config.json` when the config parsed but could not be processed, which is
+usually a `${VAR}` you have not set.
 
 See the [REST API](rest_api.malloynb) documentation for all available endpoints.
 

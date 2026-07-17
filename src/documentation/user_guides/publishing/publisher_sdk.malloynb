@@ -10,17 +10,20 @@ Build custom data applications with the Publisher SDK. Embed live, governed anal
 The fastest way to understand the SDK is to run the example data app:
 
 ```bash
-# Clone the publisher repo
+# Clone the publisher repo and install at the root. The example app resolves
+# react and @emotion from the repo-root node_modules, so this step is required.
 git clone https://github.com/malloydata/publisher.git
 cd publisher
+bun install
 
 # Start the Publisher server, serving the bundled example packages
 npx @malloy-publisher/server --server_root packages/server
 
-# In a new terminal, run the example app
+# In a new terminal, install and run the example app. It is not part of the
+# workspace, so it needs its own install as well as the one above.
 cd examples/data-app
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) to see a working dashboard with embedded Malloy visualizations.
