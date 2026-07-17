@@ -9,13 +9,24 @@ Configure database connections for Malloy Publisher deployments. For an overview
 
 Publisher uses `publisher.config.json` for database connections. This file lives in your server root directory.
 
-**Important:** Publisher does not support environment variable substitution. Put actual credential values directly in the config file.
+**Keeping credentials out of the file:** any `${VAR}` inside a string value is replaced with that environment variable's value when the config loads, so passwords and keys can stay in the environment:
+
+```json
+"postgresConnection": {
+  "host": "${PG_HOST}",
+  "password": "${PG_PASSWORD}"
+}
+```
+
+Substitution applies to every string in the config, including package `location` values. Only uppercase, braced names are matched: `$PG_PASSWORD` (no braces) and `${lowercase}` are left as literal text.
+
+Set every variable your config references before starting. If one is missing, the whole config fails to load and Publisher comes up serving nothing, which is easy to miss because `/api/v0/status` still reports `"operationalState": "serving"`. Check `/api/v0/environments` to confirm your environments actually loaded.
 
 ### Basic Structure
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -53,7 +64,7 @@ For packages with embedded parquet/CSV files, **no connection configuration is n
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "packages": [
@@ -88,16 +99,18 @@ my-analytics/
 
 DuckDB can federate queries to external databases (BigQuery, Snowflake, PostgreSQL) using attached databases. This lets you query cloud data warehouses through DuckDB.
 
+**Note:** the connection name `duckdb` is reserved for the per-package sandbox described above, so an environment-level DuckDB connection needs a different name or the server refuses to start. These examples use `shared_duckdb`; reference that same name in your Malloy code.
+
 **Attach BigQuery:**
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
         {
-          "name": "duckdb",
+          "name": "shared_duckdb",
           "type": "duckdb",
           "duckdbConnection": {
             "attachedDatabases": [
@@ -121,19 +134,19 @@ DuckDB can federate queries to external databases (BigQuery, Snowflake, PostgreS
 
 In your Malloy model:
 ```malloy
-source: events is duckdb.table('my_bq.my_dataset.events')
+source: events is shared_duckdb.table('my_bq.my_dataset.events')
 ```
 
 **Attach Snowflake:**
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
         {
-          "name": "duckdb",
+          "name": "shared_duckdb",
           "type": "duckdb",
           "duckdbConnection": {
             "attachedDatabases": [
@@ -162,12 +175,12 @@ source: events is duckdb.table('my_bq.my_dataset.events')
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
         {
-          "name": "duckdb",
+          "name": "shared_duckdb",
           "type": "duckdb",
           "duckdbConnection": {
             "attachedDatabases": [
@@ -219,7 +232,7 @@ source: events is duckdb.table('my_bq.my_dataset.events')
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -244,11 +257,11 @@ source: events is duckdb.table('my_bq.my_dataset.events')
 
 **With service account (recommended for production):**
 
-Embed the service account JSON directly in the config:
+The service account JSON goes in `serviceAccountKeyJson` as a string. To keep the key out of the file, put it in an environment variable and reference it as `${BIGQUERY_SA_JSON}`:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -258,7 +271,7 @@ Embed the service account JSON directly in the config:
           "bigqueryConnection": {
             "defaultProjectId": "my-gcp-project",
             "location": "US",
-            "serviceAccountKeyJson": "{\n  \"type\": \"service_account\",\n  \"project_id\": \"my-gcp-project\",\n  ...rest of service account JSON...\n}"
+            "serviceAccountKeyJson": "${BIGQUERY_SA_JSON}"
           }
         }
       ],
@@ -268,11 +281,20 @@ Embed the service account JSON directly in the config:
 }
 ```
 
+Then start Publisher with the key in the environment:
+
+```bash
+export BIGQUERY_SA_JSON="$(cat service-account.json)"
+npx @malloy-publisher/server --server_root .
+```
+
+The whole key can also be pasted inline as a JSON string (`"{\n  \"type\": \"service_account\", ...}"`) if you would rather not use an environment variable.
+
 **With gcloud auth (development only):**
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -299,7 +321,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -326,7 +348,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -355,7 +377,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -383,7 +405,7 @@ Embed the service account JSON directly in the config:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -407,11 +429,11 @@ Embed the service account JSON directly in the config:
 
 ---
 
-## Trino and Presto
+## Trino
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "default",
       "connections": [
@@ -430,17 +452,15 @@ Embed the service account JSON directly in the config:
 }
 ```
 
-For Presto, use `"type": "presto"` with the same configuration options.
-
 ---
 
 ## Multi-Environment Configuration
 
-You can configure multiple projects for different environments:
+You can configure multiple environments, for example one per deployment stage:
 
 ```json
 {
-  "projects": [
+  "environments": [
     {
       "name": "staging",
       "connections": [
