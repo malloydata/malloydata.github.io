@@ -19,7 +19,7 @@ Deploy Publisher ([see Publishing](publishing.malloynb)) and share the URL with 
 
 <img src="explorer-screenshots/publisher-model-list.png" alt="Publisher model list" style="max-width: 900px;">
 
-The URL format is: `http://localhost:4000/project/package/model`
+The URL format is: `http://localhost:4000/<environment>/<package>/<model-path>`, where the model path includes the file extension, for example `http://localhost:4000/examples/storefront/storefront.malloy`.
 
 Anyone with access to Publisher can explore your semantic models—no Malloy knowledge required.
 
@@ -61,9 +61,9 @@ The panel is organized into three sections:
 Attributes you can group by, filter on, or sort with. Dimensions are grouped by their source. For example, in a query centered around `order_items`, you might also see dimensions from joined models like `users` or `products`.
 
 Hovering over a dimension reveals actions:
-- **Add as Group By** – Segment results by this dimension
-- **Add as Filter** – Apply a filter based on the field
-- **Add as Sort** – Sort results by this value
+- **Add as group by** – Segment results by this dimension
+- **Add as filter** – Apply a filter based on the field
+- **Add as order by** – Sort results by this value (only available for fields already in the output)
 
 <img src="explorer-screenshots/source-panel-dimension-hover-groupby.png" alt="Dimension Hover Actions" style="max-width: 250px;">
 
@@ -72,9 +72,9 @@ Hovering over a dimension reveals actions:
 Predefined metrics you can aggregate, filter on, or sort with. These include calculations such as totals, averages, counts, and ratios.
 
 Hovering over a measure provides actions:
-- **Add as Aggregate** – Include the metric in results
-- **Add as Filter** – Use the measure to restrict results
-- **Add as Sort** – Sort results based on the metric value
+- **Add as aggregate** – Include the metric in results
+- **Add as filter** – Use the measure to restrict results
+- **Add as order by** – Sort results based on the metric value (only available for fields already in the output)
 
 <img src="explorer-screenshots/source-panel-measure-hover-aggregate.png" alt="Measure Hover Actions" style="max-width: 250px;">
 
@@ -83,8 +83,8 @@ Hovering over a measure provides actions:
 Saved queries defined in the underlying Malloy model. Views often represent curated KPIs, commonly-used explorations, or analytical building blocks.
 
 Hovering over a view provides actions:
-- **Add to Query** – Load the view's query
-- **Add as Nested Query** – Add the view as a nested subquery
+- **Add view** – Load the view's query
+- **Add as new nested query** – Add the view as a nested subquery
 
 <img src="explorer-screenshots/source-panel-view-hover-add-to-query.png" alt="View Hover Actions" style="max-width: 260px;">
 
@@ -156,7 +156,7 @@ Malloy's nesting feature enables rich, multidimensional analysis—and Explorer 
 
 To add a nested query:
 - Select **Nest Query** from the Query Panel **More Actions** menu
-- Or hover over a view in the Source Panel and select **Add as Nested Query**
+- Or hover over a view in the Source Panel and select **Add as new nested query**
 
 <img src="explorer-screenshots/query-panel-more-nest.png" alt="Nest Action" style="max-width: 350px;">
 
