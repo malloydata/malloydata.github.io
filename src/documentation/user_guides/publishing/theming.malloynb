@@ -93,4 +93,4 @@ Dark mode flips:
 - Per-package theme overrides. Use a per-chart annotation instead.
 - Importing a theme from an external file or URL.
 
-See the [Publisher README](https://github.com/malloydata/publisher/blob/main/README.md#theming) for the canonical config reference.
+See [Publisher's theming doc](https://github.com/malloydata/publisher/blob/main/docs/theming.md) for the canonical config reference.

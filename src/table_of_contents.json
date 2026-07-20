@@ -97,6 +97,10 @@
             {
               "title": "MCP for AI Agents",
               "link": "/user_guides/publishing/mcp_agents.malloynb"
+            },
+            {
+              "title": "Theming",
+              "link": "/user_guides/publishing/theming.malloynb"
             }
           ]
         },
