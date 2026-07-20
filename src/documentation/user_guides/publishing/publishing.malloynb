@@ -144,8 +144,11 @@ See [Publisher Connections](connections.malloynb) for BigQuery, Snowflake, and o
 A package's `location` can be any of these:
 
 **Local Filesystem**
-- Relative paths: `./package`, `../package` (resolved against `--server_root`)
+- Relative paths: `./package`, `../package`, resolved against the directory holding the config they appear in
+- Home-relative paths: `~/package`
 - Absolute paths: `/absolute/path/to/package`
+
+Packages do not have to live inside your server root. Keeping a config next to the packages it points at means the two move together.
 
 **GitHub**
 - `https://github.com/owner/repo/tree/branch/package-path`

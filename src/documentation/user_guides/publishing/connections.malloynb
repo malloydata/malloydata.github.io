@@ -7,7 +7,7 @@ Configure database connections for Malloy Publisher deployments. For an overview
 
 ## Configuration File
 
-Publisher uses `publisher.config.json` for database connections. This file lives in your server root directory.
+Publisher uses `publisher.config.json` for database connections. By default it is read from your server root, and `--config <path>` points at one anywhere else. Package locations inside it resolve against the directory holding the config, so a config kept next to its packages travels with them.
 
 **Keeping credentials out of the file:** any `${VAR}` inside a string value is replaced with that environment variable's value when the config loads, so passwords and keys can stay out of the file and out of version control:
 
