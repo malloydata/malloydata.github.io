@@ -17,7 +17,7 @@ npx @malloy-publisher/server --server_root /path/to/your/packages
 
 The AI sees all packages under your `server_root` directory. The MCP server starts automatically at `http://localhost:4040/mcp`.
 
-The endpoint does not require authentication, and Publisher binds `0.0.0.0` by default, so anyone who can reach port 4040 on your network can run `malloy_executeQuery` against the databases your models connect to. Bind it to loopback with `--host 127.0.0.1` for local-only use, and put an authenticating gateway in front before exposing it more widely.
+The endpoint does not require authentication, and Publisher binds `0.0.0.0` by default, so anyone who can reach port 4040 on your network can run `malloy_executeQuery` against the databases your models connect to. The surface is not read-only either: `malloy_reloadPackage` mutates server state, and for a package that carries an install location a reload re-fetches it, overwriting on-disk edits. The same effects are already reachable through the equivalent REST endpoints, so this is a reason to gate the deployment rather than a reason to avoid the tools. Bind it to loopback with `--host 127.0.0.1` for local-only use, and put an authenticating gateway in front before exposing it more widely.
 
 For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
 
@@ -115,6 +115,21 @@ The `environmentName`, `packageName`, and `modelPath` it returns map directly on
 | Tool | Parameters | Description |
 |------|------------|-------------|
 | `malloy_executeQuery` | required: `environmentName`, `packageName`, `modelPath`, and then either `query` or `queryName` plus `sourceName`. Optional: `filterParams`, `givens` | Run a Malloy query: ad hoc with `query`, or a named query or view with `queryName` plus the `sourceName` it belongs to. Exactly one of `query` and `queryName` is required. Returns JSON results. |
+
+### Authoring
+
+These two close the edit-and-run loop, so an agent can change a model and query the result without restarting the server.
+
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `malloy_compile` | required: `environmentName`, `packageName`, `modelPath`, `source`. Optional: `includeSql`, `givens` | Compile-check Malloy source against a model and get structured diagnostics back, without running a query. The source is appended to `modelPath`, so that model's imports, sources, and queries are in scope. |
+| `malloy_reloadPackage` | required: `environmentName`, `packageName` | Recompile a package from its on-disk model files, so a source or view added after boot becomes resolvable by name. Returns the mode it used, `in-place` or `reinstalled`. |
+
+Publisher compiles each configured package at boot and serves that cached model, so a source you add afterwards is not queryable by name until the package is reloaded. `malloy_compile` does not need a reload: it validates against the model as it is on disk.
+
+Compiling before reloading is a speed-up, not a safety measure. A reload that fails to compile leaves your files alone and keeps serving the previously compiled model, returning the compile errors, so nothing breaks either way. `malloy_compile` is simply the faster way to see diagnostics.
+
+One caveat worth knowing: a package whose stored metadata carries an install location is re-fetched from that source on reload, which overwrites on-disk edits. Check the returned mode if you had edits you did not save elsewhere.
 
 ### Documentation Search
 
