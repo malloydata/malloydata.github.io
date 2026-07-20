@@ -82,7 +82,7 @@ Dark mode flips:
 - The app shell (sidebar, headers, content background).
 - The Malloy renderer's chart background, axis text, and dashboard tile chrome.
 - The table chrome (header, body text, borders, pinned background) via the `--malloy-render--*` CSS variables Publisher emits from the resolved theme.
-- The saturated end of choropleth gradients (`# shape_map` / `# segment_map`) via `palette.mapColor`. Rect-mark heatmaps keep their built-in orange/blue scheme regardless of `mapColor`.
+- The saturated end of choropleth gradients (`# shape_map` / `# segment_map`) via `palette.mapColor`. Rect-mark heatmaps keep their built-in scheme regardless of `mapColor`.
 
 `palette.series` and `font` stay the same across modes by design: they're brand identity, and brands generally read the same in either mode. If you genuinely need different series colors per mode, override them in a per-chart annotation that targets just the chart you care about.
 
@@ -90,7 +90,8 @@ Dark mode flips:
 
 - Per-environment themes. `environments[].theme` is present in the config schema but not yet applied by any viewer, so today the single instance theme applies everywhere. Per-environment theming is a planned addition.
 - The Publisher app logo. The brand mark is a separate app-shell element (the app exposes a `logoHeader` prop for embedders), not part of the theme.
-- Per-package theme overrides. Use a per-chart annotation instead.
+- Per-package theme overrides. Annotate a whole model instead: a `## theme.*` annotation at the top of a
+  `.malloy` file themes every view in it, and a view's own `# theme.*` still wins over it.
 - Importing a theme from an external file or URL.
 
 See [Publisher's theming doc](https://github.com/malloydata/publisher/blob/main/docs/theming.md) for the canonical config reference.
