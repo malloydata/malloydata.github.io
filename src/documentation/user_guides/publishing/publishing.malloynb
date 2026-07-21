@@ -16,7 +16,24 @@ Once published, your models can be accessed via:
 
 ### 1. Create a Package
 
-A package is a directory with your models and a manifest:
+The fastest way is to let Publisher scaffold one:
+
+```bash
+npm create malloy-package my-analytics
+```
+
+That writes the package and a starter model, registers it in `publisher.config.json` so the server actually serves it, and sets up the workspace around it: a start script, an MCP config, agent instructions, and the Malloy agent skills as files an AI assistant can read. To build the starter model over a CSV or Parquet file of your own, pass it in:
+
+```bash
+npm create malloy-package my-analytics -- --data ./orders.csv   # npm create needs the --
+npx create-malloy-package my-analytics --data ./orders.csv      # npx does not, and rejects it
+```
+
+The two entry points differ in one way that matters. `npm create` reads anything before the `--` as one of its own options, so the separator is required there. `npx` passes flags through untouched, and a `--` would reach the tool as an extra argument.
+
+Both require Node on your machine.
+
+If you would rather assemble the package yourself, it is just a directory with your models and a manifest:
 
 ```
 my-analytics/
