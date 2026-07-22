@@ -42,53 +42,22 @@ Once connected, try prompts like:
 
 ---
 
-## Stdio Bridge (VS Code, Claude Desktop, etc.)
+## Stdio-only Clients (older Claude Desktop, etc.)
 
-Some MCP clients (VS Code, Claude Desktop) require stdio-based commands instead of HTTP. Use the bridge script to translate between protocols.
-
-### Prerequisites
-
-- Python 3.x installed
-- Malloy Publisher MCP Server running on `localhost:4040/mcp`
-
-### 1. Get the Bridge
-
-The bridge ships inside [malloy_mcp.dxt](https://github.com/malloydata/publisher/blob/main/packages/server/malloy_mcp.dxt), a Desktop Extension bundle. Hosts that install `.dxt` extensions directly (such as Claude Desktop) can use that file as-is.
-
-For any other host, the bundle is a zip: unpack it and save `malloy_bridge.py` somewhere accessible, for example `~/malloy_bridge.py`.
-
-```bash
-unzip malloy_mcp.dxt malloy_bridge.py -d ~/
-```
-
-### 2. Configure Your MCP Client
-
-Example configuration for VS Code (`settings.json` or `.vscode/mcp.json`):
+Some MCP clients speak only stdio, not HTTP. Bridge them to the HTTP endpoint with [`mcp-remote`](https://www.npmjs.com/package/mcp-remote), which needs no extra script. In the client's MCP config add:
 
 ```json
 {
-  "mcp": {
-    "servers": {
-      "malloy": {
-        "command": "python3",
-        "args": ["/full/path/to/malloy_bridge.py"]
-      }
+  "mcpServers": {
+    "malloy": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:4040/mcp", "--allow-http"]
     }
   }
 }
 ```
 
-Replace `/full/path/to/malloy_bridge.py` with the actual path where you saved the bridge script.
-
-### Testing the Bridge
-
-Test the bridge script:
-
-```bash
-echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' | python3 /path/to/malloy_bridge.py
-```
-
-Check `/tmp/malloy_bridge.log` for debugging information.
+`--allow-http` is required because the endpoint is plain HTTP on localhost. For Claude Desktop the config lives under Settings > Developer > Edit Config.
 
 ---
 
