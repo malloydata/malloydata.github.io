@@ -107,4 +107,10 @@ run: airports -> {
 | `tablePinnedBorder` | Border for pinned column edges | `2px solid #ddd` |
 | `fontFamily` | Font family for all rendered output | `monospace`, `'Helvetica Neue'` |
 | `background` | Overall background color | `white`, `transparent` |
+
+**Viewing these models in Malloy Publisher?** It depends on which surface you are looking at, and the two behave in opposite ways.
+
+On a model view, a notebook cell, or a saved result, Publisher supplies its own instance theme, and a caller-supplied theme takes precedence over both `# theme.*` and `## theme.*`. So most of the properties above have no effect there: `tableBodyColor`, `tableHeaderColor`, `tableFontSize`, `tableBackground`, `tableBorder`, `tablePinnedBackground`, `tablePinnedBorder`, `fontFamily` and `background` are all supplied by Publisher and win. Only `tableBodyWeight`, `tableHeaderWeight`, `tableRowHeight` and `tableGutterSize` fall through. For those surfaces Publisher has its own vocabulary, namespaced under `theme.palette` and `theme.font`, where a per-chart annotation overrides the instance theme rather than losing to it. See [Theming Publisher](../user_guides/publishing/theming.malloynb).
+
+In the Explore panel on a model page, results render with no instance theme at all, so the properties above work exactly as documented here, and the namespaced `theme.palette` vocabulary does nothing. Both panels sit on the same page, so a view can look different in the explorer than it does once saved.
 >>>markdown
