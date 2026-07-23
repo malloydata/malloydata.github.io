@@ -1,0 +1,172 @@
+>>>markdown
+# Combo Charts
+
+A combo chart plots two measures on two **independent** y-axes — the classic
+"bars + line" comparison. Use it when the two measures have different units or
+magnitudes (volume vs. rate, count vs. dollars, count vs. average delay) and
+would be useless folded onto a single shared scale.
+
+It needs an x dimension and **two** measures. The left axis is `y`, the right
+axis is `y2`. By default the first measure draws as bars on the left and the
+second as a line on the right.
+
+## Properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `.y` | Measure(s) on the primary (left) axis. Field ref or array `['m1','m2']`. Auto-filled with the first measure if omitted. | `# combo_chart { y=flight_count }` |
+| `.y2` | Measure(s) on the secondary (right) axis. Auto-filled with the second measure if omitted. | `# combo_chart { y2=avg_dep_delay }` |
+| `.y.chart` / `.y2.chart` | Mark type per axis: `bar` or `line`. Defaults: `y` is `bar`, `y2` is `line`. Both `bar` draws grouped side-by-side (never stacked). | `# combo_chart { y.chart=line y2.chart=bar }` |
+| `.y.line_width` / `.y2.line_width` | Line stroke width in px (default `2`). Ignored for bar axes. | `# combo_chart { y2.line_width=3 }` |
+| `.y.points` / `.y2.points` | Show/hide dots on a line. Default auto (hidden for multi-point series). Ignored for bars. | `# combo_chart { y2.points=false }` |
+| `.y.min` / `.y.max` / `.y2.min` / `.y2.max` | Pin an axis's domain bounds. Either end alone; the other stays data-driven. | `# combo_chart { y.min=0 y2.min=0 }` |
+| `.color_axes` | Tint each axis to its mark's color (default `true`). Set `false` for neutral axes. | `# combo_chart { color_axes=false }` |
+| `.x` | Field for x-axis (category or time). Auto-detected if omitted. | `# combo_chart { x=network }` |
+| `.x.limit` | Max x-axis bands (auto-fit if unset). | `# combo_chart { x.limit=20 }` |
+| `.size` | Chart size preset: `spark`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` | `# combo_chart { size=lg }` |
+| `.y.independent` / `.y2.independent` | Independent axis domains in nested charts | `# combo_chart { y.independent }` |
+| `.title` | Chart title | `# combo_chart { title='Reach vs. Rate' }` |
+| `.subtitle` | Chart subtitle | `# combo_chart { subtitle='By network' }` |
+
+The examples below all use the following semantic model.
+>>>malloy
+source: flights is duckdb.table('../data/flights.parquet') extend {
+  where: dep_time = @2001
+  join_one: carriers is duckdb.table('../data/carriers.parquet')
+    on carrier = carriers.code
+  measure:
+    flight_count is count()
+    avg_distance is distance.avg()
+    avg_dep_delay is dep_delay.avg()
+}
+>>>markdown
+
+Combo charts need one dimension and two measures.
+
+* X-axis - a time field or category
+* Left axis (`y`) - the first measure, drawn as bars by default
+* Right axis (`y2`) - the second measure, drawn as a line by default
+
+## Smart defaults
+
+With no channel tags, the first measure becomes bars on the left axis and the
+second becomes a line on the right. Here flight volume (thousands) and average
+departure delay (minutes) have wildly different scales, so a single axis would
+flatten the delay line into the x-axis — the second axis fixes that.
+>>>malloy
+#(docs) size=large limit=5000
+# combo_chart
+run: flights -> {
+  group_by: departure_month is dep_time.month
+  aggregate: flight_count, avg_dep_delay
+  order_by: departure_month
+}
+>>>markdown
+
+## Explicit channels and swapped marks
+
+Assign measures to axes with `y` / `y2`, and choose the mark for each with
+`y.chart` / `y2.chart`. Here the volume measure is drawn as a line and the delay
+as bars — the reverse of the defaults.
+>>>malloy
+#(docs) size=large limit=5000
+# combo_chart {
+  x=nickname
+  y=avg_dep_delay y.chart=bar
+  y2=flight_count y2.chart=line
+}
+run: flights -> {
+  group_by: carriers.nickname
+  aggregate: flight_count, avg_dep_delay
+  order_by: flight_count desc
+  limit: 10
+}
+>>>markdown
+
+## Axis scaling and the crossover pitfall
+
+Each axis is scaled independently from its own measure, so **where the bars and
+line cross carries no meaning** — it is an artifact of the two chosen ranges. To
+keep this from misleading, each axis is tinted to its mark's color (left axis
+like the bars, right axis like the line) so the two scales read as two separate
+rulers. Compare *trends*, not crossover points.
+
+When you do need the crossover to mean something, pin both axes to comparable
+ranges with `y.min` / `y.max` / `y2.min` / `y2.max`.
+>>>malloy
+#(docs) size=large limit=5000
+# combo_chart { y.min=0 y2.min=0 }
+run: flights -> {
+  group_by: departure_month is dep_time.month
+  aggregate: flight_count, avg_dep_delay
+  order_by: departure_month
+}
+>>>markdown
+
+## Line styling
+
+For a line axis, `line_width` sets the stroke width (px) and `points` forces the
+dot markers on or off. Both are ignored on a bar axis.
+>>>malloy
+#(docs) size=large limit=5000
+# combo_chart { y2.line_width=3 y2.points=true }
+run: flights -> {
+  group_by: departure_month is dep_time.month
+  aggregate: flight_count, avg_dep_delay
+  order_by: departure_month
+}
+>>>markdown
+
+## Neutral axes
+
+By default each axis is tinted to its mark's color. Set `color_axes=false` for
+plain, uncolored axes.
+>>>malloy
+#(docs) size=large limit=5000
+# combo_chart { color_axes=false }
+run: flights -> {
+  group_by: departure_month is dep_time.month
+  aggregate: flight_count, avg_dep_delay
+  order_by: departure_month
+}
+>>>markdown
+
+## Embedded channel tags
+
+Instead of the tag block, you can tag fields directly with `# y` / `# y2` (and
+`# x`). Tag the measures to assign them to axes.
+>>>malloy
+#(docs) size=large limit=5000
+# combo_chart
+run: flights -> {
+  group_by:
+    # x
+    departure_month is dep_time.month
+  aggregate:
+    # y
+    flight_count
+    # y2
+    avg_dep_delay
+  order_by: departure_month
+}
+>>>markdown
+
+## Combo Charts nested in tables
+
+Like other charts, combo charts can be nested inside a query to increase the
+density of a table.
+>>>malloy
+#(docs) size=large limit=5000
+run: flights -> {
+  group_by: destination
+  aggregate: flight_count
+  # combo_chart
+  nest: by_month is {
+    group_by: departure_month is dep_time.month
+    aggregate: flight_count, avg_dep_delay
+    order_by: departure_month
+  }
+  order_by: flight_count desc
+  limit: 5
+}
+>>>markdown
