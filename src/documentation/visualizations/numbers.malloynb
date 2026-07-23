@@ -220,6 +220,8 @@ The `# duration` renderer interprets a value as a number of seconds and renders 
 | `.terse` | Abbreviated units (ns, µs, ms, s, m, h, d) |
 | `.number` | SSF format for numeric parts: `# duration { number="0.0" }` |
 
+A `{ }` block attaches to the last segment of a dotted path, so `# duration.terse { number="0.0" }` sets `number` on `terse` instead of on `duration`. To set both, put them in a single block: `# duration { terse number="0.0" }`.
+
 >>>malloy
 #(docs) size=small limit=5000
 run: flights -> {
