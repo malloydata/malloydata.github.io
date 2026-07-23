@@ -27,7 +27,7 @@ The REST API lets you:
 
 | Capability | Description |
 |------------|-------------|
-| **Browse models** | List projects, packages, and models available on the server |
+| **Browse models** | List environments, packages, and models available on the server |
 | **Get model schema** | Retrieve sources, measures, dimensions, and views defined in a model |
 | **Execute queries** | Run Malloy queries and get JSON results |
 | **Explore databases** | List schemas, tables, and columns from connected databases |
@@ -37,23 +37,29 @@ The REST API lets you:
 
 ## Quick Example
 
-Run a query against a model:
+Run a query against a model. The environment and package below are the samples Publisher serves out of the box, so this works as-is against a server started with no arguments (`npx @malloy-publisher/server`). If you passed `--server_root` or `--config`, substitute your own environment, package and model names.
 
 ```bash
-curl -X POST "http://localhost:4000/api/v0/projects/my-project/packages/ecommerce/queryResults/orders.malloy" \
+curl -X POST "http://localhost:4000/api/v0/environments/examples/packages/storefront/models/storefront.malloy/query" \
   -H "Content-Type: application/json" \
-  -d '{"query": "run: orders -> { aggregate: order_count, total_revenue }"}'
+  -d '{"query": "run: order_items -> { aggregate: order_count is count(), total_revenue is sum(sale_price) }", "compactJson": true}'
 ```
 
 Response:
 
 ```json
 {
-  "result": [
-    { "order_count": 12345, "total_revenue": 1234567.89 }
-  ]
+  "result": "[{\"order_count\":25356,\"total_revenue\":2098177.9700000403}]",
+  "resource": "/api/v0/environments/examples/packages/storefront/models/storefront.malloy/query"
 }
 ```
+
+Note that `result` is a **JSON string**, not an object, so parse it before use:
+`JSON.parse(body.result)`.
+
+`compactJson: true` gives you the plain array of row objects shown above. Leave it out (the default)
+and `result` contains the full Malloy result instead: the same rows plus the schema and per-cell type
+metadata that the renderer needs to draw charts and tables.
 
 ---
 
@@ -61,14 +67,23 @@ Response:
 
 ### Fetch and Display Data
 
+The query goes in the request body, not the query string. The endpoint accepts POST only.
+
 ```javascript
 async function fetchMetrics() {
   const response = await fetch(
-    'http://localhost:4000/api/v0/projects/prod/packages/analytics/queryResults/orders.malloy?query=' +
-    encodeURIComponent('run: orders -> { aggregate: total_revenue }')
+    'http://localhost:4000/api/v0/environments/examples/packages/storefront/models/storefront.malloy/query',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: 'run: order_items -> { aggregate: total_revenue is sum(sale_price) }',
+        compactJson: true,
+      }),
+    }
   );
-  const data = await response.json();
-  return data.result;
+  const body = await response.json();
+  return JSON.parse(body.result); // -> [{ total_revenue: 2098177.9700000403 }]
 }
 ```
 
@@ -77,8 +92,8 @@ async function fetchMetrics() {
 Instead of writing queries inline, reference views defined in your model:
 
 ```javascript
-// Model has: view: monthly_summary is { ... }
-const query = 'run: orders -> monthly_summary';
+// storefront.malloy defines: view: business_overview is { ... }
+const query = 'run: order_items -> business_overview';
 ```
 
 This keeps business logic in the model, not scattered across API calls.
