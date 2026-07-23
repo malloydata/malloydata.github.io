@@ -1,0 +1,72 @@
+source: carriers is duckdb.table('../../documentation/data/carriers.parquet') extend {
+  primary_key: code
+  measure: carrier_count is count()
+}
+
+source: airports is duckdb.table('../../documentation/data/airports.parquet') extend {
+  primary_key: code
+  measure: airport_count is count()
+  dimension: name is concat(code, '-', full_name )
+}
+
+source: aircraft_models is duckdb.table('../../documentation/data/aircraft_models.parquet') extend {
+  primary_key: aircraft_model_code
+  measure: aircraft_model_count is count()
+}
+
+source: aircraft is duckdb.table('../../documentation/data/aircraft.parquet') extend {
+  primary_key: tail_num
+  measure: aircraft_count is count()
+  join_one: aircraft_models with aircraft_model_code
+}
+
+source: flights is duckdb.table('../../documentation/data/flights.parquet') extend {
+  primary_key: id2
+
+  // rename some fields as from their physical names
+  rename: origin_code is origin
+  rename: destination_code is destination
+
+  join_one: carriers with carrier
+  join_one: origin is airports with origin_code
+  join_one: destination is airports with destination_code
+  join_one: aircraft with tail_num
+
+  measure:
+    flight_count is count()
+    total_distance is sum(distance)
+    destination_count is destination.airport_count
+    origin_count is origin.count()
+    # percent
+    percent_of_flights is flight_count/all(flight_count)
+    aircraft_count is aircraft.count()
+
+    seats_for_sale is source.sum(aircraft.aircraft_models.seats)
+    seats_owned is aircraft.sum(aircraft.aircraft_models.seats)
+    average_plane_size is aircraft.avg(aircraft.aircraft_models.seats)
+    // average_flight_distance is distance.avg()
+
+  dimension: 
+    origin_name is concat(origin.code," - ", origin.city)
+    destination_name is concat(destination.code," - ", destination.city)
+    carrier_name is carriers.nickname
+    plane_manufacturer is aircraft.aircraft_models.manufacturer
+    dep_month is dep_time.month
+
+  view: metrics is {
+    aggregate: flight_count, total_distance, percent_of_flights
+  }
+
+  view: by_carrier is 
+    {group_by: carrier is concat(carrier, ' - ', carrier_name) }
+    + metrics
+
+ 
+  view: carrier_list is {
+    # list
+    nest: cl is {
+      group_by: carriers.nickname
+      aggregate: flight_count
+    }
+  }
+}
