@@ -70,11 +70,13 @@ Assign measures to axes with `y` / `y2`, and choose the mark for each with
 as bars — the reverse of the defaults.
 >>>malloy
 #(docs) size=large limit=5000
-# combo_chart {
-  x=nickname
-  y=avg_dep_delay y.chart=bar
-  y2=flight_count y2.chart=line
-}
+#|
+  combo_chart {
+    x=nickname
+    y=avg_dep_delay y.chart=bar
+    y2=flight_count y2.chart=line
+  }
+|#
 run: flights -> {
   group_by: carriers.nickname
   aggregate: flight_count, avg_dep_delay
