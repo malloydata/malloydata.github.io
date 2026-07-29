@@ -50,7 +50,7 @@ Malloy's rendering library uses [Vega-Lite](https://vega.github.io/vega-lite/) f
 
 | Tag | Description | Key Properties |
 |-----|-------------|----------------|
-| [`# bar_chart`](bar_charts.malloynb) | Bar chart | `.stack`, `.size`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
+| [`# bar_chart`](bar_charts.malloynb) | Bar chart | `.stack`, `.horizontal`, `.size`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
 | [`# line_chart`](charts_line_chart.malloynb) | Line chart | `.zero_baseline`, `.size`, `.interpolate`, `.x`, `.y`, `.series`, `.title`, `.subtitle` |
 | [`# scatter_chart`](scatter_charts.malloynb) | Scatter plot | Uses field order: x, y, color, size, shape |
 | [`# shape_map`](shape_maps.malloynb) | Choropleth map (US states) | Uses field order: state, value |
@@ -61,7 +61,7 @@ Malloy's rendering library uses [Vega-Lite](https://vega.github.io/vega-lite/) f
 
 | Tag | Description | Key Properties |
 |-----|-------------|----------------|
-| [`# dashboard`](dashboards.malloynb) | Dashboard layout | `.table.max_height`, `# break` on nested views |
+| [`# dashboard`](dashboards.malloynb) | Dashboard layout | `.columns`, `.gap`, `.table.max_height`, `# span`, `# break`, `# subtitle`, `# borderless` |
 | [`# table`](tables.malloynb) | Table (default) | `.size=fill`, `# column { width, height, word_break }` |
 | [`# pivot`](pivots.malloynb) | Pivot nested query into columns | `.dimensions` |
 | [`# transpose`](transpose.malloynb) | Swap rows and columns | `.limit` |
