@@ -148,7 +148,7 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `serviceAccountKey` | json | Service account key as a JSON object (alternative to file path) |
 | `location` | string | Dataset location |
 | `maximumBytesBilled` | string | Byte billing cap |
-| `timeoutMs` | string | Total query timeout in ms, bounding both the BigQuery job and the results-fetch polling. Defaults to 600000 (10 min); an unset, blank, non-numeric, or `0` value falls back to that default. |
+| `timeoutMs` | string | Total query timeout in ms, bounding both the BigQuery job and the results-fetch polling. Defaults to 600000 (10 min); an unset, blank, non-numeric, zero, or negative value falls back to that default. |
 | `billingProjectId` | string | Billing project (if different) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
