@@ -222,7 +222,7 @@ The `ssl` property accepts a JSON object passed directly to the underlying [node
 | `privateKeyPath` | file | Path to private key (.pem/.key) |
 | `privateKey` | password | Private key PEM string (alternative to file path) |
 | `privateKeyPass` | password | Private key passphrase |
-| `timeoutMs` | number | Query timeout in ms |
+| `timeoutMs` | number | Per-statement query timeout in ms. Defaults to 600000 (10 min); an unset, blank, non-numeric, zero, or negative value falls back to that default. |
 | `schemaSampleTimeoutMs` | number | Variant schema sample timeout in ms (default 15000) |
 | `schemaSampleRowLimit` | number | Row limit for variant schema sample (default 1000) |
 | `schemaSampleFullScanMaxBytes` | number | Tables at or below this byte size are full-scanned instead of sampled |
