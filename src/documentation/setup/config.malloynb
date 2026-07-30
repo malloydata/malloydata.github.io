@@ -164,6 +164,7 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `defaultCatalog` | string | Default Unity Catalog name |
 | `defaultSchema` | string | Default schema name |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+| `timeoutMs` | number | Client-side query timeout in ms; the query is cancelled if it runs longer. Defaults to 600000 (10 min); an unset, blank, non-numeric, zero, or negative value falls back to that default. |
 
 Authentication: provide either `token` or the `oauthClientId` + `oauthClientSecret` pair.
 
