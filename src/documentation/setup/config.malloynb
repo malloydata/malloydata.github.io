@@ -146,11 +146,43 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `projectId` | string | GCP project ID |
 | `serviceAccountKeyPath` | file | Path to service account JSON key |
 | `serviceAccountKey` | json | Service account key as a JSON object (alternative to file path) |
+| `serviceAccountKeyJson` | secret | Service account key as a JSON **string** |
+| `serviceAccountKeyJsonBase64` | secret | Service account key as base64-encoded JSON |
 | `location` | string | Dataset location |
 | `maximumBytesBilled` | string | Byte billing cap |
 | `timeoutMs` | string | Query timeout in ms |
 | `billingProjectId` | string | Billing project (if different) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+
+With no key configured at all, the connection uses [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) — the usual choice for local development, where `gcloud auth application-default login` has already run.
+
+**Supplying the key from the environment.** On a server the key normally arrives as an environment variable rather than as a file on disk. Use `serviceAccountKeyJson`, which holds the entire key file as a string:
+
+```json
+{
+  "connections": {
+    "my_bigquery": {
+      "is": "bigquery",
+      "projectId": "my-project",
+      "serviceAccountKeyJson": {"env": "BIGQUERY_CREDENTIALS_JSON"}
+    }
+  }
+}
+```
+
+Set the variable to the key file's contents on a single line — the key's own `\n` escapes are preserved by JSON, and quoting the value keeps the shell out of it:
+
+```bash
+export BIGQUERY_CREDENTIALS_JSON="$(jq -c . service-account-key.json)"
+```
+
+`serviceAccountKeyJsonBase64` takes the same key base64-encoded, for pipelines and secret stores that mangle the quoting or the embedded newlines of raw JSON:
+
+```bash
+export BIGQUERY_CREDENTIALS_JSON_B64="$(base64 < service-account-key.json | tr -d '\n')"
+```
+
+Note that `serviceAccountKey` — the `json`-typed property — **cannot** take an environment variable reference. Like every `json` property, it treats `{"env": "..."}` as literal data, so that object itself becomes the credentials and BigQuery rejects it with `The incoming JSON object does not contain a client_email field`. Use one of the two `secret` properties above instead. If several are set, the order of precedence is `serviceAccountKey`, `serviceAccountKeyJson`, `serviceAccountKeyJsonBase64`.
 
 ### `databricks` — Databricks
 
@@ -342,4 +374,6 @@ Any property value can be replaced with an environment variable reference. This 
 The `{"env": "VAR_NAME"}` syntax looks up the value from the named environment variable at connection time. If the variable is not set, the field is omitted and the connection proceeds without it.
 
 You can also provide a plain string value directly — this is useful for testing but not recommended for shared or committed config files.
+
+**One exception: `json` properties.** Properties whose type is `json` — `serviceAccountKey`, `ssl`, `session`, `extraCredential`, `extraHeaders` — hold structured data, and they take that data literally. A `{"env": "..."}` written inside one is not resolved; it is passed along to the driver as the object it looks like, which usually surfaces later as a confusing error from the driver rather than as a missing-variable message. Where a secret needs to come from the environment, use the string-typed property meant for it (for BigQuery, [`serviceAccountKeyJson`](#bigquery-google-bigquery)).
 
