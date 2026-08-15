@@ -353,6 +353,10 @@
           "link": "/visualizations/charts_line_chart.malloynb"
         },
         {
+          "title": "Combo Charts",
+          "link": "/visualizations/combo_charts.malloynb"
+        },
+        {
           "title": "Scatter Charts",
           "link": "/visualizations/scatter_charts.malloynb"
         },
