@@ -181,8 +181,6 @@ The property also accepts the key base64-encoded, which is one unquoted token an
 export BIGQUERY_CREDENTIALS_JSON="$(base64 < service-account-key.json | tr -d '\n')"
 ```
 
-No flag distinguishes the two — the encoding is detected, since JSON always begins with `{` and `{` is not a base64 character. Surrounding whitespace is ignored, so a trailing newline from `$(cat …)` or a here-doc is harmless.
-
 Note that `serviceAccountKey` — the `json`-typed property — **cannot** take an environment variable reference. Like every `json` property, it treats `{"env": "..."}` as literal data, so that object itself becomes the credentials and BigQuery rejects it with `The incoming JSON object does not contain a client_email field`. Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
 
 ### `databricks` — Databricks
@@ -375,6 +373,4 @@ Any property value can be replaced with an environment variable reference. This 
 The `{"env": "VAR_NAME"}` syntax looks up the value from the named environment variable at connection time. If the variable is not set, the field is omitted and the connection proceeds without it.
 
 You can also provide a plain string value directly — this is useful for testing but not recommended for shared or committed config files.
-
-**One exception: `json` properties.** Properties whose type is `json` — `serviceAccountKey`, `ssl`, `session`, `extraCredential`, `extraHeaders` — hold structured data, and they take that data literally. A `{"env": "..."}` written inside one is not resolved; it is passed along to the driver as the object it looks like, which usually surfaces later as a confusing error from the driver rather than as a missing-variable message. Where a secret needs to come from the environment, use the string-typed property meant for it (for BigQuery, [`serviceAccountKeyJson`](#bigquery-google-bigquery)).
 
