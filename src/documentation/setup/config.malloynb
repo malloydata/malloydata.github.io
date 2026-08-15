@@ -146,11 +146,42 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `projectId` | string | GCP project ID |
 | `serviceAccountKeyPath` | file | Path to service account JSON key |
 | `serviceAccountKey` | json | Service account key as a JSON object (alternative to file path) |
+| `serviceAccountKeyJson` | secret | Service account key as a **string** — JSON or base64-encoded JSON |
 | `location` | string | Dataset location |
 | `maximumBytesBilled` | string | Byte billing cap |
 | `timeoutMs` | string | Query timeout in ms |
 | `billingProjectId` | string | Billing project (if different) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
+
+With no key configured at all, the connection uses [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) — the usual choice for local development, where `gcloud auth application-default login` has already run.
+
+**Supplying the key from the environment.** On a server the key normally arrives as an environment variable rather than as a file on disk. Use `serviceAccountKeyJson`, which holds the entire key file as a string:
+
+```json
+{
+  "connections": {
+    "my_bigquery": {
+      "is": "bigquery",
+      "projectId": "my-project",
+      "serviceAccountKeyJson": {"env": "BIGQUERY_CREDENTIALS_JSON"}
+    }
+  }
+}
+```
+
+Set the variable to the key file's contents. Quoting the value keeps the shell out of it:
+
+```bash
+export BIGQUERY_CREDENTIALS_JSON="$(jq -c . service-account-key.json)"
+```
+
+The property also accepts the key base64-encoded, which is one unquoted token and so travels through shells, CI secret editors, and `.env` files more reliably than a blob of JSON braces and quotes:
+
+```bash
+export BIGQUERY_CREDENTIALS_JSON="$(base64 < service-account-key.json | tr -d '\n')"
+```
+
+Note that `serviceAccountKey` — the `json`-typed property — **cannot** take an environment variable reference. Like every `json` property, it treats `{"env": "..."}` as literal data, so that object itself becomes the credentials and BigQuery rejects it with `The incoming JSON object does not contain a client_email field`. Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
 
 ### `databricks` — Databricks
 
