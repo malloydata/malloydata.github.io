@@ -155,31 +155,42 @@ Malloy exposes two parameters that let you choose how a connection participates 
 
 With no key configured at all, the connection uses [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) — the usual choice for local development, where `gcloud auth application-default login` has already run.
 
-**Supplying the key from the environment.** On a server the key normally arrives as an environment variable rather than as a file on disk. Use `serviceAccountKeyJson`, which holds the entire key file as a string:
+**The server pattern.** On a server the key arrives as an environment variable rather than as a file on disk, so a deployed BigQuery config is usually just a project and a reference to that variable:
 
 ```json
 {
   "connections": {
-    "my_bigquery": {
+    "malloy_bq": {
       "is": "bigquery",
       "projectId": "my-project",
-      "serviceAccountKeyJson": {"env": "BIGQUERY_CREDENTIALS_JSON"}
+      "serviceAccountKeyJson": {"env": "MALLOY_BQ_JSON"}
     }
   }
 }
 ```
 
-Set the variable to the key file's contents. Quoting the value keeps the shell out of it:
+`serviceAccountKeyJson` holds the entire key file as a **string**. Set the variable to the key file's contents; quoting the value keeps the shell out of it:
 
 ```bash
-export BIGQUERY_CREDENTIALS_JSON="$(jq -c . service-account-key.json)"
+export MALLOY_BQ_JSON="$(jq -c . service-account-key.json)"
 ```
 
 The property also accepts the key base64-encoded, which is one unquoted token and so travels through shells, CI secret editors, and `.env` files more reliably than a blob of JSON braces and quotes:
 
 ```bash
-export BIGQUERY_CREDENTIALS_JSON="$(base64 < service-account-key.json | tr -d '\n')"
+export MALLOY_BQ_JSON="$(base64 < service-account-key.json | tr -d '\n')"
 ```
+
+Which encoding arrived is detected, not declared, so switching between the two needs no config change.
+
+**Running that same config locally.** An `{"env": "..."}` reference to a variable that isn't set is omitted rather than an error, and a BigQuery connection with no key falls back to application default credentials. So the file above needs no local variant: leave `MALLOY_BQ_JSON` unset on your laptop, log in once, and the same `malloy_bq` connection runs against the same project through your own credentials.
+
+```bash
+gcloud auth login --update-adc
+gcloud config set project my-project --installation
+```
+
+Don't try to fill `MALLOY_BQ_JSON` from `~/.config/gcloud/application_default_credentials.json`. That file holds an `authorized_user` credential — a refresh token, not a key — and the connection rejects it up front with `serviceAccountKeyJson parsed but is not a service account key`. The property takes a service account key or an [external account](https://cloud.google.com/iam/docs/workload-identity-federation) (workload identity federation) config; ADC reaches BigQuery through the unset-variable fallback above instead. To exercise the keyed path itself before deploying, point the variable at a real service account key.
 
 Note that `serviceAccountKey` — the `json`-typed property — **cannot** take an environment variable reference. Like every `json` property, it treats `{"env": "..."}` as literal data, so that object itself becomes the credentials and BigQuery rejects it with `The incoming JSON object does not contain a client_email field`. Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
 
