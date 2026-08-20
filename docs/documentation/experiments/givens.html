@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Givens (Model Parameters) | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <script src="/js/generated/malloy-render-0.0.397.js"></script>
+    <style>
+      .result-inner .malloy-render {
+        width: 100%;
+      }
+      .result-inner .table-container {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/html_data_apps.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/publishing/theming.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/html_data_apps.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/publishing/theming.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/html_data_apps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                HTML Data Apps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/theming">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Theming
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/databricks.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports and Exports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/databricks.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/databricks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Databricks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=visualizations
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/tables.html,/documentation/visualizations/big_values.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/model_options.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Visualizations
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/tables">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/big_values">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Big Values
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links / Images
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/model_options">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Model Options
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html,/documentation/experiments/virtual_sources.html,/documentation/experiments/givens.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/virtual_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Types and Virtual Sources
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/experiments/givens">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Givens (Model Parameters)
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="virtual_sources.html"><img src="/img/previous.svg" alt="previous"/>Types and Virtual Sources</a>
+  </div>
+  <div class="item">
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="givens-model-level-parameters" class="header-link anchor" href="#givens-model-level-parameters">
+          Givens — Model-Level Parameters
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/experiments/givens.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p><strong>Givens</strong> are named values supplied to a Malloy model at run time. A model declares the values it expects with a top-level <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span></code> block; references to those values inside the model use a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">NAME</span></span></code> sigil; the host application supplies values when constructing a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code> or running a query.</p>
+<p>The motivating use case is <strong>row-level access control</strong>: a model can write <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">orders</span><span style="color: #000000">.</span><span style="color: #001080">tenant_id</span><span style="color: #000000"> = $</span><span style="color: #001080">TENANT</span></span></code> once, and the runtime supplies the tenant value per API call. Other use cases include configuration values (max row limits, date cutoffs), session context (user role, locale), and any situation where one compiled model should be reusable across multiple invocations with varying context.</p>
+<p>This is an experimental feature. Enable it with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental.givens</span></span></code> at the top of your <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> file. The design — including the <strong>name</strong> <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span></span></code> itself — is provisional and may change before the feature ships.</p>
+<blockquote>
+<p><strong>Givens vs. source parameters.</strong> Malloy already has <a href="parameters">source parameters</a> (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #795E26">foo</span><span style="color: #000000">(</span><span style="color: #001080">x</span><span style="color: #000000">::</span><span style="color: #267F99">string</span><span style="color: #000000">) </span><span style="color: #AF00DB">is</span><span style="color: #000000"> ...</span></span></code>). Givens are complementary, not a replacement. Source parameters bind at instantiation and let two differently-bound copies of the same source coexist in one model. Givens bind at the runtime/query layer and produce one value per name across the whole compilation. See <a href="#givens-vs-source-parameters">Givens vs. source parameters</a> below.</p>
+</blockquote>
+
+      <h2>
+        <a id="declaring-givens" class="header-link anchor" href="#declaring-givens">
+          Declaring givens
+        </a>
+      </h2>
+    <p>A new top-level statement <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span></code> introduces givens to a model:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">##! experimental.givens</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">TENANT</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">MAX_ROWS</span><span style="color: #000000"> :: </span><span style="color: #267F99">number</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #098658">1000</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">CUTOFF_DATE</span><span style="color: #000000"> :: </span><span style="color: #267F99">date</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #098658">@2024-01-01</span></span></pre></div><p>A given declaration has a name, a type, and an optional default value. The default is an expression that may reference other givens.</p>
+<p>Type can be any Malloy atomic type, including compound types and filter expressions:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">ROLE</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">ALLOWED_ROLES</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000">[]</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">SESSION</span><span style="color: #000000"> :: { </span><span style="color: #001080">user_id</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #001080">tenant</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000"> }</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">TENANT_FILTER</span><span style="color: #000000"> :: </span><span style="color: #001080">filter</span><span style="color: #000000">&lt;</span><span style="color: #267F99">string</span><span style="color: #000000">&gt;</span></span></pre></div><p>Annotations work the same as on sources, queries, and other named declarations, and surface through the <a href="#introspection">introspection API</a>:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0451A5"># label</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;Order</span><span style="color: #008000"> </span><span style="color: #0451A5">Status&quot;</span><span style="color: #008000"> </span><span style="color: #0451A5">possible_values</span><span style="color: #000000">=</span><span style="color: #A31515">[COMPLETE,</span><span style="color: #008000"> </span><span style="color: #0451A5">CANCELLED]</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">ORDER_STATUS</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;COMPLETE&quot;</span></span></pre></div>
+      <h2>
+        <a id="referencing-givens" class="header-link anchor" href="#referencing-givens">
+          Referencing givens
+        </a>
+      </h2>
+    <p>Inside any expression, a given is referenced with a leading <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span></span></code>:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">orders_for_user</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">orders</span><span style="color: #000000"> </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">orders</span><span style="color: #000000">.</span><span style="color: #001080">tenant_id</span><span style="color: #000000"> = $</span><span style="color: #001080">TENANT</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">: </span><span style="color: #001080">recent_orders</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">orders_for_user</span><span style="color: #000000"> -&gt; {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">order_date</span><span style="color: #000000"> &gt;= $</span><span style="color: #001080">CUTOFF_DATE</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">limit</span><span style="color: #000000">: $</span><span style="color: #001080">MAX_ROWS</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span></span></code> sigil marks a reference as coming from the given namespace, distinct from source/view/field names. Given names share the declaration namespace with other top-level names, so <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">x</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> ...</span></span></code> together with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">: </span><span style="color: #001080">x</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span></span></code> is a declaration-time conflict error.</p>
+<p>A given's name appears in four places:</p>
+<ol>
+<li><p><strong>Declaration</strong> — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">: </span><span style="color: #001080">TENANT</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span></span></code></p>
+</li>
+<li><p><strong>Import</strong> (selective) — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">TENANT</span><span style="color: #000000"> } </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;b.malloy&quot;</span></span></code>, optionally with rename</p>
+</li>
+<li><p><strong>Expression reference</strong> — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">x</span><span style="color: #000000">.</span><span style="color: #001080">tenant</span><span style="color: #000000"> = $</span><span style="color: #001080">TENANT</span></span></code></p>
+</li>
+<li><p><strong>Supply</strong> (caller side) — as a key in a values file, a programmatic <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givens</span></span></code> map, or a per-query <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givens</span></span></code> option</p>
+</li></ol>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span></span></code> appears <strong>only</strong> at expression references. The other three sites use the bare name. The disambiguation problem the sigil solves only exists inside expressions, where given names compete with field names, source names, and other identifiers; declarations, imports, and supply sites already sit in syntactic positions where only a given makes sense.</p>
+
+      <h2>
+        <a id="array-givens-and-in" class="header-link anchor" href="#array-givens-and-in">
+          Array givens and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">in</span></span></code>
+        </a>
+      </h2>
+    <p>When a given has array type, an expression <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">expr</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">ARR</span></span></code> tests <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">expr</span></span></code> against the runtime-bound array. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">ARR</span></span></code> is the standard negation.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">ALLOWED_STATES</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000">[]</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">URGENT_STATUSES</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000">[]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">orders</span><span style="color: #000000"> </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">state</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">ALLOWED_STATES</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">dimension</span><span style="color: #000000">: </span><span style="color: #001080">is_urgent</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">order_status</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">URGENT_STATUSES</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>The left-hand side must have the same basic type as the array's element type — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">string</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #267F99">string</span><span style="color: #000000">[]</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">number</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #267F99">number</span><span style="color: #000000">[]</span></span></code>, etc. Mismatches are translate-time errors.</p>
+<p>The array's contents reach SQL embedded in a generated <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">IN</span><span style="color: #000000"> (...)</span></span></code> clause. An empty array, or one bound to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code>, collapses to the obvious result: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">IN</span></span></code> becomes <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">FALSE</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">NOT</span><span style="color: #000000"> </span><span style="color: #001080">IN</span></span></code> becomes <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">TRUE</span></span></code>.</p>
+<p>To <em>derive</em> a value from an array — typically a boolean gate — without embedding the array in row-position SQL, see <a href="#inline-givens">Inline givens</a> below.</p>
+
+      <h2>
+        <a id="inline-givens" class="header-link anchor" href="#inline-givens">
+          Inline givens
+        </a>
+      </h2>
+    <p>An <strong>inline</strong> given is evaluated at bind time, before SQL is emitted. Its default expression runs against the resolved given values and produces a literal — boolean, number, string — and that literal is what reaches SQL.</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">CAPABILITIES</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000">[]</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">inline</span><span style="color: #000000"> </span><span style="color: #001080">CAN_READ_ORDERS</span><span style="color: #000000"> :: </span><span style="color: #267F99">boolean</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;read_orders&#39;</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">CAPABILITIES</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">inline</span><span style="color: #000000"> </span><span style="color: #001080">CAN_MUTATE</span><span style="color: #000000"> :: </span><span style="color: #267F99">boolean</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;write_orders&#39;</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">CAPABILITIES</span><span style="color: #000000"> </span><span style="color: #0000FF">or</span><span style="color: #000000"> </span><span style="color: #A31515">&#39;admin&#39;</span><span style="color: #000000"> </span><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">CAPABILITIES</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">orders</span><span style="color: #000000"> </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: $</span><span style="color: #001080">CAN_READ_ORDERS</span><span style="color: #000000">   </span><span style="color: #008000">// SQL sees: WHERE ... AND TRUE  (or FALSE)</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>This is the <strong>row-level access control gate</strong> pattern. The host supplies a capability list as a regular given; an inline given derives a boolean from that list; the boolean — not the list — is what reaches SQL. The query planner sees a constant predicate, and the underlying capability list never crosses into row-position SQL.</p>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">inline</span></span></code> is a modifier on the declaration. An inline given is computed, not supplied — its derived value is a translation-time intermediate and isn't surfaced as a public API. It does not appear in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Model</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code> or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">PreparedQuery</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code> (a caller shouldn't be invited to override a derived value), and the host doesn't bind it through <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code> either.</p>
+
+      <h3>
+        <a id="rules" class="header-link anchor" href="#rules">
+          Rules
+        </a>
+      </h3>
+    <ul>
+<li><p>An inline given must have a default. A modifier with no <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">is</span></span></code> clause is a translate-time error.</p>
+</li>
+<li><p>The default can use:</p>
+<ul>
+<li><p>Boolean and comparison operators: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">and</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">or</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">not</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">=</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">!=</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;=</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&gt;=</span></span></code></p>
+</li>
+<li><p>The <a href="#array-givens-and-in"><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">array</span></span></code></a> test against another given</p>
+</li>
+<li><p>Literals (string, number, boolean, null, array) and references to other givens</p>
+</li></ul>
+</li>
+<li><p>The default cannot call SQL functions, reference fields, or use any operator outside the list above. Disallowed operators are reported at translate time.</p>
+</li></ul>
+<p>The allowed operator surface intentionally covers the capability/role-gate use case and will grow as concrete needs appear.</p>
+
+      <h3>
+        <a id="when-to-reach-for-inline" class="header-link anchor" href="#when-to-reach-for-inline">
+          When to reach for inline
+        </a>
+      </h3>
+    <table>
+<thead>
+<tr>
+<th>You have</th>
+
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A value the host computes per request that reaches SQL as-is</td>
+
+<td>A regular given</td>
+</tr>
+
+<tr>
+<td>An array the host supplies, tested per row</td>
+
+<td>A regular array given with <a href="#array-givens-and-in"><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">in</span><span style="color: #000000"> $</span><span style="color: #001080">array</span></span></code></a></td>
+</tr>
+
+<tr>
+<td>A value derived from other givens that should reach SQL as a literal</td>
+
+<td>An inline given</td>
+</tr>
+</tbody></table>
+
+      <h2>
+        <a id="imports-and-surfacing" class="header-link anchor" href="#imports-and-surfacing">
+          Imports and surfacing
+        </a>
+      </h2>
+    <p>Each model has a flat <strong>given namespace</strong> — the names its caller uses to supply values. Givens behave like every other top-level named thing under <a href="../language/imports">import</a>:</p>
+<ul>
+<li><p><strong>Non-selective</strong> — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;b.malloy&quot;</span></span></code> brings B's full export surface into A: sources, queries, views, <em>and</em> givens, all under their original names.</p>
+</li>
+<li><p><strong>Selective</strong> — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">source1</span><span style="color: #000000"> } </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;b.malloy&quot;</span></span></code> brings in only what's listed. Givens not in the list are not surfaced. To surface a given, list it: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">source1</span><span style="color: #000000">, </span><span style="color: #001080">MAX</span><span style="color: #000000"> } </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;b.malloy&quot;</span></span></code>.</p>
+</li>
+<li><p><strong>Rename</strong> — uses the existing <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">LOCAL</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">REMOTE</span></span></code> grammar: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">B_MAX</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">MAX_SIZE</span><span style="color: #000000"> } </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;b.malloy&quot;</span></span></code>.</p>
+</li></ul>
+<p>An imported source can reference a given that the importer didn't surface. The reference still resolves to the original declaration and works fine internally — what surfacing controls is <strong>who can supply a value</strong>. A surfaced given is in the importer's namespace and the caller can supply it. An unsurfaced given falls back on its declaration-site default; if it has no default, any query reaching it raises a missing-given error.</p>
+<p>The caller of A always sees one flat given map keyed by names in A's namespace, regardless of which file originally declared each given.</p>
+<p>Name collisions are compile-time errors, whether the colliding imports are both selective, both non-selective, or one of each. Disambiguate with rename-on-import:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">source1</span><span style="color: #000000">, </span><span style="color: #001080">B_MAX</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">MAX_SIZE</span><span style="color: #000000"> } </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;b.malloy&quot;</span></span>
+<span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">source2</span><span style="color: #000000">, </span><span style="color: #001080">C_MAX</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">MAX_SIZE</span><span style="color: #000000"> } </span><span style="color: #001080">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;c.malloy&quot;</span></span></pre></div>
+      <h3>
+        <a id="convention-shared-project-level-givens" class="header-link anchor" href="#convention-shared-project-level-givens">
+          Convention: shared project-level givens
+        </a>
+      </h3>
+    <p>A multi-tenant project where many models reference <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">TENANT</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">USER_ROLE</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">REGION</span></span></code> typically wants those givens declared once and shared, so the names stay stable across files and refactors.</p>
+<p>The recommended convention: put project-shared givens in their own <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> file and bare-import it at the top of every root file in the project. Bare imports surface givens by default, so the import statement is itself the documentation:</p>
+<div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">// tenant_givens.malloy — declared in one place</span></span>
+<span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">TENANT</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">USER_ROLE</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;viewer&quot;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">REGION</span><span style="color: #000000"> :: </span><span style="color: #267F99">string</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;us-east-1&quot;</span></span></pre></div><div class="code-wrapper"><pre class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">// orders.malloy — and every other root file in the project</span></span>
+<span class="line"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;tenant_givens.malloy&quot;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #AF00DB">source</span><span style="color: #000000">: </span><span style="color: #001080">orders</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">duckdb</span><span style="color: #000000">.</span><span style="color: #795E26">table</span><span style="color: #000000">(</span><span style="color: #A31515">&#39;warehouse.orders&#39;</span><span style="color: #000000">) </span><span style="color: #AF00DB">extend</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">tenant_id</span><span style="color: #000000"> = $</span><span style="color: #001080">TENANT</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #AF00DB">where</span><span style="color: #000000">: </span><span style="color: #001080">region</span><span style="color: #000000"> = $</span><span style="color: #001080">REGION</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>A reader opening any model in the project sees the project's given contract on line 1. This is convention, not language enforcement.</p>
+
+      <h2>
+        <a id="satisfiability" class="header-link anchor" href="#satisfiability">
+          Satisfiability
+        </a>
+      </h2>
+    <p>A query that references <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">X</span></span></code> is <strong>satisfiable</strong> if either:</p>
+<ul>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">X</span></span></code> is in the model's namespace (the caller can supply a value at run time), or</p>
+</li>
+<li><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">X</span></span></code> has a default at its declaration site.</p>
+</li></ul>
+<p>A query is <strong>unsatisfiable</strong> if neither — there is no path for the value to ever arrive. Unsatisfiable queries raise a missing-given error at run time; the translator catches what it can at translation time so the easy cases fail early.</p>
+<p><strong>Latent definitions don't need to be satisfiable.</strong> Views, dimensions, and measures that reference <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">$</span><span style="color: #001080">X</span></span></code> are fine if no query actually invokes them — satisfiability is a property of running queries, not of the namespace at large.</p>
+
+      <h2>
+        <a id="supplying-values-from-a-host-application" class="header-link anchor" href="#supplying-values-from-a-host-application">
+          Supplying values from a host application
+        </a>
+      </h2>
+    <p>Values can be supplied at two layers:</p>
+<ul>
+<li><p><strong>Per-runtime</strong> — bound to a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code>, applied as defaults to every query that runs through it.</p>
+</li>
+<li><p><strong>Per-query</strong> — supplied on a single <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #AF00DB">run</span><span style="color: #000000">({ </span><span style="color: #001080">givens</span><span style="color: #000000">: ... })</span></span></code> call, applied just to that call.</p>
+</li></ul>
+<p>The two compose: per-query values override per-runtime values for that one call. Runtime-level <a href="#finalizing-givens-at-the-runtime"><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">finalizeGivens</span></span></code></a> is a security primitive that prevents per-query overrides for specific names, even though everything else can be overridden.</p>
+
+      <h3>
+        <a id="per-runtime-a-values-file-at-givenspath" class="header-link anchor" href="#per-runtime-a-values-file-at-givenspath">
+          Per-runtime: a values file at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code>
+        </a>
+      </h3>
+    <p>Per-runtime values can live in a JSON file. The project's <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> points at the file with one top-level key:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">// malloy-config.json</span></span>
+<span class="line"><span style="color: #000000">{</span></span>
+<span class="line"><span style="color: #000000">  &quot;givensPath&quot;: &quot;./local-givens.json&quot;</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code> is a string-valued config property. Like every string-valued property in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code>, its value can be a literal string or the env-var form <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ </span><span style="color: #A31515">&quot;env&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;VAR_NAME&quot;</span><span style="color: #000000"> }</span></span></code>, which resolves at config-load time:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{</span></span>
+<span class="line"><span style="color: #000000">  &quot;givensPath&quot;: { &quot;env&quot;: &quot;GAME_STORE_GIVENS&quot; }</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>A developer sets <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">export</span><span style="color: #000000"> </span><span style="color: #001080">GAME_STORE_GIVENS</span><span style="color: #000000">=~/</span><span style="color: #001080">work</span><span style="color: #000000">/</span><span style="color: #001080">dev</span><span style="color: #000000">-</span><span style="color: #001080">givens</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> in their shell rc; the prod server's deployment sets it to <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">/</span><span style="color: #001080">var</span><span style="color: #000000">/</span><span style="color: #AF00DB">run</span><span style="color: #000000">/</span><span style="color: #001080">secrets</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">givens</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code>; CI sets it to a fixture path. Same project config everywhere — only the env-var binding differs.</p>
+<p>When the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code> is constructed, it reads the file at the resolved path. The file is plain JSON — a flat map of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">name</span><span style="color: #000000"> → </span><span style="color: #001080">value</span></span></code>, no envelope:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{</span></span>
+<span class="line"><span style="color: #000000">  &quot;TENANT&quot;: &quot;acme&quot;,</span></span>
+<span class="line"><span style="color: #000000">  &quot;USER_ROLE&quot;: &quot;admin&quot;,</span></span>
+<span class="line"><span style="color: #000000">  &quot;CUTOFF_DATE&quot;: &quot;2024-01-01&quot;</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>The schema for that JSON is the model's <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span></code> block. See <a href="#accepted-js-shapes">Accepted JS shapes</a> below for the per-type rules that apply to both the values file and per-query supply.</p>
+
+      <h3>
+        <a id="per-runtime-direct-supply-on-the-runtime" class="header-link anchor" href="#per-runtime-direct-supply-on-the-runtime">
+          Per-runtime: direct supply on the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code>
+        </a>
+      </h3>
+    <p>A <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code> ends up with its givens via one of two paths.</p>
+<p><strong>Config-driven.</strong> A developer puts a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> somewhere up the tree from where they're working. The host (CLI, VS Code, AI tooling) discovers it and uses it:</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">config</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #795E26">discoverConfig</span><span style="color: #000000">(</span><span style="color: #001080">startURL</span><span style="color: #000000">, </span><span style="color: #001080">ceilingURL</span><span style="color: #000000">, </span><span style="color: #001080">urlReader</span><span style="color: #000000">);</span></span>
+<span class="line"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">runtime</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Runtime</span><span style="color: #000000">({ </span><span style="color: #001080">config</span><span style="color: #000000">, </span><span style="color: #001080">urlReader</span><span style="color: #000000"> });</span></span></pre></div><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">discoverConfig</span></span></code> walks up from <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">startURL</span></span></code> looking for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> (and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">-</span><span style="color: #001080">local</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code>), returning a fully built <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">MalloyConfig</span></span></code> on a hit. If the discovered config has <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code>, the runtime auto-reads that file when it first needs values.</p>
+<p><strong>Direct supply on the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code>.</strong> When the host has the values in hand and doesn't want to stage a file — per-request multi-tenant servers, tests, scripts — pass them as a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code> constructor option:</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">runtime</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Runtime</span><span style="color: #000000">({</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">config</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">givens:</span><span style="color: #000000"> { </span><span style="color: #001080">TENANT:</span><span style="color: #000000"> </span><span style="color: #001080">claims</span><span style="color: #000000">.</span><span style="color: #001080">tenant_id</span><span style="color: #000000">, </span><span style="color: #001080">USER_ROLE:</span><span style="color: #000000"> </span><span style="color: #001080">claims</span><span style="color: #000000">.</span><span style="color: #001080">role</span><span style="color: #000000"> },</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">urlReader</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">});</span></span></pre></div><p>Constructor-supplied values <strong>merge over</strong> the file at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code>, per key: the constructor wins on keys it touches; keys it doesn't touch fall through to whatever the file supplied. A project config with sane defaults baked into the values file (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">MAX_ROWS</span><span style="color: #000000">: </span><span style="color: #098658">100</span></span></code>) plus a request handler supplying only the JWT-derived <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">TENANT</span></span></code> gives both, with no read-merge-write pattern in the host.</p>
+<p>A read-only getter exposes the resolved per-runtime values, for diagnostics and test assertions:</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">runtime</span><span style="color: #000000">.</span><span style="color: #001080">givens</span><span style="color: #000000">   </span><span style="color: #008000">// ReadonlyMap&lt;string, GivenValue&gt;</span></span></pre></div>
+      <h3>
+        <a id="per-query-overrides" class="header-link anchor" href="#per-query-overrides">
+          Per-query overrides
+        </a>
+      </h3>
+    <p>Queries can also supply values explicitly:</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">query</span><span style="color: #000000">.</span><span style="color: #795E26">run</span><span style="color: #000000">({</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #001080">givens:</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">STATE_FILTER:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;CA&quot;</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">    </span><span style="color: #001080">LIMIT_OVERRIDE:</span><span style="color: #000000"> </span><span style="color: #098658">50</span><span style="color: #000000">,</span></span>
+<span class="line"><span style="color: #000000">  }</span></span>
+<span class="line"><span style="color: #000000">})</span></span></pre></div><p>Per-query values override the runtime's values for that one call. The <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givens</span></span></code> option is available on every compile-or-run entry point: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">runtime</span><span style="color: #000000">.</span><span style="color: #795E26">loadQuery</span><span style="color: #000000">(...).</span><span style="color: #AF00DB">run</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">preparedQuery</span><span style="color: #000000">.</span><span style="color: #795E26">getPreparedResult</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">preparedQuery</span><span style="color: #000000">.</span><span style="color: #795E26">getSQL</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span></span></code>.</p>
+
+      <h3>
+        <a id="where-each-kind-of-value-belongs" class="header-link anchor" href="#where-each-kind-of-value-belongs">
+          Where each kind of value belongs
+        </a>
+      </h3>
+    <table>
+<thead>
+<tr>
+<th>What you have</th>
+
+<th>Where it goes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Default for when no caller supplies a value</td>
+
+<td>Model declaration: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">: </span><span style="color: #001080">X</span><span style="color: #000000"> :: </span><span style="color: #001080">T</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #001080">value</span></span></code></td>
+</tr>
+
+<tr>
+<td>Static value shared across the team, checked into git</td>
+
+<td>JSON file at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code></td>
+</tr>
+
+<tr>
+<td>Environment-specific value (dev / prod / CI vary)</td>
+
+<td>JSON file at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code>, with the path resolved via <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ </span><span style="color: #A31515">&quot;env&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;VAR_NAME&quot;</span><span style="color: #000000"> }</span></span></code></td>
+</tr>
+
+<tr>
+<td>Value the host has in hand in JS (request claims, test setup)</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Runtime</span></span></code> constructor: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">new</span><span style="color: #000000"> </span><span style="color: #795E26">Runtime</span><span style="color: #000000">({ </span><span style="color: #001080">givens</span><span style="color: #000000">: { ... } })</span></span></code></td>
+</tr>
+
+<tr>
+<td>Per-call override (UI dropdown, dashboard parameter)</td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span><span style="color: #000000">.</span><span style="color: #AF00DB">run</span><span style="color: #000000">({ </span><span style="color: #001080">givens</span><span style="color: #000000">: { ... } })</span></span></code></td>
+</tr>
+</tbody></table>
+
+      <h3>
+        <a id="finalizing-givens-at-the-runtime" class="header-link anchor" href="#finalizing-givens-at-the-runtime">
+          Finalizing givens at the runtime
+        </a>
+      </h3>
+    <p>A multi-tenant deployment needs to declare that some givens — <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">TENANT</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">USER_ROLE</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">REGION</span></span></code> — are bound by the runtime and <strong>cannot</strong> be overridden per-query. Without this guarantee, a downstream endpoint that accidentally accepts user-controlled query params and plumbs them into <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #AF00DB">run</span><span style="color: #000000">({ </span><span style="color: #001080">givens</span><span style="color: #000000">: ... })</span></span></code> is a tenant-leak vulnerability. Runtime-finalize is a security primitive.</p>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">finalizeGivens</span></span></code> lives in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">config</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code>:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{</span></span>
+<span class="line"><span style="color: #000000">  &quot;givensPath&quot;: { &quot;env&quot;: &quot;GAME_STORE_GIVENS&quot; },</span></span>
+<span class="line"><span style="color: #000000">  &quot;finalizeGivens&quot;: [&quot;TENANT&quot;, &quot;USER_ROLE&quot;, &quot;REGION&quot;]</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>Finalize is a guard at the API surface. It doesn't change what a given means or what value it resolves to — a finalized given resolves to the same value it would have without the flag. Finalize <strong>only</strong> affects which callers can supply values:</p>
+<ul>
+<li><p><strong>Per-query supply rejection.</strong> A <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #AF00DB">run</span><span style="color: #000000">({ </span><span style="color: #001080">givens</span><span style="color: #000000">: { </span><span style="color: #001080">X</span><span style="color: #000000">: ... } })</span></span></code> for a finalized <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">X</span></span></code> throws at API entry, naming <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">X</span></span></code> and saying it's finalized at the runtime layer. Not silently dropped.</p>
+</li>
+<li><p><strong>Introspection filtering.</strong> Finalized givens are filtered out of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Model</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">PreparedQuery</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code>. UIs prompting for per-query inputs don't render editors for locked names.</p>
+</li></ul>
+<p><strong>Rules.</strong></p>
+<ul>
+<li><p>A name in <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">finalizeGivens</span></span></code> that has no resolved value after merging the file at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givensPath</span></span></code> with the constructor <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givens</span><span style="color: #000000">:</span></span></code> is a setup error at runtime construction.</p>
+</li>
+<li><p>The finalize set is name-based and applies to any model loaded into the runtime, including <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">extendModel</span></span></code>-extended models. An extension that introduces a new <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">given</span><span style="color: #000000">:</span></span></code> declaration shadowing a finalized name is a name-conflict error.</p>
+</li></ul>
+
+      <h2>
+        <a id="accepted-js-shapes" class="header-link anchor" href="#accepted-js-shapes">
+          Accepted JS shapes
+        </a>
+      </h2>
+    <p>Both the JSON values file and per-query <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givens</span></span></code> maps speak the same per-type shapes:</p>
+<table>
+<thead>
+<tr>
+<th>Malloy type</th>
+
+<th>JS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">string</span></span></code></td>
+
+<td>JS string</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">number</span></span></code></td>
+
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">number</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">bigint</span></span></code>, or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">string</span></span></code> (string is the precision escape hatch for big integers and DECIMAL/NUMERIC values)</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">boolean</span></span></code></td>
+
+<td>JS boolean</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">date</span></span></code></td>
+
+<td>ISO date string <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&quot;2024-01-15&quot;</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code> (naive)</td>
+
+<td>ISO string without offset</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">timestamptz</span></span></code></td>
+
+<td>JS <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code> or ISO string with offset</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">T</span><span style="color: #000000">[]</span></span></code> (array)</td>
+
+<td>JS array; each element validated against the shape for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">T</span></span></code></td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ </span><span style="color: #001080">name</span><span style="color: #000000"> :: </span><span style="color: #001080">T</span><span style="color: #000000">, ... }</span></span></code> (record)</td>
+
+<td>JS object with matching keys; each value validated against its declared type</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ </span><span style="color: #001080">name</span><span style="color: #000000"> :: </span><span style="color: #001080">T</span><span style="color: #000000">, ... }[]</span></span></code> (array of records)</td>
+
+<td>JS array of record-shaped objects</td>
+</tr>
+
+<tr>
+<td><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">filter</span><span style="color: #000000">&lt;</span><span style="color: #001080">T</span><span style="color: #000000">&gt;</span></span></code></td>
+
+<td>JS string (Malloy filter expression source)</td>
+</tr>
+</tbody></table>
+<p>JSON-native types map directly. The JS-only forms (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">bigint</span></span></code>) are accepted on the programmatic and per-query paths where a JS caller has them in hand; their string equivalents (ISO date/timestamp strings, decimal strings for big numbers) are accepted everywhere, including in the JSON values file.</p>
+<p><strong>Timestamp values follow Malloy's literal timestamp behavior</strong> — naive <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code> floats at use site, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">timestamptz</span></span></code> carries an explicit offset. See <a href="../language/timezones">Malloy timezones</a>.</p>
+<p><strong>Naive <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">timestamp</span></span></code> givens accept ISO strings only, not JS <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code>.</strong> A <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code> represents a specific UTC instant, not a wall-clock value — structurally the wrong shape for a naive given. The rejection also sidesteps a JS pitfall: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">new</span><span style="color: #000000"> </span><span style="color: #795E26">Date</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;2001-01-01T00:00:00&quot;</span><span style="color: #000000">)</span></span></code> (no offset) is interpreted in the system's local timezone per the ECMAScript spec, so a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code> constructed from a naive string silently carries the system-TZ of whichever machine ran the constructor. ISO strings have no such dependency.</p>
+<p><strong>For <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">timestamptz</span></span></code> givens, explicit-offset strings are preferable to JS <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code>.</strong> Both work, but the string form (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #A31515">&quot;2001-01-01T00:00:00-05:00&quot;</span></span></code> or with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Z</span></span></code>) makes the timezone choice visible at the boundary; a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #267F99">Date</span></span></code> may have inherited a system-TZ assumption upstream that the supplier doesn't see.</p>
+<p><strong>Compound types</strong> are supported end-to-end: a record-typed given supplied in the values file is parsed as a JSON object, validated recursively against the declared <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ ... }</span></span></code> shape, and emitted as a record literal in the IR. Same for arrays and arrays-of-records. Type mismatches at any depth throw at the boundary with a path that points at the offending location (e.g., <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">givens</span><span style="color: #000000">.</span><span style="color: #001080">SESSION</span><span style="color: #000000">.</span><span style="color: #001080">user_id</span><span style="color: #000000">: </span><span style="color: #001080">expected</span><span style="color: #000000"> </span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #001080">got</span><span style="color: #000000"> </span><span style="color: #267F99">number</span></span></code>).</p>
+<p><strong>Nulls are legal anywhere.</strong> A <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">null</span></span></code> value is accepted for any given type, and the type system does not track nullability.</p>
+
+      <h2>
+        <a id="introspection" class="header-link anchor" href="#introspection">
+          Introspection
+        </a>
+      </h2>
+    <p>Two getters expose, to the host application, the givens a caller of this runtime can supply per-query:</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Model</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">givens</span><span style="color: #000000">(): </span><span style="color: #267F99">ReadonlyMap</span><span style="color: #000000">&lt;</span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #267F99">Given</span><span style="color: #000000">&gt;;</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">PreparedQuery</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">givens</span><span style="color: #000000">(): </span><span style="color: #267F99">ReadonlyMap</span><span style="color: #000000">&lt;</span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #267F99">Given</span><span style="color: #000000">&gt;;  </span><span style="color: #008000">// subset this query references</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Model</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code> returns every supplyable given the model surfaces, keyed by caller-facing surface name. Drives whole-model parameter-editor UIs.</p>
+<p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">PreparedQuery</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code> returns the subset <strong>this specific query</strong> references — a strict subset of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Model</span><span style="color: #000000">.</span><span style="color: #001080">givens</span></span></code>. Drives "run this query" forms that prompt only for the givens this query touches, not every given in the model.</p>
+<p>Both views exclude <a href="#inline-givens">inline givens</a> — they're computed, not supplied.</p>
+<p>Each entry is a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Given</span></span></code> wrapper:</p>
+<div class="code-wrapper"><pre class="language-typescript" style="background-color: #FBFBFB"><span class="line"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Given</span><span style="color: #000000"> {</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">name</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;                       </span><span style="color: #008000">// caller-facing surface name</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">id</span><span style="color: #000000">: </span><span style="color: #267F99">GivenID</span><span style="color: #000000">;                        </span><span style="color: #008000">// global, opaque identifier</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">type</span><span style="color: #000000">: </span><span style="color: #267F99">GivenTypeDef</span><span style="color: #000000">;</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">default</span><span style="color: #000000">: </span><span style="color: #267F99">ConstantExpr</span><span style="color: #000000"> | </span><span style="color: #267F99">undefined</span><span style="color: #000000">;  </span><span style="color: #008000">// undefined ⇒ caller must supply</span></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">location</span><span style="color: #000000">(): </span><span style="color: #267F99">DocumentLocation</span><span style="color: #000000"> | </span><span style="color: #267F99">undefined</span><span style="color: #000000">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color: #000000">  </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">annotations</span><span style="color: #000000">: </span><span style="color: #267F99">Annotations</span><span style="color: #000000">;</span></span>
+<span class="line"><span style="color: #000000">}</span></span></pre></div><p>Annotations on the declaration are accessible via the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">annotations</span></span></code> view — the same route-aware API used everywhere else in the foundation. See the <a href="../language/tags">Annotation documentation</a> for the prefix/route model and reader API.</p>
+
+      <h2>
+        <a id="givens-vs-source-parameters" class="header-link anchor" href="#givens-vs-source-parameters">
+          Givens vs. source parameters
+        </a>
+      </h2>
+    <p>Givens and <a href="parameters">source parameters</a> are complementary. They serve different scopes:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+
+<th>Givens</th>
+
+<th>Source / query parameters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scope</td>
+
+<td>Model-wide, one namespace</td>
+
+<td>Per-instantiation</td>
+</tr>
+
+<tr>
+<td>Multiplicity</td>
+
+<td>One value per name per compilation</td>
+
+<td>Many simultaneous bindings, one per call</td>
+</tr>
+
+<tr>
+<td>Use case</td>
+
+<td>Configuration, RLAC, packaging</td>
+
+<td>Currying, multiple versions of the same source / query in one model</td>
+</tr>
+
+<tr>
+<td>Binding location</td>
+
+<td>Per-runtime (config or constructor) with per-query overrides</td>
+
+<td>Call site at instantiation</td>
+</tr>
+</tbody></table>
+<p>Givens fit "I want one value visible everywhere in this compilation." Source parameters fit "I want two differently-bound copies of the same thing side-by-side in this compilation." The "two frozen versions" use case (<code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">q1</span><span style="color: #000000"> = </span><span style="color: #795E26">base</span><span style="color: #000000">(</span><span style="color: #001080">x</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #098658">100</span><span style="color: #000000">)</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">q2</span><span style="color: #000000"> = </span><span style="color: #795E26">base</span><span style="color: #000000">(</span><span style="color: #001080">x</span><span style="color: #000000"> </span><span style="color: #AF00DB">is</span><span style="color: #000000"> </span><span style="color: #098658">200</span><span style="color: #000000">)</span></span></code>) is a parameter problem, not a given problem.</p>
+
+      <h2>
+        <a id="feedback" class="header-link anchor" href="#feedback">
+          Feedback
+        </a>
+      </h2>
+    <p>Givens ship as experimental. The design is untested against real workloads and may need revision based on what we learn. Feedback is welcome on <a href="/slack">Slack</a> or in the GitHub issues for <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">@</span><span style="color: #001080">malloydata</span><span style="color: #000000">/</span><span style="color: #001080">malloy</span></span></code>.</p>
+</div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+  </body>
+</html>

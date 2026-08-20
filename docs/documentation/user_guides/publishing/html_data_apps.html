@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>HTML Data Apps | Malloy Documentation</title>
+    <link rel="stylesheet" href="/css/document.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/img/favicon.ico"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0M10W7C20Y"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    
+      gtag("config", "G-0M10W7C20Y");
+    </script>
+    <script src="/js/generated/malloy-render-0.0.397.js"></script>
+    <style>
+      .result-inner .malloy-render {
+        width: 100%;
+      }
+      .result-inner .table-container {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <div class="header">
+        <div class="header-banner">
+          <a href="http://www.malloydata.dev" target="_blank">
+            <img
+              class="logo"
+              src="/img/logo.png"
+              alt="malloy logo"
+            />
+          </a>
+
+          Malloy
+          <span class="subtitle">Documentation</span>
+        </div>
+        <div class="header-right">
+          <div class="header-links">
+            <a href="https://github.com/malloydata/malloy" target="_blank"
+              ><img
+                src="/img/github.svg"
+                style="transform: scale(0.5)"
+            /></a>
+            <a href="/slack" target="_blank"
+              ><img src="/img/slack.svg"
+            /></a>
+          </div>
+          <form onSubmit="() => alert('submit')" action="/search">
+            <div class="search-input-outer">
+              <img src="/img/search.svg" alt="search" />
+              <input placeholder="Search" id="search-input" name="query" />
+            </div>
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+              <div id=about_malloy
+                class="sidebar-section-title {% unless /documentation/index.html,/documentation/about/features.html,/documentation/about/tao.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                About Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation">
+                <img src="/img/article_icon.svg" alt="document"/>
+                What Is Malloy
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/features">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Key Features
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/about/tao">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Tao of Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=setting_up malloy
+                class="sidebar-section-title {% unless /documentation/setup/extension.html,/documentation/setup/database_support.html,/documentation/setup/config.html,/documentation/setup/cli.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Setting up Malloy
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/setup/extension">
+                <img src="/img/article_icon.svg" alt="document"/>
+                VS Code Extension
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/database_support">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Database Support
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/config">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Configuration
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/setup/cli">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=user_guides
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html,/documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html,/documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/html_data_apps.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/publishing/theming.html,/documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html,/documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html,/documentation/user_guides/troubleshooting.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                User Guides
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class="sidebar-section">
+              <div id=getting_started
+                class="sidebar-section-title {% unless /documentation/user_guides/querying_a_model.html,/documentation/user_guides/quickstart_modeling.html,/documentation/user_guides/malloy_by_example.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Getting Started
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/querying_a_model">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Querying a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/quickstart_modeling">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Building a Semantic Model
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_by_example">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Advanced Modeling
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=analyzing_& exploring
+                class="sidebar-section-title {% unless /documentation/user_guides/notebooks.html,/documentation/user_guides/publishing/explorer.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Analyzing & Exploring
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/notebooks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Analyzing with Notebooks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/explorer">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Explorer UI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=publishing
+                class="sidebar-section-title {% unless /documentation/user_guides/publishing/publishing.html,/documentation/user_guides/publishing/connections.html,/documentation/user_guides/publishing/rest_api.html,/documentation/user_guides/publishing/publisher_sdk.html,/documentation/user_guides/publishing/html_data_apps.html,/documentation/user_guides/publishing/mcp_agents.html,/documentation/user_guides/publishing/theming.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Publishing
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publishing">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publish Your Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/rest_api">
+                <img src="/img/article_icon.svg" alt="document"/>
+                REST API
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/publisher_sdk">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Publisher SDK (React)
+              </a>
+            </div>
+        <div class='sidebar-item active'>
+              <a href="/documentation/user_guides/publishing/html_data_apps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                HTML Data Apps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/mcp_agents">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MCP for AI Agents
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/publishing/theming">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Theming
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=for_sql users
+                class="sidebar-section-title {% unless /documentation/user_guides/sql_experts1.html,/documentation/user_guides/sql_experts2.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                For SQL Users
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts1">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for SQL Folks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/sql_experts2">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Refactoring SQL to Malloy
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=data_transformation
+                class="sidebar-section-title {% unless /documentation/user_guides/transform.html,/documentation/user_guides/malloy_for_dbt.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Data Transformation
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/user_guides/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform & Materialize
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/malloy_for_dbt">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy for dbt Users
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/user_guides/troubleshooting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Troubleshooting
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=language_reference
+                class="sidebar-section-title {% unless /documentation/language/statement.html,/documentation/language/source.html,/documentation/language/query.html,/documentation/language/views.html,/documentation/language/datatypes.html,/documentation/language/fields.html,/documentation/language/aggregates.html,/documentation/language/expressions.html,/documentation/language/functions.html,/documentation/language/filters.html,/documentation/language/calculations_windows.html,/documentation/language/order_by.html,/documentation/language/join.html,/documentation/language/nesting.html,/documentation/language/sql_sources.html,/documentation/language/imports.html,/documentation/language/connections.html,/documentation/language/tags.html,/documentation/language/quick_reference.html,/documentation/language/changelog.html,/documentation/language/dialect/bigquery.html,/documentation/language/dialect/databricks.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Language Reference
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/statement">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Models
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/source">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/query">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Queries
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/views">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/datatypes">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Data Types
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/fields">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Fields
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/aggregates">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Aggregates
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/functions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Functions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/filters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Filters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/calculations_windows">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Calculations (window functions)
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/order_by">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Ordering and Limiting
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/join">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Joins
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/nesting">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Views
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/sql_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/imports">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Imports and Exports
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/connections">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Connections
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/tags">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tags
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/quick_reference.html">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Quick Reference
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/changelog">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Change Log
+              </a>
+            </div>
+        <div class="sidebar-section">
+              <div id=dialects
+                class="sidebar-section-title {% unless /documentation/language/dialect/bigquery.html,/documentation/language/dialect/databricks.html,/documentation/language/dialect/presto-trino.html,/documentation/language/dialect/snowflake.html,/documentation/language/dialect/mysql.html,/documentation/language/dialect/duckdb.html,/documentation/language/dialect/postgres.html,/documentation/language/dialect/mssql-via-duckdb.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Dialects
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/bigquery">
+                <img src="/img/article_icon.svg" alt="document"/>
+                BigQuery
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/databricks">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Databricks
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/presto-trino">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Presto / Trino
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/snowflake">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Snowflake
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mysql">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MySQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                DuckDB
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/postgres">
+                <img src="/img/article_icon.svg" alt="document"/>
+                PostgreSQL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/language/dialect/mssql-via-duckdb">
+                <img src="/img/article_icon.svg" alt="document"/>
+                MSSQL via DuckDB
+              </a>
+            </div>
+              </div>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=common_patterns
+                class="sidebar-section-title {% unless /documentation/patterns/yoy.html,/documentation/patterns/foreign_sums.html,/documentation/patterns/reading_nested.html,/documentation/patterns/percent_of_total.html,/documentation/patterns/cohorts.html,/documentation/patterns/nested_subtotals.html,/documentation/patterns/other.html,/documentation/patterns/autobin.html,/documentation/patterns/moving_avg.html,/documentation/patterns/transform.html,/documentation/patterns/sessionize.html,/documentation/patterns/dim_index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Common Patterns
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/patterns/yoy">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Comparing Timeframes
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/foreign_sums">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Foreign Sums and Averages
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/reading_nested">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Reading Nested Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/percent_of_total">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Percent of Total
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/cohorts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Cohort Analysis
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/nested_subtotals">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Nested Subtotals
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/other">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bucketing with 'Other'
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/autobin">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Auto-binning Histograms
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/moving_avg">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Moving Average
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/transform">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Transform Data
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/sessionize">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Sessionize - Map/Reduce
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/patterns/dim_index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dimensional Indexes
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=visualizations
+                class="sidebar-section-title {% unless /documentation/visualizations/overview.html,/documentation/visualizations/tables.html,/documentation/visualizations/big_values.html,/documentation/visualizations/numbers.html,/documentation/visualizations/links.html,/documentation/visualizations/pivots.html,/documentation/visualizations/transpose.html,/documentation/visualizations/dashboards.html,/documentation/visualizations/lists.html,/documentation/visualizations/bar_charts.html,/documentation/visualizations/charts_line_chart.html,/documentation/visualizations/scatter_charts.html,/documentation/visualizations/shape_maps.html,/documentation/visualizations/segment_maps.html,/documentation/visualizations/model_options.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Visualizations
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/visualizations/overview">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Overview
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/tables">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/big_values">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Big Values
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/numbers">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Numbers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/links">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Links / Images
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/pivots">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Pivoted Tables
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/transpose">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Table Transpose
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/dashboards">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Dashboards
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/lists">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Lists
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/bar_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Bar Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/charts_line_chart">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Line Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/scatter_charts">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Scatter Charts
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/shape_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Shape Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/segment_maps">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Segment Maps
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/visualizations/model_options">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Model Options
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloysql
+                class="sidebar-section-title {% unless /documentation/malloy_sql/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                MalloySQL
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_sql/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Using MalloySQL
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_cli
+                class="sidebar-section-title {% unless /documentation/malloy_cli/index.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy CLI
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_cli/index">
+                <img src="/img/article_icon.svg" alt="document"/>
+                The Malloy CLI
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=malloy_with python
+                class="sidebar-section-title {% unless /documentation/malloy_python/python_package.html,/documentation/malloy_python/jupyter.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Malloy with Python
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/python_package">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy Python Package
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/malloy_python/jupyter">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Malloy in Jupyter Notebooks
+              </a>
+            </div>
+              </div>
+            </div>
+        <div class="sidebar-section">
+              <div id=experiments_(in process features)
+                class="sidebar-section-title {% unless /documentation/experiments/experiments.html,/documentation/experiments/joins.html,/documentation/experiments/sql_expressions.html,/documentation/experiments/window.html,/documentation/experiments/parameters.html,/documentation/experiments/composite_sources.html,/documentation/experiments/include.html,/documentation/experiments/persistence.html,/documentation/experiments/virtual_sources.html,/documentation/experiments/givens.html contains page.url)} %}collapsed-this-isnt-working-its-always-collapsed-ben-took-it-out{% endunless %}"
+              >
+                Experiments (in process features)
+                <img class="chevron-open" src="/img/section_open.svg" alt="section open"/>
+                <img class="chevron-closed" src="/img/section_close.svg" alt="section closed"/>
+              </div>
+              <div class="sidebar-section-item-group">
+                <div class='sidebar-item '>
+              <a href="/documentation/experiments/experiments">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Experiments
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/joins">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Join INNER/RIGHT/FULL
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/sql_expressions">
+                <img src="/img/article_icon.svg" alt="document"/>
+                SQL Expressions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/window">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Window Partitions
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/parameters">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Parameters
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/composite_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Composite "Cube" Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/include">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Access Modifiers
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/persistence">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Persistence
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/virtual_sources">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Types and Virtual Sources
+              </a>
+            </div>
+        <div class='sidebar-item '>
+              <a href="/documentation/experiments/givens">
+                <img src="/img/article_icon.svg" alt="document"/>
+                Givens (Model Parameters)
+              </a>
+            </div>
+              </div>
+            </div>
+          </div>        <script src="/js/sidebar_state.js"></script>
+        <div class="content">
+          <div class="footer">
+            
+<div class="linear-navigation">
+  <div class="item">
+      <a href="publisher_sdk.html"><img src="/img/previous.svg" alt="previous"/>Publisher SDK (React)</a>
+  </div>
+  <div class="item">
+      <a href="mcp_agents.html">MCP for AI Agents<img src="/img/next.svg" alt="next"/></a>
+  </div>
+</div> 
+          </div>
+          <div class="document-outer"><div class="document"><div class="title-row">
+        
+      <h1>
+        <a id="html-data-apps-build-a-dashboard-with-no-toolchain" class="header-link anchor" href="#html-data-apps-build-a-dashboard-with-no-toolchain">
+          HTML Data Apps: Build a Dashboard with No Toolchain
+        </a>
+      </h1>
+    
+        <a class="edit-link" target="_blank" href="https://github.dev/malloydata/malloydata.github.io/blob/main/src/documentation/user_guides/publishing/html_data_apps.malloynb#C1">VSCode <img src="/img/open_notebook.svg" alt="document"/></a>
+        </div>
+      <p>A Publisher package can ship a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> directory of plain web files (an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">index</span><span style="color: #000000">.</span><span style="color: #001080">html</span></span></code> plus CSS, JavaScript, and images) right next to its <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> files. Publisher serves that directory and gives the page a small runtime, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #AF00DB">query</span><span style="color: #000000">(...)</span></span></code>, that runs Malloy queries against the package's models and hands back plain JSON rows. You render those rows with whatever you already use: Chart.js, D3, a hand-written table, or Malloy's own <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;</span><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">render</span><span style="color: #000000">&gt;</span></span></code>. There is no build step, no <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span></span></code>, and no framework to learn.</p>
+<p>This is the most direct of Publisher's three embedding paths. The <a href="publisher_sdk">Publisher SDK</a> is the React component path, and the <a href="rest_api">REST API</a> is the raw HTTP contract. Use an HTML data app when you want a self-contained dashboard with no toolchain; use the React SDK when you are building a larger application and want managed components and notebook reuse.</p>
+
+      <h2>
+        <a id="how-a-package-becomes-an-app" class="header-link anchor" href="#how-a-package-becomes-an-app">
+          How a package becomes an app
+        </a>
+      </h2>
+    <div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">my-package/</span></span>
+<span class="line"><span style="color: #000000">  publisher.json        # package manifest (name, version, description)</span></span>
+<span class="line"><span style="color: #000000">  carriers.malloy       # one or more models</span></span>
+<span class="line"><span style="color: #000000">  carriers.parquet      # the data the models read</span></span>
+<span class="line"><span style="color: #000000">  public/               # everything in here is web-served</span></span>
+<span class="line"><span style="color: #000000">    index.html</span></span>
+<span class="line"><span style="color: #000000">    app.js</span></span></pre></div><p>Publisher serves the contents of <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> at:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">/environments/&lt;env&gt;/packages/&lt;pkg&gt;/&lt;file&gt;</span></span></pre></div><p>so <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span><span style="color: #AF00DB">index</span><span style="color: #000000">.</span><span style="color: #001080">html</span></span></code> is the package's landing page. Only <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> is reachable over the web. The models, the data files, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">publisher</span><span style="color: #000000">.</span><span style="color: #001080">json</span></span></code> stay private and are reached only through the query API, which applies the same governance (source filters, access modifiers, authorize rules) as any other Publisher client. A package becomes a data app simply by having a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> directory; there is no flag to set.</p>
+
+      <h2>
+        <a id="try-the-example" class="header-link anchor" href="#try-the-example">
+          Try the example
+        </a>
+      </h2>
+    <p>The repo ships a complete example at <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">examples</span><span style="color: #000000">/</span><span style="color: #001080">html</span><span style="color: #000000">-</span><span style="color: #001080">data</span><span style="color: #000000">-</span><span style="color: #001080">app</span></span></code>: a carrier dashboard with filters, KPI tiles, two charts, and a data table, plus an iframe embed demo. Clone Publisher and serve the example with live reload:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">git clone https://github.com/malloydata/publisher.git</span></span>
+<span class="line"><span style="color: #000000">cd publisher</span></span>
+<span class="line"><span style="color: #000000"></span></span>
+<span class="line"><span style="color: #000000"># Point a small server config at the example package.</span></span>
+<span class="line"><span style="color: #000000">mkdir -p /tmp/publisher-demo &amp;&amp; cp -R examples/html-data-app /tmp/publisher-demo/</span></span>
+<span class="line"><span style="color: #000000">cat &gt; /tmp/publisher-demo/publisher.config.json &lt;&lt;&#39;JSON&#39;</span></span>
+<span class="line"><span style="color: #000000">{</span></span>
+<span class="line"><span style="color: #000000">  &quot;frozenConfig&quot;: false,</span></span>
+<span class="line"><span style="color: #000000">  &quot;environments&quot;: [</span></span>
+<span class="line"><span style="color: #000000">    {</span></span>
+<span class="line"><span style="color: #000000">      &quot;name&quot;: &quot;demo&quot;,</span></span>
+<span class="line"><span style="color: #000000">      &quot;packages&quot;: [{ &quot;name&quot;: &quot;html-data-app&quot;, &quot;location&quot;: &quot;./html-data-app&quot; }],</span></span>
+<span class="line"><span style="color: #000000">      &quot;connections&quot;: []</span></span>
+<span class="line"><span style="color: #000000">    }</span></span>
+<span class="line"><span style="color: #000000">  ]</span></span>
+<span class="line"><span style="color: #000000">}</span></span>
+<span class="line"><span style="color: #000000">JSON</span></span>
+<span class="line"><span style="color: #000000"></span></span>
+<span class="line"><span style="color: #000000"># Start the server in watch mode.</span></span>
+<span class="line"><span style="color: #000000">npx @malloy-publisher/server --server_root /tmp/publisher-demo --watch-env demo</span></span></pre></div><p>Open <a href="http://localhost:4000/environments/demo/packages/html-data-app/">http://localhost:4000/environments/demo/packages/html-data-app/</a>. Edit a file under <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> and the page reloads on its own; edit <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">carriers</span><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> and the package recompiles. See <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">examples</span><span style="color: #000000">/</span><span style="color: #001080">html</span><span style="color: #000000">-</span><span style="color: #001080">data</span><span style="color: #000000">-</span><span style="color: #001080">app</span><span style="color: #000000">/</span><span style="color: #001080">README</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code> for the full walkthrough.</p>
+
+      <h2>
+        <a id="the-runtime" class="header-link anchor" href="#the-runtime">
+          The runtime
+        </a>
+      </h2>
+    <p>Load the runtime once per page with a root-relative script tag, so it resolves through Publisher whatever environment or package the page lives in:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;script src=&quot;/sdk/publisher.js&quot;&gt;&lt;/script&gt;</span></span></pre></div><p>It adds a single global, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">window</span><span style="color: #000000">.</span><span style="color: #001080">Publisher</span></span></code>, with no dependencies. The smallest page that talks to a model is:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;!doctype html&gt;</span></span>
+<span class="line"><span style="color: #000000">&lt;title&gt;Carriers&lt;/title&gt;</span></span>
+<span class="line"><span style="color: #000000">&lt;pre id=&quot;out&quot;&gt;&lt;/pre&gt;</span></span>
+<span class="line"><span style="color: #000000">&lt;script src=&quot;/sdk/publisher.js&quot;&gt;&lt;/script&gt;</span></span>
+<span class="line"><span style="color: #000000">&lt;script&gt;</span></span>
+<span class="line"><span style="color: #000000">  Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; by_letter&quot;).then((rows) =&gt; {</span></span>
+<span class="line"><span style="color: #000000">    document.getElementById(&quot;out&quot;).textContent = JSON.stringify(rows, null, 2);</span></span>
+<span class="line"><span style="color: #000000">  });</span></span>
+<span class="line"><span style="color: #000000">&lt;/script&gt;</span></span></pre></div>
+      <h2>
+        <a id="running-queries" class="header-link anchor" href="#running-queries">
+          Running queries
+        </a>
+      </h2>
+    <p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #AF00DB">query</span><span style="color: #000000">(</span><span style="color: #001080">modelPath</span><span style="color: #000000">, </span><span style="color: #001080">malloy</span><span style="color: #000000">)</span></span></code> runs a Malloy query against one model in the current package and resolves to an array of plain row objects. <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">modelPath</span></span></code> is the model file's path within the package, with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">/</span></span></code> separators. The second argument is any Malloy query string.</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">// Run a named view defined in the model.</span></span>
+<span class="line"><span style="color: #000000">const rows = await Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; by_letter&quot;);</span></span>
+<span class="line"><span style="color: #000000">// rows -&gt; [{ letter: &quot;A&quot;, n: 23 }, { letter: &quot;B&quot;, n: 17 }, ...]</span></span>
+<span class="line"><span style="color: #000000"></span></span>
+<span class="line"><span style="color: #000000">// Refine a view with a filter at call time.</span></span>
+<span class="line"><span style="color: #000000">await Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; by_letter + { where: letter = &#39;A&#39; }&quot;);</span></span>
+<span class="line"><span style="color: #000000"></span></span>
+<span class="line"><span style="color: #000000">// A single-row KPI view: read element [0].</span></span>
+<span class="line"><span style="color: #000000">const [kpis] = await Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; kpis&quot;);</span></span>
+<span class="line"><span style="color: #000000">document.getElementById(&quot;total&quot;).textContent = kpis.total;</span></span></pre></div><p>Define frontend-friendly views in the model, one per tile, pre-aggregated and pre-sorted. That keeps the page's query strings short and the work on the server. A dashboard usually fires several at once and renders them together:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">const [byLetter, byBucket, kpisRows] = await Promise.all([</span></span>
+<span class="line"><span style="color: #000000">  Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; by_letter&quot;),</span></span>
+<span class="line"><span style="color: #000000">  Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; by_size_bucket&quot;),</span></span>
+<span class="line"><span style="color: #000000">  Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; kpis&quot;),</span></span>
+<span class="line"><span style="color: #000000">]);</span></span></pre></div><p>From there it is ordinary front-end code. With Chart.js, for example:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">const rows = await Publisher.query(&quot;carriers.malloy&quot;, &quot;run: carriers -&gt; by_letter&quot;);</span></span>
+<span class="line"><span style="color: #000000">new Chart(document.getElementById(&quot;byLetter&quot;), {</span></span>
+<span class="line"><span style="color: #000000">  type: &quot;bar&quot;,</span></span>
+<span class="line"><span style="color: #000000">  data: {</span></span>
+<span class="line"><span style="color: #000000">    labels: rows.map((r) =&gt; r.letter),</span></span>
+<span class="line"><span style="color: #000000">    datasets: [{ label: &quot;Carriers&quot;, data: rows.map((r) =&gt; r.n) }],</span></span>
+<span class="line"><span style="color: #000000">  },</span></span>
+<span class="line"><span style="color: #000000">});</span></span></pre></div><p>If a query fails, the promise rejects with an <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Error</span></span></code> whose message starts with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #AF00DB">query</span><span style="color: #000000">:</span></span></code>. The error carries <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">error</span><span style="color: #000000">.</span><span style="color: #001080">status</span></span></code> (the HTTP status) and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">error</span><span style="color: #000000">.</span><span style="color: #001080">response</span></span></code> (the parsed body), so you can tell a missing required filter from a compile error or a permission failure.</p>
+<p>If you would rather let Malloy draw the chart, call <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #795E26">queryFull</span><span style="color: #000000">(</span><span style="color: #001080">modelPath</span><span style="color: #000000">, </span><span style="color: #001080">malloy</span><span style="color: #000000">)</span></span></code>. It takes the same arguments but resolves to the full Malloy result envelope, which you pass straight to a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;</span><span style="color: #001080">malloy</span><span style="color: #000000">-</span><span style="color: #001080">render</span><span style="color: #000000">&gt;</span></span></code> element.</p>
+<p>Both <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">query</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">queryFull</span></span></code> take an optional third argument for runtime options: <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">filterParams</span></span></code> (values for the model's declared parameters, its givens), <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">sourceName</span></span></code> and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">queryName</span></span></code>, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">bypassFilters</span></span></code>, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">environment</span></span></code> / <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">package</span></span></code> overrides. When a filter value comes from untrusted input, declare a parameter on the model and pass it through <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">filterParams</span></span></code> rather than building the <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">where</span><span style="color: #000000">:</span></span></code> string by hand, so the server formats it safely. The in-repo authoring reference lists every option.</p>
+
+      <h2>
+        <a id="embedding-in-another-page" class="header-link anchor" href="#embedding-in-another-page">
+          Embedding in another page
+        </a>
+      </h2>
+    <p>A page can be embedded in another page as an auto-resizing iframe with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #001080">embed</span></span></code>:</p>
+<div class="code-wrapper"><pre class="language-txt" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">&lt;script src=&quot;https://your-publisher/sdk/publisher.js&quot;&gt;&lt;/script&gt;</span></span>
+<span class="line"><span style="color: #000000">&lt;div id=&quot;dashboard&quot;&gt;&lt;/div&gt;</span></span>
+<span class="line"><span style="color: #000000">&lt;script&gt;</span></span>
+<span class="line"><span style="color: #000000">  const handle = Publisher.embed(&quot;#dashboard&quot;, {</span></span>
+<span class="line"><span style="color: #000000">    src: &quot;https://your-publisher/environments/demo/packages/html-data-app/index.html&quot;,</span></span>
+<span class="line"><span style="color: #000000">  });</span></span>
+<span class="line"><span style="color: #000000">  // handle.destroy() removes the iframe and its listeners.</span></span>
+<span class="line"><span style="color: #000000">&lt;/script&gt;</span></span></pre></div><p><code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #795E26">embed</span><span style="color: #000000">(</span><span style="color: #001080">selector</span><span style="color: #000000">, </span><span style="color: #001080">options</span><span style="color: #000000">)</span></span></code> mounts an iframe into the matched element and returns <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">{ </span><span style="color: #001080">iframe</span><span style="color: #000000">, </span><span style="color: #795E26">destroy</span><span style="color: #000000">() }</span></span></code>. The iframe is sandboxed. When you omit <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">height</span></span></code>, the embedded page measures its own content and tells the host how tall to make the frame, and the host only trusts those messages from the iframe it created. You write none of that wiring; pass a fixed <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">height</span></span></code> to opt out of auto-sizing, or <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">allow</span></span></code> to set the iframe's permissions policy.</p>
+<p>For a same-origin embed, the browser's cookies authenticate the iframe and you pass nothing extra. For a cross-origin embed (your customer's app on another domain), mint a signed token on your server and pass it as <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">options</span><span style="color: #000000">.</span><span style="color: #001080">token</span></span></code>; the embedded page receives it and authenticates with it. The token exchange is covered in the <a href="publisher_sdk">Publisher SDK guide</a>.</p>
+
+      <h2>
+        <a id="live-reload-while-you-build" class="header-link anchor" href="#live-reload-while-you-build">
+          Live reload while you build
+        </a>
+      </h2>
+    <p>Start the server with <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #008000">--watch-env &lt;env&gt;</span></span></code> (or set <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">PUBLISHER_WATCH</span><span style="color: #000000">=&lt;</span><span style="color: #001080">env</span><span style="color: #000000">&gt;</span></span></code>) and Publisher mounts that environment's local packages in place and watches them. Editing a <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #000000">.</span><span style="color: #001080">malloy</span></span></code> file recompiles the package; editing a file under <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> refreshes any open page. The runtime subscribes to a server-sent-events stream and reloads automatically, so you keep the browser open and just edit. Leave watch mode off in production, where it reports as disabled and no reloads fire.</p>
+
+      <h2>
+        <a id="a-note-on-auth-and-secrets" class="header-link anchor" href="#a-note-on-auth-and-secrets">
+          A note on auth and secrets
+        </a>
+      </h2>
+    <p>By default the runtime sends the browser's cookies with every request, so a page served to a signed-in user queries as that user with no extra code. To use a bearer token instead, call <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #795E26">setToken</span><span style="color: #000000">(</span><span style="color: #001080">token</span><span style="color: #000000">)</span></span></code> before querying, and <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #795E26">setToken</span><span style="color: #000000">(</span><span style="color: #0000FF">null</span><span style="color: #000000">)</span></span></code> to go back to cookies.</p>
+<p>Everything you put under <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #AF00DB">public</span><span style="color: #000000">/</span></span></code> is web-served as-is, so keep secrets out of it. Your protection lives in the models and the database, behind the query API, where source filters, access modifiers, and authorize rules decide what each caller may see.</p>
+
+      <h2>
+        <a id="next-steps" class="header-link anchor" href="#next-steps">
+          Next steps
+        </a>
+      </h2>
+    <ul>
+<li><p><a href="https://github.com/malloydata/publisher/tree/main/examples/html-data-app">Example app source</a> for a complete package with filters, charts, KPIs, and an embed demo.</p>
+</li>
+<li><p>The in-repo authoring reference, <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">docs</span><span style="color: #000000">/</span><span style="color: #001080">html</span><span style="color: #000000">-</span><span style="color: #001080">data</span><span style="color: #000000">-</span><span style="color: #001080">apps</span><span style="color: #000000">.</span><span style="color: #001080">md</span></span></code>, for the full <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #AF00DB">query</span></span></code> / <code class="language-malloy" style="background-color: #FBFBFB"><span class="line"><span style="color: #001080">Publisher</span><span style="color: #000000">.</span><span style="color: #001080">embed</span></span></code> API, the page and event contracts, and the security model.</p>
+</li>
+<li><p><a href="rest_api">REST API</a> for the HTTP contract the runtime calls.</p>
+</li>
+<li><p><a href="publisher_sdk">Publisher SDK</a> for the React component path and the signed-token exchange.</p>
+</li></ul>
+</div></div>
+        </div>
+        <script src="/js/view_toggles.js"></script>
+        <script src="/js/jump_to_hash.js"></script>
+      </div>
+    </div>
+    <div id="banner_wrapper">
+      <div id="banner">
+        <div>
+          This site uses cookies from Google to deliver its services and to analyze
+          traffic.
+          <a
+            href="https://policies.google.com/technologies/cookies"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+        <button id="banner_button">I Understand</button>
+      </div>
+    </div>
+    <script src="/js/banner.js"></script>
+  </body>
+</html>
