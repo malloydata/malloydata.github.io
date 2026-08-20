@@ -155,6 +155,8 @@ Then add a BigQuery connection via **Malloy: Edit Connections**. Leave the servi
 
 In **Malloy: Edit Connections**, click "Pick file" to select your service account JSON key.
 
+To read the key from an environment variable instead, see [BigQuery configuration](config.malloynb#bigquery-google-bigquery).
+
 ### Snowflake
 
 Both password and RSA key authentication are supported via **Malloy: Edit Connections**.

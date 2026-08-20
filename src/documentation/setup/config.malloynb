@@ -153,35 +153,44 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `billingProjectId` | string | Billing project (if different) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
-With no key configured at all, the connection uses [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) — the usual choice for local development, where `gcloud auth application-default login` has already run.
+With no key configured at all, the connection uses [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials).
 
-**Supplying the key from the environment.** On a server the key normally arrives as an environment variable rather than as a file on disk. Use `serviceAccountKeyJson`, which holds the entire key file as a string:
+**Setting up a server.** Keep the key out of the config file and read it from the environment.
+
+1. Point the config at the variable:
 
 ```json
 {
   "connections": {
-    "my_bigquery": {
+    "malloy_bq": {
       "is": "bigquery",
       "projectId": "my-project",
-      "serviceAccountKeyJson": {"env": "BIGQUERY_CREDENTIALS_JSON"}
+      "serviceAccountKeyJson": {"env": "MALLOY_BQ_JSON"}
     }
   }
 }
 ```
 
-Set the variable to the key file's contents. Quoting the value keeps the shell out of it:
+2. In your test environment, fill it from your own login:
 
 ```bash
-export BIGQUERY_CREDENTIALS_JSON="$(jq -c . service-account-key.json)"
+gcloud auth login --update-adc
+export MALLOY_BQ_JSON="$(cat ~/.config/gcloud/application_default_credentials.json)"
 ```
 
-The property also accepts the key base64-encoded, which is one unquoted token and so travels through shells, CI secret editors, and `.env` files more reliably than a blob of JSON braces and quotes:
+3. In production, set the same variable to a service account key:
 
 ```bash
-export BIGQUERY_CREDENTIALS_JSON="$(base64 < service-account-key.json | tr -d '\n')"
+export MALLOY_BQ_JSON="$(cat service-account-key.json)"
 ```
 
-Note that `serviceAccountKey` — the `json`-typed property — **cannot** take an environment variable reference. Like every `json` property, it treats `{"env": "..."}` as literal data, so that object itself becomes the credentials and BigQuery rejects it with `The incoming JSON object does not contain a client_email field`. Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
+4. Base64 is also accepted, and is one unquoted token — handy for CI secret editors and `.env` files:
+
+```bash
+export MALLOY_BQ_JSON="$(base64 < service-account-key.json | tr -d '\n')"
+```
+
+Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
 
 ### `databricks` — Databricks
 
