@@ -147,6 +147,7 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `serviceAccountKeyPath` | file | Path to service account JSON key |
 | `serviceAccountKey` | json | Service account key as a JSON object (alternative to file path) |
 | `serviceAccountKeyJson` | secret | Service account key as a **string** — JSON or base64-encoded JSON |
+| `authClient` | opaque | A credential supplied by the application hosting Malloy ([see below](#host-supplied-credentials)) |
 | `location` | string | Dataset location |
 | `maximumBytesBilled` | string | Byte billing cap |
 | `timeoutMs` | string | Query timeout in ms |
@@ -191,6 +192,27 @@ export MALLOY_BQ_JSON="$(base64 < service-account-key.json | tr -d '\n')"
 ```
 
 Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
+
+#### Host-supplied credentials
+
+Some credentials cannot be written down at all — an impersonated service account, workload identity federation, a credential proxied through your own service. `authClient` is for those. Its value never appears in the config file; the file only names something the host application has registered, and the host supplies the credential when the connection is built:
+
+```json
+{
+  "connections": {
+    "tenant_bq": {
+      "is": "bigquery",
+      "projectId": "acme-analytics",
+      "billingProjectId": "my-billing-project",
+      "authClient": {"tenantAuth": "acme"}
+    }
+  }
+}
+```
+
+This only works if the application you are running Malloy in offers such a name — a server that mints per-tenant credentials, for example. There is nothing to set here for the VS Code extension or the CLI, and naming something the host has not registered is an error rather than a silently missing credential.
+
+Two things follow from an `authClient` replacing the credential outright. Setting one alongside any service account key is an error, since the key would be ignored. And BigQuery resolves the project ID through the supplied credential instead of the ambient one, so set `billingProjectId` explicitly.
 
 ### `databricks` — Databricks
 
@@ -380,6 +402,8 @@ Any property value can be replaced with an environment variable reference. This 
 ```
 
 The `{"env": "VAR_NAME"}` syntax looks up the value from the named environment variable at connection time. If the variable is not set, the field is omitted and the connection proceeds without it.
+
+A few properties are exceptions, because doing without them is not safe: DuckDB's `securityPolicy` and BigQuery's `authClient` fail the connection rather than fall back to no policy and to ambient credentials. Leaving such a property out of the config entirely is still fine — the rule only applies once you have named a variable.
 
 You can also provide a plain string value directly — this is useful for testing but not recommended for shared or committed config files.
 
