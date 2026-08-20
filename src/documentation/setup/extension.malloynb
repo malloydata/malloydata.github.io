@@ -155,7 +155,7 @@ Then add a BigQuery connection via **Malloy: Edit Connections**. Leave the servi
 
 In **Malloy: Edit Connections**, click "Pick file" to select your service account JSON key.
 
-To develop against the same config a server will run — a `projectId` plus a `serviceAccountKeyJson` reference to an environment variable — check that `malloy-config.json` in and leave the variable unset locally, so the connection falls back to the gcloud credentials above. See [BigQuery configuration](config.malloynb#bigquery-google-bigquery).
+To read the key from an environment variable instead, see [BigQuery configuration](config.malloynb#bigquery-google-bigquery).
 
 ### Snowflake
 
