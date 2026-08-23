@@ -154,8 +154,6 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `billingProjectId` | string | Billing project (if different) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
-With no key configured at all, the connection uses [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials).
-
 **Setting up a server.** Keep the key out of the config file and read it from the environment.
 
 1. Point the config at the variable:
@@ -172,17 +170,16 @@ With no key configured at all, the connection uses [application default credenti
 }
 ```
 
-2. In your test environment, fill it from your own login:
+2. In your test environment, leave the variable unset and log in as yourself. When `serviceAccountKeyJson` is empty, the connection uses whatever [application default credentials](https://cloud.google.com/docs/authentication/application-default-credentials) you have:
 
 ```bash
 gcloud auth login --update-adc
-export MALLOY_BQ_JSON="$(cat ~/.config/gcloud/application_default_credentials.json)"
 ```
 
 3. In production, set the same variable to a service account key:
 
 ```bash
-export MALLOY_BQ_JSON="$(cat service-account-key.json)"
+export MALLOY_BQ_JSON="$(jq -c . service-account-key.json)"
 ```
 
 4. Base64 is also accepted, and is one unquoted token — handy for CI secret editors and `.env` files:
@@ -191,7 +188,7 @@ export MALLOY_BQ_JSON="$(cat service-account-key.json)"
 export MALLOY_BQ_JSON="$(base64 < service-account-key.json | tr -d '\n')"
 ```
 
-Use `serviceAccountKeyJson` instead. If both are set, `serviceAccountKey` wins.
+`serviceAccountKey`, the `json`-typed property, cannot take an `{"env": ...}` reference — it would be read as literal data. Use `serviceAccountKeyJson`. If both are set, `serviceAccountKey` wins.
 
 #### Host-supplied credentials
 
