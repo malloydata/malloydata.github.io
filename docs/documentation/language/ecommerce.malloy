@@ -1,0 +1,152 @@
+--! styles ecommerce.styles.json
+source: users is duckdb.table('../data/users.parquet') extend {
+  primary_key: id
+  dimension: full_name is initcap!(concat(first_name, ' ', last_name))
+  measure: user_count is count()
+}
+
+source: product is duckdb.table('../data/products.parquet') extend {
+  primary_key: id
+  measure: product_count is count()
+}
+
+source: inventory_items is duckdb.table('../data/inventory_items.parquet') extend {
+  primary_key: id
+
+  join_one: product with product_id
+
+  measure:
+    inventory_item_count is count(id)
+    total_cost is cost.sum()
+}
+
+source: user_order_facts is 
+  duckdb.table('../data/order_items.parquet')  ->  {
+    group_by: user_id
+    aggregate: first_order is min(created_at)
+    aggregate: most_recent_order is max(created_at)
+    aggregate: lifetime_orders is count()
+    aggregate: lifetime_spend is sale_price.sum() {where: status != 'Cancelled' & 'Returned'}
+  }
+extend {
+  primary_key: user_id
+
+  dimension: top_customer is lifetime_orders > 10
+  dimension: lifetime_order_tier is lifetime_orders ?
+    pick '1 to 3' when  < 4
+    pick '4 to 6' when < 7
+    pick '7 to 10' when < 11
+    else '11+'
+
+  dimension: spend_category is lifetime_spend ?
+    pick 'Low Spend' when < 50
+    pick 'Mid Spend' when < 500
+    pick 'High Spend' when < 1000
+    pick 'VIP' when >= 1000
+    else null
+}
+
+source: order_items is duckdb.table('../data/order_items.parquet') extend {
+  primary_key: id
+
+  join_one:
+    users with user_id
+    inventory_items with inventory_item_id
+    user_order_facts with user_id
+
+  dimension:
+    gross_margin is sale_price - inventory_items.cost
+
+  measure:
+    order_count is count(order_id)
+    order_item_count is count()
+    total_sales is sale_price.sum()
+    total_gross_margin is gross_margin.sum()
+    average_gross_margin is gross_margin.avg()
+
+  view: top_categories is {
+    limit: 5
+    group_by: inventory_items.product_category
+    aggregate: total_sales
+  }
+
+  view: top_brands is {
+    limit: 5
+    group_by: inventory_items.product_brand
+    aggregate: total_sales, total_gross_margin, order_item_count
+  }
+
+  view: top_products is {
+    limit: 5
+    group_by: inventory_items.product_name
+    aggregate: total_sales, total_gross_margin, order_item_count
+  }
+
+  view: top_customers is {
+    limit: 5
+    group_by: users.full_name
+    aggregate: total_sales, order_item_count
+  }
+
+  view: recent_purchases is {
+    limit: 5
+    group_by: id, order_id, created_at, sale_price, inventory_items.product_name
+    order_by: created_at desc
+  }
+
+  view: by_year is {
+    group_by: created_year is year(created_at)
+    aggregate: total_sales
+  }
+
+  view: by_month is {
+    group_by: created_month is created_at.month
+    aggregate: total_sales
+  }
+
+  view: sales_by_state_2020 is {
+    where: created_at = @2020
+    group_by: users.state
+    aggregate: total_sales
+  }
+
+  view: sales_by_month_2020 is {
+    where: created_at = @2020
+    group_by: order_month is created_at.month
+    aggregate: total_sales
+  }
+
+  view: orders_by_status is {
+    group_by: status
+    aggregate: order_count
+  }
+
+  view: brand_dashboard is {
+  group_by: inventory_items.product.brand
+  aggregate:
+    total_sales
+    order_item_count
+    inventory_items.product.product_count
+  nest:
+    top_categories
+    by_month
+    top_products
+  limit: 10
+  }
+
+  view: customer_dashboard is {
+    limit: 5
+    group_by: users.full_name, users.city, users.state, users.country
+    aggregate:
+      total_sales
+      order_item_count
+      order_count
+    nest:
+      top_categories
+      by_year
+      top_brands
+      recent_purchases
+  }
+
+  view: search_index is {index: * }
+}
