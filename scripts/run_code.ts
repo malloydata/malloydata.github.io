@@ -28,7 +28,6 @@ import {
   QueryMaterializer,
   Result,
   ModelDef,
-  annotationToTag,
   API,
 } from "@malloydata/malloy";
 import { validateRenderTags } from "@malloydata/render-validator";
@@ -270,9 +269,17 @@ export async function runNotebookCode(
   showCode: string,
   documentPath: string,
   options: RunOptions,
-  modelDef: ModelDef
+  modelDef: ModelDef | undefined,
+  cellNumber: number
 ): Promise<{ rendered: string; newModel: ModelDef; isHidden: boolean }> {
-  const fakeURL = new URL("file://" + path.join(DOCS_ROOT_PATH, documentPath));
+  // Each cell compiles under its own URL, because the URL is the model's
+  // identity: `modelAnnotations` is keyed by it, and every cell sharing one URL
+  // would mean every cell overwriting the one entry, losing the `##!`
+  // experiment flags that earlier cells in the notebook turned on. Distinct
+  // URLs make the notebook a real extend chain, one link per cell.
+  const fakeURL = new URL(
+    `file://${path.join(DOCS_ROOT_PATH, documentPath)}#cell${cellNumber}`
+  );
   const urlReader = new DocsURLReader(
     documentPath,
     new Map([[fakeURL.toString(), code]])
@@ -286,19 +293,17 @@ export async function runNotebookCode(
     .substring(0, 50)}..."`;
   log(`  >> Running (notebook) query ${querySummary}`);
   const runStartTime = performance.now();
-  const newModel = runtime
-    ._loadModelFromModelDef(modelDef)
-    .extendModel(fakeURL);
+  // The first Malloy cell has nothing to extend, so it compiles on its own —
+  // no need to hand-build an empty `ModelDef` for it to sit on top of.
+  const newModel = modelDef
+    ? runtime._loadModelFromModelDef(modelDef).extendModel(fakeURL)
+    : runtime.loadModel(fakeURL);
   const model = await newModel.getModel();
-  // Synthetic Annotation with `notes` only (no `inherits`): each notebook
+  // `.annotations` is this model's own `##` bundle alone, so each notebook
   // cell sees only its own model annotations, not `##(docs) hidden` from
-  // prior cells. `annotationToTag` takes the synthetic value directly;
-  // `.annotations.parseAsTag('docs')` on the model would walk inherits.
-  const modelTagParse = annotationToTag(
-    { notes: model._modelDef?.annotation?.notes },
-    'docs'
-  );
-  const modelTags = modelTagParse.tag;
+  // prior cells. `.modelAnnotations` is the other one — it folds the
+  // import/extend lineage, which would leak a prior cell's `hidden`.
+  const modelTags = model.annotations.parseAsTag('docs').tag;
   const newModelDef = model._modelDef;
   let hasQuery = false;
   try {
