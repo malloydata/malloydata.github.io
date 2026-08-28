@@ -78,14 +78,10 @@ class Renderer {
   }[] = [];
   private cellNumber = 0;
   private mode: "markdown" | "malloy" | undefined = undefined;
-  private modelDef: ModelDef = {
-    name: "notebook",
-    exports: [],
-    contents: {},
-    queryList: [],
-    dependencies: {},
-    sourceRegistry: {},
-  };
+  // Undefined until the first Malloy cell compiles: cell 1 has no base model
+  // to extend, so it is compiled on its own and every later cell extends what
+  // came before.
+  private modelDef: ModelDef | undefined = undefined;
 
   constructor(path: string) {
     this.path = path;
@@ -116,7 +112,8 @@ class Renderer {
           showCode,
           this.path,
           { dataStyles: {} },
-          this.modelDef
+          this.modelDef,
+          this.cellNumber
         );
         result = rendered;
         hidden = isHidden;
