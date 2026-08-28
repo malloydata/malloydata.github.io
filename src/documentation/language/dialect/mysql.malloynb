@@ -16,13 +16,65 @@ any of the listed functions here without needing to use [Raw SQL Functions](../f
     repeat
     reverse
 
+# Schema Types
+
+When Malloy reads a MySQL table or query schema, each column type becomes a
+Malloy type as follows. `UNSIGNED` and `ZEROFILL` never change the Malloy type.
+
+| MySQL type | Malloy type |
+|---|---|
+| `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT` | `number` (integer) |
+| `BIGINT` | `number` (bigint) |
+| `FLOAT`, `DOUBLE` | `number` (float) |
+| `DECIMAL` with fractional digits | `number` (float) |
+| `DECIMAL` with no fractional digits, 15 digits or fewer | `number` (integer) |
+| `DECIMAL` with no fractional digits, 16 digits or more | `number` (bigint) |
+| `CHAR`, `VARCHAR`, `TINYTEXT`, `TEXT`, `MEDIUMTEXT`, `LONGTEXT` | `string` |
+| `TIME` | `string` |
+| `DATE` | `date` |
+| `DATETIME`, `TIMESTAMP` | `timestamp` |
+
+`DECIMAL` is an exact type, so a decimal with no fractional digits is a whole
+number rather than a floating point one. Above 15 digits it no longer fits a
+JavaScript number exactly, which is why it becomes a `bigint`. See
+[Number](../datatypes.malloynb#number).
+
+MySQL rewrites type aliases when a table is created, so the name Malloy sees is
+not always the name you declared: `INTEGER` becomes `INT`, `NUMERIC`, `DEC` and
+`FIXED` become `DECIMAL`, `REAL` and `DOUBLE PRECISION` become `DOUBLE`,
+`BOOLEAN` becomes `TINYINT(1)`, and `SERIAL` becomes `BIGINT UNSIGNED`.
+
+Every other MySQL type is read as
+[SQL native data](../datatypes.malloynb#unsupported-sql-native-data), which
+Malloy can carry but cannot operate on: `BIT`, `ENUM`, `SET`, `YEAR`, `JSON`,
+`BINARY`, `VARBINARY`, the `BLOB` family, and the spatial types.
+
+## Casting to a MySQL type
+
+The type names recognized by a
+[database native cast](../expressions.malloynb#casting-to-specific-database-types)
+are the schema types in the table above; any other name produces SQL native
+data.
+
+MySQL's own `CAST` accepts a different and smaller set of target names --
+`SIGNED`, `UNSIGNED`, `CHAR`, `DOUBLE`, `FLOAT`, `REAL`, `DECIMAL`, `BINARY`,
+`NCHAR`, `DATE`, `DATETIME`, `TIME`, `YEAR`, `JSON` -- and rejects `INT`,
+`BIGINT`, `VARCHAR` and `TEXT`. Because a native cast is passed through to the
+database unchanged, a name in one set but not the other will fail one way or
+the other. Prefer Malloy's own type names, `x::number` and `x::string`, which
+always work.
+
 # Errata
 
-## Boolean Filter Expressions
+## Boolean Columns and Filter Expressions
 
-Becase MySQL doesn't have a true boolean data type, a columns which contains boolean values
-will be read as numeric by Malloy. This will make it impossible to use boolean [filter expressions](../filter-expressions.malloynb) 
-without explicitly casting the value to type boolean
+MySQL has no boolean type. `BOOLEAN` is a spelling of `TINYINT(1)`, where the
+`(1)` is a display width that constrains nothing -- a `TINYINT(1)` column will
+happily store 42 -- so there is no fact in the schema that could identify a
+boolean column, and Malloy reads every `TINYINT` as a number.
+
+To use boolean [filter expressions](../filter-expressions.malloynb) on such a
+column, cast it explicitly.
 
 ```malloy
 dimension: presentAndNotAccountedFor is present::boolean ~ f'true' and accountedFor::boolean ~ f'false'
