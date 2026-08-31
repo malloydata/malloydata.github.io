@@ -1,0 +1,26 @@
+>>>markdown
+# Malloy Public Roadmap
+
+This roadmap file is our best effort to share with the community our thoughts about the Malloy roadmap.
+This is directional, not a commitment.
+
+Have a request or idea? [Open an issue](https://github.com/malloydata/malloy/issues/new/choose) · [Talk to us on Slack](https://malloydata.github.io/slack)
+
+## Database Support
+
+Current: BigQuery · Snowflake · DuckDB · MotherDuck · PostgreSQL · MySQL · Trino · Presto · Databricks
+
+Other databases under consideration:
+
+| Connector | Notes |
+|---|---|
+| Oracle | Oracle Database / Autonomous DB |
+
+## Publisher & Ecosystem
+
+| Area | Feature |
+|---|---|
+| **Publisher** | Standalone Python MCP server; `malloy-pub` CLI; Windows/Linux support |
+| **Renderer** | Dark/light mode; CSS variables for embedding; chart legend consistency; `# area_chart`, `# pie_chart`, `# heatmap` |
+| **Docs** | LLM-optimized documentation page; expanded `malloy-samples` |
+| **Python** | Ibis-style API: `ibis.malloy.connect(...)` with `s.dimensions()`, `s.measures()` selectors |
