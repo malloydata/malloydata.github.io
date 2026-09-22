@@ -1,13 +1,15 @@
 >>>markdown
 # MCP for AI Agents
 
-Connect AI assistants to your Malloy semantic models using the Model Context Protocol (MCP). Publisher includes a built-in MCP server that exposes your models to AI agents.
+Point Claude, Cursor, or any MCP client at a Malloy Publisher server and it can answer questions about your data.
+
+The agent queries your **semantic model**, not the database. It works from the sources, joins, and measures you already defined, so it cannot invent a table that does not exist or write arbitrary SQL against production. Asked "what was revenue last quarter", the agent looks up how you defined revenue instead of guessing at column names.
+
+That is the difference between this and handing an agent a warehouse connection.
 
 ---
 
-## Quick Start
-
-This works for MCP clients that support HTTP endpoints directly.
+## Quick start
 
 ### 1. Start Publisher
 
@@ -15,13 +17,17 @@ This works for MCP clients that support HTTP endpoints directly.
 npx @malloy-publisher/server --server_root /path/to/your/packages
 ```
 
-The AI sees all packages under your `server_root` directory. The MCP server starts automatically at `http://localhost:4040/mcp`.
+The agent sees every package under `server_root`. The MCP server starts automatically at `http://localhost:4040/mcp`.
 
-The endpoint does not require authentication, and Publisher binds `0.0.0.0` by default, so anyone who can reach port 4040 on your network can run `malloy_executeQuery` against the databases your models connect to. The surface is not read-only either: `malloy_reloadPackage` mutates server state, and for a package that carries an install location a reload re-fetches it, overwriting on-disk edits. The same effects are already reachable through the equivalent REST endpoints, so this is a reason to gate the deployment rather than a reason to avoid the tools. Bind it to loopback with `--host 127.0.0.1` for local-only use, and put an authenticating gateway in front before exposing it more widely.
+### 2. Point your agent at it
 
-For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
+For Claude Code:
 
-### 2. Configure Your MCP Client
+```bash
+claude mcp add --transport http malloy http://127.0.0.1:4040/mcp
+```
+
+For clients configured by file:
 
 ```json
 {
@@ -33,16 +39,35 @@ For other deployment options (Docker, git clone), see [Publish Your Models](publ
 }
 ```
 
-### 3. Start Asking Questions
+### 3. Ask a question
 
-Once connected, try prompts like:
 - "What Malloy packages are available?"
 - "Show me the measures in the orders model"
 - "Query total revenue by month"
 
+The agent calls `malloy_getContext` to find the relevant sources and fields, then `malloy_executeQuery` to run a query against them.
+
 ---
 
-## Stdio-only Clients (older Claude Desktop, etc.)
+## Querying a warehouse
+
+The same model runs on your warehouse. Start on local Parquet or CSV through DuckDB, then point the connection at BigQuery, Snowflake, Postgres, Databricks, Trino, or MySQL and query the same sources through the same MCP tools — see [Publisher Connections](connections.malloynb) for the full list and how to configure credentials.
+
+Nothing about the agent's setup changes when the backend does. The tools, the model paths, and the field names stay the same.
+
+---
+
+## Before you expose it
+
+The MCP endpoint does not require authentication, and Publisher binds `0.0.0.0` by default, so anyone who can reach port 4040 on your network can run `malloy_executeQuery` against the databases your models connect to. The surface is not read-only either: `malloy_reloadPackage` mutates server state, and for a package that carries an install location a reload re-fetches it, overwriting on-disk edits. The same effects are already reachable through the equivalent REST endpoints, so this is a reason to gate the deployment rather than a reason to avoid the tools.
+
+Bind it to loopback with `--host 127.0.0.1` for local-only use, and put an authenticating gateway in front before exposing it more widely.
+
+For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
+
+---
+
+## Stdio-only clients (older Claude Desktop, etc.)
 
 Some MCP clients speak only stdio, not HTTP. Bridge them to the HTTP endpoint with [`mcp-remote`](https://www.npmjs.com/package/mcp-remote), which needs no extra script. In the client's MCP config add:
 
