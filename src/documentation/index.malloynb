@@ -1,13 +1,23 @@
 >>>markdown
 # What Is Malloy
 
-Malloy is a modern open source language for describing data relationships and transformations. It is an analytical language that runs on SQL databases. It provides the ability to define a semantic data model and query it. Malloy currently works with SQL databases BigQuery, Postgres, and querying Parquet and CSV via DuckDB.
+Malloy is a modern open source language for describing data relationships and transformations. It is an analytical language that runs on SQL databases. It provides the ability to define a semantic data model and query it. Malloy runs on BigQuery, Snowflake, Postgres, MySQL, Trino, Presto, Databricks and MotherDuck, and on local Parquet, CSV and JSON files through DuckDB. See [Database Support](setup/database_support.malloynb).
 - Queries compile to SQL, optimized for your database.
 - Has both a semantic data model and a query language.  The semantic model contains reusable calculations and definitions, making queries short and readable.
 - Excels at reading and writing nested data sets.
 - Things that are complicated in SQL are simple to express in Malloy. For example: level of detail calculations, percent of total, aggregating against multiple tables across a join safely, date operations, reasonable ordering by default, and more.
 
 Malloy is a work in progress. Malloy is designed to be a language for anyone who works with SQL--whether you’re an analyst, data scientist, data engineer, or someone building a data application. If you know SQL, Malloy will feel familiar, while more powerful and efficient. Malloy allows you to model as you go, so there is no heavy up-front work before you can start answering complex questions, and you're never held back or restricted by the model.
+
+## Serve Models to AI Agents
+
+[Malloy Publisher](user_guides/publishing/publishing.malloynb) is the open source server for Malloy models. It serves a model over the Model Context Protocol (MCP) to Claude, Cursor, Codex and other agents, and over REST to applications. The agent queries the model you defined instead of writing SQL against raw tables. Start it locally with one command:
+
+```bash
+npx @malloy-publisher/server@latest
+```
+
+Start on local files through DuckDB, then point the same model at a warehouse. See [MCP for AI Agents](user_guides/publishing/mcp_agents.malloynb) to connect an agent.
 
 ## Try Malloy Today
 - <a href="https://github.dev/malloydata/try-malloy/airports.malloy" target="_blank">Try the language in your browser now</a> and run live Malloy queries while following the [Quickstart](user_guides/basic.malloynb)
