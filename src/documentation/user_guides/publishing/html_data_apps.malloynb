@@ -49,7 +49,7 @@ cat > /tmp/publisher-demo/publisher.config.json <<'JSON'
 JSON
 
 # Start the server in watch mode.
-npx @malloy-publisher/server --server_root /tmp/publisher-demo --watch-env demo
+npx @malloy-publisher/server@latest --server_root /tmp/publisher-demo --watch-env demo
 ```
 
 Open [http://localhost:4000/environments/demo/packages/html-data-app/](http://localhost:4000/environments/demo/packages/html-data-app/). Edit a file under `public/` and the page reloads on its own; edit `carriers.malloy` and the package recompiles. See `examples/html-data-app/README.md` for the full walkthrough.
