@@ -33,7 +33,15 @@ title: "Malloy: an open source semantic modeling and query language"
     a table that does not exist or write arbitrary SQL against production.
   </p>
 
-  <pre><code>npx @malloy-publisher/server --server_root ./packages</code></pre>
+  <pre><code>npx @malloy-publisher/server@latest</code></pre>
+
+  <p>
+    That serves three example packages, with no credentials needed. To serve
+    your own data, scaffold a package:
+  </p>
+
+  <pre><code>npm create @malloy-publisher/malloy-package@latest sales -- --data ./orders.csv
+npm start</code></pre>
 
   <p>
     <a href="{{ site.baseurl }}/documentation/user_guides/publishing/mcp_agents">Connect an AI agent over MCP</a> ·
