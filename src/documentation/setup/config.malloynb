@@ -152,6 +152,7 @@ Malloy exposes two parameters that let you choose how a connection participates 
 | `maximumBytesBilled` | string | Byte billing cap |
 | `timeoutMs` | string | Query timeout in ms |
 | `billingProjectId` | string | Billing project (if different) |
+| `dbmeta` | boolean | Copy table and column descriptions onto the schema, off unless set ([see below](#database-metadata)) |
 | `setupSQL` | text | Connection setup SQL ([see below](#setup-sql)) |
 
 **Setting up a server.** Keep the key out of the config file and read it from the environment.
@@ -210,6 +211,26 @@ Some credentials cannot be written down at all — an impersonated service accou
 This only works if the application you are running Malloy in offers such a name — a server that mints per-tenant credentials, for example. There is nothing to set here for the VS Code extension or the CLI, and naming something the host has not registered is an error rather than a silently missing credential.
 
 Two things follow from an `authClient` replacing the credential outright. Setting one alongside any service account key is an error, since the key would be ignored. And BigQuery resolves the project ID through the supplied credential instead of the ambient one, so set `billingProjectId` explicitly.
+
+#### Database metadata
+
+BigQuery tables and columns can carry descriptions. With `dbmeta` on, the connection copies them onto the schema it reads, so they reach every tool that shows documentation:
+
+```json
+{
+  "connections": {
+    "malloy_bq": {
+      "is": "bigquery",
+      "projectId": "my-project",
+      "dbmeta": true
+    }
+  }
+}
+```
+
+Each described table and column gets a `#(dbmeta)` annotation, such as `#(dbmeta) description = "Customer identifier."`. The connection writes it when it reads the schema; you never write it in a model. One switch covers tables and columns, and it is off unless set.
+
+A doc string written in the model (`#"`) still wins: tools show the model's own text where there is one, and the database description everywhere else. Turning `dbmeta` on or off never changes query results. Sources defined by a SQL query have no descriptions to copy.
 
 ### `databricks` — Databricks
 
