@@ -228,9 +228,9 @@ BigQuery tables and columns can carry descriptions. With `dbmeta` on, the connec
 }
 ```
 
-Each described table and column gets a `#(dbmeta)` annotation, such as `#(dbmeta) description = "Customer identifier."`. The connection writes it when it reads the schema; you never write it in a model. One switch covers tables and columns, and it is off unless set.
+Each described table and column gets a `#(dbmeta)` annotation, such as `#(dbmeta) description="Customer identifier."`. The connection writes it when it reads the schema; you never write it in a model. One switch covers tables and columns, and it is off unless set.
 
-A doc string written in the model (`#"`) still wins: tools show the model's own text where there is one, and the database description everywhere else. Turning `dbmeta` on or off never changes query results. Sources defined by a SQL query have no descriptions to copy.
+Doc strings written in the model (`#"`) are kept alongside the database description; each tool decides how to show the two. Turning `dbmeta` on or off never changes query results. Sources defined by a SQL query have no descriptions to copy.
 
 ### `databricks` — Databricks
 
