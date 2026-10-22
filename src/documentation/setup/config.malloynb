@@ -281,6 +281,7 @@ The `ssl` property accepts a JSON object passed directly to the underlying [node
 | `privateKeyPath` | file | Path to private key (.pem/.key) |
 | `privateKey` | password | Private key PEM string (alternative to file path) |
 | `privateKeyPass` | password | Private key passphrase |
+| `authenticator` | string | snowflake-sdk authenticator, e.g. `SNOWFLAKE_JWT`, `EXTERNALBROWSER`, `OAUTH`. Defaults to `SNOWFLAKE_JWT` when `privateKey` or `privateKeyPath` is set, otherwise password authentication |
 | `timeoutMs` | number | Query timeout in ms |
 | `schemaSampleTimeoutMs` | number | Variant schema sample timeout in ms (default 15000) |
 | `schemaSampleRowLimit` | number | Row limit for variant schema sample (default 1000) |
@@ -289,6 +290,8 @@ The `ssl` property accepts a JSON object passed directly to the underlying [node
 | `poolMin` | number | Minimum pooled connections kept warm (default 1) |
 | `poolMax` | number | Maximum pooled connections (default 1) |
 | `poolTestOnBorrow` | boolean | Validate each connection when checked out of the pool (default true) |
+
+For key-pair authentication, set `privateKey` or `privateKeyPath`; `authenticator` can be left out. A private key takes precedence over a `password`: when both are set and `authenticator` is not, the connection uses the key.
 
 Snowflake also supports TOML configuration at `~/.snowflake/connections.toml`. See [Snowflake connection configuration](https://docs.snowflake.com/en/developer-guide/python-connector/python-connector-connect#connecting-using-the-connections-toml-file) for details.
 
