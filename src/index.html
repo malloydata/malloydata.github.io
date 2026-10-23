@@ -1,4 +1,60 @@
 ---
-layout: redirect.html
-redirect: /documentation
+layout: documentation.html
+title: "Malloy: an open source semantic modeling and query language"
 ---
+<div class="document">
+  <h1>Malloy</h1>
+
+  <p>
+    Malloy is an open source semantic modeling and query language. You describe
+    your data once — the tables, how they join, what the measures mean — and
+    query that model instead of writing the same SQL again. Queries compile to
+    SQL and run on your existing database.
+  </p>
+
+  <p>
+    <a href="{{ site.baseurl }}/documentation">Read the documentation</a> ·
+    <a href="{{ site.baseurl }}/documentation/user_guides/basic">Quickstart</a> ·
+    <a href="https://github.dev/malloydata/try-malloy/airports.malloy">Try it in your browser</a>
+  </p>
+
+  <h2>Serve models to AI agents</h2>
+
+  <p>
+    <a href="{{ site.baseurl }}/documentation/user_guides/publishing/publishing">Malloy Publisher</a>
+    is the open source server for Malloy models. It serves them over the Model
+    Context Protocol (MCP) and REST, so a coding agent, an application, or a BI
+    tool all query the same model.
+  </p>
+
+  <p>
+    Because the agent queries the semantic model rather than the database
+    directly, it works from the measures and joins you defined. It cannot invent
+    a table that does not exist or write arbitrary SQL against production.
+  </p>
+
+  <pre><code>npx @malloy-publisher/server@latest</code></pre>
+
+  <p>
+    That serves three example packages, with no credentials needed. To serve
+    your own data, scaffold a package:
+  </p>
+
+  <pre><code>npm create @malloy-publisher/malloy-package@latest sales -- --data ./orders.csv
+npm start</code></pre>
+
+  <p>
+    <a href="{{ site.baseurl }}/documentation/user_guides/publishing/mcp_agents">Connect an AI agent over MCP</a> ·
+    <a href="{{ site.baseurl }}/documentation/user_guides/publishing/rest_api">REST API</a>
+  </p>
+
+  <h2>Where to start</h2>
+
+  <ul>
+    <li><a href="{{ site.baseurl }}/documentation">What is Malloy</a> — the language and what it is for</li>
+    <li><a href="{{ site.baseurl }}/documentation/user_guides/quickstart_modeling">Build a semantic model</a></li>
+    <li><a href="{{ site.baseurl }}/documentation/user_guides/querying_a_model">Query a semantic model</a></li>
+    <li><a href="{{ site.baseurl }}/documentation/setup/database_support">Databases Malloy connects to</a></li>
+    <li><a href="https://github.com/malloydata/malloy">GitHub</a> · <a href="{{ site.baseurl }}/slack">Slack community</a></li>
+  </ul>
+</div>
