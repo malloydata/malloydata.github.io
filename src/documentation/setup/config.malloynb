@@ -403,6 +403,8 @@ Any property value can be replaced with an environment variable reference. This 
 
 The `{"env": "VAR_NAME"}` syntax looks up the value from the named environment variable at connection time. If the variable is not set, the field is omitted and the connection proceeds without it.
 
+An environment variable is always text, so for a `boolean` or `number` property it is converted: `true` and `false`, in any case, become booleans, and numeric text such as `5432` becomes a number. A value that can't be converted, like `PG_PORT=abc`, is left out with a warning.
+
 A few properties are exceptions, because doing without them is not safe: DuckDB's `securityPolicy` and BigQuery's `authClient` fail the connection rather than fall back to no policy and to ambient credentials. Leaving such a property out of the config entirely is still fine — the rule only applies once you have named a variable.
 
 You can also provide a plain string value directly — this is useful for testing but not recommended for shared or committed config files.
