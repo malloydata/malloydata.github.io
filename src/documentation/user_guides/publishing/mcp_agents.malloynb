@@ -1,27 +1,49 @@
 >>>markdown
 # MCP for AI Agents
 
-Connect AI assistants to your Malloy semantic models using the Model Context Protocol (MCP). Publisher includes a built-in MCP server that exposes your models to AI agents.
+Point Claude, Cursor, or any MCP client at a Malloy Publisher server and it can answer questions about your data.
+
+The agent queries your **semantic model**, not the database. It works from the sources, joins, and measures you already defined, so it cannot invent a table that does not exist or write arbitrary SQL against production. Asked "what was revenue last quarter", the agent looks up how you defined revenue instead of guessing at column names.
+
+That is the difference between this and handing an agent a warehouse connection.
 
 ---
 
-## Quick Start
-
-This works for MCP clients that support HTTP endpoints directly.
+## Quick start
 
 ### 1. Start Publisher
 
+To try it on the bundled example packages, with no credentials:
+
 ```bash
-npx @malloy-publisher/server --server_root /path/to/your/packages
+npx @malloy-publisher/server@latest
 ```
 
-The AI sees all packages under your `server_root` directory. The MCP server starts automatically at `http://localhost:4040/mcp`.
+To serve your own data, scaffold a package in an empty directory and start it:
 
-The endpoint does not require authentication, and Publisher binds `0.0.0.0` by default, so anyone who can reach port 4040 on your network can run `malloy_executeQuery` against the databases your models connect to. The surface is not read-only either: `malloy_reloadPackage` mutates server state, and for a package that carries an install location a reload re-fetches it, overwriting on-disk edits. The same effects are already reachable through the equivalent REST endpoints, so this is a reason to gate the deployment rather than a reason to avoid the tools. Bind it to loopback with `--host 127.0.0.1` for local-only use, and put an authenticating gateway in front before exposing it more widely.
+```bash
+npm create @malloy-publisher/malloy-package@latest sales -- --data ./orders.csv
+npm start
+```
 
-For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
+Either way, the MCP server starts at `http://localhost:4040/mcp`, and REST and the web console at `http://localhost:4000`. Keep the `@latest`: without it, `npx` can rerun an old cached version. Check that your packages loaded before you connect an agent:
 
-### 2. Configure Your MCP Client
+```bash
+curl -s http://localhost:4000/api/v0/status | jq '{operationalState, loadErrors}'
+curl -s http://localhost:4000/api/v0/environments | jq '[.[].name]'
+```
+
+`operationalState` should be `"serving"`, and the second command should list at least one environment. A server started with no packages also reports `"serving"`, so the first check alone does not prove your data is there.
+
+### 2. Point your agent at it
+
+For Claude Code:
+
+```bash
+claude mcp add --transport http malloy http://127.0.0.1:4040/mcp
+```
+
+For clients configured by file:
 
 ```json
 {
@@ -33,16 +55,35 @@ For other deployment options (Docker, git clone), see [Publish Your Models](publ
 }
 ```
 
-### 3. Start Asking Questions
+### 3. Ask a question
 
-Once connected, try prompts like:
 - "What Malloy packages are available?"
 - "Show me the measures in the orders model"
 - "Query total revenue by month"
 
+The agent calls `list_packages` to learn the environment and package names, `get_context` to find the relevant sources and fields, then `execute_query` to run a query against them.
+
 ---
 
-## Stdio-only Clients (older Claude Desktop, etc.)
+## Querying a warehouse
+
+The same model runs on your warehouse. Start on local Parquet or CSV through DuckDB, then point the connection at BigQuery, Snowflake, Postgres, Databricks, Trino, or MySQL and query the same sources through the same MCP tools — see [Publisher Connections](connections.malloynb) for the full list and how to configure credentials.
+
+Nothing about the agent's setup changes when the backend does. The tools, the model paths, and the field names stay the same.
+
+---
+
+## Before you expose it
+
+Neither the MCP endpoint nor the REST API requires authentication. By default the MCP port (4040) binds `127.0.0.1`, so only your own machine can reach it, but the REST port (4000) binds `0.0.0.0`, and REST can run the same queries. Anyone who can reach port 4000 on your network can query the databases your models connect to. The surface is not read-only either: `reload_package` mutates server state, and for a package that carries an install location a reload re-fetches it, overwriting on-disk edits. The same effects are already reachable through the equivalent REST endpoints, so this is a reason to gate the deployment rather than a reason to avoid the tools.
+
+Pass `--host 127.0.0.1` to keep both ports local-only, and put an authenticating gateway in front before exposing either one more widely. Setting `MCP_HOST=0.0.0.0` exposes the MCP port on the network.
+
+For other deployment options (Docker, git clone), see [Publish Your Models](publishing.malloynb).
+
+---
+
+## Stdio-only clients (older Claude Desktop, etc.)
 
 Some MCP clients speak only stdio, not HTTP. Bridge them to the HTTP endpoint with [`mcp-remote`](https://www.npmjs.com/package/mcp-remote), which needs no extra script. In the client's MCP config add:
 
@@ -63,48 +104,45 @@ Some MCP clients speak only stdio, not HTTP. Bridge them to the HTTP endpoint wi
 
 ## MCP Tools
 
-Publisher serves these tools from the single MCP endpoint, alongside the bundled agent skills as prompts.
+Publisher serves these tools from the single MCP endpoint, alongside the bundled agent skills as prompts. Your client lists the full parameter schema for each one when it connects; this is the map.
 
 ### Discovery
 
-`malloy_getContext` is the entry point. Every parameter is optional, so an agent can start with nothing and narrow down as it learns the names.
+| Tool | Description |
+|------|-------------|
+| `list_packages` | Every environment the server serves and the packages in each. Call it first on a cold start: the other tools need these names. It is also the only listing that shows a package which failed to load. |
+| `get_context` | Find the sources, fields, views and joins that answer a question. Pass one typed search target per concept (`{target_type, search_text}`, where `target_type` is `source`, `dimension`, `measure`, `view`, `join` or `dimensional_value`) and exactly one scope naming an environment and package. One call returns the matching sources, best first, with the matched fields nested in each. |
+| `get_status` | Server health: its state, each environment's packages, and every package that failed to load or is serving a model older than the files on disk. Check it before concluding a package is empty or missing. |
 
-| Tool | Parameters | Description |
-|------|------------|-------------|
-| `malloy_getContext` | all optional: `environmentName`, `packageName`, `query`, `sourceName`, `limit` | Progressively discover what is on the server, and the model entities most relevant to a plain-English question. |
-
-Call it with no arguments to list the environments and the packages in each, with an `environmentName` to list that environment's packages, with `environmentName` plus `packageName` to list that package's sources, and with `environmentName` plus `packageName` plus a plain-English `query` to get the sources, views, named queries, and dimension/measure fields most relevant to it, each with its model path and `#(doc)` description. Add `sourceName` alongside a `query` to focus retrieval on a single source.
-
-Each step needs the ones before it: `packageName` without `environmentName` is ignored, and you get the environment list back rather than an error.
-
-The `environmentName`, `packageName`, and `modelPath` it returns map directly onto `malloy_executeQuery`, so an agent can go from a question to a grounded query without guessing names.
+Each source that `get_context` returns carries its `environment`, `package`, `model_path` and `source` names, which map directly onto `execute_query`'s `environmentName`, `packageName`, `modelPath` and `sourceName`. An agent can go from a question to a grounded query without guessing names.
 
 ### Query Execution
 
-| Tool | Parameters | Description |
-|------|------------|-------------|
-| `malloy_executeQuery` | required: `environmentName`, `packageName`, `modelPath`, and then either `query` or `queryName` plus `sourceName`. Optional: `filterParams`, `givens` | Run a Malloy query: ad hoc with `query`, or a named query or view with `queryName` plus the `sourceName` it belongs to. Exactly one of `query` and `queryName` is required. Returns JSON results. |
+| Tool | Description |
+|------|-------------|
+| `execute_query` | Run a Malloy query against a model and get JSON rows back: ad hoc with `query`, or a named view with `queryName` plus the `sourceName` it belongs to. Requires `environmentName`, `packageName` and `modelPath`. Optional `givens` and `filterParams`. |
 
 ### Authoring
 
-These two close the edit-and-run loop, so an agent can change a model and query the result without restarting the server.
+These close the edit-and-run loop, so an agent can change a model and query the result without restarting the server.
 
-| Tool | Parameters | Description |
-|------|------------|-------------|
-| `malloy_compile` | required: `environmentName`, `packageName`, `modelPath`, `source`. Optional: `includeSql`, `givens` | Compile-check Malloy source against a model and get structured diagnostics back, without running a query. The source is appended to `modelPath`, so that model's imports, sources, and queries are in scope. |
-| `malloy_reloadPackage` | required: `environmentName`, `packageName` | Recompile a package from its on-disk model files, so a source or view added after boot becomes resolvable by name. Returns the mode it used, `in-place` or `reinstalled`. |
+| Tool | Description |
+|------|-------------|
+| `compile_model` | Compile-check Malloy source and get structured diagnostics back, without running a query. `scope` says what the source is: `append` (default) for a new definition added to `modelPath`, `file` for an edited copy of the whole file, `package` to dry-run every file in the package. |
+| `reload_package` | Recompile a package from its model files on disk, so a source or view added after boot becomes queryable by name. |
+| `search_database_schema` | List a connection's schemas and tables, or rank a schema's tables against a plain-English description. Each table comes back with the `source:` line to start a model from. Returns names and types only, never row values. Use it when building a model from a database that has none yet. |
 
-Publisher compiles each configured package at boot and serves that cached model, so a source you add afterwards is not queryable by name until the package is reloaded. `malloy_compile` does not need a reload: it validates against the model as it is on disk.
+Publisher compiles each configured package at boot and serves that cached model, so a source you add afterwards is not queryable by name until the package is reloaded. `compile_model` does not need a reload.
 
-Compiling before reloading is a speed-up, not a safety measure. A reload that fails to compile leaves your files alone and keeps serving the previously compiled model, returning the compile errors, so nothing breaks either way. `malloy_compile` is simply the faster way to see diagnostics.
+Compiling before reloading is a speed-up, not a safety measure. A reload that fails to compile leaves your files alone and keeps serving the previously compiled model, returning the compile errors, so nothing breaks either way. `get_status` then reports the package as stale until a later reload succeeds.
 
-One caveat worth knowing: a package whose stored metadata carries an install location is re-fetched from that source on reload, which overwrites on-disk edits. Check the returned mode if you had edits you did not save elsewhere.
+One caveat worth knowing: a package whose stored metadata carries an install location is re-fetched from that source on reload, which overwrites on-disk edits.
 
 ### Documentation Search
 
-| Tool | Parameters | Description |
-|------|------------|-------------|
-| `malloy_searchDocs` | required: `query`. Optional: `limit` | Keyword search over a bundled index of the Malloy documentation, returning matching pages with a short excerpt and a link. |
+| Tool | Description |
+|------|-------------|
+| `search_malloy_docs` | Search the Malloy language documentation, returning matching pages with a short excerpt and a link. |
 
 ### Skills as MCP prompts
 
