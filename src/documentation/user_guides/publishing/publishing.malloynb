@@ -76,7 +76,7 @@ directory** (the folder containing `my-analytics/`):
 From that same parent directory, run:
 
 ```bash
-npx @malloy-publisher/server --server_root .
+npx @malloy-publisher/server@latest --server_root .
 ```
 
 The `--server_root` should point to the directory that **contains** your package folder(s), not the package itself.
@@ -89,23 +89,32 @@ my-workspace/                ← Run npx from HERE (--server_root .)
     └── orders.malloy
 ```
 
-**Want to try it immediately?** Use malloy-samples:
+**Want to try it immediately?** Run Publisher with no arguments, in an empty directory:
 
 ```bash
-git clone https://github.com/credibledata/malloy-samples.git
-cd malloy-samples
-npx @malloy-publisher/server --port 4000 --server_root .
+npx @malloy-publisher/server@latest
 ```
 
-Then open `http://localhost:4000` to explore the sample models.
+It serves three bundled example packages (`storefront`, `governed-analytics` and `html-data-app`), all on DuckDB, with no credentials. The first run downloads them from GitHub. Open `http://localhost:4000` to explore them.
+
+Keep the `@latest`. Without it, `npx` can rerun an old version from its cache.
 
 For alternative deployment methods (Docker, build from source), see [Deployment & Configuration](#deployment-configuration) below.
 
 ### 4. Open Browser
 
-Go to `http://localhost:4000` to browse and query your models. If the package list is empty, the
-config did not load: check the startup log rather than the status endpoint, which reports `serving`
-either way.
+Go to `http://localhost:4000` to browse and query your models. To check from a terminal that your
+packages loaded:
+
+```bash
+curl -s http://localhost:4000/api/v0/status | jq '{operationalState, loadErrors}'
+curl -s http://localhost:4000/api/v0/environments | jq '[.[].name]'
+```
+
+`operationalState` should be `"serving"`, `loadErrors` should be absent, and the second command should
+list your environment. Check the environment list too: a server that found no config also reports
+`"serving"`, with nothing in it. A package that failed to compile is skipped rather than fatal, and
+`loadErrors` names it and says why.
 
 That's it for local files. If your models use DuckDB with `.parquet`, `.csv`, or `.json` files, no
 connection configuration is needed on top of the config above, because every package gets its own
@@ -183,7 +192,7 @@ Packages do not have to live inside your server root. Keeping a config next to t
 ### Option 1: npx (Quickest)
 
 ```bash
-npx @malloy-publisher/server --server_root ./my-packages
+npx @malloy-publisher/server@latest --server_root ./my-packages
 ```
 
 ### Option 2: Build from Source
@@ -313,7 +322,7 @@ Publisher persists configuration changes in a local DuckDB database (`publisher.
 To reset the database and reload from `publisher.config.json`:
 
 ```bash
-npx @malloy-publisher/server --init --server_root .
+npx @malloy-publisher/server@latest --init --server_root .
 ```
 
 Use `--init` when:
