@@ -1,0 +1,510 @@
+>>>markdown
+# Working with Array and Nested Data
+
+Some data has a natural owner. A session has events. An order has items. A shipment has packages. Each child row belongs to exactly one parent and is almost always read with it.
+
+The relational way to store this is two tables and a key: `sessions` and `events`, joined on `session_id`. The other way is to keep the children inside the parent row, as an array of records:
+
+```sql
+CREATE TABLE sessions (
+  fullVisitorId VARCHAR,
+  visitId BIGINT,
+  device STRUCT(deviceCategory VARCHAR, browser VARCHAR),
+  hits STRUCT(
+    hitNumber BIGINT,
+    time BIGINT,              -- ms since the session started
+    type VARCHAR,             -- 'PAGE' or 'EVENT'
+    page STRUCT(pagePath VARCHAR),
+    eCommerceAction STRUCT(action_type VARCHAR),
+    product STRUCT(productQuantity BIGINT, ...)[]
+  )[]
+);
+```
+
+This wide, nested storage is efficient for data like this:
+
+- **A row is complete.** A session's events are read with the session, with no join and no key to match on.
+- **It stays together on disk.** Columnar databases store and compress the nested columns alongside their parent, so a query reads only the parts it names.
+- **It is what the data already looks like.** Event logs, analytics exports and document stores produce it this way, and BigQuery, DuckDB, Snowflake, Databricks and Trino all store it natively.
+
+The examples on this page use a sample of Google Analytics data: 2,556 sessions, each with an array of hits (about five on average), and each hit with its own array of products.
+
+```malloy
+source: ga_sessions is
+  duckdb.table('../data/ga_sample.parquet') extend {
+  measure: session_count is count()
+}
+```
+
+## Two ways to read nested data
+
+### Unnesting: a path into the array
+
+A path through an array, like `hits.type` or `hits.count()`, **unnests** it. Malloy joins the array to its row, as if it were a `join_many`, so the query sees one row per hit:
+
+```malloy
+run: ga_sessions -> {
+  group_by: hits.page.pagePath
+  aggregate: hit_count is hits.count()
+}
+```
+
+Unnesting is the way to ask about the hits themselves, across sessions: hits by page, products by category. [Reading Nested Data](../patterns/reading_nested.malloynb) has more on reading nested data with paths. Aggregates stay correct, because Malloy's aggregate locality computes `session_count` over sessions and `hits.count()` over hits even though the query has one row per hit.
+
+### Querying in place: the arrow
+
+The pipe operator, `->`, runs a query on the array of the current row, and its result is a value of that row:
+
+```malloy
+##! experimental.array_queries
+
+source: ga_sessions is
+  duckdb.table('../data/ga_sample.parquet') extend {
+  dimension:
+    page_views is hits -> {
+      aggregate: n is count() { where: type = 'PAGE' }
+    }
+  measure: session_count is count()
+}
+```
+
+`page_views` is a dimension of the session, like `device.browser`. Nothing is unnested and the session is not fanned out, so it can be grouped by, filtered on, or aggregated like any other dimension. Inside the braces, names are the element's own (`type`, not `hits.type`): the query's source is one session's hits.
+
+The arrow is experimental, so a file that uses it needs `##! experimental.array_queries` at the top.
+
+| | Unnesting (`hits.type`) | Querying in place (`hits -> { ... }`) |
+|---|---|---|
+| The question is about | the hits, across sessions | each session, from its hits |
+| Rows the query sees | one per hit | one per session |
+| The result is | a measure, or a dimension of the hit | a value of the session |
+| Works for | every database with nested data | one value: every database with nested data; an array: DuckDB and BigQuery ([Database support](#database-support)) |
+
+## Why query in place
+
+### A fact about the row becomes a dimension
+
+How many sessions viewed one page, two pages, three? With the arrow, the page count is a dimension, so the question is one query:
+
+```malloy
+run: ga_sessions -> {
+  group_by: page_views
+  aggregate: session_count
+  order_by: page_views
+  limit: 6
+}
+```
+
+| page_views | session_count |
+|---|---|
+| 1 | 1,243 |
+| 2 | 351 |
+| 3 | 233 |
+| 4 | 145 |
+| 5 | 107 |
+| 6 | 61 |
+
+Without it, the page count is only a measure, so the query is a pipeline: a first stage to make one row per session, and a second to group those rows.
+
+```malloy
+run: ga_sessions -> {
+  group_by: fullVisitorId, visitId
+  aggregate: page_views is hits.count() {
+    where: hits.type = 'PAGE'
+  }
+} -> {
+  group_by: page_views
+  aggregate: session_count is count()
+  order_by: page_views
+  limit: 6
+}
+```
+
+This gives the same answer, at a cost:
+
+- **The first stage needs a key**, and a wrong one is silently wrong. In this sample `visitId` is not unique, 2,509 values across 2,556 sessions, so grouping by `visitId` alone merges sessions, and the first row comes back as 1,198 instead of 1,243.
+- **The second stage has lost the source.** `session_count` has to be written again, as `count()`, and any session field the second stage needs has to be carried through the first.
+- **The count lives only in this query.** Every query that wants it has to restate the first stage.
+- **It is slower.** The pipeline unnests every hit and groups the hits back into sessions. The arrow reads each session's hits where they are.
+
+### Filter sessions without losing their hits
+
+Say we want to look only at the sessions that made a purchase, and find the three pages those sessions viewed most. The first try filters on a path into `hits`:
+
+```malloy
+run: ga_sessions -> {
+  -- a completed purchase
+  where: hits.eCommerceAction.action_type = '6'
+  group_by: hits.page.pagePath
+  aggregate: page_views is hits.count() {
+    where: hits.type = 'PAGE'
+  }
+  limit: 3
+}
+```
+
+| pagePath | page_views |
+|---|---|
+| /ordercompleted.html | 92 |
+
+One page, the order confirmation. The filter removed the page views we wanted to count.
+
+The query groups by `hits.page.pagePath`, so its rows are hits: one row for each hit, each carrying its session. The `where:` is tested on every row, and a page view is not a purchase, so every page-view hit fails the test and is dropped. With two small sessions:
+
+| session | hit | page | kept by the `where:` |
+|---|---|---|---|
+| A | page view | /home | no |
+| A | page view | /basket.html | no |
+| A | purchase | /ordercompleted.html | yes |
+| B | page view | /home | no |
+
+The filter did isolate the purchasing sessions: B is gone. But A kept only its purchase hit, so the only page left to count is the one where the purchase happened.
+
+The fix is to make the condition a fact about the session, not about each hit. The arrow asks each session whether it has a purchase hit, and the `where:` then keeps or drops the session whole. Every hit of a session that made a purchase stays, page views included:
+
+```malloy
+run: ga_sessions -> {
+  where: hits -> {
+    aggregate: n is count() {
+      where: eCommerceAction.action_type = '6'
+    }
+  } > 0
+  group_by: hits.page.pagePath
+  aggregate: page_views is hits.count() {
+    where: hits.type = 'PAGE'
+  }
+  limit: 3
+}
+```
+
+| pagePath | page_views |
+|---|---|
+| /basket.html | 185 |
+| /ordercompleted.html | 92 |
+| /payment.html | 89 |
+
+Both queries keep the same 43 sessions; the second sees all 1,276 of their page views.
+
+## Common patterns
+
+An example without a note runs on every database with nested data. SQL Server has none, so it runs none of them.
+
+The patterns below add these dimensions to `ga_sessions`. In Google Analytics, `eCommerceAction.action_type` is `'3'` for adding to the cart, `'5'` for checkout and `'6'` for a completed purchase.
+
+```malloy
+##! experimental.array_queries
+
+source: ga_sessions is
+  duckdb.table('../data/ga_sample.parquet') extend {
+  dimension:
+    page_views is hits -> {
+      aggregate: n is count() { where: type = 'PAGE' }
+    }
+    purchased is hits -> {
+      aggregate: n is count() {
+        where: eCommerceAction.action_type = '6'
+      }
+    } > 0
+    added_to_cart is hits -> {
+      aggregate: n is count() {
+        where: eCommerceAction.action_type = '3'
+      }
+    } > 0
+    first_hit_ms is hits -> { aggregate: n is time.min() }
+    last_hit_ms is hits -> { aggregate: n is time.max() }
+    session_seconds is (last_hit_ms - first_hit_ms) / 1000
+  measure:
+    session_count is count()
+}
+```
+
+### Did something happen?
+
+An aggregate with a filter, compared to zero, is a yes-or-no fact about the row:
+
+```malloy
+run: ga_sessions -> {
+  group_by: device.deviceCategory
+  aggregate:
+    session_count
+    buyers is count() { where: purchased }
+}
+```
+
+| deviceCategory | session_count | buyers |
+|---|---|---|
+| desktop | 1,742 | 41 |
+| mobile | 725 | 2 |
+| tablet | 89 | 0 |
+
+### Rows with one thing and not another
+
+Sessions which added to the cart but did not buy:
+
+```malloy
+run: ga_sessions -> {
+  where: added_to_cart and not purchased
+  aggregate: abandoned_carts is count()
+}
+```
+
+| abandoned_carts |
+|---|
+| 142 |
+
+The arrow can also be written inline, without a dimension to name it. Sessions which visited the basket page:
+
+```malloy
+run: ga_sessions -> {
+  where: hits -> {
+    aggregate: n is count() {
+      where: page.pagePath ~ '%basket%'
+    }
+  } > 0
+  aggregate: session_count
+}
+```
+
+| session_count |
+|---|
+| 251 |
+
+### When it began and ended
+
+The first and last hit times, and the session's length from them:
+
+```malloy
+run: ga_sessions -> {
+  group_by: device.deviceCategory
+  aggregate:
+    session_count
+    avg_seconds is round(session_seconds.avg(), 1)
+}
+```
+
+| deviceCategory | session_count | avg_seconds |
+|---|---|---|
+| desktop | 1,742 | 190.6 |
+| mobile | 725 | 120 |
+| tablet | 89 | 76.7 |
+
+### The first or last event
+
+A `select:` with `order_by:` and `limit: 1` picks one element. Its result is an array of records, here of one record, which a path can reach into:
+
+```malloy
+dimension: landing_page is hits -> {
+  select: hitNumber, page.pagePath
+  order_by: hitNumber
+  limit: 1
+}
+
+run: ga_sessions -> {
+  group_by: landing_page.pagePath
+  aggregate: session_count
+  limit: 5
+}
+```
+
+| pagePath | session_count |
+|---|---|
+| /home | 1,273 |
+| /google+redesign/shop+by+brand/youtube | 590 |
+| /google+redesign/apparel/mens/mens+t+shirts | 117 |
+| /signin.html | 78 |
+| /basket.html | 35 |
+
+> `landing_page` returns an array, so it runs on **DuckDB** and **BigQuery** only. Elsewhere an arrow computes one value.
+
+### The top few of each row
+
+A query on an array can group, order and limit, and returns its rows. The three most viewed pages of each session:
+
+```malloy
+dimension: top_pages is hits -> {
+  where: type = 'PAGE'
+  group_by: page.pagePath
+  aggregate: views is count()
+  order_by: views desc
+  limit: 3
+}
+
+run: ga_sessions -> {
+  where: page_views > 10
+  select: visitId, page_views, top_pages
+  order_by: page_views desc
+  limit: 3
+}
+```
+
+| visitId | page_views | top_pages |
+|---|---|---|
+| 1501621275 | 155 | /store.html/quickview 147 · /store.html 4 · /home 1 |
+| 1501627131 | 112 | /google+redesign/electronics 13 · /google+redesign/office 10 · /google+redesign/electronics/quickview 8 |
+| 1501623575 | 106 | /google+redesign/apparel/kids/kids+infant/quickview 26 · /basket.html 25 · … |
+
+> `top_pages` returns an array, so it runs on **DuckDB** and **BigQuery** only.
+
+### Did one thing happen before another?
+
+Two arrows, each the time of a first event, compared:
+
+```malloy
+dimension:
+  first_cart_ms is hits -> {
+    aggregate: n is time.min() {
+      where: eCommerceAction.action_type = '3'
+    }
+  }
+  first_checkout_ms is hits -> {
+    aggregate: n is time.min() {
+      where: eCommerceAction.action_type = '5'
+    }
+  }
+
+run: ga_sessions -> {
+  where: first_cart_ms is not null
+  group_by:
+    checked_out_after_cart is first_checkout_ms > first_cart_ms
+  aggregate: session_count
+}
+```
+
+| checked_out_after_cart | session_count |
+|---|---|
+| true | 82 |
+| null | 94 |
+
+A null is a session which added to the cart and never reached checkout.
+
+### Arrays inside the elements
+
+Each hit has its own array of products. A query on `hits` can aggregate it, so this is the units in each session:
+
+```malloy
+dimension: units_bought is hits -> {
+  aggregate: n is product.productQuantity.sum()
+}
+
+run: ga_sessions -> {
+  aggregate:
+    units is units_bought.sum()
+    buying_sessions is count() { where: units_bought > 0 }
+}
+```
+
+| units | buying_sessions |
+|---|---|
+| 4,877 | 185 |
+
+> **Snowflake** runs `units_bought`, and conditions on either the hit or the product, but refuses one condition that reads both, such as `where: type = 'PAGE' or product.productQuantity > 1`.
+
+### Totals of a per-row fact
+
+A dimension made by an arrow can be aggregated like any other: `units_bought.sum()` above, or `page_views.avg()`. Written inline, use the function form, `sum(hits -> { aggregate: n is time.max() })`; `(hits -> { ... }).sum()` does not parse.
+
+## What a query on an array returns
+
+What the arrow returns depends only on the shape of its query:
+
+| Shape | Result |
+|---|---|
+| One stage of `aggregate:` with one field | That value, on every database with nested data |
+| `select:`, `group_by:`, or several stages | An array of records, which can be selected, or reached into with a path, on DuckDB and BigQuery |
+| One stage of `aggregate:` with several fields | An error |
+
+For an array of scalars, the element is `each`: `tags -> { aggregate: n is count() { where: each = 'sale' } }`.
+
+## Limits
+
+On every database:
+
+- The left side of `->` is a field which names an array.
+- Inside the arrow, only the element's own fields are visible, not the row's other columns.
+- One stage of `aggregate:` returns one field.
+
+## Database support
+
+An arrow which computes one value works on every database with nested data. An arrow which returns an array works on DuckDB and BigQuery.
+
+| Database | One value | An array |
+|---|---|---|
+| DuckDB, BigQuery | yes | yes |
+| Postgres, MySQL | yes | — |
+| Trino, Presto, Databricks | yes, with the limits below | — |
+| Snowflake | yes, with the limits below | — |
+| SQL Server | — | — |
+
+On **Trino, Presto, Databricks and Snowflake**, the value is computed with the database's array functions, which can take one aggregate over the elements' own fields. So inside the arrow:
+
+- a `having:` is refused;
+- a field which is not one aggregate, such as `time.max() - time.min()`, is refused: compute each aggregate in its own arrow, and combine them outside, as `session_seconds` does;
+- a condition on an array inside the elements is refused, unless the aggregate is of that array. `count() { where: product.productQuantity > 1 }` counts hits by a condition on their products, which is refused; `product.count() { where: productQuantity > 1 }` counts products, which works.
+
+On **Snowflake** also, one condition cannot read both an element and an array inside it.
+
+### What doesn't work
+
+Each of these is refused when the model is translated, or when the query is compiled, with the error shown. They use the `ga_sessions` dimensions above.
+
+**An array, except on DuckDB and BigQuery.** On Trino, `landing_page` is refused:
+
+```
+The trino dialect can only query an array for one value: one stage of `aggregate:` with one field
+```
+
+**A `having:`, on Trino, Presto, Databricks and Snowflake:**
+
+```malloy
+dimension: busy_session is hits -> {
+  aggregate: n is count()
+  having: n > 3
+}
+```
+
+```
+The trino dialect cannot query this array: it has a `having:`
+```
+
+**A field which is not one aggregate, on the same four:**
+
+```malloy
+dimension: span is hits -> {
+  aggregate: n is time.max() - time.min()
+}
+```
+
+```
+The trino dialect cannot query this array: `n` is not one aggregate
+```
+
+**A condition on an array inside the elements, unless the aggregate is of that array, on the same four:**
+
+```malloy
+dimension: big_hits is hits -> {
+  aggregate: n is count() { where: product.productQuantity > 1 }
+}
+```
+
+```
+The trino dialect cannot query this array: it reads `product.productQuantity`, from an array inside the elements, which only an aggregate over that array can read
+```
+
+**One condition on both an element and an array inside it, on Snowflake:**
+
+```malloy
+dimension: page_products is hits -> {
+  aggregate: n is product.count() {
+    where: type = 'PAGE' or product.productQuantity > 1
+  }
+}
+```
+
+```
+The snowflake dialect cannot query this array: one condition reads both `product` and the elements' own fields, which snowflake can read only in separate conditions
+```
+
+**SQL Server** has no nested data:
+
+```
+The sqlserver dialect cannot query an array with ->
+```

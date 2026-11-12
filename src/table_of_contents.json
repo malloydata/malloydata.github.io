@@ -443,6 +443,10 @@
         {
           "title": "Givens (Model Parameters)",
           "link": "/experiments/givens.malloynb"
+        },
+        {
+          "title": "Queries on Arrays",
+          "link": "/experiments/array_queries.malloynb"
         }
       ]
     }
