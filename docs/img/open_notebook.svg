@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="110px" height="110px" viewBox="0 0 110 110" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>open</title>
+    <g id="open" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M82.5,60.7939453 L82.5,77.1108398 C82.5,79.8722636 80.2614237,82.1108398 77.5,82.1108398 L32.5,82.1108398 C29.7385763,82.1108398 27.5,79.8722636 27.5,77.1108398 L27.5,32.1108398 C27.5,29.3494161 29.7385763,27.1108398 32.5,27.1108398 L48.3173828,27.1108398" id="Path" stroke="#4285F4" stroke-width="6"></path>
+        <g id="Group" transform="translate(54.3368, 24.0811)" fill="#4285F4">
+            <rect id="Rectangle" x="5.06137162" y="0" width="26" height="6" rx="3"></rect>
+            <rect id="Rectangle-Copy" transform="translate(28.0614, 13) rotate(-90) translate(-28.0614, -13)" x="15.0613716" y="10" width="26" height="6" rx="3"></rect>
+            <rect id="Rectangle-Copy-2" transform="translate(14.9801, 16.2656) rotate(-45) translate(-14.9801, -16.2656)" x="-3.20498076" y="13.2655735" width="36.3702589" height="6" rx="3"></rect>
+        </g>
+    </g>
+</svg>
