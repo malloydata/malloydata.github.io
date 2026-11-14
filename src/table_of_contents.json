@@ -268,6 +268,10 @@
           "link": "/patterns/reading_nested.malloynb"
         },
         {
+          "title": "Working with Arrays",
+          "link": "/patterns/arrays.malloynb"
+        },
+        {
           "title": "Percent of Total",
           "link": "/patterns/percent_of_total.malloynb"
         },
