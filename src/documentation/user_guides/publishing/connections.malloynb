@@ -289,7 +289,7 @@ Then start Publisher with the key in the environment:
 
 ```bash
 export BIGQUERY_SA_JSON="$(cat service-account.json)"
-npx @malloy-publisher/server --server_root .
+npx @malloy-publisher/server@latest --server_root .
 ```
 
 The whole key can also be pasted inline as a JSON string (`"{\n  \"type\": \"service_account\", ...}"`) if you would rather not use an environment variable.

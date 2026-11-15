@@ -17,7 +17,7 @@ cd publisher
 bun install
 
 # Start the Publisher server, serving the bundled example packages
-npx @malloy-publisher/server --server_root packages/server
+npx @malloy-publisher/server@latest --server_root packages/server
 
 # In a new terminal, install and run the example app. It is not part of the
 # workspace, so it needs its own install as well as the one above.
