@@ -166,49 +166,48 @@ run: flights -> {
 
 ## Pick Expressions
 
-The `pick` construction in Malloy is similar to <code>CASE</code> statements in SQL.
->>>markdown
+A `pick` expression in Malloy is similar to the <code>CASE / END</code> construct in SQL.
+
 ```malloy
 pick 'small'  when size < 10
 pick 'medium' when size < 20
 else 'large'
 ```
->>>markdown
 
 Pick expressions are also compatible with the [apply operator](#application) and partial comparisons.
->>>markdown
+
 ```malloy
 size ?
   pick 'small' when < 10
   pick 'medium' when < 20
   else 'large'
 ```
->>>markdown
 
-Pick can be used to "clean" data, combining similar dirty values into one clean value. In the following example, the `pick` statement collects all the "this actually
+In this example, each `when` is a partial comparison, and `size` is applied to each of them. The first `when` which is true picks its value.
+
+Pick can be used to "clean" data, combining similar dirty values into one clean value. In the following example, the `pick` statement renames `'refused'` to `'returned'`, collects all the "this actually
 shipped" statuses, and because there is no `else`, leaves the other
-status values alone.
->>>markdown
+status values alone. Note that a `when` which is a plain value, like `when 'refused'`, in an applied pick is treated as a comparison: `shipping_status = 'refused'`.
+
 ```malloy
 shipping_status ?
+  pick 'returned' when 'refused'
   pick 'shipped' when 'will call' | 'shipped'
   pick 'ignore' when 'bad1' | 'bad2' | 'testing'
 ```
->>>markdown
 
 Another common kind of cleaning is to have a small set you want to group
 by and all other values are compressed into `null`. A `pick` clause with no value
 picks an applied value when the condition is met.
->>>markdown
+
 ```malloy
 status ?
   pick when 'good' | 'ok' | 'fine' // leave these alone
   else null                        // ignore the rest
 ```
->>>markdown
 
 If you need to match on multiple fields and conditions, use a dimension.
->>>markdown
+
 ```malloy
 dimension: Facility_Type_State is
   pick 'Cali Heli' when state = 'CA' and fac_type = 'HELIPORT'
@@ -216,7 +215,24 @@ dimension: Facility_Type_State is
   pick 'Phoenix Ultra' when state = 'AZ' and fac_type = 'ULTRALIGHT' and city = 'PHOENIX'
   else 'Not Needed'
 ```
->>>markdown
+
+**Note:** After `?`, a boolean value in a `when` could be either a value to compare with or a condition, so this pick could be read two ways:
+
+```malloy
+discount_pct ? pick 10 when is_member else 0
+```
+
+This could compare `discount_pct` with `is_member`, or it could check that the discount is 10 for members and 0 for everyone else. Malloy reads it the second way. After `?`, a pick with an `else` and a condition in every `when` is a value, and the applied value is compared with it. The example above means:
+
+```malloy
+discount_pct = (pick 10 when is_member else 0)
+```
+
+So applying a boolean to a pick does not choose by that boolean. `is_rush ? pick 'fast' when true else 'slow'` compares `is_rush` with `'fast'` or `'slow'`, which is an error. To choose by a condition, write the condition in the `when`:
+
+```malloy
+pick 'fast' when is_rush else 'slow'
+```
 
 ## Time Expressions
 
